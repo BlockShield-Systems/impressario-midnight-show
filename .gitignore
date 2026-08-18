@@ -8,3 +8,4 @@ dist/
 .dev.vars
 *.bak
 *.tsbuildinfo
+.asset-tools.env
