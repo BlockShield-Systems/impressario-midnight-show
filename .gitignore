@@ -1,11 +1,16 @@
-node_modules/
-dist/
-*.log
-.DS_Store
-.vscode/
-.idea/
-.wrangler/
-.dev.vars
+
+# Local Aseprite authoring backups
 *.bak
+*.log
 *.tsbuildinfo
+.DS_Store
 .asset-tools.env
+.dev.vars
+.idea/
+.vscode/
+.wrangler/
+assets/source/characters/impressario/*-backup.aseprite
+assets/source/characters/impressario/*.generated.aseprite
+assets/source/characters/impressario/*.manual-backup.aseprite
+dist/
+node_modules/
