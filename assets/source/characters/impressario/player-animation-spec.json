@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "character": "impressario",
+  "canvas": {
+    "width": 128,
+    "height": 128
+  },
+  "render": {
+    "worldWidth": 64,
+    "worldHeight": 64,
+    "originX": 0.5,
+    "originY": 0.765625,
+    "pivotX": 64,
+    "pivotY": 98,
+    "defaultFacing": "right"
+  },
+  "physics": {
+    "bodyWidth": 18,
+    "bodyHeight": 30,
+    "independentFromSprite": true
+  },
+  "requiredTags": {
+    "idle": {
+      "minimumFrames": 4,
+      "recommendedFrames": 8,
+      "frameRate": 8,
+      "repeat": -1
+    },
+    "run": {
+      "minimumFrames": 6,
+      "recommendedFrames": 10,
+      "frameRate": 14,
+      "repeat": -1
+    },
+    "jump_start": {
+      "minimumFrames": 2,
+      "recommendedFrames": 3,
+      "frameRate": 16,
+      "repeat": 0
+    },
+    "rise": {
+      "minimumFrames": 2,
+      "recommendedFrames": 3,
+      "frameRate": 8,
+      "repeat": -1
+    },
+    "fall": {
+      "minimumFrames": 2,
+      "recommendedFrames": 3,
+      "frameRate": 8,
+      "repeat": -1
+    }
+  }
+}
