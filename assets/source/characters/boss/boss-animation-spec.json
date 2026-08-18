@@ -1,0 +1,171 @@
+{
+  "schemaVersion": 1,
+  "atlasKey": "mirror-conductor",
+  "displayName": "The Mirror Conductor",
+  "frameWidth": 128,
+  "frameHeight": 128,
+  "frameCount": 171,
+  "tagCount": 21,
+  "sourceFacing": "right",
+  "footpoint": {
+    "x": 64,
+    "y": 112
+  },
+  "forms": {
+    "dormant": "Closed ceremonial conductor",
+    "phase1": "Cyan and gold precision form",
+    "phase2": "Broken mantle with mirror arms",
+    "phase3": "Corrupted asymmetric core form",
+    "defeat": "Baton break and mirror dissolution",
+    "fireworks": "Core detonation, body fragments and theatrical fireworks"
+  },
+  "requiredTags": {
+    "boss_dormant": {
+      "from": 0,
+      "to": 5,
+      "frameDurationMs": 140,
+      "repeat": true,
+      "form": "dormant"
+    },
+    "boss_entrance": {
+      "from": 6,
+      "to": 15,
+      "frameDurationMs": 90,
+      "repeat": false,
+      "form": "entrance"
+    },
+    "boss_phase1_idle": {
+      "from": 16,
+      "to": 23,
+      "frameDurationMs": 110,
+      "repeat": true,
+      "form": "phase1"
+    },
+    "boss_phase1_telegraph": {
+      "from": 24,
+      "to": 30,
+      "frameDurationMs": 75,
+      "repeat": false,
+      "form": "phase1"
+    },
+    "boss_phase1_cast": {
+      "from": 31,
+      "to": 38,
+      "frameDurationMs": 65,
+      "repeat": false,
+      "form": "phase1"
+    },
+    "boss_phase1_counter": {
+      "from": 39,
+      "to": 44,
+      "frameDurationMs": 70,
+      "repeat": false,
+      "form": "phase1"
+    },
+    "boss_transition_1_2": {
+      "from": 45,
+      "to": 56,
+      "frameDurationMs": 85,
+      "repeat": false,
+      "form": "transition12"
+    },
+    "boss_phase2_idle": {
+      "from": 57,
+      "to": 64,
+      "frameDurationMs": 105,
+      "repeat": true,
+      "form": "phase2"
+    },
+    "boss_phase2_telegraph": {
+      "from": 65,
+      "to": 72,
+      "frameDurationMs": 70,
+      "repeat": false,
+      "form": "phase2"
+    },
+    "boss_phase2_cast": {
+      "from": 73,
+      "to": 81,
+      "frameDurationMs": 62,
+      "repeat": false,
+      "form": "phase2"
+    },
+    "boss_phase2_counter": {
+      "from": 82,
+      "to": 87,
+      "frameDurationMs": 68,
+      "repeat": false,
+      "form": "phase2"
+    },
+    "boss_transition_2_3": {
+      "from": 88,
+      "to": 101,
+      "frameDurationMs": 78,
+      "repeat": false,
+      "form": "transition23"
+    },
+    "boss_phase3_idle": {
+      "from": 102,
+      "to": 109,
+      "frameDurationMs": 95,
+      "repeat": true,
+      "form": "phase3"
+    },
+    "boss_phase3_telegraph": {
+      "from": 110,
+      "to": 118,
+      "frameDurationMs": 65,
+      "repeat": false,
+      "form": "phase3"
+    },
+    "boss_phase3_cast": {
+      "from": 119,
+      "to": 128,
+      "frameDurationMs": 58,
+      "repeat": false,
+      "form": "phase3"
+    },
+    "boss_phase3_counter": {
+      "from": 129,
+      "to": 135,
+      "frameDurationMs": 62,
+      "repeat": false,
+      "form": "phase3"
+    },
+    "boss_hurt_phase1": {
+      "from": 136,
+      "to": 139,
+      "frameDurationMs": 70,
+      "repeat": false,
+      "form": "phase1"
+    },
+    "boss_hurt_phase2": {
+      "from": 140,
+      "to": 143,
+      "frameDurationMs": 68,
+      "repeat": false,
+      "form": "phase2"
+    },
+    "boss_hurt_phase3": {
+      "from": 144,
+      "to": 148,
+      "frameDurationMs": 62,
+      "repeat": false,
+      "form": "phase3"
+    },
+    "boss_defeat": {
+      "from": 149,
+      "to": 158,
+      "frameDurationMs": 105,
+      "repeat": false,
+      "form": "defeat"
+    },
+    "boss_fireworks": {
+      "from": 159,
+      "to": 170,
+      "frameDurationMs": 85,
+      "repeat": false,
+      "form": "fireworks"
+    }
+  }
+}
