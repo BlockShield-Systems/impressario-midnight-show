@@ -5,9 +5,9 @@
 --   * 128x128 RGB/RGBA sprite
 --   * 14 editable layers
 --   * fixed production palette
---   * 32 frames
---   * movement tags
---   * first cane attack reference animation
+--   * 108 frames
+--   * complete movement tags
+--   * nine cane-combat animations
 
 local output = app.params["output"]
 
@@ -123,51 +123,156 @@ local LAYER_NAMES_BOTTOM_TO_TOP = {
   "14_guides"
 }
 
-local FRAME_SPECS = {
-  -- idle 1-8
-  { kind = "idle", phase = 1, duration = 0.125 },
-  { kind = "idle", phase = 2, duration = 0.125 },
-  { kind = "idle", phase = 3, duration = 0.125 },
-  { kind = "idle", phase = 4, duration = 0.125 },
-  { kind = "idle", phase = 5, duration = 0.125 },
-  { kind = "idle", phase = 6, duration = 0.125 },
-  { kind = "idle", phase = 7, duration = 0.125 },
-  { kind = "idle", phase = 8, duration = 0.125 },
-
-  -- run 9-18
-  { kind = "run", phase = 1, duration = 0.070 },
-  { kind = "run", phase = 2, duration = 0.070 },
-  { kind = "run", phase = 3, duration = 0.070 },
-  { kind = "run", phase = 4, duration = 0.070 },
-  { kind = "run", phase = 5, duration = 0.070 },
-  { kind = "run", phase = 6, duration = 0.070 },
-  { kind = "run", phase = 7, duration = 0.070 },
-  { kind = "run", phase = 8, duration = 0.070 },
-  { kind = "run", phase = 9, duration = 0.070 },
-  { kind = "run", phase = 10, duration = 0.070 },
-
-  -- jump_start 19-21
-  { kind = "jump_start", phase = 1, duration = 0.060 },
-  { kind = "jump_start", phase = 2, duration = 0.060 },
-  { kind = "jump_start", phase = 3, duration = 0.060 },
-
-  -- rise 22-24
-  { kind = "rise", phase = 1, duration = 0.100 },
-  { kind = "rise", phase = 2, duration = 0.100 },
-  { kind = "rise", phase = 3, duration = 0.100 },
-
-  -- fall 25-27
-  { kind = "fall", phase = 1, duration = 0.110 },
-  { kind = "fall", phase = 2, duration = 0.110 },
-  { kind = "fall", phase = 3, duration = 0.110 },
-
-  -- attack_combo_1 28-32
-  { kind = "attack_combo_1", phase = 1, duration = 0.070 },
-  { kind = "attack_combo_1", phase = 2, duration = 0.040 },
-  { kind = "attack_combo_1", phase = 3, duration = 0.040 },
-  { kind = "attack_combo_1", phase = 4, duration = 0.075 },
-  { kind = "attack_combo_1", phase = 5, duration = 0.075 }
+local FRAME_GROUPS = {
+  {
+    name = "idle",
+    kind = "idle",
+    durations = { 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125 },
+    repeats = 0,
+    color = { 216, 170, 70 }
+  },
+  {
+    name = "run",
+    kind = "run",
+    durations = { 0.070, 0.070, 0.070, 0.070, 0.070, 0.070, 0.070, 0.070, 0.070, 0.070 },
+    repeats = 0,
+    color = { 183, 42, 80 }
+  },
+  {
+    name = "jump_start",
+    kind = "jump_start",
+    durations = { 0.060, 0.060, 0.060 },
+    repeats = 1,
+    color = { 241, 192, 155 }
+  },
+  {
+    name = "rise",
+    kind = "rise",
+    durations = { 0.100, 0.100, 0.100 },
+    repeats = 0,
+    color = { 110, 205, 236 }
+  },
+  {
+    name = "fall",
+    kind = "fall",
+    durations = { 0.110, 0.110, 0.110 },
+    repeats = 0,
+    color = { 84, 126, 188 }
+  },
+  {
+    name = "land",
+    kind = "land",
+    durations = { 0.050, 0.060, 0.080 },
+    repeats = 1,
+    color = { 111, 224, 166 }
+  },
+  {
+    name = "dash",
+    kind = "dash",
+    durations = { 0.045, 0.045, 0.045, 0.045, 0.045, 0.045 },
+    repeats = 1,
+    color = { 244, 199, 104 }
+  },
+  {
+    name = "wall_slide",
+    kind = "wall_slide",
+    durations = { 0.090, 0.090, 0.090, 0.090 },
+    repeats = 0,
+    color = { 116, 154, 215 }
+  },
+  {
+    name = "wall_jump",
+    kind = "wall_jump",
+    durations = { 0.055, 0.055, 0.065, 0.075 },
+    repeats = 1,
+    color = { 126, 215, 238 }
+  },
+  {
+    name = "hurt",
+    kind = "hurt",
+    durations = { 0.060, 0.070, 0.090, 0.120 },
+    repeats = 1,
+    color = { 238, 82, 104 }
+  },
+  {
+    name = "attack_combo_1",
+    kind = "attack_combo_1",
+    durations = { 0.070, 0.040, 0.040, 0.075, 0.075 },
+    repeats = 1,
+    color = { 245, 212, 119 }
+  },
+  {
+    name = "attack_combo_2",
+    kind = "attack_combo_2",
+    durations = { 0.060, 0.045, 0.045, 0.053, 0.053, 0.054 },
+    repeats = 1,
+    color = { 255, 221, 125 }
+  },
+  {
+    name = "attack_combo_3",
+    kind = "attack_combo_3",
+    durations = { 0.055, 0.055, 0.050, 0.050, 0.063, 0.062, 0.062, 0.063 },
+    repeats = 1,
+    color = { 255, 239, 173 }
+  },
+  {
+    name = "attack_low",
+    kind = "attack_low",
+    durations = { 0.045, 0.045, 0.050, 0.050, 0.070, 0.070, 0.070 },
+    repeats = 1,
+    color = { 229, 168, 71 }
+  },
+  {
+    name = "attack_launcher",
+    kind = "attack_launcher",
+    durations = { 0.060, 0.060, 0.050, 0.050, 0.060, 0.060, 0.060, 0.060 },
+    repeats = 1,
+    color = { 247, 210, 115 }
+  },
+  {
+    name = "attack_air_neutral",
+    kind = "attack_air_neutral",
+    durations = { 0.070, 0.060, 0.060, 0.060, 0.060, 0.060 },
+    repeats = 1,
+    color = { 236, 198, 95 }
+  },
+  {
+    name = "attack_air_up",
+    kind = "attack_air_up",
+    durations = { 0.080, 0.060, 0.060, 0.067, 0.066, 0.067 },
+    repeats = 1,
+    color = { 248, 220, 135 }
+  },
+  {
+    name = "attack_down",
+    kind = "attack_down",
+    durations = { 0.050, 0.050, 0.080, 0.080, 0.074, 0.073, 0.073 },
+    repeats = 1,
+    color = { 242, 185, 79 }
+  },
+  {
+    name = "attack_dash",
+    kind = "attack_dash",
+    durations = { 0.035, 0.065, 0.065, 0.050, 0.050, 0.050, 0.050 },
+    repeats = 1,
+    color = { 255, 226, 144 }
+  },
 }
+
+local FRAME_SPECS = {}
+
+for _, group in ipairs(FRAME_GROUPS) do
+  for phase, duration in ipairs(group.durations) do
+    table.insert(
+      FRAME_SPECS,
+      {
+        kind = group.kind,
+        phase = phase,
+        duration = duration
+      }
+    )
+  end
+end
 
 local function newImage(sprite)
   local image = Image(
@@ -372,6 +477,248 @@ local function fillPolygon(
 
       index = index + 2
     end
+  end
+end
+
+
+local ATTACK_PROFILES = {
+  attack_combo_2 = {
+    activeFrom = 2,
+    activeTo = 3,
+    wind = { handX = 67, handY = 76, tipX = 55, tipY = 66 },
+    strike = { handX = 80, handY = 73, tipX = 108, tipY = 58 },
+    recover = { handX = 75, handY = 78, tipX = 91, tipY = 87 }
+  },
+
+  attack_combo_3 = {
+    activeFrom = 3,
+    activeTo = 4,
+    wind = { handX = 70, handY = 68, tipX = 72, tipY = 42 },
+    strike = { handX = 80, handY = 76, tipX = 109, tipY = 91 },
+    recover = { handX = 74, handY = 79, tipX = 88, tipY = 96 }
+  },
+
+  attack_low = {
+    activeFrom = 3,
+    activeTo = 4,
+    wind = { handX = 68, handY = 82, tipX = 57, tipY = 91 },
+    strike = { handX = 79, handY = 84, tipX = 109, tipY = 96 },
+    recover = { handX = 74, handY = 81, tipX = 89, tipY = 98 }
+  },
+
+  attack_launcher = {
+    activeFrom = 3,
+    activeTo = 4,
+    wind = { handX = 70, handY = 83, tipX = 84, tipY = 97 },
+    strike = { handX = 75, handY = 67, tipX = 78, tipY = 34 },
+    recover = { handX = 73, handY = 75, tipX = 85, tipY = 58 }
+  },
+
+  attack_air_neutral = {
+    activeFrom = 2,
+    activeTo = 3,
+    wind = { handX = 68, handY = 76, tipX = 55, tipY = 69 },
+    strike = { handX = 81, handY = 74, tipX = 110, tipY = 72 },
+    recover = { handX = 74, handY = 77, tipX = 91, tipY = 86 }
+  },
+
+  attack_air_up = {
+    activeFrom = 2,
+    activeTo = 3,
+    wind = { handX = 70, handY = 76, tipX = 60, tipY = 62 },
+    strike = { handX = 76, handY = 64, tipX = 79, tipY = 31 },
+    recover = { handX = 73, handY = 72, tipX = 87, tipY = 53 }
+  },
+
+  attack_down = {
+    activeFrom = 3,
+    activeTo = 4,
+    wind = { handX = 69, handY = 73, tipX = 82, tipY = 59 },
+    strike = { handX = 74, handY = 87, tipX = 73, tipY = 118 },
+    recover = { handX = 72, handY = 81, tipX = 83, tipY = 102 }
+  },
+
+  attack_dash = {
+    activeFrom = 2,
+    activeTo = 3,
+    wind = { handX = 70, handY = 76, tipX = 61, tipY = 67 },
+    strike = { handX = 84, handY = 74, tipX = 116, tipY = 73 },
+    recover = { handX = 78, handY = 77, tipX = 101, tipY = 85 }
+  }
+}
+
+local function applyExtendedPose(
+  pose,
+  spec
+)
+  if spec.kind == "land" then
+    if spec.phase == 1 then
+      pose.bob = 4
+      pose.frontKneeY = 93
+      pose.backKneeY = 93
+      pose.frontFootX = 56
+      pose.backFootX = 72
+      pose.tailsSwing = 3
+    elseif spec.phase == 2 then
+      pose.bob = 2
+      pose.frontKneeY = 91
+      pose.backKneeY = 91
+      pose.frontFootX = 58
+      pose.backFootX = 70
+      pose.tailsSwing = 2
+    else
+      pose.bob = 0
+      pose.tailsSwing = 1
+    end
+
+    return
+  end
+
+  if spec.kind == "dash" then
+    pose.bob = -1
+    pose.lean = 5
+    pose.frontFootX = 58 - spec.phase
+    pose.backFootX = 52 - spec.phase
+    pose.frontKneeX = 60
+    pose.backKneeX = 57
+    pose.frontHandX = 79
+    pose.frontHandY = 75
+    pose.backHandX = 53
+    pose.backHandY = 79
+    pose.caneHookX = 82
+    pose.caneHookY = 72
+    pose.caneTipX = 101 + spec.phase
+    pose.caneTipY = 78
+    pose.tailsSwing = -7
+    return
+  end
+
+  if spec.kind == "wall_slide" then
+    pose.lean = -2
+    pose.frontFootX = 58
+    pose.backFootX = 62
+    pose.frontFootY = 96
+    pose.backFootY = 93
+    pose.frontKneeX = 57
+    pose.backKneeX = 64
+    pose.frontKneeY = 87
+    pose.backKneeY = 86
+    pose.frontHandX = 75
+    pose.frontHandY = 75
+    pose.backHandX = 54
+    pose.backHandY = 75
+    pose.caneTipX = 80
+    pose.caneTipY = 92
+    pose.tailsSwing = 4 + (spec.phase % 2)
+    return
+  end
+
+  if spec.kind == "wall_jump" then
+    pose.bob = -2
+    pose.lean = 2 + spec.phase
+    pose.frontFootX = 57
+    pose.backFootX = 67
+    pose.frontFootY = 94
+    pose.backFootY = 91
+    pose.frontKneeX = 60
+    pose.backKneeX = 65
+    pose.frontKneeY = 86
+    pose.backKneeY = 85
+    pose.frontHandX = 76
+    pose.frontHandY = 74
+    pose.caneTipX = 91
+    pose.caneTipY = 85
+    pose.tailsSwing = -5
+    return
+  end
+
+  if spec.kind == "hurt" then
+    pose.lean = -5 + spec.phase
+    pose.bob = (spec.phase == 1) and -2 or 1
+    pose.frontFootX = 57
+    pose.backFootX = 70
+    pose.frontKneeY = 91
+    pose.backKneeY = 90
+    pose.frontHandX = 68
+    pose.frontHandY = 75
+    pose.backHandX = 54
+    pose.backHandY = 77
+    pose.caneHookX = 70
+    pose.caneHookY = 70
+    pose.caneTipX = 82
+    pose.caneTipY = 94
+    pose.hatTilt = -2
+    pose.tailsSwing = -3
+    return
+  end
+
+  local profile =
+    ATTACK_PROFILES[spec.kind]
+
+  if profile == nil then
+    return
+  end
+
+  local active =
+    spec.phase >= profile.activeFrom and
+    spec.phase <= profile.activeTo
+
+  local values
+
+  if spec.phase < profile.activeFrom then
+    values = profile.wind
+  elseif active then
+    values = profile.strike
+  else
+    values = profile.recover
+  end
+
+  pose.frontHandX = values.handX
+  pose.frontHandY = values.handY
+  pose.caneTipX = values.tipX
+  pose.caneTipY = values.tipY
+  pose.caneHookX = values.handX + 4
+  pose.caneHookY = values.handY - 4
+  pose.attackFx = active
+
+  if active then
+    pose.lean = 4
+    pose.frontFootX = 65
+    pose.backFootX = 56
+    pose.tailsSwing = 5
+  elseif spec.phase < profile.activeFrom then
+    pose.lean = -2
+    pose.tailsSwing = -3
+  else
+    pose.lean = 1
+    pose.tailsSwing = 2
+  end
+
+  if
+    spec.kind == "attack_low" or
+    spec.kind == "attack_down"
+  then
+    pose.bob = 3
+    pose.frontKneeY = 92
+    pose.backKneeY = 91
+  end
+
+  if
+    spec.kind == "attack_air_neutral" or
+    spec.kind == "attack_air_up" or
+    spec.kind == "attack_down"
+  then
+    pose.frontFootY = 94
+    pose.backFootY = 92
+    pose.frontKneeY = 86
+    pose.backKneeY = 86
+  end
+
+  if spec.kind == "attack_dash" then
+    pose.lean = 6
+    pose.frontFootX = 57
+    pose.backFootX = 51
+    pose.tailsSwing = -7
   end
 end
 
@@ -609,6 +956,20 @@ local function createPose(spec)
       pose.caneTipY = 98
       pose.tailsSwing = 1
     end
+  end
+
+  if
+    spec.kind ~= "idle" and
+    spec.kind ~= "run" and
+    spec.kind ~= "jump_start" and
+    spec.kind ~= "rise" and
+    spec.kind ~= "fall" and
+    spec.kind ~= "attack_combo_1"
+  then
+    applyExtendedPose(
+      pose,
+      spec
+    )
   end
 
   return pose
@@ -1283,8 +1644,11 @@ local function drawFrame(
     local tipY =
       pose.caneTipY +
       (
-        spec.kind ==
-          "attack_combo_1"
+        string.sub(
+          spec.kind,
+          1,
+          7
+        ) == "attack_"
         and bob
         or 0
       )
@@ -1347,37 +1711,52 @@ local function drawFrame(
     local image = newImage(sprite)
 
     if pose.attackFx then
+      local handX =
+        pose.frontHandX + lean
+
+      local handY =
+        pose.frontHandY + bob
+
+      local tipX =
+        pose.caneTipX + lean
+
+      local tipY =
+        pose.caneTipY + bob
+
+      local deltaX = tipX - handX
+      local deltaY = tipY - handY
+
       line(
         image,
-        82,
-        69,
-        108,
-        69,
+        handX,
+        handY - 5,
+        tipX,
+        tipY - 5,
         COLORS.attackFx
       )
 
       line(
         image,
-        84,
-        72,
-        112,
-        75,
+        handX - math.floor(deltaY * 0.12),
+        handY + math.floor(deltaX * 0.12),
+        tipX - math.floor(deltaY * 0.08),
+        tipY + math.floor(deltaX * 0.08),
         COLORS.attackFx
       )
 
       line(
         image,
-        82,
-        78,
-        108,
-        82,
+        handX + math.floor(deltaY * 0.12),
+        handY - math.floor(deltaX * 0.12),
+        tipX + math.floor(deltaY * 0.08),
+        tipY - math.floor(deltaX * 0.08),
         COLORS.attackFx
       )
 
       setPixel(
         image,
-        111,
-        74,
+        tipX,
+        tipY,
         COLORS.goldLight
       )
     end
@@ -1565,74 +1944,43 @@ local function addTag(
   return tag
 end
 
-addTag(
-  "idle",
-  1,
-  8,
-  Color {
-    r = 216,
-    g = 170,
-    b = 70
-  }
-)
+local tagStart = 1
 
-addTag(
-  "run",
-  9,
-  18,
-  Color {
-    r = 183,
-    g = 42,
-    b = 80
-  }
-)
+for _, group in ipairs(FRAME_GROUPS) do
+  local tagEnd =
+    tagStart + #group.durations - 1
 
-addTag(
-  "jump_start",
-  19,
-  21,
-  Color {
-    r = 241,
-    g = 192,
-    b = 155
-  }
-)
+  local tag =
+    addTag(
+      group.name,
+      tagStart,
+      tagEnd,
+      Color {
+        r = group.color[1],
+        g = group.color[2],
+        b = group.color[3]
+      }
+    )
 
-addTag(
-  "rise",
-  22,
-  24,
-  Color {
-    r = 110,
-    g = 205,
-    b = 236
-  }
-)
+  tag.repeats = group.repeats
+  tag.data =
+    "Generated M7C animation: " ..
+    group.kind
 
-addTag(
-  "fall",
-  25,
-  27,
-  Color {
-    r = 84,
-    g = 126,
-    b = 188
-  }
-)
+  tagStart = tagEnd + 1
+end
 
-addTag(
-  "attack_combo_1",
-  28,
-  32,
-  Color {
-    r = 245,
-    g = 212,
-    b = 119
-  }
-)
+if tagStart - 1 ~= #FRAME_SPECS then
+  error(
+    "Tag/frame mismatch: " ..
+    tostring(tagStart - 1) ..
+    " versus " ..
+    tostring(#FRAME_SPECS)
+  )
+end
 
 sprite.data =
-  "Impressario generated source v1\n" ..
+  "Impressario generated source M7C v2\n" ..
   "Canvas: 128x128 RGBA\n" ..
   "Footpoint: 64,98\n" ..
   "Physics body: 18x30\n" ..

@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "character": "impressario",
   "canvas": {
     "width": 128,
@@ -19,36 +19,173 @@
     "bodyHeight": 30,
     "independentFromSprite": true
   },
+  "totalFrames": 108,
+  "requiredTagCount": 19,
+  "priority": [
+    "hurt",
+    "combat",
+    "dash",
+    "wall_jump",
+    "wall_slide",
+    "jump_start",
+    "rise",
+    "fall",
+    "land",
+    "run",
+    "idle"
+  ],
   "requiredTags": {
     "idle": {
-      "minimumFrames": 4,
+      "from": 0,
+      "to": 7,
+      "minimumFrames": 8,
       "recommendedFrames": 8,
-      "frameRate": 8,
-      "repeat": -1
+      "repeat": -1,
+      "durationMs": 1000
     },
     "run": {
-      "minimumFrames": 6,
+      "from": 8,
+      "to": 17,
+      "minimumFrames": 10,
       "recommendedFrames": 10,
-      "frameRate": 14,
-      "repeat": -1
+      "repeat": -1,
+      "durationMs": 700
     },
     "jump_start": {
-      "minimumFrames": 2,
+      "from": 18,
+      "to": 20,
+      "minimumFrames": 3,
       "recommendedFrames": 3,
-      "frameRate": 16,
-      "repeat": 0
+      "repeat": 0,
+      "durationMs": 180
     },
     "rise": {
-      "minimumFrames": 2,
+      "from": 21,
+      "to": 23,
+      "minimumFrames": 3,
       "recommendedFrames": 3,
-      "frameRate": 8,
-      "repeat": -1
+      "repeat": -1,
+      "durationMs": 300
     },
     "fall": {
-      "minimumFrames": 2,
+      "from": 24,
+      "to": 26,
+      "minimumFrames": 3,
       "recommendedFrames": 3,
-      "frameRate": 8,
-      "repeat": -1
+      "repeat": -1,
+      "durationMs": 330
+    },
+    "land": {
+      "from": 27,
+      "to": 29,
+      "minimumFrames": 3,
+      "recommendedFrames": 3,
+      "repeat": 0,
+      "durationMs": 190
+    },
+    "dash": {
+      "from": 30,
+      "to": 35,
+      "minimumFrames": 6,
+      "recommendedFrames": 6,
+      "repeat": 0,
+      "durationMs": 270
+    },
+    "wall_slide": {
+      "from": 36,
+      "to": 39,
+      "minimumFrames": 4,
+      "recommendedFrames": 4,
+      "repeat": -1,
+      "durationMs": 360
+    },
+    "wall_jump": {
+      "from": 40,
+      "to": 43,
+      "minimumFrames": 4,
+      "recommendedFrames": 4,
+      "repeat": 0,
+      "durationMs": 250
+    },
+    "hurt": {
+      "from": 44,
+      "to": 47,
+      "minimumFrames": 4,
+      "recommendedFrames": 4,
+      "repeat": 0,
+      "durationMs": 340
+    },
+    "attack_combo_1": {
+      "from": 48,
+      "to": 52,
+      "minimumFrames": 5,
+      "recommendedFrames": 5,
+      "repeat": 0,
+      "durationMs": 300
+    },
+    "attack_combo_2": {
+      "from": 53,
+      "to": 58,
+      "minimumFrames": 6,
+      "recommendedFrames": 6,
+      "repeat": 0,
+      "durationMs": 310
+    },
+    "attack_combo_3": {
+      "from": 59,
+      "to": 66,
+      "minimumFrames": 8,
+      "recommendedFrames": 8,
+      "repeat": 0,
+      "durationMs": 460
+    },
+    "attack_low": {
+      "from": 67,
+      "to": 73,
+      "minimumFrames": 7,
+      "recommendedFrames": 7,
+      "repeat": 0,
+      "durationMs": 400
+    },
+    "attack_launcher": {
+      "from": 74,
+      "to": 81,
+      "minimumFrames": 8,
+      "recommendedFrames": 8,
+      "repeat": 0,
+      "durationMs": 460
+    },
+    "attack_air_neutral": {
+      "from": 82,
+      "to": 87,
+      "minimumFrames": 6,
+      "recommendedFrames": 6,
+      "repeat": 0,
+      "durationMs": 370
+    },
+    "attack_air_up": {
+      "from": 88,
+      "to": 93,
+      "minimumFrames": 6,
+      "recommendedFrames": 6,
+      "repeat": 0,
+      "durationMs": 400
+    },
+    "attack_down": {
+      "from": 94,
+      "to": 100,
+      "minimumFrames": 7,
+      "recommendedFrames": 7,
+      "repeat": 0,
+      "durationMs": 480
+    },
+    "attack_dash": {
+      "from": 101,
+      "to": 107,
+      "minimumFrames": 7,
+      "recommendedFrames": 7,
+      "repeat": 0,
+      "durationMs": 365
     }
   }
 }

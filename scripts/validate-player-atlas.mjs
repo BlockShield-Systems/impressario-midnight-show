@@ -112,6 +112,56 @@ for (const [name, definition] of Object.entries(spec.requiredTags)) {
   }
 }
 
+if (
+  Number.isInteger(spec.totalFrames) &&
+  frameEntries.length !== spec.totalFrames
+) {
+  fail(
+    `${frameEntries.length} Frames vorhanden; ` +
+    `${spec.totalFrames} erwartet`,
+  );
+}
+
+if (
+  Number.isInteger(spec.requiredTagCount) &&
+  tags.size !== spec.requiredTagCount
+) {
+  fail(
+    `${tags.size} Tags vorhanden; ` +
+    `${spec.requiredTagCount} erwartet`,
+  );
+}
+
+for (const [name, definition] of Object.entries(spec.requiredTags)) {
+  const tag = tags.get(name);
+
+  if (
+    Number.isInteger(definition.from) &&
+    tag.from !== definition.from
+  ) {
+    fail(
+      `${name}: Startframe ${tag.from}; ` +
+      `${definition.from} erwartet`,
+    );
+  }
+
+  if (
+    Number.isInteger(definition.to) &&
+    tag.to !== definition.to
+  ) {
+    fail(
+      `${name}: Endframe ${tag.to}; ` +
+      `${definition.to} erwartet`,
+    );
+  }
+}
+
+for (const name of tags.keys()) {
+  if (!(name in spec.requiredTags)) {
+    fail(`Unerwarteter Tag: ${name}`);
+  }
+}
+
 console.log(
   `Player-Atlas gültig: ${frameEntries.length} Frames, ` +
   `${tags.size} Tags, ${expectedWidth}x${expectedHeight}px`,

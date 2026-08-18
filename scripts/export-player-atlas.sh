@@ -68,6 +68,27 @@ if [[ ! -s "${OUTPUT_JSON}" ]]; then
   exit 1
 fi
 
+# Eine unter WSL ausgeführte Windows-Aseprite-Binary schreibt die
+# Atlas-Metadaten mit CRLF. Für reproduzierbare Git-Diffs wird das
+# exportierte Textformat unmittelbar auf LF normalisiert.
+node --input-type=module - "${OUTPUT_JSON}" <<'NORMALIZE_JSON_EOF'
+import fs from "node:fs";
+
+const file = process.argv[2];
+
+if (!file) {
+  throw new Error("Pfad zur Atlas-JSON-Datei fehlt.");
+}
+
+const original = fs.readFileSync(file, "utf8");
+const normalized = original.replace(/\r\n?/g, "\n");
+
+if (normalized !== original) {
+  fs.writeFileSync(file, normalized, "utf8");
+  console.log("Atlas-JSON-Zeilenenden wurden auf LF normalisiert.");
+}
+NORMALIZE_JSON_EOF
+
 cd "${PROJECT}"
 
 node - <<'NODE_EOF'
