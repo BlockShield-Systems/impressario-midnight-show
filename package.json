@@ -19,7 +19,9 @@
     "assets:player": "bash scripts/export-player-atlas.sh",
     "assets:player:validate": "node scripts/validate-player-atlas.mjs",
     "assets:audio": "bash scripts/export-audio.sh",
-    "assets:build": "npm run assets:player && npm run assets:audio && npm run build"
+    "assets:build": "npm run assets:player && npm run assets:enemies && npm run assets:audio && npm run build",
+    "assets:enemies": "bash scripts/generate-enemy-source.sh && bash scripts/export-enemy-atlas.sh",
+    "assets:enemies:validate": "node scripts/validate-enemy-atlas.mjs"
   },
   "dependencies": {
     "phaser": "4.2.1"

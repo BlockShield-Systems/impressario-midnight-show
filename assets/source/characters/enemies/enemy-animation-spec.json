@@ -1,0 +1,465 @@
+{
+  "schemaVersion": 2,
+  "atlasKey": "enemies",
+  "frameWidth": 64,
+  "frameHeight": 64,
+  "frameCount": 318,
+  "tagCount": 58,
+  "sourceFacing": "right",
+  "bossIncluded": false,
+  "bossPackage": "M7F",
+  "archetypes": {
+    "stagehand": {
+      "displayName": "Masked Stagehand",
+      "design": "Stocky masked worker with apron, rope hook and broad silhouette"
+    },
+    "card_thrower": {
+      "displayName": "Card Thrower",
+      "design": "Slender card illusionist with asymmetric sleeves and card fan"
+    },
+    "shadow_acrobat": {
+      "displayName": "Shadow Acrobat",
+      "design": "Bent long-limbed acrobat with bandages and crescent posture"
+    },
+    "light_wraith": {
+      "displayName": "Light Wraith",
+      "design": "Incorporeal mask spirit with luminous core and torn floating tail"
+    },
+    "card_sentry": {
+      "displayName": "Card Sentry",
+      "design": "Non-humanoid floating card knight and shield totem"
+    },
+    "echo_duelist": {
+      "displayName": "Echo Duelist",
+      "design": "Aristocratic mirror knight with rapier and half cloak"
+    },
+    "echo_caster": {
+      "displayName": "Echo Caster",
+      "design": "Floating court mage with prism crown and orbiting shards"
+    },
+    "training_dummy": {
+      "displayName": "Training Dummy",
+      "design": "Mechanical theatre puppet with target body and spring base"
+    },
+    "core_duelist": {
+      "displayName": "Core Duelist",
+      "design": "Broken reflection with shard blade and corrupted split silhouette"
+    },
+    "core_caster": {
+      "displayName": "Core Caster",
+      "design": "Unstable mirror apparition surrounded by rotating fragments"
+    },
+    "core_mime": {
+      "displayName": "Core Mime",
+      "design": "Monochrome pantomime with elongated hands and echo gestures"
+    }
+  },
+  "requiredTags": {
+    "stagehand_idle": {
+      "from": 0,
+      "to": 5,
+      "frameDurationMs": 110,
+      "repeat": false,
+      "archetype": "stagehand"
+    },
+    "stagehand_walk": {
+      "from": 6,
+      "to": 13,
+      "frameDurationMs": 75,
+      "repeat": false,
+      "archetype": "stagehand"
+    },
+    "stagehand_alert": {
+      "from": 14,
+      "to": 18,
+      "frameDurationMs": 80,
+      "repeat": true,
+      "archetype": "stagehand"
+    },
+    "stagehand_hurt": {
+      "from": 19,
+      "to": 22,
+      "frameDurationMs": 70,
+      "repeat": true,
+      "archetype": "stagehand"
+    },
+    "stagehand_defeat": {
+      "from": 23,
+      "to": 26,
+      "frameDurationMs": 110,
+      "repeat": true,
+      "archetype": "stagehand"
+    },
+    "thrower_idle": {
+      "from": 27,
+      "to": 32,
+      "frameDurationMs": 110,
+      "repeat": false,
+      "archetype": "card_thrower"
+    },
+    "thrower_move": {
+      "from": 33,
+      "to": 40,
+      "frameDurationMs": 75,
+      "repeat": false,
+      "archetype": "card_thrower"
+    },
+    "thrower_telegraph": {
+      "from": 41,
+      "to": 45,
+      "frameDurationMs": 76,
+      "repeat": true,
+      "archetype": "card_thrower"
+    },
+    "thrower_cooldown": {
+      "from": 46,
+      "to": 50,
+      "frameDurationMs": 90,
+      "repeat": true,
+      "archetype": "card_thrower"
+    },
+    "thrower_hurt": {
+      "from": 51,
+      "to": 54,
+      "frameDurationMs": 70,
+      "repeat": true,
+      "archetype": "card_thrower"
+    },
+    "thrower_defeat": {
+      "from": 55,
+      "to": 58,
+      "frameDurationMs": 110,
+      "repeat": true,
+      "archetype": "card_thrower"
+    },
+    "acrobat_stalk": {
+      "from": 59,
+      "to": 66,
+      "frameDurationMs": 75,
+      "repeat": false,
+      "archetype": "shadow_acrobat"
+    },
+    "acrobat_telegraph": {
+      "from": 67,
+      "to": 71,
+      "frameDurationMs": 90,
+      "repeat": true,
+      "archetype": "shadow_acrobat"
+    },
+    "acrobat_leap": {
+      "from": 72,
+      "to": 78,
+      "frameDurationMs": 70,
+      "repeat": false,
+      "archetype": "shadow_acrobat"
+    },
+    "acrobat_hurt": {
+      "from": 79,
+      "to": 82,
+      "frameDurationMs": 70,
+      "repeat": true,
+      "archetype": "shadow_acrobat"
+    },
+    "acrobat_defeat": {
+      "from": 83,
+      "to": 86,
+      "frameDurationMs": 110,
+      "repeat": true,
+      "archetype": "shadow_acrobat"
+    },
+    "wraith_hover": {
+      "from": 87,
+      "to": 94,
+      "frameDurationMs": 90,
+      "repeat": false,
+      "archetype": "light_wraith"
+    },
+    "wraith_telegraph": {
+      "from": 95,
+      "to": 100,
+      "frameDurationMs": 70,
+      "repeat": true,
+      "archetype": "light_wraith"
+    },
+    "wraith_charge": {
+      "from": 101,
+      "to": 107,
+      "frameDurationMs": 60,
+      "repeat": false,
+      "archetype": "light_wraith"
+    },
+    "wraith_hurt": {
+      "from": 108,
+      "to": 111,
+      "frameDurationMs": 70,
+      "repeat": true,
+      "archetype": "light_wraith"
+    },
+    "wraith_defeat": {
+      "from": 112,
+      "to": 115,
+      "frameDurationMs": 110,
+      "repeat": true,
+      "archetype": "light_wraith"
+    },
+    "sentry_idle": {
+      "from": 116,
+      "to": 121,
+      "frameDurationMs": 110,
+      "repeat": false,
+      "archetype": "card_sentry"
+    },
+    "sentry_telegraph": {
+      "from": 122,
+      "to": 127,
+      "frameDurationMs": 70,
+      "repeat": true,
+      "archetype": "card_sentry"
+    },
+    "sentry_cooldown": {
+      "from": 128,
+      "to": 134,
+      "frameDurationMs": 80,
+      "repeat": true,
+      "archetype": "card_sentry"
+    },
+    "sentry_hurt": {
+      "from": 135,
+      "to": 138,
+      "frameDurationMs": 70,
+      "repeat": true,
+      "archetype": "card_sentry"
+    },
+    "sentry_defeat": {
+      "from": 139,
+      "to": 142,
+      "frameDurationMs": 110,
+      "repeat": true,
+      "archetype": "card_sentry"
+    },
+    "echo_duelist_patrol": {
+      "from": 143,
+      "to": 150,
+      "frameDurationMs": 75,
+      "repeat": false,
+      "archetype": "echo_duelist"
+    },
+    "echo_duelist_telegraph": {
+      "from": 151,
+      "to": 155,
+      "frameDurationMs": 84,
+      "repeat": true,
+      "archetype": "echo_duelist"
+    },
+    "echo_duelist_dash": {
+      "from": 156,
+      "to": 162,
+      "frameDurationMs": 60,
+      "repeat": false,
+      "archetype": "echo_duelist"
+    },
+    "echo_duelist_cooldown": {
+      "from": 163,
+      "to": 166,
+      "frameDurationMs": 100,
+      "repeat": true,
+      "archetype": "echo_duelist"
+    },
+    "echo_duelist_hurt": {
+      "from": 167,
+      "to": 170,
+      "frameDurationMs": 70,
+      "repeat": true,
+      "archetype": "echo_duelist"
+    },
+    "echo_duelist_defeat": {
+      "from": 171,
+      "to": 174,
+      "frameDurationMs": 110,
+      "repeat": true,
+      "archetype": "echo_duelist"
+    },
+    "echo_caster_hover": {
+      "from": 175,
+      "to": 182,
+      "frameDurationMs": 90,
+      "repeat": false,
+      "archetype": "echo_caster"
+    },
+    "echo_caster_telegraph": {
+      "from": 183,
+      "to": 188,
+      "frameDurationMs": 70,
+      "repeat": true,
+      "archetype": "echo_caster"
+    },
+    "echo_caster_cooldown": {
+      "from": 189,
+      "to": 193,
+      "frameDurationMs": 90,
+      "repeat": true,
+      "archetype": "echo_caster"
+    },
+    "echo_caster_hurt": {
+      "from": 194,
+      "to": 197,
+      "frameDurationMs": 70,
+      "repeat": true,
+      "archetype": "echo_caster"
+    },
+    "echo_caster_defeat": {
+      "from": 198,
+      "to": 201,
+      "frameDurationMs": 110,
+      "repeat": true,
+      "archetype": "echo_caster"
+    },
+    "dummy_idle": {
+      "from": 202,
+      "to": 207,
+      "frameDurationMs": 130,
+      "repeat": true,
+      "archetype": "training_dummy"
+    },
+    "dummy_hit": {
+      "from": 208,
+      "to": 211,
+      "frameDurationMs": 70,
+      "repeat": false,
+      "archetype": "training_dummy"
+    },
+    "dummy_heavy_hit": {
+      "from": 212,
+      "to": 216,
+      "frameDurationMs": 75,
+      "repeat": false,
+      "archetype": "training_dummy"
+    },
+    "dummy_reset": {
+      "from": 217,
+      "to": 220,
+      "frameDurationMs": 90,
+      "repeat": false,
+      "archetype": "training_dummy"
+    },
+    "core_duelist_idle": {
+      "from": 221,
+      "to": 226,
+      "frameDurationMs": 120,
+      "repeat": true,
+      "archetype": "core_duelist"
+    },
+    "core_duelist_patrol": {
+      "from": 227,
+      "to": 234,
+      "frameDurationMs": 90,
+      "repeat": true,
+      "archetype": "core_duelist"
+    },
+    "core_duelist_telegraph": {
+      "from": 235,
+      "to": 239,
+      "frameDurationMs": 75,
+      "repeat": false,
+      "archetype": "core_duelist"
+    },
+    "core_duelist_dash": {
+      "from": 240,
+      "to": 244,
+      "frameDurationMs": 65,
+      "repeat": false,
+      "archetype": "core_duelist"
+    },
+    "core_duelist_stagger": {
+      "from": 245,
+      "to": 248,
+      "frameDurationMs": 75,
+      "repeat": false,
+      "archetype": "core_duelist"
+    },
+    "core_duelist_defeated": {
+      "from": 249,
+      "to": 253,
+      "frameDurationMs": 90,
+      "repeat": false,
+      "archetype": "core_duelist"
+    },
+    "core_caster_hover": {
+      "from": 254,
+      "to": 261,
+      "frameDurationMs": 110,
+      "repeat": true,
+      "archetype": "core_caster"
+    },
+    "core_caster_telegraph": {
+      "from": 262,
+      "to": 267,
+      "frameDurationMs": 80,
+      "repeat": false,
+      "archetype": "core_caster"
+    },
+    "core_caster_cast": {
+      "from": 268,
+      "to": 272,
+      "frameDurationMs": 70,
+      "repeat": false,
+      "archetype": "core_caster"
+    },
+    "core_caster_stagger": {
+      "from": 273,
+      "to": 276,
+      "frameDurationMs": 75,
+      "repeat": false,
+      "archetype": "core_caster"
+    },
+    "core_caster_defeated": {
+      "from": 277,
+      "to": 281,
+      "frameDurationMs": 90,
+      "repeat": false,
+      "archetype": "core_caster"
+    },
+    "core_mime_idle": {
+      "from": 282,
+      "to": 287,
+      "frameDurationMs": 125,
+      "repeat": true,
+      "archetype": "core_mime"
+    },
+    "core_mime_stalk": {
+      "from": 288,
+      "to": 295,
+      "frameDurationMs": 95,
+      "repeat": true,
+      "archetype": "core_mime"
+    },
+    "core_mime_record": {
+      "from": 296,
+      "to": 301,
+      "frameDurationMs": 85,
+      "repeat": false,
+      "archetype": "core_mime"
+    },
+    "core_mime_mimic": {
+      "from": 302,
+      "to": 308,
+      "frameDurationMs": 70,
+      "repeat": false,
+      "archetype": "core_mime"
+    },
+    "core_mime_stagger": {
+      "from": 309,
+      "to": 312,
+      "frameDurationMs": 75,
+      "repeat": false,
+      "archetype": "core_mime"
+    },
+    "core_mime_defeated": {
+      "from": 313,
+      "to": 317,
+      "frameDurationMs": 90,
+      "repeat": false,
+      "archetype": "core_mime"
+    }
+  }
+}
