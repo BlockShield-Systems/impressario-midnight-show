@@ -1,0 +1,43 @@
+IMPRESSARIO – THE MIDNIGHT SHOW
+MILESTONE 4A: THE GRAND GALLERY
+
+New section:
+
+- World expanded from 4800 to 6400 pixels
+- New Act IV traversal section
+- Immediate scenery change after The Main Stage
+- Midnight-blue, violet, cyan and gold palette
+- Gallery windows with stars
+- Decorative picture frames and card-suit emblems
+- Chandeliers and architectural trim
+- Dedicated Grand Gallery platform design
+- New Grand Gallery checkpoint
+- Act IV title transition
+- Spotlight Sigil foreshadowing
+
+Design rule introduced:
+
+Every major act must have its own readable environment identity:
+
+- distinct dominant colors
+- distinct architecture
+- distinct lighting
+- distinct foreground/platform treatment
+- clear transition landmark
+
+Next milestone:
+
+- Spotlight Sigil interaction
+- First spell unlock
+- Show Meter
+- Spotlight spell tutorial
+- Shadow enemy vulnerable to magical light
+
+Development:
+
+npm install
+npm run dev
+
+Verification:
+
+npm run build

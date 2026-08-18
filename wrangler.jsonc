@@ -1,0 +1,40 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "impressario-midnight-show",
+  "main": "worker/src/index.ts",
+  "compatibility_date": "2026-08-18",
+  "workers_dev": true,
+  "preview_urls": true,
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "run_worker_first": [
+      "/api/*"
+    ],
+    "not_found_handling": "single-page-application"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "impressario-leaderboard",
+      "database_id": "8a5731ee-c376-480f-8764-36072c693553",
+      "migrations_dir": "worker/migrations"
+    }
+  ],
+  "ratelimits": [
+    {
+      "name": "START_LIMITER",
+      "namespace_id": "1001",
+      "simple": {
+        "limit": 8,
+        "period": 60
+      }
+    }
+  ],
+  "vars": {
+    "TURNSTILE_SITE_KEY": "0x4AAAAAAETYILffpEJOeLSk",
+    "ALLOWED_ORIGIN": "https://impressario-midnight-show.contact-541.workers.dev",
+    "BUILD_VERSION": "0.7.0",
+    "ENVIRONMENT": "production"
+  }
+}

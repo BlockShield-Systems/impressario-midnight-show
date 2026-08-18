@@ -1,0 +1,37 @@
+IMPRESSARIO – THE MIDNIGHT SHOW
+MILESTONE 3B: RANGED ENEMIES AND MAIN STAGE ENCOUNTER
+
+New systems:
+
+- Five-point player health
+- Damage invulnerability window
+- Knockback and death/respawn sequence
+- Main Stage checkpoint
+- Three Masked Stagehands
+- Two ranged Card Throwers
+- Telegraph before every ranged attack
+- Dodgeable card projectiles
+- Locked Main Stage encounter
+- Dynamic entrance and exit gates
+- Enemy counter
+- Permanent encounter defeat state
+- Exit route after clearing the arena
+
+Controls:
+
+A / D or Arrow Left / Right = Move
+Space = Jump / Double Jump
+Shift = Dash
+W or Arrow Up = Up Attack modifier
+S or Arrow Down = Down Attack modifier
+J or Gamepad X = Cane Attack
+F3 = Toggle debug overlays
+
+Development:
+
+npm install
+npm run dev
+
+Verification:
+
+npm run build

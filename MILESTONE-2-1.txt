@@ -1,0 +1,30 @@
+IMPRESSARIO – THE MIDNIGHT SHOW
+MILESTONE 2.1: COMBAT TUTORIAL POLISH
+
+Start:
+
+    npm install
+    npm run dev
+
+Controls:
+
+    A / D or Arrow Left / Right = Move
+    Space = Jump / Double Jump
+    Shift = Dash
+    W or Arrow Up = Up Attack modifier
+    S or Arrow Down = Down Attack modifier
+    J or Gamepad X = Cane Attack
+    F3 = Toggle movement and hitbox debug display
+
+Changes:
+
+    - Expanded world width
+    - Dedicated ground-level combat arena
+    - Safe transition from movement to combat
+    - Combat objective activates inside the arena
+    - Camera locks during the combat rehearsal
+    - Camera releases after objective 9
+    - Debug overlays are disabled by default
+    - Training dummy repositioned and constrained to the arena
+    - English-only visible text
+    - LDtk level dimensions updated

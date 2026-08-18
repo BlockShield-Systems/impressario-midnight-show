@@ -1,0 +1,59 @@
+IMPRESSARIO – THE MIDNIGHT SHOW
+MILESTONE 5A: THE SPOTLIGHT VAULT
+
+New content:
+
+- Spotlight spell unlock
+- K keyboard binding
+- Show Meter
+- Spell cost and passive regeneration
+- Expanding Spotlight area effect
+- Two Light Wraith enemies
+- Reduced physical damage against Wraiths
+- High Spotlight damage against Wraiths
+- Telegraph and charge attack
+- Locked spell-training arena
+- Full arena reset after death
+- New Spotlight Vault scenery
+- Exit toward the Card Sanctum
+
+Controls:
+
+K = Spotlight spell
+J = Staff attack
+W/S + J = Directional staff attacks
+Space = Jump / Double Jump
+Shift = Dash
+F3 = Debug display
+
+Balance:
+
+Spotlight:
+- Cost: 30 Show
+- Maximum Show: 100
+- Regeneration: 12 per second
+- Radius: 155 pixels
+- Damage to Wraiths: 18
+- Cooldown: 0.55 seconds
+
+Light Wraith:
+- Health: 30
+- Physical damage received: 20%
+- Spotlight casts required: 2
+- Contact damage: 1 health point
+
+Next milestone:
+
+- Card Storm spell
+- Card Sanctum environment
+- Spell selection
+- Mixed physical and magical encounter
+
+Development:
+
+npm install
+npm run dev
+
+Verification:
+
+npm run build

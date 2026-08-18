@@ -1,0 +1,25 @@
+IMPRESSARIO – THE MIDNIGHT SHOW
+MILESTONE 3B.1: ENCOUNTER RETRY AND ONE-WAY GATE FLOW
+
+Fixed encounter lifecycle:
+
+- The entrance remains open before the encounter.
+- Crossing the arena threshold closes the gate behind the player.
+- The player cannot leave while enemies remain alive.
+- Death respawns the player at The Main Stage checkpoint.
+- Death opens both arena gates.
+- All three Stagehands respawn with full health.
+- Both Card Throwers respawn with full health.
+- All active card projectiles are removed.
+- The enemy counter restarts at 0/5.
+- Re-entering the arena starts a clean attempt.
+- Clearing all five enemies permanently opens the exit.
+
+Development:
+
+npm install
+npm run dev
+
+Verification:
+
+npm run build

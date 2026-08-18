@@ -1,0 +1,34 @@
+IMPRESSARIO — THE MIDNIGHT SHOW
+MILESTONE 6A: THE FRACTURED ROYAL BOX
+
+Fixes:
+
+- Added a reachable opposed-wall ascent after the final Card Sentry.
+- Spotlight key K no longer queues a movement dash.
+- Card Sanctum scenery now ends at x=12000.
+
+New act:
+
+- ACT VII — The Fractured Royal Box
+- World width expanded from 12000 to 14400.
+- New black, cyan and magenta mirror-palace scenery.
+- Upper technical and lower hazard routes.
+- Two mandatory wall-jump ascents.
+- Fatal voids.
+- Five spike fields.
+- Four moving mirror blades.
+- Four telegraphed laser barriers.
+- Two Mirror Duelists.
+- Two Prism Casters.
+- Exit gate remains locked until all four Royal Echoes are defeated.
+- Death resets enemies, projectiles, hazards and the exit gate.
+- Checkpoint at the Royal Box entrance.
+
+Development:
+
+    npm install
+    npm run dev
+
+Verification:
+
+    npm run build

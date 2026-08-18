@@ -1,0 +1,32 @@
+IMPRESSARIO – THE MIDNIGHT SHOW
+MILESTONE 3A: FIRST ENEMY ENCOUNTER
+
+Start:
+
+    npm install
+    npm run dev
+
+New content:
+
+    - ACT III: The Main Stage
+    - Shared CombatTarget interface
+    - Three Masked Stagehands
+    - Patrol, alert, chase, stagger and defeated states
+    - Cane attacks damage moving enemies
+    - Launchers and knockback affect enemies
+    - Temporary enemy respawn for repeated testing
+
+Controls:
+
+    A / D or Arrow Left / Right = Move
+    Space = Jump / Double Jump
+    Shift = Dash
+    W or Arrow Up = Up Attack modifier
+    S or Arrow Down = Down Attack modifier
+    J or Gamepad X = Cane Attack
+    F3 = Toggle debug overlays
+
+Current limitation:
+
+    Stagehands apply contact push but do not yet damage player health.
+    Player health, i-frames and checkpoints are the next combat milestone.

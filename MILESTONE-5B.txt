@@ -1,0 +1,45 @@
+IMPRESSARIO – THE MIDNIGHT SHOW
+MILESTONE 5B: THE CARD SANCTUM
+
+New challenge section:
+
+- World expanded to 12000 pixels
+- Two-route level design
+- Upper technical route
+- Lower hazard route
+- Multiple fatal voids
+- Wall-jump shaft
+- Double-jump and air-dash sequences
+- Jump → dash → double-jump sequence
+- Four moving card blades
+- Four spike fields
+- Three Card Sentry enemies
+- Telegraph and aimed projectiles
+- Locked exit until all Sentries are defeated
+- Complete Sanctum reset after death
+
+Difficulty philosophy:
+
+- Harder through combined mechanics
+- Hazards remain visibly telegraphed
+- Alternative routes support different play styles
+- Stable platforms exist before major commitments
+- No mandatory blind jumps
+- Death returns to the start of the Sanctum challenge
+
+Next milestone:
+
+- Card Storm spell
+- Royal Box
+- Mixed enemy arena
+- Elite Royal Guard
+- Preparation for The False Maestro
+
+Development:
+
+npm install
+npm run dev
+
+Verification:
+
+npm run build

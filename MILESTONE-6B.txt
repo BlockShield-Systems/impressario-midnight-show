@@ -1,0 +1,52 @@
+IMPRESSARIO — THE MIDNIGHT SHOW
+MILESTONE 6B
+ACT VIII — THE MIRROR CORE
+
+WORLD
+- World size: 17280 x 720
+- Mirror Core range: x=14400..17280
+- Distinct black-blue mirror-glass biome
+- Cyan, magenta and gold readability language
+- Refraction Ascent, Kaleidoscope Gauntlet and Core Chamber
+
+PROGRESSION
+- Two Grand-Card Mirror Relays
+- Relay gate opens only after both ranged activations
+- Checkpoint at the Mirror Core entrance
+- Checkpoint after both relays
+- Checkpoint before the Core Chamber
+- Deterministic reset after player death
+
+ACROBATICS
+- Upper and lower routes
+- Wall-jump convergence
+- Air-dash laser windows
+- Three moving collision platforms
+- Look-down-compatible safe lower landings
+- Rotating core beams
+- Alternating Phase-3 floor hazard
+
+ENEMIES
+- Mirror Duelist
+- Prism Caster
+- Reflection Mime
+- Delayed mirrored movement
+- Combined melee, Grand Card and movement pressure
+
+BOSS
+- The Mirror Conductor
+- Phase 1: Spotlight breaks Reflected Guard
+- Phase 2: Grand Card marks the real Conductor
+- Phase 3: Curtain Collapse and rotating core beams
+- Boss defeat permanently opens the ACT IX exit
+
+SUPPORT
+- Four Encore Roses
+- Grand Card remains active through x=17280
+- Existing SHOW meter remains shared
+- Fatal void remains active after encounters
+
+VALIDATION
+- bash -n create-milestone-6a.sh
+- npm run build
+- production bundle checks

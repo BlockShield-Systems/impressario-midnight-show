@@ -1,0 +1,32 @@
+IMPRESSARIO – THE MIDNIGHT SHOW
+MILESTONE 2: COMBAT FOUNDATION
+
+Start:
+
+    npm install
+    npm run dev
+
+Movement:
+
+    A/D or Arrow Left/Right = Move
+    Space or W = Jump / Double Jump
+    Shift = Dash
+    S or Arrow Down = Fast Fall
+
+Combat:
+
+    J or Gamepad X = Cane Attack
+    J, J, J = Ground Combo
+    Down + J = Low Sweep
+    Up + J = Up Launcher
+    Air + J = Air Neutral
+    Air + Up + J = Air Up
+    Air + Down + J = Down Strike
+    Dash + J = Dash Attack
+
+LDtk project:
+
+    public/assets/levels/prologue.ldtk
+
+The LDtk project is a valid editable project seed.
+Runtime collision migration follows after combat tuning.

@@ -1,0 +1,43 @@
+IMPRESSARIO – THE MIDNIGHT SHOW
+MILESTONE 4B: THE GALLERY GAUNTLET
+
+Difficulty progression:
+
+- World expanded to 8200 x 720
+- Vertical camera movement
+- Two fatal void sections
+- Damage-dealing spike fields
+- Two moving pendulum blade traps
+- Lower combat floor
+- Vertical platform ascent
+- Two Acrobatic Shadow enemies
+- Telegraph before every shadow leap
+- Entry and midpoint checkpoints
+- Full gauntlet reset after death
+- New deep-gallery environment treatment
+
+Fairness rules:
+
+- Fatal jumps are preceded by stable ground
+- Moving traps use a readable rhythm
+- Enemy leap attacks have visible telegraphs
+- Enemies are placed on stable combat surfaces
+- Checkpoints separate the major challenge sections
+- No blind jump is required
+
+Next milestone:
+
+- Spotlight Vault
+- Spotlight spell unlock
+- Magic meter
+- Spell tutorial
+- Light-sensitive shadow encounter
+
+Development:
+
+npm install
+npm run dev
+
+Verification:
+
+npm run build
