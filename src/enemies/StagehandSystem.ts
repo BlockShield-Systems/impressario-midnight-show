@@ -1,5 +1,7 @@
 import Phaser from "phaser";
 
+import { EnemyView } from "./EnemyView";
+
 import type {
   CombatSystem,
   CombatTarget
@@ -65,7 +67,8 @@ class MaskedStagehand implements CombatTarget {
   private alertTimer = 0;
   private contactCooldown = 0;
 
-  private readonly graphics: Phaser.GameObjects.Graphics;
+  private readonly view: EnemyView;
+
   private readonly label: Phaser.GameObjects.Text;
 
   public constructor(
@@ -77,8 +80,8 @@ class MaskedStagehand implements CombatTarget {
     this.x = spawn.x;
     this.y = spawn.y;
 
-    this.graphics = scene.add.graphics();
-    this.graphics.setDepth(15);
+    this.view = new EnemyView(scene, 17);
+
 
     this.label = scene.add.text(
       this.x,
@@ -391,135 +394,43 @@ class MaskedStagehand implements CombatTarget {
   }
 
   private redraw(): void {
-    const g = this.graphics;
-    g.clear();
+    const tag =
+      this.state === "defeated"
+        ? "stagehand_defeat"
+        : this.state === "stagger"
+          ? "stagehand_hurt"
+          : this.state === "alert"
+            ? "stagehand_alert"
+            : Math.abs(this.velocityX) > 5
+              ? "stagehand_walk"
+              : "stagehand_idle";
 
-    if (!this.enabled) {
+    this.view.update({
+      x: this.x,
+      y: this.y,
+      width: this.width,
+      height: this.height,
+      facing: this.direction,
+      visible: this.enabled,
+      tag,
+      flashing: this.flashTimer > 0
+    });
+
+    if (
+      !this.enabled ||
+      this.state === "defeated"
+    ) {
       this.label.setVisible(false);
       return;
     }
 
-    if (this.state === "defeated") {
-      this.label.setVisible(false);
-
-      g.fillStyle(0x1c1015, 0.4);
-
-      g.fillEllipse(
-        this.x + 9,
-        323,
-        29,
-        6
-      );
-
-      g.lineStyle(
-        4,
-        0x5d2436,
-        0.6
-      );
-
-      g.lineBetween(
-        this.x + 1,
-        this.y + 26,
-        this.x + 19,
-        this.y + 30
-      );
-
-      return;
-    }
-
-    this.label.setVisible(true);
-
-    const bodyColor =
-      this.flashTimer > 0
-        ? 0xffefd0
-        : 0x34202a;
-
-    g.fillStyle(0x000000, 0.3);
-    g.fillEllipse(
-      this.x + 9,
-      329,
-      25,
-      6
-    );
-
-    g.fillStyle(bodyColor, 1);
-    g.fillRoundedRect(
-      this.x + 2,
-      this.y + 10,
-      14,
-      18,
-      3
-    );
-
-    g.fillStyle(0xe4d5c4, 1);
-    g.fillRoundedRect(
-      this.x + 3,
-      this.y + 1,
-      12,
-      10,
-      4
-    );
-
-    g.fillStyle(0x180d12, 1);
-    g.fillCircle(
-      this.x + 6,
-      this.y + 5,
-      1.5
-    );
-
-    g.fillCircle(
-      this.x + 12,
-      this.y + 5,
-      1.5
-    );
-
-    g.fillStyle(0x181016, 1);
-    g.fillRect(
-      this.x + 1,
-      this.y - 3,
-      16,
-      3
-    );
-
-    g.lineStyle(
-      3,
-      0x5d2436,
-      1
-    );
-
-    const armOffset =
-      this.direction === 1
-        ? 4
-        : -4;
-
-    g.lineBetween(
-      this.x + 9,
-      this.y + 15,
-      this.x + 9 + armOffset,
-      this.y + 24
-    );
-
-    if (this.state === "alert") {
-      g.fillStyle(0xf6cc61, 1);
-
-      g.fillTriangle(
-        this.x + 7,
-        this.y - 17,
-        this.x + 11,
-        this.y - 17,
-        this.x + 9,
-        this.y - 8
-      );
-    }
-
-    this.label.setPosition(
-      this.x - 6,
-      this.y - 15
-    );
-
-    this.label.setText(
-      `HP ${this.health}`
-    );
+    this.label
+      .setVisible(true)
+      .setPosition(
+        this.x - 5,
+        this.y - 15
+      )
+      .setText(`HP ${this.health}`);
   }
 }
 

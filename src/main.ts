@@ -6,6 +6,7 @@ import { StagehandSystem } from "./enemies/StagehandSystem";
 import { CardThrowerSystem } from "./enemies/CardThrowerSystem";
 import { PlayerHealthSystem } from "./player/PlayerHealthSystem";
 import { PlayerView } from "./player/PlayerView";
+import { EnemyView } from "./enemies/EnemyView";
 import { ShadowAcrobatSystem } from "./enemies/ShadowAcrobatSystem";
 import { GalleryHazardSystem } from "./world/GalleryHazardSystem";
 import { MagicSystem } from "./magic/MagicSystem";
@@ -925,6 +926,7 @@ class GameScene extends Phaser.Scene {
 
   public preload(): void {
     PlayerView.preload(this);
+    EnemyView.preload(this);
   }
 
   public create(): void {

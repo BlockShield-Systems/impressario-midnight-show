@@ -1,5 +1,7 @@
 import Phaser from "phaser";
 
+import { EnemyView } from "./EnemyView";
+
 import type {
   CombatSystem,
   CombatTarget
@@ -97,8 +99,8 @@ class RoyalEcho implements CombatTarget {
   private flashTimer = 0;
   private contactCooldown = 0;
 
-  private readonly graphics:
-    Phaser.GameObjects.Graphics;
+  private readonly view: EnemyView;
+
 
   private readonly label:
     Phaser.GameObjects.Text;
@@ -123,8 +125,8 @@ class RoyalEcho implements CombatTarget {
         ? 52
         : 40;
 
-    this.graphics = scene.add.graphics();
-    this.graphics.setDepth(31);
+    this.view = new EnemyView(scene, 31);
+
 
     this.label = scene.add.text(
       this.x,
@@ -592,189 +594,59 @@ class RoyalEcho implements CombatTarget {
   }
 
   private redraw(): void {
-    const g = this.graphics;
-    g.clear();
-
-    if (!this.enabled) {
-      this.label.setVisible(false);
-      return;
-    }
-
-    if (this.state === "defeated") {
-      this.label.setVisible(false);
-
-      g.fillStyle(0x080912, 0.55);
-      g.fillEllipse(
-        this.x + 11,
-        this.y + 31,
-        31,
-        7
-      );
-
-      g.lineStyle(3, 0x863c92, 0.55);
-      g.lineBetween(
-        this.x,
-        this.y + 27,
-        this.x + 22,
-        this.y + 31
-      );
-
-      return;
-    }
-
-    this.label.setVisible(true);
-
-    const centerX =
-      this.x + this.width * 0.5;
-
-    const centerY =
-      this.y + this.height * 0.5;
-
-    const bodyColor =
-      this.flashTimer > 0
-        ? 0xffffff
-        : this.spawn.kind === "duelist"
-          ? 0x4c174f
-          : 0x142d4d;
-
-    g.fillStyle(0x02040a, 0.35);
-    g.fillEllipse(
-      centerX,
-      this.y + 34,
-      29,
-      7
-    );
-
-    g.fillStyle(bodyColor, 1);
-    g.fillRoundedRect(
-      this.x + 3,
-      this.y + 8,
-      16,
-      22,
-      4
-    );
-
-    g.fillStyle(
+    const tag =
       this.spawn.kind === "duelist"
-        ? 0xf0c75c
-        : 0x7de8ef,
-      1
-    );
+        ? this.state === "defeated"
+          ? "echo_duelist_defeat"
+          : this.state === "stagger"
+            ? "echo_duelist_hurt"
+            : this.state === "telegraph"
+              ? "echo_duelist_telegraph"
+              : this.state === "dash"
+                ? "echo_duelist_dash"
+                : this.state === "cooldown"
+                  ? "echo_duelist_cooldown"
+                  : "echo_duelist_patrol"
+        : this.state === "defeated"
+          ? "echo_caster_defeat"
+          : this.state === "stagger"
+            ? "echo_caster_hurt"
+            : this.state === "telegraph"
+              ? "echo_caster_telegraph"
+              : this.state === "cooldown"
+                ? "echo_caster_cooldown"
+                : "echo_caster_hover";
 
-    g.fillRoundedRect(
-      this.x + 4,
-      this.y,
-      14,
-      11,
-      4
-    );
+    this.view.update({
+      x: this.x,
+      y: this.y,
+      width: this.width,
+      height: this.height,
+      facing: this.facing,
+      visible: this.enabled,
+      tag,
+      flashing: this.flashTimer > 0
+    });
 
-    g.fillStyle(0x070914, 1);
-    g.fillCircle(
-      centerX - 3,
-      this.y + 5,
-      1.5
-    );
-
-    g.fillCircle(
-      centerX + 3,
-      this.y + 5,
-      1.5
-    );
-
-    if (this.spawn.kind === "duelist") {
-      g.lineStyle(3, 0xe4bd59, 1);
-
-      const tipX =
-        centerX +
-        this.facing * 17;
-
-      g.lineBetween(
-        centerX,
-        centerY,
-        tipX,
-        centerY - 9
-      );
-
-      if (this.state === "dash") {
-        g.lineStyle(2, 0xe777ef, 0.7);
-
-        for (
-          let index = 0;
-          index < 3;
-          index += 1
-        ) {
-          g.lineBetween(
-            centerX -
-              this.facing *
-              (16 + index * 7),
-            centerY - 7 + index * 7,
-            centerX -
-              this.facing *
-              (35 + index * 6),
-            centerY - 7 + index * 7
-          );
-        }
-      }
-    } else {
-      g.lineStyle(2, 0x80e8ef, 0.9);
-      g.strokeCircle(
-        centerX,
-        centerY,
-        16
-      );
-
-      g.fillStyle(0xd957a6, 0.9);
-      g.fillCircle(
-        centerX +
-          Math.cos(this.elapsed * 4) * 17,
-        centerY +
-          Math.sin(this.elapsed * 4) * 17,
-        3
-      );
-    }
-
-    if (this.state === "telegraph") {
-      const radius =
-        20 +
-        this.actionTimer * 20;
-
-      g.lineStyle(
-        2,
-        this.spawn.kind === "duelist"
-          ? 0xf0c85d
-          : 0xe46fc7,
-        1
-      );
-
-      g.strokeCircle(
-        centerX,
-        centerY,
-        radius
-      );
-
-      g.lineStyle(1, 0x82eaf1, 0.9);
-
-      g.lineBetween(
-        centerX,
-        centerY,
-        this.player.centerX,
-        this.player.centerY
-      );
+    if (
+      !this.enabled ||
+      this.state === "defeated"
+    ) {
+      this.label.setVisible(false);
+      return;
     }
 
     this.label
+      .setVisible(true)
       .setPosition(
         this.x - 5,
         this.y - 15
       )
-      .setText(
-        `${
-          this.spawn.kind === "duelist"
-            ? "DUEL"
-            : "PRISM"
-        } ${this.health}`
-      );
+      .setText(`${
+        this.spawn.kind === "duelist"
+          ? "DUEL"
+          : "PRISM"
+      } ${this.health}`);
   }
 }
 

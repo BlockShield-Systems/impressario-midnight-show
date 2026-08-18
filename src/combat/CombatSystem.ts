@@ -1,4 +1,6 @@
 import Phaser from "phaser";
+
+import { EnemyView } from "../enemies/EnemyView";
 import type { PlayerController } from "../main";
 
 export type AttackId =
@@ -362,14 +364,13 @@ class TrainingDummy implements CombatTarget {
   public health = 100;
   public flashTimer = 0;
 
-  private readonly graphics: Phaser.GameObjects.Graphics;
+  private readonly view: EnemyView;
   private readonly healthText: Phaser.GameObjects.Text;
 
   public constructor(
     scene: Phaser.Scene
   ) {
-    this.graphics = scene.add.graphics();
-    this.graphics.setDepth(16);
+    this.view = new EnemyView(scene, 16);
 
     this.healthText = scene.add.text(
       this.x - 12,
@@ -453,62 +454,26 @@ class TrainingDummy implements CombatTarget {
   }
 
   private redraw(): void {
-    const g = this.graphics;
-    g.clear();
+    this.view.update({
+      x: this.x,
+      y: this.y,
+      width: this.width,
+      height: this.height,
+      facing: 1,
+      visible: true,
+      tag:
+        this.flashTimer > 0
+          ? "dummy_hit"
+          : "dummy_idle",
+      flashing: this.flashTimer > 0
+    });
 
-    const bodyColor =
-      this.flashTimer > 0
-        ? 0xfff2c9
-        : 0x775033;
-
-    g.fillStyle(0x24151a, 0.35);
-    g.fillEllipse(
-      this.x + this.width * 0.5,
-      329,
-      27,
-      6
-    );
-
-    g.lineStyle(3, 0xc58b3e, 1);
-    g.lineBetween(
-      this.x + 9,
-      this.y + 6,
-      this.x + 9,
-      this.y + 30
-    );
-
-    g.fillStyle(bodyColor, 1);
-    g.fillRoundedRect(
-      this.x + 2,
-      this.y + 7,
-      14,
-      18,
-      3
-    );
-
-    g.fillStyle(0x8e1638, 1);
-    g.fillCircle(
-      this.x + 9,
-      this.y + 5,
-      6
-    );
-
-    g.lineStyle(2, 0xc58b3e, 1);
-    g.lineBetween(
-      this.x - 4,
-      this.y + 14,
-      this.x + 22,
-      this.y + 14
-    );
-
-    this.healthText.setPosition(
-      this.x - 3,
-      this.y - 14
-    );
-
-    this.healthText.setText(
-      `HP ${this.health}`
-    );
+    this.healthText
+      .setPosition(
+        this.x - 3,
+        this.y - 14
+      )
+      .setText(`HP ${this.health}`);
   }
 }
 

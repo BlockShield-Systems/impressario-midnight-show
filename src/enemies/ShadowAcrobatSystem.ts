@@ -1,5 +1,7 @@
 import Phaser from "phaser";
 
+import { EnemyView } from "./EnemyView";
+
 import type {
   CombatSystem,
   CombatTarget
@@ -59,7 +61,8 @@ class ShadowAcrobat implements CombatTarget {
   private flashTimer = 0;
   private contactCooldown = 0;
 
-  private readonly graphics: Phaser.GameObjects.Graphics;
+  private readonly view: EnemyView;
+
   private readonly label: Phaser.GameObjects.Text;
 
   public constructor(
@@ -72,8 +75,8 @@ class ShadowAcrobat implements CombatTarget {
     this.y =
       spawn.groundY - this.height;
 
-    this.graphics = scene.add.graphics();
-    this.graphics.setDepth(17);
+    this.view = new EnemyView(scene, 17);
+
 
     this.label = scene.add.text(
       this.x,
@@ -430,169 +433,43 @@ class ShadowAcrobat implements CombatTarget {
   }
 
   private redraw(): void {
-    const g = this.graphics;
-    g.clear();
+    const tag =
+      this.state === "defeated"
+        ? "acrobat_defeat"
+        : this.state === "stagger"
+          ? "acrobat_hurt"
+          : this.state === "telegraph"
+            ? "acrobat_telegraph"
+            : this.state === "leap"
+              ? "acrobat_leap"
+              : "acrobat_stalk";
 
-    if (!this.enabled) {
+    this.view.update({
+      x: this.x,
+      y: this.y,
+      width: this.width,
+      height: this.height,
+      facing: this.facing,
+      visible: this.enabled,
+      tag,
+      flashing: this.flashTimer > 0
+    });
+
+    if (
+      !this.enabled ||
+      this.state === "defeated"
+    ) {
       this.label.setVisible(false);
       return;
-    }
-
-    if (this.state === "defeated") {
-      this.label.setVisible(false);
-
-      g.fillStyle(
-        0x070b16,
-        0.5
-      );
-
-      g.fillEllipse(
-        this.x + 10,
-        this.spawn.groundY - 3,
-        31,
-        7
-      );
-
-      return;
-    }
-
-    this.label.setVisible(true);
-
-    const centerX =
-      this.x + this.width * 0.5;
-
-    const bodyColor =
-      this.flashTimer > 0
-        ? 0xeaffff
-        : 0x11172b;
-
-    g.fillStyle(
-      0x02040b,
-      0.38
-    );
-
-    g.fillEllipse(
-      centerX,
-      this.spawn.groundY + 2,
-      26,
-      6
-    );
-
-    g.fillStyle(
-      bodyColor,
-      1
-    );
-
-    g.fillTriangle(
-      centerX,
-      this.y + 5,
-      this.x + 1,
-      this.y + 27,
-      this.x + 18,
-      this.y + 27
-    );
-
-    g.fillStyle(
-      0x8be8ef,
-      0.92
-    );
-
-    g.fillCircle(
-      centerX,
-      this.y + 7,
-      6
-    );
-
-    g.fillStyle(
-      0x07101d,
-      1
-    );
-
-    g.fillCircle(
-      centerX - 2,
-      this.y + 6,
-      1.3
-    );
-
-    g.fillCircle(
-      centerX + 2,
-      this.y + 6,
-      1.3
-    );
-
-    g.lineStyle(
-      3,
-      0x513c79,
-      1
-    );
-
-    if (this.state === "leap") {
-      g.lineBetween(
-        centerX,
-        this.y + 16,
-        centerX - 13,
-        this.y + 4
-      );
-
-      g.lineBetween(
-        centerX,
-        this.y + 16,
-        centerX + 13,
-        this.y + 4
-      );
-    } else {
-      g.lineBetween(
-        centerX,
-        this.y + 16,
-        centerX - 10,
-        this.y + 23
-      );
-
-      g.lineBetween(
-        centerX,
-        this.y + 16,
-        centerX + 10,
-        this.y + 23
-      );
-    }
-
-    if (this.state === "telegraph") {
-      const pulse =
-        12 +
-        this.actionTimer * 16;
-
-      g.lineStyle(
-        2,
-        0xd6ae4e,
-        0.95
-      );
-
-      g.strokeCircle(
-        centerX,
-        this.spawn.groundY - 2,
-        pulse
-      );
-
-      g.fillStyle(
-        0x76e5ed,
-        0.25
-      );
-
-      g.fillCircle(
-        centerX,
-        this.spawn.groundY - 2,
-        pulse * 0.65
-      );
     }
 
     this.label
+      .setVisible(true)
       .setPosition(
         this.x - 5,
-        this.y - 16
+        this.y - 15
       )
-      .setText(
-        `HP ${this.health}`
-      );
+      .setText(`HP ${this.health}`);
   }
 }
 

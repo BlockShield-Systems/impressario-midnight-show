@@ -1,5 +1,7 @@
 import Phaser from "phaser";
 
+import { EnemyView } from "./EnemyView";
+
 import type {
   CombatSystem,
   CombatTarget
@@ -66,8 +68,8 @@ class CardSentry implements CombatTarget {
   private actionTimer = 0;
   private flashTimer = 0;
 
-  private readonly graphics:
-    Phaser.GameObjects.Graphics;
+  private readonly view: EnemyView;
+
 
   private readonly label:
     Phaser.GameObjects.Text;
@@ -86,8 +88,8 @@ class CardSentry implements CombatTarget {
     this.x = spawn.x;
     this.y = spawn.y;
 
-    this.graphics = scene.add.graphics();
-    this.graphics.setDepth(18);
+    this.view = new EnemyView(scene, 18);
+
 
     this.label = scene.add.text(
       this.x,
@@ -253,144 +255,46 @@ class CardSentry implements CombatTarget {
   }
 
   private redraw(): void {
-    const g = this.graphics;
-    g.clear();
+    const tag =
+      this.state === "defeated"
+        ? "sentry_defeat"
+        : this.state === "stagger"
+          ? "sentry_hurt"
+          : this.state === "telegraph"
+            ? "sentry_telegraph"
+            : this.state === "cooldown"
+              ? "sentry_cooldown"
+              : "sentry_idle";
 
-    if (!this.enabled) {
+    this.view.update({
+      x: this.x,
+      y: this.y,
+      width: this.width,
+      height: this.height,
+      facing: this.player.centerX <
+        this.x + this.width * 0.5
+          ? -1
+          : 1,
+      visible: this.enabled,
+      tag,
+      flashing: this.flashTimer > 0
+    });
+
+    if (
+      !this.enabled ||
+      this.state === "defeated"
+    ) {
       this.label.setVisible(false);
       return;
-    }
-
-    if (this.state === "defeated") {
-      this.label.setVisible(false);
-
-      g.fillStyle(
-        0xd6ac4b,
-        0.18
-      );
-
-      g.fillCircle(
-        this.x + 11,
-        this.y + 16,
-        21
-      );
-
-      return;
-    }
-
-    this.label.setVisible(true);
-
-    const centerX =
-      this.x + 11;
-
-    const centerY =
-      this.y + 16;
-
-    g.fillStyle(
-      0xd42f61,
-      0.18
-    );
-
-    g.fillCircle(
-      centerX,
-      centerY,
-      23
-    );
-
-    g.fillStyle(
-      this.flashTimer > 0
-        ? 0xffffff
-        : 0x27132d,
-      1
-    );
-
-    g.fillRoundedRect(
-      this.x,
-      this.y,
-      this.width,
-      this.height,
-      5
-    );
-
-    g.lineStyle(
-      3,
-      0xdfb44e,
-      1
-    );
-
-    g.strokeRoundedRect(
-      this.x,
-      this.y,
-      this.width,
-      this.height,
-      5
-    );
-
-    g.fillStyle(
-      0xd93665,
-      1
-    );
-
-    g.fillCircle(
-      centerX - 4,
-      centerY - 2,
-      5
-    );
-
-    g.fillCircle(
-      centerX + 4,
-      centerY - 2,
-      5
-    );
-
-    g.fillTriangle(
-      centerX - 8,
-      centerY,
-      centerX + 8,
-      centerY,
-      centerX,
-      centerY + 10
-    );
-
-    if (this.state === "telegraph") {
-      const radius =
-        27 +
-        this.actionTimer * 24;
-
-      g.lineStyle(
-        2,
-        0x76e4ec,
-        1
-      );
-
-      g.strokeCircle(
-        centerX,
-        centerY,
-        radius
-      );
-
-      g.lineStyle(
-        1,
-        0xf2cc64,
-        0.9
-      );
-
-      g.lineBetween(
-        centerX,
-        centerY,
-        this.player.centerX,
-        this.player.centerY
-      );
     }
 
     this.label
+      .setVisible(true)
       .setPosition(
         this.x - 5,
         this.y - 15
       )
-      .setText(
-        `HP ${this.health}`
-      );
+      .setText(`HP ${this.health}`);
   }
 }
 

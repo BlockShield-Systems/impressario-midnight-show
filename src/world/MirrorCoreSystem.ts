@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import { EnemyView } from "../enemies/EnemyView";
 import { leaderboard } from "../leaderboard/LeaderboardClient";
 
 import type {
@@ -450,6 +451,8 @@ implements CombatTarget {
   private readonly movementHistory:
     number[] = [];
 
+  private readonly view: EnemyView;
+
   public constructor(
     private readonly scene: Phaser.Scene,
     private readonly player:
@@ -470,6 +473,13 @@ implements CombatTarget {
   ) {
     this.x = spawn.x;
     this.y = spawn.y;
+
+    this.graphics.setVisible(false);
+
+    this.view = new EnemyView(
+      scene,
+      44
+    );
 
     this.health =
       spawn.kind === "mime"
@@ -499,6 +509,8 @@ implements CombatTarget {
     this.active =
       enabled &&
       !this.defeated;
+
+    this.redraw();
   }
 
   public reset(): void {
@@ -524,6 +536,7 @@ implements CombatTarget {
     this.elapsed = 0;
 
     this.movementHistory.length = 0;
+    this.redraw();
   }
 
   public receiveHit(
@@ -552,7 +565,7 @@ implements CombatTarget {
     if (this.health <= 0) {
       this.defeated = true;
       this.active = false;
-      this.graphics.clear();
+      this.redraw();
 
       this.scene.cameras.main.shake(
         90,
@@ -795,101 +808,68 @@ implements CombatTarget {
     }
   }
 
-  private redraw(): void {
-    const g = this.graphics;
-    g.clear();
-
-    const centerX =
-      this.x +
-      this.width * 0.5;
-
-    const centerY =
-      this.y +
-      this.height * 0.5;
-
-    g.fillStyle(
-      0x000000,
-      0.3
-    );
-
-    g.fillEllipse(
-      centerX,
-      this.y + this.height + 3,
-      28,
-      7
-    );
-
-    g.fillStyle(
-      this.flashTimer > 0
-        ? 0xffffff
-        : this.spawn.kind === "duelist"
-          ? 0x54265f
-          : this.spawn.kind === "caster"
-            ? 0x173f5c
-            : 0x25273f,
-      1
-    );
-
-    if (
-      this.spawn.kind === "caster"
-    ) {
-      g.fillTriangle(
-        centerX,
-        this.y - 5,
-        this.x - 5,
-        this.y + this.height,
-        this.x + this.width + 5,
-        this.y + this.height
-      );
-
-      g.lineStyle(
-        2,
-        0x72e9f0,
-        1
-      );
-
-      g.strokeCircle(
-        centerX,
-        centerY,
-        8
-      );
-    } else {
-      g.fillRoundedRect(
-        this.x,
-        this.y,
-        this.width,
-        this.height,
-        5
-      );
-
-      g.lineStyle(
-        2,
-        this.spawn.kind === "mime"
-          ? 0xf2ca65
-          : 0xe45dc6,
-        1
-      );
-
-      g.lineBetween(
-        centerX,
-        this.y + 5,
-        centerX +
-          this.facing * 13,
-        this.y + 18
-      );
+  private visualTag(): string {
+    if (this.defeated) {
+      return `core_${this.spawn.kind}_defeated`;
     }
 
-    g.fillStyle(
-      0xf2f7ff,
-      0.9
-    );
+    if (this.spawn.kind === "duelist") {
+      if (
+        Math.abs(this.velocityX) > 180 &&
+        this.actionTimer > 0.72
+      ) {
+        return "core_duelist_dash";
+      }
 
-    g.fillCircle(
-      centerX -
-        this.facing * 3,
-      this.y + 7,
-      1.8
-    );
+      if (this.actionTimer < 0.18) {
+        return "core_duelist_telegraph";
+      }
+
+      return Math.abs(this.velocityX) > 5
+        ? "core_duelist_patrol"
+        : "core_duelist_idle";
+    }
+
+    if (this.spawn.kind === "caster") {
+      if (this.actionTimer > 1.05) {
+        return "core_caster_cast";
+      }
+
+      if (this.actionTimer < 0.22) {
+        return "core_caster_telegraph";
+      }
+
+      return "core_caster_hover";
+    }
+
+    if (Math.abs(this.velocityY) > 20) {
+      return "core_mime_mimic";
+    }
+
+    if (this.movementHistory.length < 30) {
+      return "core_mime_record";
+    }
+
+    return Math.abs(this.velocityX) > 5
+      ? "core_mime_stalk"
+      : "core_mime_idle";
+  }
+
+  private redraw(): void {
+    this.graphics.clear();
+
+    this.view.update({
+      x: this.x,
+      y: this.y,
+      width: this.width,
+      height: this.height,
+      facing: this.facing,
+      visible:
+        this.active ||
+        this.defeated,
+      tag: this.visualTag(),
+      flashing: this.flashTimer > 0
+    });
   }
 }
 

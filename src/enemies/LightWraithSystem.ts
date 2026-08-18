@@ -1,5 +1,7 @@
 import Phaser from "phaser";
 
+import { EnemyView } from "./EnemyView";
+
 import type {
   CombatSystem,
   CombatTarget
@@ -61,8 +63,8 @@ class LightWraith implements CombatTarget {
   private flashTimer = 0;
   private contactCooldown = 0;
 
-  private readonly graphics:
-    Phaser.GameObjects.Graphics;
+  private readonly view: EnemyView;
+
 
   private readonly label:
     Phaser.GameObjects.Text;
@@ -76,8 +78,8 @@ class LightWraith implements CombatTarget {
     this.x = spawn.x;
     this.y = spawn.y;
 
-    this.graphics = scene.add.graphics();
-    this.graphics.setDepth(18);
+    this.view = new EnemyView(scene, 18);
+
 
     this.label = scene.add.text(
       this.x,
@@ -492,137 +494,50 @@ class LightWraith implements CombatTarget {
   }
 
   private redraw(): void {
-    const g = this.graphics;
-    g.clear();
+    const tag =
+      this.state === "defeated"
+        ? "wraith_defeat"
+        : this.state === "stagger"
+          ? "wraith_hurt"
+          : this.state === "telegraph"
+            ? "wraith_telegraph"
+            : this.state === "charge"
+              ? "wraith_charge"
+              : "wraith_hover";
 
-    if (!this.enabled) {
+    this.view.update({
+      x: this.x,
+      y: this.y,
+      width: this.width,
+      height: this.height,
+      facing: this.velocityX < -1
+        ? -1
+        : this.velocityX > 1
+          ? 1
+          : this.player.centerX <
+              this.x + this.width * 0.5
+            ? -1
+            : 1,
+      visible: this.enabled,
+      tag,
+      flashing: this.flashTimer > 0
+    });
+
+    if (
+      !this.enabled ||
+      this.state === "defeated"
+    ) {
       this.label.setVisible(false);
       return;
-    }
-
-    if (this.state === "defeated") {
-      this.label.setVisible(false);
-
-      g.fillStyle(
-        0x7de9ef,
-        0.16
-      );
-
-      g.fillCircle(
-        this.x + 12,
-        this.y + 16,
-        18
-      );
-
-      return;
-    }
-
-    this.label.setVisible(true);
-
-    const centerX =
-      this.x +
-      this.width * 0.5;
-
-    const centerY =
-      this.y +
-      this.height * 0.5;
-
-    const bodyColor =
-      this.flashTimer > 0
-        ? 0xffffff
-        : 0x16213d;
-
-    g.fillStyle(
-      0x62dce8,
-      0.13
-    );
-
-    g.fillCircle(
-      centerX,
-      centerY,
-      21
-    );
-
-    g.fillStyle(
-      bodyColor,
-      0.94
-    );
-
-    g.fillTriangle(
-      centerX,
-      this.y,
-      this.x,
-      this.y + 31,
-      this.x + 24,
-      this.y + 31
-    );
-
-    g.fillStyle(
-      0x8cecf3,
-      1
-    );
-
-    g.fillCircle(
-      centerX,
-      this.y + 10,
-      7
-    );
-
-    g.fillStyle(
-      0x06101d,
-      1
-    );
-
-    g.fillCircle(
-      centerX - 2.5,
-      this.y + 9,
-      1.5
-    );
-
-    g.fillCircle(
-      centerX + 2.5,
-      this.y + 9,
-      1.5
-    );
-
-    if (this.state === "telegraph") {
-      const radius =
-        16 +
-        this.actionTimer * 24;
-
-      g.lineStyle(
-        2,
-        0xe9c75e,
-        0.95
-      );
-
-      g.strokeCircle(
-        centerX,
-        centerY,
-        radius
-      );
-
-      g.lineStyle(
-        1,
-        0x78e7ef,
-        0.8
-      );
-
-      g.strokeCircle(
-        centerX,
-        centerY,
-        radius * 0.7
-      );
     }
 
     this.label
+      .setVisible(true)
       .setPosition(
         this.x - 5,
         this.y - 15
       )
-      .setText(
-        `HP ${this.health}`
-      );
+      .setText(`HP ${this.health}`);
   }
 }
 

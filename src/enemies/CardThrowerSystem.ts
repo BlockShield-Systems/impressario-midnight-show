@@ -1,5 +1,7 @@
 import Phaser from "phaser";
 
+import { EnemyView } from "./EnemyView";
+
 import type {
   CombatSystem,
   CombatTarget
@@ -69,7 +71,8 @@ class CardThrower implements CombatTarget {
   private flashTimer = 0;
   private contactCooldown = 0;
 
-  private readonly graphics: Phaser.GameObjects.Graphics;
+  private readonly view: EnemyView;
+
   private readonly label: Phaser.GameObjects.Text;
 
   public constructor(
@@ -86,8 +89,8 @@ class CardThrower implements CombatTarget {
     this.x = spawn.x;
     this.y = spawn.y;
 
-    this.graphics = scene.add.graphics();
-    this.graphics.setDepth(15);
+    this.view = new EnemyView(scene, 15);
+
 
     this.label = scene.add.text(
       this.x,
@@ -360,146 +363,45 @@ class CardThrower implements CombatTarget {
   }
 
   private redraw(): void {
-    const g = this.graphics;
-    g.clear();
+    const tag =
+      this.state === "defeated"
+        ? "thrower_defeat"
+        : this.state === "stagger"
+          ? "thrower_hurt"
+          : this.state === "telegraph"
+            ? "thrower_telegraph"
+            : this.state === "cooldown"
+              ? "thrower_cooldown"
+              : Math.abs(this.velocityX) > 5
+                ? "thrower_move"
+                : "thrower_idle";
 
-    if (!this.enabled) {
+    this.view.update({
+      x: this.x,
+      y: this.y,
+      width: this.width,
+      height: this.height,
+      facing: this.facing,
+      visible: this.enabled,
+      tag,
+      flashing: this.flashTimer > 0
+    });
+
+    if (
+      !this.enabled ||
+      this.state === "defeated"
+    ) {
       this.label.setVisible(false);
       return;
     }
 
-    if (this.state === "defeated") {
-      this.label.setVisible(false);
-
-      g.fillStyle(0x151019, 0.45);
-      g.fillEllipse(
-        this.x + 9,
-        323,
-        28,
-        6
-      );
-
-      g.lineStyle(
-        4,
-        0x283f67,
-        0.6
-      );
-
-      g.lineBetween(
-        this.x,
-        this.y + 27,
-        this.x + 19,
-        this.y + 30
-      );
-
-      return;
-    }
-
-    this.label.setVisible(true);
-
-    const bodyColor =
-      this.flashTimer > 0
-        ? 0xf5f1ff
-        : 0x243858;
-
-    g.fillStyle(0x000000, 0.3);
-    g.fillEllipse(
-      this.x + 9,
-      329,
-      25,
-      6
-    );
-
-    g.fillStyle(bodyColor, 1);
-    g.fillRoundedRect(
-      this.x + 2,
-      this.y + 10,
-      14,
-      18,
-      3
-    );
-
-    g.fillStyle(0xd9e4ef, 1);
-    g.fillRoundedRect(
-      this.x + 3,
-      this.y + 1,
-      12,
-      10,
-      4
-    );
-
-    g.fillStyle(0x15233b, 1);
-    g.fillCircle(
-      this.x + 6,
-      this.y + 5,
-      1.5
-    );
-
-    g.fillCircle(
-      this.x + 12,
-      this.y + 5,
-      1.5
-    );
-
-    g.fillStyle(0x111826, 1);
-    g.fillRect(
-      this.x + 1,
-      this.y - 3,
-      16,
-      3
-    );
-
-    const handX =
-      this.x + 9 +
-      this.facing * 11;
-
-    g.lineStyle(
-      3,
-      0x31547d,
-      1
-    );
-
-    g.lineBetween(
-      this.x + 9,
-      this.y + 15,
-      handX,
-      this.y + 13
-    );
-
-    if (this.state === "telegraph") {
-      g.lineStyle(
-        2,
-        0x63d7ff,
-        0.9
-      );
-
-      g.strokeCircle(
-        handX,
-        this.y + 12,
-        8 + this.actionTimer * 8
-      );
-
-      g.fillStyle(
-        0xf1f5ff,
-        1
-      );
-
-      g.fillRect(
-        handX - 3,
-        this.y + 8,
-        6,
-        9
-      );
-    }
-
-    this.label.setPosition(
-      this.x - 6,
-      this.y - 15
-    );
-
-    this.label.setText(
-      `HP ${this.health}`
-    );
+    this.label
+      .setVisible(true)
+      .setPosition(
+        this.x - 5,
+        this.y - 15
+      )
+      .setText(`HP ${this.health}`);
   }
 }
 
