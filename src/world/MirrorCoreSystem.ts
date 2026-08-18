@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import { BossView } from "../boss/BossView";
 import { EnemyView } from "../enemies/EnemyView";
 import { leaderboard } from "../leaderboard/LeaderboardClient";
 
@@ -889,6 +890,22 @@ implements CombatTarget {
   private markedTimer = 0;
   private flashTimer = 0;
 
+  private visualTimer = 0;
+  private visualMode:
+    | "idle"
+    | "entrance"
+    | "cast"
+    | "counter"
+    | "hurt"
+    | "transition12"
+    | "transition23" = "idle";
+
+  private previousPhase: 1 | 2 | 3 = 1;
+  private facing: -1 | 1 = -1;
+  private defeatSequenceStarted = false;
+
+  private readonly view: BossView;
+
   public constructor(
     private readonly scene:
       Phaser.Scene,
@@ -898,7 +915,18 @@ implements CombatTarget {
       (counter: BossCounter) => void,
     private readonly onDefeated:
       () => void
-  ) {}
+  ) {
+    this.graphics.setDepth(47);
+
+    this.view = new BossView(
+      scene,
+      46
+    );
+
+    this.view.reset(
+      this.viewState(false)
+    );
+  }
 
   public get currentHealth(): number {
     return this.health;
@@ -940,6 +968,14 @@ implements CombatTarget {
     this.active =
       enabled &&
       !this.defeated;
+
+    if (this.active) {
+      this.visualMode = "entrance";
+      this.visualTimer = 0.82;
+      this.previousPhase = this.phase;
+    }
+
+    this.updateView();
   }
 
   public breakShield(): void {
@@ -952,6 +988,8 @@ implements CombatTarget {
 
     this.shielded = false;
     this.flashTimer = 0.35;
+    this.visualMode = "entrance";
+    this.visualTimer = 0.72;
 
     this.scene.cameras.main.flash(
       220,
@@ -993,11 +1031,13 @@ implements CombatTarget {
     damage: number,
     _knockbackX: number,
     _knockbackY: number,
-    _facing: -1 | 1
+    facing: -1 | 1
   ): void {
     if (!this.active) {
       return;
     }
+
+    this.facing = facing;
 
     if (this.shielded) {
       this.onCounter({
@@ -1010,8 +1050,12 @@ implements CombatTarget {
       });
 
       this.flashTimer = 0.1;
+      this.visualMode = "counter";
+      this.visualTimer = 0.48;
       return;
     }
+
+    const phaseBefore = this.phase;
 
     this.health = Math.max(
       0,
@@ -1021,11 +1065,30 @@ implements CombatTarget {
     this.flashTimer = 0.12;
 
     if (this.health <= 0) {
-      this.defeated = true;
-      this.active = false;
-      this.graphics.clear();
-      this.onDefeated();
+      this.startDefeatSequence();
+      return;
     }
+
+    const phaseAfter = this.phase;
+
+    if (
+      phaseBefore === 1 &&
+      phaseAfter >= 2
+    ) {
+      this.visualMode = "transition12";
+      this.visualTimer = 1.0;
+    } else if (
+      phaseBefore <= 2 &&
+      phaseAfter === 3
+    ) {
+      this.visualMode = "transition23";
+      this.visualTimer = 1.12;
+    } else {
+      this.visualMode = "hurt";
+      this.visualTimer = 0.3;
+    }
+
+    this.previousPhase = phaseAfter;
   }
 
   public reset(): void {
@@ -1039,9 +1102,21 @@ implements CombatTarget {
     this.health = 108;
     this.shielded = true;
     this.active = false;
+    this.defeated = false;
 
     this.markedTimer = 0;
     this.flashTimer = 0;
+    this.visualTimer = 0;
+    this.visualMode = "idle";
+    this.previousPhase = 1;
+    this.facing = -1;
+    this.defeatSequenceStarted = false;
+
+    this.graphics.clear();
+
+    this.view.reset(
+      this.viewState(false)
+    );
   }
 
   public update(
@@ -1070,15 +1145,57 @@ implements CombatTarget {
       this.markedTimer - deltaSeconds
     );
 
+    this.visualTimer = Math.max(
+      0,
+      this.visualTimer - deltaSeconds
+    );
+
+    this.facing =
+      player.centerX <
+      this.x + this.width * 0.5
+        ? -1
+        : 1;
+
     this.y =
       205 +
       Math.sin(elapsed * 1.8) *
       34;
 
+    const currentPhase = this.phase;
+
+    if (
+      currentPhase !==
+      this.previousPhase
+    ) {
+      if (
+        this.previousPhase === 1 &&
+        currentPhase >= 2
+      ) {
+        this.visualMode = "transition12";
+        this.visualTimer = 1.0;
+      } else if (
+        this.previousPhase <= 2 &&
+        currentPhase === 3
+      ) {
+        this.visualMode = "transition23";
+        this.visualTimer = 1.12;
+      }
+
+      this.previousPhase =
+        currentPhase;
+    }
+
+    if (
+      this.visualTimer <= 0 &&
+      this.visualMode !== "idle"
+    ) {
+      this.visualMode = "idle";
+    }
+
     const interval =
-      this.phase === 1
+      currentPhase === 1
         ? 1.15
-        : this.phase === 2
+        : currentPhase === 2
           ? 0.9
           : 0.62;
 
@@ -1098,9 +1215,9 @@ implements CombatTarget {
       currentCycle !== previousCycle
     ) {
       const count =
-        this.phase === 3
+        currentPhase === 3
           ? 3
-          : this.phase === 2
+          : currentPhase === 2
             ? 2
             : 1;
 
@@ -1116,24 +1233,115 @@ implements CombatTarget {
             this.height * 0.5,
           player.centerX,
           player.centerY +
-            (index -
-              (count - 1) * 0.5) *
+            (
+              index -
+              (count - 1) * 0.5
+            ) *
             55,
           index % 2 === 0
             ? 0xe95acb
             : 0x75eaf1
         );
       }
+
+      if (
+        this.visualMode === "idle"
+      ) {
+        this.visualMode = "cast";
+        this.visualTimer = 0.48;
+      }
     }
 
-    this.redraw(elapsed);
+    this.updateView();
+    this.redrawVfx(elapsed);
   }
 
-  private redraw(
+  private startDefeatSequence(): void {
+    if (this.defeatSequenceStarted) {
+      return;
+    }
+
+    this.defeatSequenceStarted = true;
+    this.defeated = true;
+    this.active = false;
+
+    this.graphics.clear();
+
+    this.view.playDefeatSequence(
+      this.viewState(true),
+      () => {
+        this.onDefeated();
+      }
+    );
+  }
+
+  private updateView(): void {
+    this.view.update(
+      this.viewState(this.active),
+      this.selectAnimation()
+    );
+  }
+
+  private viewState(
+    visible: boolean
+  ): {
+    readonly x: number;
+    readonly y: number;
+    readonly width: number;
+    readonly height: number;
+    readonly facing: -1 | 1;
+    readonly phase: 1 | 2 | 3;
+    readonly visible: boolean;
+    readonly flashing: boolean;
+  } {
+    return {
+      x: this.x,
+      y: this.y,
+      width: this.width,
+      height: this.height,
+      facing: this.facing,
+      phase: this.phase,
+      visible,
+      flashing: this.flashTimer > 0
+    };
+  }
+
+  private selectAnimation(): string {
+    const phase = this.phase;
+
+    switch (this.visualMode) {
+      case "entrance":
+        return "boss_entrance";
+
+      case "transition12":
+        return "boss_transition_1_2";
+
+      case "transition23":
+        return "boss_transition_2_3";
+
+      case "cast":
+        return `boss_phase${phase}_cast`;
+
+      case "counter":
+        return `boss_phase${phase}_counter`;
+
+      case "hurt":
+        return `boss_hurt_phase${phase}`;
+
+      case "idle":
+        return `boss_phase${phase}_idle`;
+    }
+  }
+
+  private redrawVfx(
     elapsed: number
   ): void {
     const g = this.graphics;
     g.clear();
+
+    if (!this.active) {
+      return;
+    }
 
     const centerX =
       this.x +
@@ -1152,7 +1360,7 @@ implements CombatTarget {
       ) {
         g.fillStyle(
           0x723769,
-          0.42
+          0.2
         );
 
         g.fillRoundedRect(
@@ -1166,7 +1374,7 @@ implements CombatTarget {
         g.lineStyle(
           2,
           0xe95acb,
-          0.5
+          0.45
         );
 
         g.strokeRoundedRect(
@@ -1189,53 +1397,11 @@ implements CombatTarget {
       g.strokeCircle(
         centerX,
         centerY,
-        33 +
+        38 +
           Math.sin(elapsed * 7) *
           3
       );
     }
-
-    g.fillStyle(
-      this.flashTimer > 0
-        ? 0xffffff
-        : 0x171629,
-      1
-    );
-
-    g.fillRoundedRect(
-      this.x,
-      this.y,
-      this.width,
-      this.height,
-      9
-    );
-
-    g.fillStyle(
-      0xe95acb,
-      1
-    );
-
-    g.fillTriangle(
-      centerX,
-      this.y - 17,
-      this.x + 2,
-      this.y + 4,
-      this.x + this.width - 2,
-      this.y + 4
-    );
-
-    g.lineStyle(
-      3,
-      0x75eaf1,
-      1
-    );
-
-    g.lineBetween(
-      centerX,
-      this.y + 12,
-      centerX,
-      this.y + 45
-    );
 
     if (this.shielded) {
       g.lineStyle(
@@ -1247,38 +1413,9 @@ implements CombatTarget {
       g.strokeCircle(
         centerX,
         centerY,
-        37
+        41
       );
     }
-
-    const healthRatio =
-      this.health / 108;
-
-    g.fillStyle(
-      0x090b17,
-      0.95
-    );
-
-    g.fillRect(
-      this.x - 25,
-      this.y - 31,
-      84,
-      8
-    );
-
-    g.fillStyle(
-      this.phase === 3
-        ? 0xe95acb
-        : 0x75eaf1,
-      1
-    );
-
-    g.fillRect(
-      this.x - 24,
-      this.y - 30,
-      82 * healthRatio,
-      6
-    );
   }
 }
 
@@ -2231,6 +2368,14 @@ export class MirrorCoreSystem {
   private updateProjectiles(
     deltaSeconds: number
   ): void {
+    if (
+      this.bossStarted &&
+      this.conductor.isDefeated
+    ) {
+      this.projectiles.length = 0;
+      return;
+    }
+
     const bounds =
       playerBounds(this.player);
 
@@ -2299,6 +2444,13 @@ export class MirrorCoreSystem {
   }
 
   private updateHazards(): void {
+    if (
+      this.bossStarted &&
+      this.conductor.isDefeated
+    ) {
+      return;
+    }
+
     if (
       this.player.x <
         MIRROR_CORE_START_X ||
