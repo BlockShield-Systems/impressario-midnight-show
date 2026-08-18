@@ -7,6 +7,7 @@ export class PlayerHealthSystem {
 
   private health = this.maximumHealth;
   private invulnerabilityTimer = 0;
+  private hurtTimer = 0;
   private respawnTimer = 0;
 
   private checkpointX = 72;
@@ -62,10 +63,19 @@ export class PlayerHealthSystem {
     return this.health;
   }
 
+  public get isHurt(): boolean {
+    return this.hurtTimer > 0;
+  }
+
   public update(deltaSeconds: number): void {
     this.invulnerabilityTimer = Math.max(
       0,
       this.invulnerabilityTimer - deltaSeconds
+    );
+
+    this.hurtTimer = Math.max(
+      0,
+      this.hurtTimer - deltaSeconds
     );
 
     if (this.respawnTimer <= 0) {
@@ -152,6 +162,7 @@ export class PlayerHealthSystem {
 
     this.health = 0;
     this.invulnerabilityTimer = 0;
+    this.hurtTimer = 0;
 
     this.redrawHud();
     this.beginRespawn();
@@ -188,6 +199,7 @@ export class PlayerHealthSystem {
 
     this.player.velocityY = forceY;
     this.invulnerabilityTimer = 0.85;
+    this.hurtTimer = 0.34;
 
     this.scene.cameras.main.shake(
       110,
@@ -240,6 +252,7 @@ export class PlayerHealthSystem {
 
     this.health = this.maximumHealth;
     this.invulnerabilityTimer = 1;
+    this.hurtTimer = 0;
 
     this.statusText.setText("");
 

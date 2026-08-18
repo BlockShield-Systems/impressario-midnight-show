@@ -5,6 +5,7 @@ import { CombatSystem } from "./combat/CombatSystem";
 import { StagehandSystem } from "./enemies/StagehandSystem";
 import { CardThrowerSystem } from "./enemies/CardThrowerSystem";
 import { PlayerHealthSystem } from "./player/PlayerHealthSystem";
+import { PlayerView } from "./player/PlayerView";
 import { ShadowAcrobatSystem } from "./enemies/ShadowAcrobatSystem";
 import { GalleryHazardSystem } from "./world/GalleryHazardSystem";
 import { MagicSystem } from "./magic/MagicSystem";
@@ -407,7 +408,7 @@ class CollisionWorld {
 /* Character controller                                                       */
 /* -------------------------------------------------------------------------- */
 
-type MovementState =
+export type MovementState =
   | "idle"
   | "run"
   | "rise"
@@ -496,6 +497,14 @@ export class PlayerController implements KinematicBody {
 
   public get centerY(): number {
     return this.y + this.height * 0.5;
+  }
+
+  public get isGrounded(): boolean {
+    return this.contacts.grounded;
+  }
+
+  public get isWallJumping(): boolean {
+    return this.wallControlLockTimer > 0;
   }
 
   public get state(): MovementState {
@@ -798,211 +807,6 @@ export class PlayerController implements KinematicBody {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Player rendering                                                           */
-/* -------------------------------------------------------------------------- */
-
-class PlayerView {
-  public readonly container: Phaser.GameObjects.Container;
-
-  private readonly graphics: Phaser.GameObjects.Graphics;
-  private readonly shadow: Phaser.GameObjects.Ellipse;
-
-  private animationTime = 0;
-
-  public constructor(
-    scene: Phaser.Scene,
-    private readonly player: PlayerController
-  ) {
-    this.graphics = scene.add.graphics();
-
-    this.container = scene.add.container(
-      player.centerX,
-      player.centerY,
-      [this.graphics]
-    );
-
-    this.container.setDepth(20);
-
-    this.shadow = scene.add.ellipse(
-      player.centerX,
-      player.y + player.height + 3,
-      24,
-      6,
-      0x000000,
-      0.35
-    );
-
-    this.shadow.setDepth(5);
-
-    this.draw();
-  }
-
-  public update(deltaSeconds: number): void {
-    this.animationTime += deltaSeconds;
-
-    this.container.setPosition(
-      this.player.centerX,
-      this.player.centerY
-    );
-
-    this.container.setScale(this.player.facing, 1);
-
-    this.shadow.setPosition(
-      this.player.centerX,
-      this.player.y + this.player.height + 3
-    );
-
-    const airborne =
-      this.player.state !== "idle" &&
-      this.player.state !== "run";
-
-    this.shadow.setScale(airborne ? 0.72 : 1, 1);
-    this.shadow.setAlpha(airborne ? 0.2 : 0.35);
-
-    this.draw();
-  }
-
-  private draw(): void {
-    const g = this.graphics;
-    const state = this.player.state;
-
-    g.clear();
-
-    const runBob =
-      state === "run"
-        ? Math.sin(this.animationTime * 18) * 1.25
-        : 0;
-
-    const coatColor =
-      state === "dash"
-        ? 0xf4c768
-        : 0x8e1638;
-
-    // Coat tails
-    g.fillStyle(0x541025, 1);
-    g.fillTriangle(-7, 5, -11, 19, -1, 10);
-    g.fillTriangle(7, 5, 11, 19, 1, 10);
-
-    // Torso
-    g.fillStyle(coatColor, 1);
-    g.fillRoundedRect(
-      -8,
-      -7 + runBob,
-      state === "dash" ? 21 : 16,
-      21,
-      4
-    );
-
-    // Shirt
-    g.fillStyle(0xf4eadb, 1);
-    g.fillTriangle(
-      -4,
-      -7 + runBob,
-      4,
-      -7 + runBob,
-      0,
-      6 + runBob
-    );
-
-    // Bow tie
-    g.fillStyle(0x191019, 1);
-    g.fillTriangle(
-      -5,
-      -3 + runBob,
-      0,
-      runBob,
-      0,
-      -5 + runBob
-    );
-
-    g.fillTriangle(
-      5,
-      -3 + runBob,
-      0,
-      runBob,
-      0,
-      -5 + runBob
-    );
-
-    // Head
-    g.fillStyle(0xdca27f, 1);
-    g.fillCircle(0, -13 + runBob, 6);
-
-    // Hair
-    g.fillStyle(0x1a1114, 1);
-    g.fillRoundedRect(
-      -6,
-      -19 + runBob,
-      12,
-      5,
-      2
-    );
-
-    // Moustache
-    g.fillStyle(0x27171a, 1);
-
-    g.fillTriangle(
-      -5,
-      -12 + runBob,
-      0,
-      -10 + runBob,
-      -1,
-      -13 + runBob
-    );
-
-    g.fillTriangle(
-      5,
-      -12 + runBob,
-      0,
-      -10 + runBob,
-      1,
-      -13 + runBob
-    );
-
-    // Top hat
-    g.fillStyle(0x120d12, 1);
-    g.fillRoundedRect(
-      -7,
-      -30 + runBob,
-      14,
-      12,
-      2
-    );
-
-    g.fillRect(-10, -19 + runBob, 20, 3);
-
-    g.fillStyle(0xc99732, 1);
-    g.fillRect(-7, -22 + runBob, 14, 2);
-
-    // Legs
-    g.lineStyle(4, 0x21151a, 1);
-
-    if (state === "run") {
-      const stride =
-        Math.sin(this.animationTime * 18) * 5;
-
-      g.lineBetween(-3, 12, -4 + stride, 20);
-      g.lineBetween(3, 12, 4 - stride, 20);
-    } else {
-      g.lineBetween(-3, 12, -4, 20);
-      g.lineBetween(3, 12, 4, 20);
-    }
-
-    // Cane
-    g.lineStyle(2, 0xd8aa46, 1);
-    g.lineBetween(8, -1 + runBob, 15, 15 + runBob);
-    g.lineBetween(8, -1 + runBob, 12, -4 + runBob);
-
-    if (state === "dash") {
-      g.lineStyle(2, 0xf8d675, 0.65);
-      g.lineBetween(-18, -8, -35, -8);
-      g.lineBetween(-18, 0, -42, 0);
-      g.lineBetween(-18, 8, -34, 8);
-    }
-  }
-}
-
-/* -------------------------------------------------------------------------- */
 /* Scene                                                                      */
 /* -------------------------------------------------------------------------- */
 
@@ -1119,6 +923,10 @@ class GameScene extends Phaser.Scene {
     super("game");
   }
 
+  public preload(): void {
+    PlayerView.preload(this);
+  }
+
   public create(): void {
     this.cameras.main.setBackgroundColor("#0b0710");
 
@@ -1143,11 +951,6 @@ class GameScene extends Phaser.Scene {
       270
     );
 
-    this.playerView = new PlayerView(
-      this,
-      this.player
-    );
-
     this.playerHealth =
       new PlayerHealthSystem(
         this,
@@ -1160,6 +963,13 @@ class GameScene extends Phaser.Scene {
     this.combatSystem = new CombatSystem(
       this,
       this.player
+    );
+
+    this.playerView = new PlayerView(
+      this,
+      this.player,
+      this.combatSystem,
+      this.playerHealth
     );
 
     this.stagehandSystem = new StagehandSystem(
@@ -1341,8 +1151,8 @@ class GameScene extends Phaser.Scene {
       }
     }
 
-    this.playerView.update(frameDelta);
     this.combatSystem.update(frameDelta);
+    this.playerView.update(frameDelta);
     this.stagehandSystem.update(frameDelta);
     this.cardThrowerSystem.update(frameDelta);
     this.shadowAcrobatSystem.update(frameDelta);

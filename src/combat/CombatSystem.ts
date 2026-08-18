@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 import type { PlayerController } from "../main";
 
-type AttackId =
+export type AttackId =
   | "combo-1"
   | "combo-2"
   | "combo-3"
@@ -12,7 +12,7 @@ type AttackId =
   | "down-strike"
   | "dash-attack";
 
-type AttackPhase =
+export type AttackPhase =
   | "idle"
   | "startup"
   | "active"
@@ -44,6 +44,13 @@ interface ActiveAttack {
   phase: AttackPhase;
   elapsed: number;
   hitConnected: boolean;
+}
+
+export interface CombatAnimationState {
+  readonly attackId: AttackId | null;
+  readonly phase: AttackPhase;
+  readonly normalizedProgress: number;
+  readonly paused: boolean;
 }
 
 interface TutorialObjective {
@@ -656,6 +663,57 @@ export class CombatSystem {
     if (tutorialActive) {
       this.updateTutorialPrompt();
     }
+  }
+
+  public get animationState():
+    CombatAnimationState {
+    const attack =
+      this.activeAttack;
+
+    if (!attack) {
+      return {
+        attackId: null,
+        phase: "idle",
+        normalizedProgress: 0,
+        paused: false
+      };
+    }
+
+    const definition =
+      attack.definition;
+
+    const totalDuration =
+      definition.startup +
+      definition.active +
+      definition.recovery;
+
+    let elapsed =
+      attack.elapsed;
+
+    if (attack.phase === "active") {
+      elapsed += definition.startup;
+    } else if (
+      attack.phase === "recovery"
+    ) {
+      elapsed +=
+        definition.startup +
+        definition.active;
+    }
+
+    return {
+      attackId: definition.id,
+      phase: attack.phase,
+
+      normalizedProgress:
+        Phaser.Math.Clamp(
+          elapsed / totalDuration,
+          0,
+          1
+        ),
+
+      paused:
+        this.hitstopTimer > 0
+    };
   }
 
   public registerTarget(

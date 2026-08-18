@@ -286,6 +286,52 @@ local function newImage(sprite)
   return image
 end
 
+local function isCombatKind(
+  kind
+)
+  return string.sub(
+    kind,
+    1,
+    7
+  ) == "attack_"
+end
+
+-- Combat weapon poses were authored opposite to the movement/head
+-- source-facing convention. Mirror only the directional combat
+-- package around the 64,98 character pivot. Runtime then mirrors
+-- the complete flattened frame uniformly for world facing.
+local function mirrorDirectionalImage(
+  image
+)
+  local mirrored = Image(
+    WIDTH,
+    HEIGHT,
+    ColorMode.RGB
+  )
+
+  mirrored:clear()
+
+  for y = 0, HEIGHT - 1 do
+    for x = 0, WIDTH - 1 do
+      local targetX =
+        ORIGIN_X * 2 - x
+
+      if
+        targetX >= 0 and
+        targetX < WIDTH
+      then
+        mirrored:drawPixel(
+          targetX,
+          y,
+          image:getPixel(x, y)
+        )
+      end
+    end
+  end
+
+  return mirrored
+end
+
 local function setPixel(image, x, y, color)
   x = math.floor(x + 0.5)
   y = math.floor(y + 0.5)
@@ -1037,6 +1083,11 @@ local function drawFrame(
       )
     end
 
+    if isCombatKind(spec.kind) then
+      image =
+        mirrorDirectionalImage(image)
+    end
+
     addCel(
       sprite,
       layers["01_fx_back"],
@@ -1140,6 +1191,11 @@ local function drawFrame(
       2,
       COLORS.skinShadow
     )
+
+    if isCombatKind(spec.kind) then
+      image =
+        mirrorDirectionalImage(image)
+    end
 
     addCel(
       sprite,
@@ -1417,6 +1473,11 @@ local function drawFrame(
       pose.frontHandY + bob - 1,
       COLORS.skinLight
     )
+
+    if isCombatKind(spec.kind) then
+      image =
+        mirrorDirectionalImage(image)
+    end
 
     addCel(
       sprite,
@@ -1698,6 +1759,11 @@ local function drawFrame(
       COLORS.goldLight
     )
 
+    if isCombatKind(spec.kind) then
+      image =
+        mirrorDirectionalImage(image)
+    end
+
     addCel(
       sprite,
       layers["12_cane"],
@@ -1759,6 +1825,11 @@ local function drawFrame(
         tipY,
         COLORS.goldLight
       )
+    end
+
+    if isCombatKind(spec.kind) then
+      image =
+        mirrorDirectionalImage(image)
     end
 
     addCel(
