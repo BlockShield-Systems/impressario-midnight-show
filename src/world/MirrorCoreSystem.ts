@@ -21,7 +21,7 @@ import type {
 } from "../player/PlayerHealthSystem";
 
 export const MIRROR_CORE_START_X = 14400;
-export const MIRROR_CORE_END_X = 17280;
+export const MIRROR_CORE_END_X = 18720;
 
 interface MovingMirror {
   readonly solid: Phaser.Geom.Rectangle;
@@ -115,7 +115,7 @@ const ROSE_POSITIONS = [
   [14530, 294],
   [15360, 294],
   [16250, 294],
-  [16480, 294]
+  [17920, 294]
 ] as const;
 
 const SPIKE_RECTS = [
@@ -876,7 +876,7 @@ implements CombatTarget {
 
 class MirrorConductor
 implements CombatTarget {
-  public x = 16785;
+  public x = 18225;
   public y = 205;
 
   public readonly width = 42;
@@ -1127,7 +1127,7 @@ implements CombatTarget {
   }
 
   public reset(): void {
-    this.x = 16785;
+    this.x = 18225;
     this.y = 205;
 
     this.health = 108;
@@ -1515,7 +1515,7 @@ export class MirrorCoreSystem {
 
   private readonly bossGate =
     new Phaser.Geom.Rectangle(
-      16405,
+      17845,
       0,
       18,
       520
@@ -1523,7 +1523,7 @@ export class MirrorCoreSystem {
 
   private readonly exitGate =
     new Phaser.Geom.Rectangle(
-      17178,
+      18618,
       0,
       18,
       520
@@ -2056,7 +2056,7 @@ export class MirrorCoreSystem {
       this.gauntletCleared &&
       !this.bossStarted &&
       !this.bossDefeated &&
-      this.player.x >= 16440
+      this.player.x >= 17880
     ) {
       this.bossStarted = true;
 
@@ -2559,7 +2559,7 @@ export class MirrorCoreSystem {
     ) {
       const centerX =
         this.bossStarted
-          ? 16800
+          ? 18240
           : 15900;
 
       const centerY =
@@ -2646,13 +2646,13 @@ export class MirrorCoreSystem {
       const floorHazard =
         dangerousLeft
           ? new Phaser.Geom.Rectangle(
-              16425,
+              17865,
               312,
               340,
               18
             )
           : new Phaser.Geom.Rectangle(
-              16765,
+              18205,
               312,
               390,
               18
@@ -2804,19 +2804,19 @@ export class MirrorCoreSystem {
       .setAlpha(0);
 
     this.spawnFinaleBurst(
-      16802,
+      18242,
       225,
       48
     );
 
     this.spawnFinaleBurst(
-      16755,
+      18195,
       185,
       30
     );
 
     this.spawnFinaleBurst(
-      16852,
+      18292,
       175,
       30
     );
@@ -2927,8 +2927,8 @@ export class MirrorCoreSystem {
       ) {
         const burstX =
           Phaser.Math.Between(
-            16640,
-            17020
+            18080,
+            18460
           );
 
         const burstY =
@@ -2951,7 +2951,7 @@ export class MirrorCoreSystem {
     } else if (
       this.finaleTime < 8.7
     ) {
-      const targetX = 17130;
+      const targetX = 18570;
 
       const direction =
         targetX >
@@ -3127,7 +3127,7 @@ export class MirrorCoreSystem {
     }
 
     // Majestic illuminated gate.
-    const gateX = 17142;
+    const gateX = 18582;
     const gateY = 82;
     const gateWidth = 92;
     const gateHeight = 244;
@@ -3336,7 +3336,7 @@ export class MirrorCoreSystem {
 
     for (
       let x = 14520;
-      x < 17200;
+      x < 18640;
       x += 360
     ) {
       g.lineStyle(
@@ -3441,7 +3441,7 @@ export class MirrorCoreSystem {
     ).setDepth(41);
 
     this.scene.add.text(
-      16455,
+      17895,
       82,
       "CORE CHAMBER — MIRROR CONDUCTOR",
       {
@@ -3693,7 +3693,7 @@ export class MirrorCoreSystem {
     ) {
       const centerX =
         this.bossStarted
-          ? 16800
+          ? 18240
           : 15900;
 
       const centerY =

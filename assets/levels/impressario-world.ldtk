@@ -11,13 +11,13 @@
   "iid": "49475ace-8d6d-5ace-b9c1-bdfa1f69afc7",
   "jsonVersion": "1.5.3",
   "appBuildId": 50300,
-  "nextUid": 10,
+  "nextUid": 11,
   "identifierStyle": "Capitalize",
   "toc": [],
   "worldLayout": "Free",
   "worldGridWidth": 256,
   "worldGridHeight": 256,
-  "defaultLevelWidth": 17280,
+  "defaultLevelWidth": 18720,
   "defaultLevelHeight": 720,
   "defaultPivotX": 0,
   "defaultPivotY": 0,
@@ -164,7 +164,27 @@
         ]
       }
     ],
-    "tilesets": [],
+    "tilesets": [
+      {
+        "__cWid": 8,
+        "__cHei": 8,
+        "identifier": "ImpressarioEnvironment",
+        "uid": 4,
+        "relPath": "../../public/assets/world/impressario-environment.png",
+        "embedAtlas": null,
+        "pxWid": 256,
+        "pxHei": 256,
+        "tileGridSize": 32,
+        "spacing": 0,
+        "padding": 0,
+        "tags": [],
+        "tagsSourceEnumUid": null,
+        "enumTags": [],
+        "customData": [],
+        "savedSelections": [],
+        "cachedPixelData": null
+      }
+    ],
     "enums": [],
     "externalEnums": [],
     "levelFields": []
@@ -177,7 +197,7 @@
       "worldX": 0,
       "worldY": 0,
       "worldDepth": 0,
-      "pxWid": 17280,
+      "pxWid": 18720,
       "pxHei": 720,
       "__bgColor": "#0B0710",
       "__bgPos": null,
@@ -194,7 +214,7 @@
         {
           "__identifier": "Entities",
           "__type": "Entities",
-          "__cWid": 1080,
+          "__cWid": 1170,
           "__cHei": 45,
           "__gridSize": 16,
           "__opacity": 1,
@@ -3490,7 +3510,7 @@
             {
               "__identifier": "CollisionRect",
               "__grid": [
-                1026,
+                1116,
                 20
               ],
               "__pivot": [
@@ -3501,14 +3521,14 @@
                 "Collision"
               ],
               "__tile": null,
-              "__worldX": 16423,
+              "__worldX": 17863,
               "__worldY": 326,
               "defUid": 2,
               "fieldInstances": [],
               "height": 34,
               "iid": "2f03ba30-3d5b-5bd5-b0e9-d57322225088",
               "px": [
-                16423,
+                17863,
                 326
               ],
               "width": 757
@@ -3516,7 +3536,7 @@
             {
               "__identifier": "CollisionRect",
               "__grid": [
-                1033,
+                1123,
                 15
               ],
               "__pivot": [
@@ -3527,14 +3547,14 @@
                 "Collision"
               ],
               "__tile": null,
-              "__worldX": 16530,
+              "__worldX": 17970,
               "__worldY": 255,
               "defUid": 2,
               "fieldInstances": [],
               "height": 14,
               "iid": "0b74d1d4-b0cd-5243-9042-dce07acaef1f",
               "px": [
-                16530,
+                17970,
                 255
               ],
               "width": 100
@@ -3542,7 +3562,7 @@
             {
               "__identifier": "CollisionRect",
               "__grid": [
-                1042,
+                1132,
                 12
               ],
               "__pivot": [
@@ -3553,14 +3573,14 @@
                 "Collision"
               ],
               "__tile": null,
-              "__worldX": 16680,
+              "__worldX": 18120,
               "__worldY": 205,
               "defUid": 2,
               "fieldInstances": [],
               "height": 14,
               "iid": "a55fa359-47d6-56b7-a5ec-b33c8fcaba11",
               "px": [
-                16680,
+                18120,
                 205
               ],
               "width": 92
@@ -3568,7 +3588,7 @@
             {
               "__identifier": "CollisionRect",
               "__grid": [
-                1051,
+                1141,
                 15
               ],
               "__pivot": [
@@ -3579,14 +3599,14 @@
                 "Collision"
               ],
               "__tile": null,
-              "__worldX": 16830,
+              "__worldX": 18270,
               "__worldY": 255,
               "defUid": 2,
               "fieldInstances": [],
               "height": 14,
               "iid": "13b2ddca-9783-56af-9476-052b5e3685b9",
               "px": [
-                16830,
+                18270,
                 255
               ],
               "width": 96
@@ -3594,7 +3614,7 @@
             {
               "__identifier": "CollisionRect",
               "__grid": [
-                1061,
+                1151,
                 13
               ],
               "__pivot": [
@@ -3605,14 +3625,14 @@
                 "Collision"
               ],
               "__tile": null,
-              "__worldX": 16985,
+              "__worldX": 18425,
               "__worldY": 210,
               "defUid": 2,
               "fieldInstances": [],
               "height": 14,
               "iid": "b76257ba-85ec-5b7a-9c71-50d00b6bebea",
               "px": [
-                16985,
+                18425,
                 210
               ],
               "width": 95
@@ -3620,7 +3640,7 @@
             {
               "__identifier": "CollisionRect",
               "__grid": [
-                1080,
+                1170,
                 0
               ],
               "__pivot": [
@@ -3631,14 +3651,14 @@
                 "Collision"
               ],
               "__tile": null,
-              "__worldX": 17280,
+              "__worldX": 18720,
               "__worldY": 0,
               "defUid": 2,
               "fieldInstances": [],
               "height": 720,
               "iid": "af31b628-6b71-59d5-bb67-746a588d9a8e",
               "px": [
-                17280,
+                18720,
                 0
               ],
               "width": 20
@@ -4015,7 +4035,7 @@
             {
               "__identifier": "Section",
               "__grid": [
-                1026,
+                1116,
                 0
               ],
               "__pivot": [
@@ -4026,7 +4046,7 @@
                 "Section"
               ],
               "__tile": null,
-              "__worldX": 16423,
+              "__worldX": 17863,
               "__worldY": 0,
               "defUid": 3,
               "fieldInstances": [
@@ -4048,10 +4068,285 @@
               "height": 720,
               "iid": "c0f2cec5-9734-5732-81e6-ef812a30a1fb",
               "px": [
-                16423,
+                17863,
                 0
               ],
               "width": 857
+            },
+            {
+              "__identifier": "Section",
+              "__grid": [
+                1026,
+                0
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Section"
+              ],
+              "__tile": null,
+              "__worldX": 16423,
+              "__worldY": 0,
+              "defUid": 3,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "ConductorApproach",
+                  "defUid": 1,
+                  "realEditorValues": [
+                    {
+                      "id": "e0d69bb1-5359-5652-9c68-6dd71d621453",
+                      "params": [
+                        "ConductorApproach"
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "height": 720,
+              "iid": "257fa217-3020-5d13-9d83-846ba0d2d4d1",
+              "px": [
+                16423,
+                0
+              ],
+              "width": 1440
+            },
+            {
+              "__identifier": "CollisionRect",
+              "__grid": [
+                1025,
+                20
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Collision"
+              ],
+              "__tile": null,
+              "__worldX": 16400,
+              "__worldY": 326,
+              "defUid": 2,
+              "fieldInstances": [],
+              "height": 34,
+              "iid": "8fc42196-0a93-54fd-8794-8302441cbefa",
+              "px": [
+                16400,
+                326
+              ],
+              "width": 220
+            },
+            {
+              "__identifier": "CollisionRect",
+              "__grid": [
+                1041,
+                17
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Collision"
+              ],
+              "__tile": null,
+              "__worldX": 16670,
+              "__worldY": 286,
+              "defUid": 2,
+              "fieldInstances": [],
+              "height": 14,
+              "iid": "673fd8ab-e1f7-5c3c-997e-40175e335f68",
+              "px": [
+                16670,
+                286
+              ],
+              "width": 105
+            },
+            {
+              "__identifier": "CollisionRect",
+              "__grid": [
+                1051,
+                14
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Collision"
+              ],
+              "__tile": null,
+              "__worldX": 16825,
+              "__worldY": 235,
+              "defUid": 2,
+              "fieldInstances": [],
+              "height": 14,
+              "iid": "66d176f4-c7a6-5c8b-9cfa-58cda3e311e6",
+              "px": [
+                16825,
+                235
+              ],
+              "width": 105
+            },
+            {
+              "__identifier": "CollisionRect",
+              "__grid": [
+                1061,
+                11
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Collision"
+              ],
+              "__tile": null,
+              "__worldX": 16985,
+              "__worldY": 184,
+              "defUid": 2,
+              "fieldInstances": [],
+              "height": 14,
+              "iid": "14571f56-2020-56c0-be62-f469e1584dae",
+              "px": [
+                16985,
+                184
+              ],
+              "width": 110
+            },
+            {
+              "__identifier": "CollisionRect",
+              "__grid": [
+                1072,
+                14
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Collision"
+              ],
+              "__tile": null,
+              "__worldX": 17155,
+              "__worldY": 235,
+              "defUid": 2,
+              "fieldInstances": [],
+              "height": 14,
+              "iid": "4a1fd8bd-d513-582e-b6a7-79b9f81828fd",
+              "px": [
+                17155,
+                235
+              ],
+              "width": 110
+            },
+            {
+              "__identifier": "CollisionRect",
+              "__grid": [
+                1082,
+                17
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Collision"
+              ],
+              "__tile": null,
+              "__worldX": 17325,
+              "__worldY": 286,
+              "defUid": 2,
+              "fieldInstances": [],
+              "height": 14,
+              "iid": "7d43507f-3e7b-566a-a992-fc40150c44e6",
+              "px": [
+                17325,
+                286
+              ],
+              "width": 110
+            },
+            {
+              "__identifier": "CollisionRect",
+              "__grid": [
+                1092,
+                20
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Collision"
+              ],
+              "__tile": null,
+              "__worldX": 17485,
+              "__worldY": 326,
+              "defUid": 2,
+              "fieldInstances": [],
+              "height": 34,
+              "iid": "219c1939-eae2-5bb5-bd7b-05ad0a5be054",
+              "px": [
+                17485,
+                326
+              ],
+              "width": 150
+            },
+            {
+              "__identifier": "CollisionRect",
+              "__grid": [
+                1105,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Collision"
+              ],
+              "__tile": null,
+              "__worldX": 17680,
+              "__worldY": 270,
+              "defUid": 2,
+              "fieldInstances": [],
+              "height": 14,
+              "iid": "2b6ad97b-d332-5db2-82ba-de6368936026",
+              "px": [
+                17680,
+                270
+              ],
+              "width": 90
+            },
+            {
+              "__identifier": "CollisionRect",
+              "__grid": [
+                1112,
+                20
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Collision"
+              ],
+              "__tile": null,
+              "__worldX": 17805,
+              "__worldY": 326,
+              "defUid": 2,
+              "fieldInstances": [],
+              "height": 34,
+              "iid": "a4873299-5665-5641-bcd9-b0cf61e549ca",
+              "px": [
+                17805,
+                326
+              ],
+              "width": 58
             }
           ],
           "gridTiles": [],

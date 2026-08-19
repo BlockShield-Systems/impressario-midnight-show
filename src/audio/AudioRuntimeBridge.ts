@@ -138,7 +138,7 @@ const ZONES: readonly Zone[] = [
       "vo_mirror_core"
   },
   {
-    start: 16400,
+    start: 17840,
     music:
       "music_10_conductor_phase_1",
     ambience:

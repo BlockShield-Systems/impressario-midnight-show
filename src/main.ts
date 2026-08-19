@@ -27,6 +27,7 @@ import {
   WORLD_SOLIDS,
   WORLD_WIDTH
 } from "./world/WorldLayout";
+import { EnvironmentTileRenderer } from "./world/EnvironmentTileRenderer";
 
 /* -------------------------------------------------------------------------- */
 /* Configuration                                                              */
@@ -940,12 +941,19 @@ class GameScene extends Phaser.Scene {
     EnemyView.preload(this);
     BossView.preload(this);
     AudioDirector.preload(this);
+    EnvironmentTileRenderer.preload(
+      this
+    );
   }
 
   public create(): void {
     this.cameras.main.setBackgroundColor("#0b0710");
 
     this.createBackdrop();
+
+    new EnvironmentTileRenderer(
+      this
+    );
 
     const solids = this.createLevel();
 

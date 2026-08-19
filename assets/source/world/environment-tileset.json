@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "image": "/assets/world/impressario-environment.png",
+  "width": 256,
+  "height": 256,
+  "tileWidth": 32,
+  "tileHeight": 32,
+  "columns": 8,
+  "rows": 8,
+  "tileCount": 64,
+  "sectionFrames": {
+    "MovementRehearsal": 0,
+    "CombatRehearsal": 1,
+    "MainStage": 2,
+    "GrandGallery": 3,
+    "GalleryGauntlet": 4,
+    "SpotlightVault": 5,
+    "CardSanctum": 6,
+    "RoyalBox": 7,
+    "MirrorCore": 8,
+    "ConductorApproach": 9,
+    "MirrorConductor": 10
+  }
+}

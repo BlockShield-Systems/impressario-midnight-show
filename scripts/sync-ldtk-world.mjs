@@ -156,9 +156,9 @@ const sections = layer.entityInstances
       left.startX - right.startX
   );
 
-if (sections.length !== 10) {
+if (sections.length !== 11) {
   throw new Error(
-    `Expected 10 sections, got ${
+    `Expected 11 sections, got ${
       sections.length
     }.`
   );

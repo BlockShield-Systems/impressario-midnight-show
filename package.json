@@ -19,7 +19,7 @@
     "assets:player": "bash scripts/export-player-atlas.sh",
     "assets:player:validate": "node scripts/validate-player-atlas.mjs",
     "assets:audio": "python3 scripts/audio-pipeline.py all",
-    "assets:build": "npm run assets:player && npm run assets:enemies && npm run assets:boss && npm run assets:audio && npm run build",
+    "assets:build": "npm run assets:world && npm run assets:player && npm run assets:enemies && npm run assets:boss && npm run assets:audio && npm run build",
     "assets:enemies": "bash scripts/generate-enemy-source.sh && bash scripts/export-enemy-atlas.sh",
     "assets:enemies:validate": "node scripts/validate-enemy-atlas.mjs",
     "assets:boss": "bash scripts/generate-boss-source.sh && bash scripts/export-boss-atlas.sh",
@@ -31,7 +31,8 @@
     "test:audio:e2e": "playwright test tests/audio-runtime.spec.ts",
     "test:audio:e2e:headed": "playwright test tests/audio-runtime.spec.ts --headed",
     "levels:sync": "node scripts/sync-ldtk-world.mjs",
-    "levels:validate": "node scripts/sync-ldtk-world.mjs --check"
+    "levels:validate": "node scripts/sync-ldtk-world.mjs --check",
+    "assets:world": "python3 scripts/generate-environment-tiles.py"
   },
   "dependencies": {
     "phaser": "4.2.1"
