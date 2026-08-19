@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import { getWorldSupportPickups } from "./WorldHazards";
 
 import type {
   CombatSystem,
@@ -39,12 +40,8 @@ const ROYAL_BOX_START_X = 12000;
 const LOOK_DOWN_DELAY = 0.18;
 const LOOK_DOWN_OFFSET = 105;
 
-const ROSE_POSITIONS = [
-  { x: 12135, y: 298 },
-  { x: 13070, y: 298 },
-  { x: 13542, y: 182 },
-  { x: 14146, y: 242 }
-] as const;
+const ROSE_POSITIONS =
+  getWorldSupportPickups("RoyalBox");
 
 export class RoyalBoxSupportSystem {
   private unlocked = false;

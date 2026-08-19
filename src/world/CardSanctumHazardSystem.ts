@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import { getWorldHazards } from "./WorldHazards";
 
 import type { PlayerController } from "../main";
 import type { PlayerHealthSystem } from "../player/PlayerHealthSystem";
@@ -18,63 +19,32 @@ interface SpikeDefinition {
   readonly width: number;
 }
 
-const BLADES: readonly BladeDefinition[] = [
-  {
-    originX: 9950,
-    originY: 390,
-    travelX: 90,
-    travelY: 0,
-    speed: 1.7,
-    phase: 0
-  },
-  {
-    originX: 10460,
-    originY: 275,
-    travelX: 0,
-    travelY: 105,
-    speed: 1.5,
-    phase: Math.PI * 0.5
-  },
-  {
-    originX: 11120,
-    originY: 245,
-    travelX: 110,
-    travelY: 0,
-    speed: 1.9,
-    phase: Math.PI
-  },
-  {
-    originX: 11590,
-    originY: 395,
-    travelX: 0,
-    travelY: 95,
-    speed: 1.65,
-    phase: Math.PI * 0.25
-  }
-];
+const BLADES: readonly BladeDefinition[] =
+  getWorldHazards(
+    "CardSanctum",
+    "Blade"
+  ).map(
+    hazard => ({
+      originX: hazard.x,
+      originY: hazard.y,
+      travelX: hazard.travelX,
+      travelY: hazard.travelY,
+      speed: hazard.speed,
+      phase: hazard.phase
+    })
+  );
 
-const SPIKES: readonly SpikeDefinition[] = [
-  {
-    x: 9850,
-    y: 520,
-    width: 70
-  },
-  {
-    x: 10160,
-    y: 520,
-    width: 75
-  },
-  {
-    x: 10840,
-    y: 326,
-    width: 65
-  },
-  {
-    x: 11390,
-    y: 520,
-    width: 78
-  }
-];
+const SPIKES: readonly SpikeDefinition[] =
+  getWorldHazards(
+    "CardSanctum",
+    "Spike"
+  ).map(
+    hazard => ({
+      x: hazard.x,
+      y: hazard.y,
+      width: hazard.width
+    })
+  );
 
 export class CardSanctumHazardSystem {
   private enabled = false;

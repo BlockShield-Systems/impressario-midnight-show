@@ -11,7 +11,7 @@
   "iid": "49475ace-8d6d-5ace-b9c1-bdfa1f69afc7",
   "jsonVersion": "1.5.3",
   "appBuildId": 50300,
-  "nextUid": 27,
+  "nextUid": 38,
   "identifierStyle": "Capitalize",
   "toc": [],
   "worldLayout": "Free",
@@ -650,6 +650,349 @@
             "editorTextSuffix": null,
             "editorTextPrefix": null,
             "useForSmartColor": false,
+            "min": null,
+            "max": null,
+            "regex": null,
+            "acceptFileTypes": null,
+            "defaultOverride": null,
+            "textLanguageMode": null,
+            "symmetricalRef": false,
+            "autoChainRef": true,
+            "allowOutOfLevelRef": true,
+            "allowedRefs": "Any",
+            "allowedRefTags": [],
+            "tilesetUid": null
+          }
+        ]
+      },
+      {
+        "allowOutOfBounds": true,
+        "doc": null,
+        "exportToToc": false,
+        "fillOpacity": 0.45,
+        "hollow": false,
+        "keepAspectRatio": false,
+        "limitBehavior": "DiscardOldOnes",
+        "limitScope": "PerLevel",
+        "lineOpacity": 1,
+        "maxCount": 0,
+        "nineSliceBorders": [],
+        "pivotX": 0,
+        "pivotY": 0,
+        "renderMode": "Rectangle",
+        "resizableX": true,
+        "resizableY": true,
+        "showName": false,
+        "tags": [
+          "Gameplay"
+        ],
+        "tileRect": null,
+        "tileRenderMode": "Cover",
+        "tilesetId": null,
+        "identifier": "HazardAnchor",
+        "uid": 27,
+        "color": "#63E6E2",
+        "width": 16,
+        "height": 16,
+        "fieldDefs": [
+          {
+            "__type": "String",
+            "identifier": "Identifier",
+            "uid": 28,
+            "type": "F_String",
+            "isArray": false,
+            "canBeNull": false,
+            "arrayMinLength": null,
+            "arrayMaxLength": null,
+            "editorDisplayMode": "NameAndValue",
+            "editorDisplayPos": "Above",
+            "editorLinkStyle": "ZigZag",
+            "editorShowInWorld": true,
+            "editorAlwaysShow": true,
+            "editorCutLongValues": false,
+            "editorTextSuffix": null,
+            "editorTextPrefix": null,
+            "useForSmartColor": true,
+            "min": null,
+            "max": null,
+            "regex": null,
+            "acceptFileTypes": null,
+            "defaultOverride": null,
+            "textLanguageMode": null,
+            "symmetricalRef": false,
+            "autoChainRef": true,
+            "allowOutOfLevelRef": true,
+            "allowedRefs": "Any",
+            "allowedRefTags": [],
+            "tilesetUid": null
+          },
+          {
+            "__type": "String",
+            "identifier": "Group",
+            "uid": 29,
+            "type": "F_String",
+            "isArray": false,
+            "canBeNull": false,
+            "arrayMinLength": null,
+            "arrayMaxLength": null,
+            "editorDisplayMode": "NameAndValue",
+            "editorDisplayPos": "Above",
+            "editorLinkStyle": "ZigZag",
+            "editorShowInWorld": true,
+            "editorAlwaysShow": true,
+            "editorCutLongValues": false,
+            "editorTextSuffix": null,
+            "editorTextPrefix": null,
+            "useForSmartColor": true,
+            "min": null,
+            "max": null,
+            "regex": null,
+            "acceptFileTypes": null,
+            "defaultOverride": null,
+            "textLanguageMode": null,
+            "symmetricalRef": false,
+            "autoChainRef": true,
+            "allowOutOfLevelRef": true,
+            "allowedRefs": "Any",
+            "allowedRefTags": [],
+            "tilesetUid": null
+          },
+          {
+            "__type": "String",
+            "identifier": "Kind",
+            "uid": 30,
+            "type": "F_String",
+            "isArray": false,
+            "canBeNull": false,
+            "arrayMinLength": null,
+            "arrayMaxLength": null,
+            "editorDisplayMode": "NameAndValue",
+            "editorDisplayPos": "Above",
+            "editorLinkStyle": "ZigZag",
+            "editorShowInWorld": true,
+            "editorAlwaysShow": true,
+            "editorCutLongValues": false,
+            "editorTextSuffix": null,
+            "editorTextPrefix": null,
+            "useForSmartColor": true,
+            "min": null,
+            "max": null,
+            "regex": null,
+            "acceptFileTypes": null,
+            "defaultOverride": null,
+            "textLanguageMode": null,
+            "symmetricalRef": false,
+            "autoChainRef": true,
+            "allowOutOfLevelRef": true,
+            "allowedRefs": "Any",
+            "allowedRefTags": [],
+            "tilesetUid": null
+          },
+          {
+            "__type": "Float",
+            "identifier": "TravelX",
+            "uid": 31,
+            "type": "F_Float",
+            "isArray": false,
+            "canBeNull": false,
+            "arrayMinLength": null,
+            "arrayMaxLength": null,
+            "editorDisplayMode": "NameAndValue",
+            "editorDisplayPos": "Above",
+            "editorLinkStyle": "ZigZag",
+            "editorShowInWorld": true,
+            "editorAlwaysShow": true,
+            "editorCutLongValues": false,
+            "editorTextSuffix": null,
+            "editorTextPrefix": null,
+            "useForSmartColor": false,
+            "min": null,
+            "max": null,
+            "regex": null,
+            "acceptFileTypes": null,
+            "defaultOverride": null,
+            "textLanguageMode": null,
+            "symmetricalRef": false,
+            "autoChainRef": true,
+            "allowOutOfLevelRef": true,
+            "allowedRefs": "Any",
+            "allowedRefTags": [],
+            "tilesetUid": null
+          },
+          {
+            "__type": "Float",
+            "identifier": "TravelY",
+            "uid": 32,
+            "type": "F_Float",
+            "isArray": false,
+            "canBeNull": false,
+            "arrayMinLength": null,
+            "arrayMaxLength": null,
+            "editorDisplayMode": "NameAndValue",
+            "editorDisplayPos": "Above",
+            "editorLinkStyle": "ZigZag",
+            "editorShowInWorld": true,
+            "editorAlwaysShow": true,
+            "editorCutLongValues": false,
+            "editorTextSuffix": null,
+            "editorTextPrefix": null,
+            "useForSmartColor": false,
+            "min": null,
+            "max": null,
+            "regex": null,
+            "acceptFileTypes": null,
+            "defaultOverride": null,
+            "textLanguageMode": null,
+            "symmetricalRef": false,
+            "autoChainRef": true,
+            "allowOutOfLevelRef": true,
+            "allowedRefs": "Any",
+            "allowedRefTags": [],
+            "tilesetUid": null
+          },
+          {
+            "__type": "Float",
+            "identifier": "Speed",
+            "uid": 33,
+            "type": "F_Float",
+            "isArray": false,
+            "canBeNull": false,
+            "arrayMinLength": null,
+            "arrayMaxLength": null,
+            "editorDisplayMode": "NameAndValue",
+            "editorDisplayPos": "Above",
+            "editorLinkStyle": "ZigZag",
+            "editorShowInWorld": true,
+            "editorAlwaysShow": true,
+            "editorCutLongValues": false,
+            "editorTextSuffix": null,
+            "editorTextPrefix": null,
+            "useForSmartColor": false,
+            "min": null,
+            "max": null,
+            "regex": null,
+            "acceptFileTypes": null,
+            "defaultOverride": null,
+            "textLanguageMode": null,
+            "symmetricalRef": false,
+            "autoChainRef": true,
+            "allowOutOfLevelRef": true,
+            "allowedRefs": "Any",
+            "allowedRefTags": [],
+            "tilesetUid": null
+          },
+          {
+            "__type": "Float",
+            "identifier": "Phase",
+            "uid": 34,
+            "type": "F_Float",
+            "isArray": false,
+            "canBeNull": false,
+            "arrayMinLength": null,
+            "arrayMaxLength": null,
+            "editorDisplayMode": "NameAndValue",
+            "editorDisplayPos": "Above",
+            "editorLinkStyle": "ZigZag",
+            "editorShowInWorld": true,
+            "editorAlwaysShow": true,
+            "editorCutLongValues": false,
+            "editorTextSuffix": null,
+            "editorTextPrefix": null,
+            "useForSmartColor": false,
+            "min": null,
+            "max": null,
+            "regex": null,
+            "acceptFileTypes": null,
+            "defaultOverride": null,
+            "textLanguageMode": null,
+            "symmetricalRef": false,
+            "autoChainRef": true,
+            "allowOutOfLevelRef": true,
+            "allowedRefs": "Any",
+            "allowedRefTags": [],
+            "tilesetUid": null
+          }
+        ]
+      },
+      {
+        "allowOutOfBounds": true,
+        "doc": null,
+        "exportToToc": false,
+        "fillOpacity": 0.45,
+        "hollow": false,
+        "keepAspectRatio": false,
+        "limitBehavior": "DiscardOldOnes",
+        "limitScope": "PerLevel",
+        "lineOpacity": 1,
+        "maxCount": 0,
+        "nineSliceBorders": [],
+        "pivotX": 0,
+        "pivotY": 0,
+        "renderMode": "Rectangle",
+        "resizableX": false,
+        "resizableY": false,
+        "showName": false,
+        "tags": [
+          "Gameplay"
+        ],
+        "tileRect": null,
+        "tileRenderMode": "Cover",
+        "tilesetId": null,
+        "identifier": "SupportPickup",
+        "uid": 35,
+        "color": "#63E6E2",
+        "width": 16,
+        "height": 16,
+        "fieldDefs": [
+          {
+            "__type": "String",
+            "identifier": "Identifier",
+            "uid": 36,
+            "type": "F_String",
+            "isArray": false,
+            "canBeNull": false,
+            "arrayMinLength": null,
+            "arrayMaxLength": null,
+            "editorDisplayMode": "NameAndValue",
+            "editorDisplayPos": "Above",
+            "editorLinkStyle": "ZigZag",
+            "editorShowInWorld": true,
+            "editorAlwaysShow": true,
+            "editorCutLongValues": false,
+            "editorTextSuffix": null,
+            "editorTextPrefix": null,
+            "useForSmartColor": true,
+            "min": null,
+            "max": null,
+            "regex": null,
+            "acceptFileTypes": null,
+            "defaultOverride": null,
+            "textLanguageMode": null,
+            "symmetricalRef": false,
+            "autoChainRef": true,
+            "allowOutOfLevelRef": true,
+            "allowedRefs": "Any",
+            "allowedRefTags": [],
+            "tilesetUid": null
+          },
+          {
+            "__type": "String",
+            "identifier": "Group",
+            "uid": 37,
+            "type": "F_String",
+            "isArray": false,
+            "canBeNull": false,
+            "arrayMinLength": null,
+            "arrayMaxLength": null,
+            "editorDisplayMode": "NameAndValue",
+            "editorDisplayPos": "Above",
+            "editorLinkStyle": "ZigZag",
+            "editorShowInWorld": true,
+            "editorAlwaysShow": true,
+            "editorCutLongValues": false,
+            "editorTextSuffix": null,
+            "editorTextPrefix": null,
+            "useForSmartColor": true,
             "min": null,
             "max": null,
             "regex": null,
@@ -7857,6 +8200,2575 @@
               "px": [
                 16200,
                 194
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "HazardAnchor",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 6625,
+              "__worldY": 86,
+              "defUid": 27,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "GalleryPendulumA",
+                  "defUid": 28,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "Gallery",
+                  "defUid": 29,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "Pendulum",
+                  "defUid": 30,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelX",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 31,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelY",
+                  "__type": "Float",
+                  "__value": 165,
+                  "defUid": 32,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Speed",
+                  "__type": "Float",
+                  "__value": 1.65,
+                  "defUid": 33,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 34,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "2ea2ad91-2c21-408c-8592-6dfe418583a4",
+              "px": [
+                6625,
+                86
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "HazardAnchor",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 7875,
+              "__worldY": 82,
+              "defUid": 27,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "GalleryPendulumB",
+                  "defUid": 28,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "Gallery",
+                  "defUid": 29,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "Pendulum",
+                  "defUid": 30,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelX",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 31,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelY",
+                  "__type": "Float",
+                  "__value": 175,
+                  "defUid": 32,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Speed",
+                  "__type": "Float",
+                  "__value": 1.65,
+                  "defUid": 33,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 3.141592653589793,
+                  "defUid": 34,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "461b1b12-7b6e-4432-87d3-4339c83cdc76",
+              "px": [
+                7875,
+                82
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "HazardAnchor",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 6915,
+              "__worldY": 430,
+              "defUid": 27,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "GallerySpikeA",
+                  "defUid": 28,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "Gallery",
+                  "defUid": 29,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "Spike",
+                  "defUid": 30,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelX",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 31,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelY",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 32,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Speed",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 33,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 34,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 15,
+              "iid": "c4612b2f-1f29-4bcc-a6dd-aa41535d5840",
+              "px": [
+                6915,
+                430
+              ],
+              "width": 62
+            },
+            {
+              "__identifier": "HazardAnchor",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 7625,
+              "__worldY": 326,
+              "defUid": 27,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "GallerySpikeB",
+                  "defUid": 28,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "Gallery",
+                  "defUid": 29,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "Spike",
+                  "defUid": 30,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelX",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 31,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelY",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 32,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Speed",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 33,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 34,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 15,
+              "iid": "270c3120-93d8-4f78-a704-2c4fc61b49e0",
+              "px": [
+                7625,
+                326
+              ],
+              "width": 58
+            },
+            {
+              "__identifier": "HazardAnchor",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 9950,
+              "__worldY": 390,
+              "defUid": 27,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "SanctumBladeA",
+                  "defUid": 28,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "CardSanctum",
+                  "defUid": 29,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "Blade",
+                  "defUid": 30,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelX",
+                  "__type": "Float",
+                  "__value": 90,
+                  "defUid": 31,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelY",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 32,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Speed",
+                  "__type": "Float",
+                  "__value": 1.7,
+                  "defUid": 33,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 34,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "f4455dcd-6907-4c3e-bb8c-dde38ab54420",
+              "px": [
+                9950,
+                390
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "HazardAnchor",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 10460,
+              "__worldY": 275,
+              "defUid": 27,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "SanctumBladeB",
+                  "defUid": 28,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "CardSanctum",
+                  "defUid": 29,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "Blade",
+                  "defUid": 30,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelX",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 31,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelY",
+                  "__type": "Float",
+                  "__value": 105,
+                  "defUid": 32,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Speed",
+                  "__type": "Float",
+                  "__value": 1.5,
+                  "defUid": 33,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 1.5707963267948966,
+                  "defUid": 34,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "278fe933-e2f9-4c58-9206-c3a36c3f79ce",
+              "px": [
+                10460,
+                275
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "HazardAnchor",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 11120,
+              "__worldY": 245,
+              "defUid": 27,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "SanctumBladeC",
+                  "defUid": 28,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "CardSanctum",
+                  "defUid": 29,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "Blade",
+                  "defUid": 30,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelX",
+                  "__type": "Float",
+                  "__value": 110,
+                  "defUid": 31,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelY",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 32,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Speed",
+                  "__type": "Float",
+                  "__value": 1.9,
+                  "defUid": 33,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 3.141592653589793,
+                  "defUid": 34,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "baa74201-bc78-4f59-a505-4cc54a43ac05",
+              "px": [
+                11120,
+                245
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "HazardAnchor",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 11590,
+              "__worldY": 395,
+              "defUid": 27,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "SanctumBladeD",
+                  "defUid": 28,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "CardSanctum",
+                  "defUid": 29,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "Blade",
+                  "defUid": 30,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelX",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 31,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelY",
+                  "__type": "Float",
+                  "__value": 95,
+                  "defUid": 32,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Speed",
+                  "__type": "Float",
+                  "__value": 1.65,
+                  "defUid": 33,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 0.7853981633974483,
+                  "defUid": 34,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "5509b571-10e1-4ead-b566-887842ef0bdc",
+              "px": [
+                11590,
+                395
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "HazardAnchor",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 9850,
+              "__worldY": 520,
+              "defUid": 27,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "SanctumSpikeA",
+                  "defUid": 28,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "CardSanctum",
+                  "defUid": 29,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "Spike",
+                  "defUid": 30,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelX",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 31,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelY",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 32,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Speed",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 33,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 34,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "9086e45c-f209-4e24-9400-d44aaa451f70",
+              "px": [
+                9850,
+                520
+              ],
+              "width": 70
+            },
+            {
+              "__identifier": "HazardAnchor",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 10160,
+              "__worldY": 520,
+              "defUid": 27,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "SanctumSpikeB",
+                  "defUid": 28,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "CardSanctum",
+                  "defUid": 29,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "Spike",
+                  "defUid": 30,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelX",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 31,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelY",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 32,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Speed",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 33,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 34,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "97d34049-d7fb-4d3c-8276-ce942d945122",
+              "px": [
+                10160,
+                520
+              ],
+              "width": 75
+            },
+            {
+              "__identifier": "HazardAnchor",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 10840,
+              "__worldY": 326,
+              "defUid": 27,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "SanctumSpikeC",
+                  "defUid": 28,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "CardSanctum",
+                  "defUid": 29,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "Spike",
+                  "defUid": 30,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelX",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 31,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelY",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 32,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Speed",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 33,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 34,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "bc2f0211-44a4-445b-be0b-60029640dccc",
+              "px": [
+                10840,
+                326
+              ],
+              "width": 65
+            },
+            {
+              "__identifier": "HazardAnchor",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 11390,
+              "__worldY": 520,
+              "defUid": 27,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "SanctumSpikeD",
+                  "defUid": 28,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "CardSanctum",
+                  "defUid": 29,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "Spike",
+                  "defUid": 30,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelX",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 31,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelY",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 32,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Speed",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 33,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 34,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "c650fbf3-2378-43a7-acdf-1f3351a2d1d4",
+              "px": [
+                11390,
+                520
+              ],
+              "width": 78
+            },
+            {
+              "__identifier": "HazardAnchor",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 12305,
+              "__worldY": 520,
+              "defUid": 27,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "RoyalSpikeA",
+                  "defUid": 28,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "RoyalBox",
+                  "defUid": 29,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "Spike",
+                  "defUid": 30,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelX",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 31,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelY",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 32,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Speed",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 33,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 34,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 15,
+              "iid": "c21b076c-4c21-4fe3-8496-208e172ca0cb",
+              "px": [
+                12305,
+                520
+              ],
+              "width": 78
+            },
+            {
+              "__identifier": "HazardAnchor",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 12695,
+              "__worldY": 520,
+              "defUid": 27,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "RoyalSpikeB",
+                  "defUid": 28,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "RoyalBox",
+                  "defUid": 29,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "Spike",
+                  "defUid": 30,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelX",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 31,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelY",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 32,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Speed",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 33,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 34,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 15,
+              "iid": "96750524-4c96-440f-a8f2-8817d3a21da4",
+              "px": [
+                12695,
+                520
+              ],
+              "width": 72
+            },
+            {
+              "__identifier": "HazardAnchor",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 13210,
+              "__worldY": 326,
+              "defUid": 27,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "RoyalSpikeC",
+                  "defUid": 28,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "RoyalBox",
+                  "defUid": 29,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "Spike",
+                  "defUid": 30,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelX",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 31,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelY",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 32,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Speed",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 33,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 34,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 15,
+              "iid": "b7075efb-e937-4a32-aa9a-1e69dfb0fe8e",
+              "px": [
+                13210,
+                326
+              ],
+              "width": 62
+            },
+            {
+              "__identifier": "HazardAnchor",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 13455,
+              "__worldY": 520,
+              "defUid": 27,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "RoyalSpikeD",
+                  "defUid": 28,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "RoyalBox",
+                  "defUid": 29,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "Spike",
+                  "defUid": 30,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelX",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 31,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelY",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 32,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Speed",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 33,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 34,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 15,
+              "iid": "8797e5ab-2137-41c3-a54b-33471a6a6cd3",
+              "px": [
+                13455,
+                520
+              ],
+              "width": 86
+            },
+            {
+              "__identifier": "HazardAnchor",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 13810,
+              "__worldY": 520,
+              "defUid": 27,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "RoyalSpikeE",
+                  "defUid": 28,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "RoyalBox",
+                  "defUid": 29,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "Spike",
+                  "defUid": 30,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelX",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 31,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelY",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 32,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Speed",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 33,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 34,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 15,
+              "iid": "a6c087ed-4585-4f8e-a1f4-6641f40410ac",
+              "px": [
+                13810,
+                520
+              ],
+              "width": 74
+            },
+            {
+              "__identifier": "HazardAnchor",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 12440,
+              "__worldY": 350,
+              "defUid": 27,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "RoyalBladeA",
+                  "defUid": 28,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "RoyalBox",
+                  "defUid": 29,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "Blade",
+                  "defUid": 30,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelX",
+                  "__type": "Float",
+                  "__value": 92,
+                  "defUid": 31,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelY",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 32,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Speed",
+                  "__type": "Float",
+                  "__value": 1.8,
+                  "defUid": 33,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 34,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "f499dfc7-7ade-40e9-81e9-6ae2897c49c3",
+              "px": [
+                12440,
+                350
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "HazardAnchor",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 12870,
+              "__worldY": 310,
+              "defUid": 27,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "RoyalBladeB",
+                  "defUid": 28,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "RoyalBox",
+                  "defUid": 29,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "Blade",
+                  "defUid": 30,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelX",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 31,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelY",
+                  "__type": "Float",
+                  "__value": 105,
+                  "defUid": 32,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Speed",
+                  "__type": "Float",
+                  "__value": 1.6,
+                  "defUid": 33,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 1.5707963267948966,
+                  "defUid": 34,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "4127cfec-a88e-4d67-bf5d-5f1c6eb0aaf5",
+              "px": [
+                12870,
+                310
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "HazardAnchor",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 13570,
+              "__worldY": 300,
+              "defUid": 27,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "RoyalBladeC",
+                  "defUid": 28,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "RoyalBox",
+                  "defUid": 29,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "Blade",
+                  "defUid": 30,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelX",
+                  "__type": "Float",
+                  "__value": 105,
+                  "defUid": 31,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelY",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 32,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Speed",
+                  "__type": "Float",
+                  "__value": 2.05,
+                  "defUid": 33,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 3.141592653589793,
+                  "defUid": 34,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "c41a4d4c-368e-49b4-a6c8-00c78debdde9",
+              "px": [
+                13570,
+                300
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "HazardAnchor",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 14010,
+              "__worldY": 390,
+              "defUid": 27,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "RoyalBladeD",
+                  "defUid": 28,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "RoyalBox",
+                  "defUid": 29,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "Blade",
+                  "defUid": 30,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelX",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 31,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelY",
+                  "__type": "Float",
+                  "__value": 92,
+                  "defUid": 32,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Speed",
+                  "__type": "Float",
+                  "__value": 1.75,
+                  "defUid": 33,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 0.7853981633974483,
+                  "defUid": 34,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "78ea60eb-2f31-498c-be3b-c58cedad8d87",
+              "px": [
+                14010,
+                390
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "HazardAnchor",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 12270,
+              "__worldY": 300,
+              "defUid": 27,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "RoyalLaserA",
+                  "defUid": 28,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "RoyalBox",
+                  "defUid": 29,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "Laser",
+                  "defUid": 30,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelX",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 31,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelY",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 32,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Speed",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 33,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 34,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 220,
+              "iid": "563fd748-0d8a-4299-a49d-0b8b094295d5",
+              "px": [
+                12270,
+                300
+              ],
+              "width": 8
+            },
+            {
+              "__identifier": "HazardAnchor",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 13010,
+              "__worldY": 150,
+              "defUid": 27,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "RoyalLaserB",
+                  "defUid": 28,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "RoyalBox",
+                  "defUid": 29,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "Laser",
+                  "defUid": 30,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelX",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 31,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelY",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 32,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Speed",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 33,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 0.85,
+                  "defUid": 34,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 176,
+              "iid": "d1a5eac5-8900-4ac0-9c0c-4ade6df83d2a",
+              "px": [
+                13010,
+                150
+              ],
+              "width": 8
+            },
+            {
+              "__identifier": "HazardAnchor",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 13690,
+              "__worldY": 145,
+              "defUid": 27,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "RoyalLaserC",
+                  "defUid": 28,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "RoyalBox",
+                  "defUid": 29,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "Laser",
+                  "defUid": 30,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelX",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 31,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelY",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 32,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Speed",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 33,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 1.55,
+                  "defUid": 34,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 375,
+              "iid": "8caf9869-b469-4963-a32e-f96f3cab1ab4",
+              "px": [
+                13690,
+                145
+              ],
+              "width": 8
+            },
+            {
+              "__identifier": "HazardAnchor",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 14110,
+              "__worldY": 220,
+              "defUid": 27,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "RoyalLaserD",
+                  "defUid": 28,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "RoyalBox",
+                  "defUid": 29,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "Laser",
+                  "defUid": 30,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelX",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 31,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelY",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 32,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Speed",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 33,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 0.35,
+                  "defUid": 34,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 300,
+              "iid": "1acf9fff-470e-45ca-a699-745658e7efca",
+              "px": [
+                14110,
+                220
+              ],
+              "width": 8
+            },
+            {
+              "__identifier": "HazardAnchor",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 14790,
+              "__worldY": 507,
+              "defUid": 27,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "CoreSpikeA",
+                  "defUid": 28,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "MirrorCore",
+                  "defUid": 29,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "Spike",
+                  "defUid": 30,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelX",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 31,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelY",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 32,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Speed",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 33,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 34,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 14,
+              "iid": "292f0912-6786-4fee-9997-a23152052f2f",
+              "px": [
+                14790,
+                507
+              ],
+              "width": 58
+            },
+            {
+              "__identifier": "HazardAnchor",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 15010,
+              "__worldY": 507,
+              "defUid": 27,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "CoreSpikeB",
+                  "defUid": 28,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "MirrorCore",
+                  "defUid": 29,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "Spike",
+                  "defUid": 30,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelX",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 31,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelY",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 32,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Speed",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 33,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 34,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 14,
+              "iid": "c3776528-fdc4-4b13-833b-be80a2d8887c",
+              "px": [
+                15010,
+                507
+              ],
+              "width": 56
+            },
+            {
+              "__identifier": "HazardAnchor",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 15530,
+              "__worldY": 507,
+              "defUid": 27,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "CoreSpikeC",
+                  "defUid": 28,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "MirrorCore",
+                  "defUid": 29,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "Spike",
+                  "defUid": 30,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelX",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 31,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelY",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 32,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Speed",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 33,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 34,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 14,
+              "iid": "90e3dcdf-ff65-490a-a6bf-92eae2d44488",
+              "px": [
+                15530,
+                507
+              ],
+              "width": 64
+            },
+            {
+              "__identifier": "HazardAnchor",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 16000,
+              "__worldY": 507,
+              "defUid": 27,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "CoreSpikeD",
+                  "defUid": 28,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "MirrorCore",
+                  "defUid": 29,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "Spike",
+                  "defUid": 30,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelX",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 31,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "TravelY",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 32,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Speed",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 33,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 0,
+                  "defUid": 34,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 14,
+              "iid": "14d378a1-11cb-4a28-b63a-584a3bd4f00f",
+              "px": [
+                16000,
+                507
+              ],
+              "width": 62
+            },
+            {
+              "__identifier": "SupportPickup",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 12135,
+              "__worldY": 298,
+              "defUid": 35,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "RoyalRoseA",
+                  "defUid": 36,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "RoyalBox",
+                  "defUid": 37,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "9ee1e5fd-5a1a-40f2-b6d7-456cdc38ea4b",
+              "px": [
+                12135,
+                298
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "SupportPickup",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 13070,
+              "__worldY": 298,
+              "defUid": 35,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "RoyalRoseB",
+                  "defUid": 36,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "RoyalBox",
+                  "defUid": 37,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "6bb9a832-437b-4754-9937-8fa545da35ba",
+              "px": [
+                13070,
+                298
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "SupportPickup",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 13542,
+              "__worldY": 182,
+              "defUid": 35,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "RoyalRoseC",
+                  "defUid": 36,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "RoyalBox",
+                  "defUid": 37,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "6f4987cc-f798-4031-92a6-3105a35b7b51",
+              "px": [
+                13542,
+                182
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "SupportPickup",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 14146,
+              "__worldY": 242,
+              "defUid": 35,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "RoyalRoseD",
+                  "defUid": 36,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "RoyalBox",
+                  "defUid": 37,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "c70d459b-2056-4212-a51b-1a6d7502c1a3",
+              "px": [
+                14146,
+                242
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "SupportPickup",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 14530,
+              "__worldY": 294,
+              "defUid": 35,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "CoreRoseA",
+                  "defUid": 36,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "MirrorCore",
+                  "defUid": 37,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "958c9f99-288a-49ab-81cf-078d1b08f9ca",
+              "px": [
+                14530,
+                294
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "SupportPickup",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 15360,
+              "__worldY": 294,
+              "defUid": 35,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "CoreRoseB",
+                  "defUid": 36,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "MirrorCore",
+                  "defUid": 37,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "6c1ae9f8-8157-44ab-a2c4-7d51a56ddcd3",
+              "px": [
+                15360,
+                294
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "SupportPickup",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 16250,
+              "__worldY": 294,
+              "defUid": 35,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "CoreRoseC",
+                  "defUid": 36,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "MirrorCore",
+                  "defUid": 37,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "a6825340-dbf3-4153-bde5-280fe64d5d78",
+              "px": [
+                16250,
+                294
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "SupportPickup",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 17920,
+              "__worldY": 294,
+              "defUid": 35,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "CoreRoseD",
+                  "defUid": 36,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "MirrorCore",
+                  "defUid": 37,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "17006c6e-0fc9-40ca-ba25-67d728ccb9a4",
+              "px": [
+                17920,
+                294
               ],
               "width": 16
             }

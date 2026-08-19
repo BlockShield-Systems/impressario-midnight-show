@@ -1,6 +1,10 @@
 import Phaser from "phaser";
 import { getWorldEnemySpawns } from "./WorldEnemies";
 import {
+  getWorldHazards,
+  getWorldSupportPickups
+} from "./WorldHazards";
+import {
   getWorldCheckpoint,
   getWorldGate,
   type WorldGateId
@@ -122,39 +126,28 @@ readonly CoreEnemySpawn[] =
     }
   );
 
-const ROSE_POSITIONS = [
-  [14530, 294],
-  [15360, 294],
-  [16250, 294],
-  [17920, 294]
-] as const;
+const ROSE_POSITIONS =
+  getWorldSupportPickups("MirrorCore");
 
-const SPIKE_RECTS = [
-  new Phaser.Geom.Rectangle(
-    14790,
-    507,
-    58,
-    14
-  ),
-  new Phaser.Geom.Rectangle(
-    15010,
-    507,
-    56,
-    14
-  ),
-  new Phaser.Geom.Rectangle(
-    15530,
-    507,
-    64,
-    14
-  ),
-  new Phaser.Geom.Rectangle(
-    16000,
-    507,
-    62,
-    14
-  )
-];
+const SPIKE_RECTS =
+  getWorldHazards(
+    "MirrorCore",
+    "Spike"
+  ).map(
+    hazard =>
+      new Phaser.Geom.Rectangle(
+        hazard.x,
+        hazard.y,
+        hazard.width,
+        hazard.height
+      )
+  );
+
+if (SPIKE_RECTS.length !== 4) {
+  throw new Error(
+    `Expected 4 MirrorCore spikes, got ${SPIKE_RECTS.length}.`
+  );
+}
 
 function playerBounds(
   player: PlayerController
@@ -1801,9 +1794,9 @@ export class MirrorCoreSystem {
 
     this.roses =
       ROSE_POSITIONS.map(
-        ([x, y]) => ({
-          x,
-          y,
+        position => ({
+          x: position.x,
+          y: position.y,
           consumed: false
         })
       );

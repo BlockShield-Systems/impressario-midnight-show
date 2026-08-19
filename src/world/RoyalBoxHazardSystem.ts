@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import { getWorldHazards } from "./WorldHazards";
 
 import type { PlayerController } from "../main";
 import type { PlayerHealthSystem } from "../player/PlayerHealthSystem";
@@ -25,95 +26,46 @@ interface LaserDefinition {
   readonly phase: number;
 }
 
-const SPIKES: readonly SpikeDefinition[] = [
-  {
-    x: 12305,
-    y: 520,
-    width: 78
-  },
-  {
-    x: 12695,
-    y: 520,
-    width: 72
-  },
-  {
-    x: 13210,
-    y: 326,
-    width: 62
-  },
-  {
-    x: 13455,
-    y: 520,
-    width: 86
-  },
-  {
-    x: 13810,
-    y: 520,
-    width: 74
-  }
-];
+const SPIKES: readonly SpikeDefinition[] =
+  getWorldHazards(
+    "RoyalBox",
+    "Spike"
+  ).map(
+    hazard => ({
+      x: hazard.x,
+      y: hazard.y,
+      width: hazard.width
+    })
+  );
 
-const BLADES: readonly BladeDefinition[] = [
-  {
-    originX: 12440,
-    originY: 350,
-    travelX: 92,
-    travelY: 0,
-    speed: 1.8,
-    phase: 0
-  },
-  {
-    originX: 12870,
-    originY: 310,
-    travelX: 0,
-    travelY: 105,
-    speed: 1.6,
-    phase: Math.PI * 0.5
-  },
-  {
-    originX: 13570,
-    originY: 300,
-    travelX: 105,
-    travelY: 0,
-    speed: 2.05,
-    phase: Math.PI
-  },
-  {
-    originX: 14010,
-    originY: 390,
-    travelX: 0,
-    travelY: 92,
-    speed: 1.75,
-    phase: Math.PI * 0.25
-  }
-];
+const BLADES: readonly BladeDefinition[] =
+  getWorldHazards(
+    "RoyalBox",
+    "Blade"
+  ).map(
+    hazard => ({
+      originX: hazard.x,
+      originY: hazard.y,
+      travelX: hazard.travelX,
+      travelY: hazard.travelY,
+      speed: hazard.speed,
+      phase: hazard.phase
+    })
+  );
 
-const LASERS: readonly LaserDefinition[] = [
-  {
-    x: 12270,
-    top: 300,
-    bottom: 520,
-    phase: 0
-  },
-  {
-    x: 13010,
-    top: 150,
-    bottom: 326,
-    phase: 0.85
-  },
-  {
-    x: 13690,
-    top: 145,
-    bottom: 520,
-    phase: 1.55
-  },
-  {
-    x: 14110,
-    top: 220,
-    bottom: 520,
-    phase: 0.35
-  }
-];
+const LASERS: readonly LaserDefinition[] =
+  getWorldHazards(
+    "RoyalBox",
+    "Laser"
+  ).map(
+    hazard => ({
+      x: hazard.x,
+      top: hazard.y,
+      bottom:
+        hazard.y + hazard.height,
+      phase: hazard.phase
+    })
+  );
 
 export class RoyalBoxHazardSystem {
   private enabled = false;

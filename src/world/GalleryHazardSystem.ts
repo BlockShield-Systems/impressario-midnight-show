@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import { getWorldHazards } from "./WorldHazards";
 
 import type { PlayerController } from "../main";
 import type { PlayerHealthSystem } from "../player/PlayerHealthSystem";
@@ -7,6 +8,7 @@ interface PendulumDefinition {
   readonly x: number;
   readonly anchorY: number;
   readonly length: number;
+  readonly speed: number;
   readonly phase: number;
 }
 
@@ -16,33 +18,32 @@ interface SpikeDefinition {
   readonly width: number;
 }
 
-const PENDULUMS: readonly PendulumDefinition[] = [
-  {
-    x: 6625,
-    anchorY: 86,
-    length: 165,
-    phase: 0
-  },
-  {
-    x: 7875,
-    anchorY: 82,
-    length: 175,
-    phase: Math.PI
-  }
-];
+const PENDULUMS:
+readonly PendulumDefinition[] =
+  getWorldHazards(
+    "Gallery",
+    "Pendulum"
+  ).map(
+    hazard => ({
+      x: hazard.x,
+      anchorY: hazard.y,
+      length: hazard.travelY,
+      speed: hazard.speed,
+      phase: hazard.phase
+    })
+  );
 
-const SPIKES: readonly SpikeDefinition[] = [
-  {
-    x: 6915,
-    y: 430,
-    width: 62
-  },
-  {
-    x: 7625,
-    y: 326,
-    width: 58
-  }
-];
+const SPIKES: readonly SpikeDefinition[] =
+  getWorldHazards(
+    "Gallery",
+    "Spike"
+  ).map(
+    hazard => ({
+      x: hazard.x,
+      y: hazard.y,
+      width: hazard.width
+    })
+  );
 
 export class GalleryHazardSystem {
   private enabled = false;
@@ -147,7 +148,7 @@ export class GalleryHazardSystem {
   ): Phaser.Math.Vector2 {
     const angle =
       Math.sin(
-        this.elapsed * 1.65 +
+        this.elapsed * pendulum.speed +
         pendulum.phase
       ) * 0.82;
 
