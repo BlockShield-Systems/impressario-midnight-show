@@ -1,0 +1,3927 @@
+{
+  "schemaVersion": 1,
+  "generatedUtc": "2026-08-19T03:34:41.358292+00:00",
+  "assetCount": 95,
+  "physicalSourceCount": 92,
+  "duplicateGroupCount": 3,
+  "format": {
+    "container": "WAV",
+    "codec": "PCM signed 24-bit little-endian",
+    "sampleRate": 48000
+  },
+  "duplicateGroups": [
+    {
+      "decodedPcmSha256": "4e00a2f3750e9a326680561e9438adae0686a567e0c1d610f58155d418aead9a",
+      "canonicalId": "combo_finisher",
+      "aliases": [
+        "grand_card_cast"
+      ]
+    },
+    {
+      "decodedPcmSha256": "7eb1fc646413948b14f9d78057bdbc05ee7a85c114cb842f5ae5083c2982bf3d",
+      "canonicalId": "grand_card_flight",
+      "aliases": [
+        "grand_card_hit"
+      ]
+    },
+    {
+      "decodedPcmSha256": "8457233def45b55a2b0c3602a88d077fbb2cf368fb37c46491bdd759e3948c24",
+      "canonicalId": "enemy_defeat",
+      "aliases": [
+        "spotlight_cast"
+      ]
+    }
+  ],
+  "assets": [
+    {
+      "id": "music_01_opening_rehearsal",
+      "category": "music",
+      "bus": "music",
+      "loop": true,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/music/music_01_opening_rehearsal_raw_1787103271815.mp3",
+      "sourceInputSha256": "d55f14b5c01325a527aaf4ed66cbac9bf812861b872cbe400c0646880636cb1a",
+      "sourceFile": "music/music_01_opening_rehearsal.wav",
+      "sourceSha256": "de73b3ac5df02ccd0b2ab350a736a9d18a171c11ad48e76a229678b22baeb348",
+      "decodedPcmSha256": "dee654f62ecdcdb3bb653eb1b90e335c4f7abec63489e1d283ad595c19a86802",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 2,
+            "channel_layout": "stereo",
+            "bits_per_sample": 24,
+            "bit_rate": "2304000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "90.024000",
+          "size": "25927014",
+          "bit_rate": "2304009"
+        }
+      },
+      "loudnessInput": {
+        "input_i": "-16.09",
+        "input_tp": "-1.69",
+        "input_lra": "10.60",
+        "input_thresh": "-27.03",
+        "output_i": "-14.60",
+        "output_tp": "-1.32",
+        "output_lra": "8.30",
+        "output_thresh": "-25.25",
+        "normalization_type": "dynamic",
+        "target_offset": "-1.40"
+      },
+      "loudnessOutput": {
+        "input_i": "-16.00",
+        "input_tp": "-1.60",
+        "input_lra": "10.70",
+        "input_thresh": "-26.94",
+        "output_i": "-14.62",
+        "output_tp": "-1.32",
+        "output_lra": "8.30",
+        "output_thresh": "-25.25",
+        "normalization_type": "dynamic",
+        "target_offset": "-1.38"
+      }
+    },
+    {
+      "id": "music_02_combat_rehearsal",
+      "category": "music",
+      "bus": "music",
+      "loop": true,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/music/music_02_combat_rehearsal_raw_1787103271815.mp3",
+      "sourceInputSha256": "1da50dacc664ba46b57bda26bba5890684365cfd57bd742299ede87ef5942ad1",
+      "sourceFile": "music/music_02_combat_rehearsal.wav",
+      "sourceSha256": "75c3e8bcfa56e2b60d43744935a088be9f12356f64f9924edaacf680abc5a3ed",
+      "decodedPcmSha256": "078560e11e54d5d54be8daf7212ec52d4c70271ef284c26859bbeca5a7fcbdb4",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 2,
+            "channel_layout": "stereo",
+            "bits_per_sample": 24,
+            "bit_rate": "2304000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "85.032000",
+          "size": "24489318",
+          "bit_rate": "2304009"
+        }
+      },
+      "loudnessInput": {
+        "input_i": "-14.91",
+        "input_tp": "-0.15",
+        "input_lra": "4.70",
+        "input_thresh": "-25.05",
+        "output_i": "-15.54",
+        "output_tp": "-1.00",
+        "output_lra": "2.40",
+        "output_thresh": "-25.61",
+        "normalization_type": "dynamic",
+        "target_offset": "-0.46"
+      },
+      "loudnessOutput": {
+        "input_i": "-16.00",
+        "input_tp": "-1.24",
+        "input_lra": "4.70",
+        "input_thresh": "-26.14",
+        "output_i": "-15.54",
+        "output_tp": "-1.00",
+        "output_lra": "2.40",
+        "output_thresh": "-25.61",
+        "normalization_type": "dynamic",
+        "target_offset": "-0.46"
+      }
+    },
+    {
+      "id": "music_03_backstage_ambush",
+      "category": "music",
+      "bus": "music",
+      "loop": true,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/music/music_03_backstage_ambush_raw_1787103271815.mp3",
+      "sourceInputSha256": "9610dde3f1aac72fd97ec62d19b9a80792f7f01dd3a56145996ee353dc1c112e",
+      "sourceFile": "music/music_03_backstage_ambush.wav",
+      "sourceSha256": "3f634710ceb364c710d1a5c592fa160b2c48518c54e7f04d2bcbd258b0597390",
+      "decodedPcmSha256": "81affbd531dbc113b512e964d7c46ac84001c5acd81be323653693ca1e9e33bc",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 2,
+            "channel_layout": "stereo",
+            "bits_per_sample": 24,
+            "bit_rate": "2304000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "82.032000",
+          "size": "23625318",
+          "bit_rate": "2304009"
+        }
+      },
+      "loudnessInput": {
+        "input_i": "-14.45",
+        "input_tp": "-0.08",
+        "input_lra": "10.10",
+        "input_thresh": "-25.18",
+        "output_i": "-14.60",
+        "output_tp": "-1.00",
+        "output_lra": "7.10",
+        "output_thresh": "-24.98",
+        "normalization_type": "dynamic",
+        "target_offset": "-1.40"
+      },
+      "loudnessOutput": {
+        "input_i": "-15.99",
+        "input_tp": "-1.63",
+        "input_lra": "10.20",
+        "input_thresh": "-26.73",
+        "output_i": "-14.60",
+        "output_tp": "-1.00",
+        "output_lra": "7.10",
+        "output_thresh": "-24.98",
+        "normalization_type": "dynamic",
+        "target_offset": "-1.40"
+      }
+    },
+    {
+      "id": "music_04_grand_gallery",
+      "category": "music",
+      "bus": "music",
+      "loop": true,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/music/music_04_grand_gallery_raw_1787103271815.mp3",
+      "sourceInputSha256": "2f148c50ee3748793b071bf0b98e616a67e900c310fbbd82c886f73feb2a110b",
+      "sourceFile": "music/music_04_grand_gallery.wav",
+      "sourceSha256": "761c407e6f206c6c905d0fbb27150e57bd30081d16bce024d4dbeee8807f2a4b",
+      "decodedPcmSha256": "cb1198d105ce4f01675f38df89f3d14e90e5f9a2fb099757a12d3465bb14c5f6",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 2,
+            "channel_layout": "stereo",
+            "bits_per_sample": 24,
+            "bit_rate": "2304000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "95.040000",
+          "size": "27371622",
+          "bit_rate": "2304008"
+        }
+      },
+      "loudnessInput": {
+        "input_i": "-13.92",
+        "input_tp": "0.11",
+        "input_lra": "5.80",
+        "input_thresh": "-23.93",
+        "output_i": "-15.19",
+        "output_tp": "-1.94",
+        "output_lra": "5.20",
+        "output_thresh": "-25.19",
+        "normalization_type": "dynamic",
+        "target_offset": "-0.81"
+      },
+      "loudnessOutput": {
+        "input_i": "-16.01",
+        "input_tp": "-1.97",
+        "input_lra": "5.80",
+        "input_thresh": "-26.01",
+        "output_i": "-15.19",
+        "output_tp": "-1.94",
+        "output_lra": "5.20",
+        "output_thresh": "-25.19",
+        "normalization_type": "dynamic",
+        "target_offset": "-0.81"
+      }
+    },
+    {
+      "id": "music_05_gallery_gauntlet",
+      "category": "music",
+      "bus": "music",
+      "loop": true,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/music/music_05_gallery_gauntlet_raw_1787103271815.mp3",
+      "sourceInputSha256": "de2bdc3d2a88ebe8cf81f3d82d32dd3e55a433063d956e0d74edf74d2bdcf0cd",
+      "sourceFile": "music/music_05_gallery_gauntlet.wav",
+      "sourceSha256": "ebebef0044771a3a5f2eaba9c80d2674138d00c4555c3260d5d0b0c8a8e0685f",
+      "decodedPcmSha256": "2cc42c52bdf023de6aedea1d1583392e614a032c9a447b45905d8b8694a30a9d",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 2,
+            "channel_layout": "stereo",
+            "bits_per_sample": 24,
+            "bit_rate": "2304000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "85.032000",
+          "size": "24489318",
+          "bit_rate": "2304009"
+        }
+      },
+      "loudnessInput": {
+        "input_i": "-16.80",
+        "input_tp": "-0.31",
+        "input_lra": "8.70",
+        "input_thresh": "-27.28",
+        "output_i": "-14.53",
+        "output_tp": "-1.00",
+        "output_lra": "8.60",
+        "output_thresh": "-24.90",
+        "normalization_type": "dynamic",
+        "target_offset": "-1.47"
+      },
+      "loudnessOutput": {
+        "input_i": "-15.76",
+        "input_tp": "-0.99",
+        "input_lra": "9.20",
+        "input_thresh": "-26.24",
+        "output_i": "-15.67",
+        "output_tp": "-1.00",
+        "output_lra": "8.60",
+        "output_thresh": "-26.04",
+        "normalization_type": "dynamic",
+        "target_offset": "-0.33"
+      }
+    },
+    {
+      "id": "music_06_spotlight_vault",
+      "category": "music",
+      "bus": "music",
+      "loop": true,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/music/music_06_spotlight_vault_raw_1787103271815.mp3",
+      "sourceInputSha256": "d250b5a0753c949ba2faee50169ba2a3be0f8ee7f9c733007c0084e8b4d9e41b",
+      "sourceFile": "music/music_06_spotlight_vault.wav",
+      "sourceSha256": "0cf12f85932004b1ff116d535cb349a799e00c3ff3118930c9f8f4de60ce5d45",
+      "decodedPcmSha256": "cb98c3e616fa2c347c10c5342c0f41233b5cea3d0460c9b74b3416afe7eb1f0f",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 2,
+            "channel_layout": "stereo",
+            "bits_per_sample": 24,
+            "bit_rate": "2304000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "90.024000",
+          "size": "25927014",
+          "bit_rate": "2304009"
+        }
+      },
+      "loudnessInput": {
+        "input_i": "-14.50",
+        "input_tp": "-0.38",
+        "input_lra": "21.20",
+        "input_thresh": "-26.43",
+        "output_i": "-12.23",
+        "output_tp": "-1.00",
+        "output_lra": "3.90",
+        "output_thresh": "-22.25",
+        "normalization_type": "dynamic",
+        "target_offset": "-3.77"
+      },
+      "loudnessOutput": {
+        "input_i": "-16.03",
+        "input_tp": "-1.00",
+        "input_lra": "19.90",
+        "input_thresh": "-28.31",
+        "output_i": "-13.25",
+        "output_tp": "-1.00",
+        "output_lra": "6.50",
+        "output_thresh": "-23.28",
+        "normalization_type": "dynamic",
+        "target_offset": "-2.75"
+      }
+    },
+    {
+      "id": "music_07_card_sanctum",
+      "category": "music",
+      "bus": "music",
+      "loop": true,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/music/music_07_card_sanctum_raw_1787103271815.mp3",
+      "sourceInputSha256": "e337061a20825491714d043ebc739021ce85ea23d3e9d2f425ac33136c421ac7",
+      "sourceFile": "music/music_07_card_sanctum.wav",
+      "sourceSha256": "9cfba76d01197eb9b1caa59fe21723692e15d4c4b4c9ea5c0b23f5264c771aa1",
+      "decodedPcmSha256": "a9f5224307a531324b2a070ac7efb4441ea219084ac52db54db930d23a972f41",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 2,
+            "channel_layout": "stereo",
+            "bits_per_sample": 24,
+            "bit_rate": "2304000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "88.032000",
+          "size": "25353318",
+          "bit_rate": "2304009"
+        }
+      },
+      "loudnessInput": {
+        "input_i": "-14.32",
+        "input_tp": "0.71",
+        "input_lra": "7.50",
+        "input_thresh": "-24.34",
+        "output_i": "-14.27",
+        "output_tp": "-1.00",
+        "output_lra": "3.90",
+        "output_thresh": "-24.28",
+        "normalization_type": "dynamic",
+        "target_offset": "-1.73"
+      },
+      "loudnessOutput": {
+        "input_i": "-15.92",
+        "input_tp": "-1.00",
+        "input_lra": "3.70",
+        "input_thresh": "-25.93",
+        "output_i": "-15.52",
+        "output_tp": "-1.00",
+        "output_lra": "3.00",
+        "output_thresh": "-25.53",
+        "normalization_type": "dynamic",
+        "target_offset": "-0.48"
+      }
+    },
+    {
+      "id": "music_08_royal_box",
+      "category": "music",
+      "bus": "music",
+      "loop": true,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/music/music_08_royal_box_raw_1787103271815.mp3",
+      "sourceInputSha256": "e0f20e08e0d70c7527e91e7805dc1aeb91df00116ff2f4f328af9351c5b06e2e",
+      "sourceFile": "music/music_08_royal_box.wav",
+      "sourceSha256": "fa60d11d0c25f8e4f1ba1d6a3b351398522308e61e366a547904329d1f967cb4",
+      "decodedPcmSha256": "82fcadd2be6ead8c0942d46869cdadc62dadee463f868d1f879de9a0933c82c0",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 2,
+            "channel_layout": "stereo",
+            "bits_per_sample": 24,
+            "bit_rate": "2304000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "92.040000",
+          "size": "26507622",
+          "bit_rate": "2304008"
+        }
+      },
+      "loudnessInput": {
+        "input_i": "-13.31",
+        "input_tp": "-0.67",
+        "input_lra": "7.90",
+        "input_thresh": "-24.11",
+        "output_i": "-13.95",
+        "output_tp": "-1.00",
+        "output_lra": "4.50",
+        "output_thresh": "-24.64",
+        "normalization_type": "dynamic",
+        "target_offset": "-2.05"
+      },
+      "loudnessOutput": {
+        "input_i": "-16.00",
+        "input_tp": "-3.36",
+        "input_lra": "7.90",
+        "input_thresh": "-26.79",
+        "output_i": "-13.95",
+        "output_tp": "-1.00",
+        "output_lra": "4.50",
+        "output_thresh": "-24.64",
+        "normalization_type": "dynamic",
+        "target_offset": "-2.05"
+      }
+    },
+    {
+      "id": "music_09_mirror_core",
+      "category": "music",
+      "bus": "music",
+      "loop": true,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/music/music_09_mirror_core_raw_1787103271815.mp3",
+      "sourceInputSha256": "ed8bd0c00fdd48751cf87b9e8d1f14ed9dc403199dc0fa776bd78889275c6f51",
+      "sourceFile": "music/music_09_mirror_core.wav",
+      "sourceSha256": "8386382c01b83e35e8188f7f33ca3c867cc9990247d8f31f2e816f96171dc042",
+      "decodedPcmSha256": "2cbeca54ebaa56c588a48ae67789974053afcb3c0e0ce27b9c8af85755201adb",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 2,
+            "channel_layout": "stereo",
+            "bits_per_sample": 24,
+            "bit_rate": "2304000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "95.040000",
+          "size": "27371622",
+          "bit_rate": "2304008"
+        }
+      },
+      "loudnessInput": {
+        "input_i": "-14.95",
+        "input_tp": "-0.95",
+        "input_lra": "16.00",
+        "input_thresh": "-25.97",
+        "output_i": "-14.96",
+        "output_tp": "-1.00",
+        "output_lra": "12.30",
+        "output_thresh": "-25.43",
+        "normalization_type": "dynamic",
+        "target_offset": "-1.04"
+      },
+      "loudnessOutput": {
+        "input_i": "-16.01",
+        "input_tp": "-1.00",
+        "input_lra": "12.30",
+        "input_thresh": "-26.60",
+        "output_i": "-16.26",
+        "output_tp": "-1.52",
+        "output_lra": "8.10",
+        "output_thresh": "-26.52",
+        "normalization_type": "dynamic",
+        "target_offset": "0.26"
+      }
+    },
+    {
+      "id": "music_10_conductor_phase_1",
+      "category": "music",
+      "bus": "music",
+      "loop": true,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/music/music_10_conductor_phase1_raw_1787103271815.mp3",
+      "sourceInputSha256": "ca5a62a64f9bc65a14a25c0fc710a845c26f769a06ef7e5bba5f5b606141ade9",
+      "sourceFile": "music/music_10_conductor_phase_1.wav",
+      "sourceSha256": "71999436b0488ea725b86bd724ff47f14c646996037c7a99417227e6ebae5146",
+      "decodedPcmSha256": "a90162e3db85c005936753a47c60d8e1c83790c894ec2487114c3509ffb15aa1",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 2,
+            "channel_layout": "stereo",
+            "bits_per_sample": 24,
+            "bit_rate": "2304000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "90.024000",
+          "size": "25927014",
+          "bit_rate": "2304009"
+        }
+      },
+      "loudnessInput": {
+        "input_i": "-14.34",
+        "input_tp": "-1.06",
+        "input_lra": "20.40",
+        "input_thresh": "-26.55",
+        "output_i": "-12.04",
+        "output_tp": "-1.00",
+        "output_lra": "5.50",
+        "output_thresh": "-22.36",
+        "normalization_type": "dynamic",
+        "target_offset": "-3.96"
+      },
+      "loudnessOutput": {
+        "input_i": "-16.51",
+        "input_tp": "-2.87",
+        "input_lra": "22.60",
+        "input_thresh": "-28.91",
+        "output_i": "-12.92",
+        "output_tp": "-1.00",
+        "output_lra": "6.70",
+        "output_thresh": "-23.04",
+        "normalization_type": "dynamic",
+        "target_offset": "-3.08"
+      }
+    },
+    {
+      "id": "music_11_conductor_phase_2",
+      "category": "music",
+      "bus": "music",
+      "loop": true,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/music/music_11_conductor_phase2_raw_1787103271815.mp3",
+      "sourceInputSha256": "3d08f8db7c8f71b9bcf4c2b0ad7bc23157ecb2b846ebd05ecc680e828dd53f0e",
+      "sourceFile": "music/music_11_conductor_phase_2.wav",
+      "sourceSha256": "e622b1f5532136a9a6b7ba4fd8bb5e500ddb64690be1994822233706145f8e45",
+      "decodedPcmSha256": "9b10d7cb11934c0203d1a14f6434a0f11b87f243d510746b3ef864eb3b38a88b",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 2,
+            "channel_layout": "stereo",
+            "bits_per_sample": 24,
+            "bit_rate": "2304000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "90.024000",
+          "size": "25927014",
+          "bit_rate": "2304009"
+        }
+      },
+      "loudnessInput": {
+        "input_i": "-15.62",
+        "input_tp": "-0.01",
+        "input_lra": "18.00",
+        "input_thresh": "-27.19",
+        "output_i": "-14.26",
+        "output_tp": "-1.00",
+        "output_lra": "13.50",
+        "output_thresh": "-25.43",
+        "normalization_type": "dynamic",
+        "target_offset": "-1.74"
+      },
+      "loudnessOutput": {
+        "input_i": "-16.51",
+        "input_tp": "-2.21",
+        "input_lra": "15.60",
+        "input_thresh": "-28.08",
+        "output_i": "-15.11",
+        "output_tp": "-1.00",
+        "output_lra": "13.20",
+        "output_thresh": "-26.18",
+        "normalization_type": "dynamic",
+        "target_offset": "-0.89"
+      }
+    },
+    {
+      "id": "music_12_conductor_phase_3",
+      "category": "music",
+      "bus": "music",
+      "loop": true,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/music/music_12_conductor_phase3_raw_1787103271815.mp3",
+      "sourceInputSha256": "3ff644a1859656befae8f3b19d452899fd7430807c65178169fe06e4a6c75b63",
+      "sourceFile": "music/music_12_conductor_phase_3.wav",
+      "sourceSha256": "25f1ba24b66dfaa1dd4ba27f4585589caef84f476b1287ad98fc625262dd8ee4",
+      "decodedPcmSha256": "18a0b9b6708bff7fdbb7743e8d1484624b74e252a25c9ce58cc3e433d9347368",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 2,
+            "channel_layout": "stereo",
+            "bits_per_sample": 24,
+            "bit_rate": "2304000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "90.024000",
+          "size": "25927014",
+          "bit_rate": "2304009"
+        }
+      },
+      "loudnessInput": {
+        "input_i": "-10.39",
+        "input_tp": "-0.04",
+        "input_lra": "6.20",
+        "input_thresh": "-21.08",
+        "output_i": "-15.63",
+        "output_tp": "-4.53",
+        "output_lra": "4.50",
+        "output_thresh": "-26.16",
+        "normalization_type": "dynamic",
+        "target_offset": "-0.37"
+      },
+      "loudnessOutput": {
+        "input_i": "-16.00",
+        "input_tp": "-5.65",
+        "input_lra": "6.10",
+        "input_thresh": "-26.67",
+        "output_i": "-15.63",
+        "output_tp": "-4.52",
+        "output_lra": "4.50",
+        "output_thresh": "-26.16",
+        "normalization_type": "dynamic",
+        "target_offset": "-0.37"
+      }
+    },
+    {
+      "id": "music_13_finale",
+      "category": "music",
+      "bus": "music",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/music/music_13_finale_raw_1787103271815.mp3",
+      "sourceInputSha256": "05cb7fc1fa923dd85b6989be5a02e2d56915ac1d909b7cee062c90241a585727",
+      "sourceFile": "music/music_13_finale.wav",
+      "sourceSha256": "84e9c301c06f0647092b75f087e8b341633ba58072ff638ca54fc93cf463a984",
+      "decodedPcmSha256": "c792502383b69807b0e22326321f75bc75f94860b6027845c9d02e1f14648b77",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 2,
+            "channel_layout": "stereo",
+            "bits_per_sample": 24,
+            "bit_rate": "2304000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "42.024000",
+          "size": "12103014",
+          "bit_rate": "2304019"
+        }
+      },
+      "loudnessInput": {
+        "input_i": "-11.87",
+        "input_tp": "-0.44",
+        "input_lra": "9.80",
+        "input_thresh": "-22.95",
+        "output_i": "-13.64",
+        "output_tp": "-1.44",
+        "output_lra": "3.40",
+        "output_thresh": "-24.48",
+        "normalization_type": "dynamic",
+        "target_offset": "-2.36"
+      },
+      "loudnessOutput": {
+        "input_i": "-16.00",
+        "input_tp": "-4.57",
+        "input_lra": "9.80",
+        "input_thresh": "-27.05",
+        "output_i": "-13.64",
+        "output_tp": "-1.44",
+        "output_lra": "3.50",
+        "output_thresh": "-24.48",
+        "normalization_type": "dynamic",
+        "target_offset": "-2.36"
+      }
+    },
+    {
+      "id": "amb_theatre_room",
+      "category": "ambience",
+      "bus": "ambience",
+      "loop": true,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/ambience/amb_theatre_room.mp3",
+      "sourceInputSha256": "2534aef777644ca2d5a6142cd276e9bdd4e32f7ba53f7e1c9bc8ba7b46ed28db",
+      "sourceFile": "ambience/amb_theatre_room.wav",
+      "sourceSha256": "6471b51dac5084a6a118fa6166eb4ff9992404b9dac3a3e93ec90da1e1b462b2",
+      "decodedPcmSha256": "670da75166deb0dbe4defdcfd7d07457a3b7af2bdee9f3cb1da22b07c1de69bd",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 2,
+            "channel_layout": "stereo",
+            "bits_per_sample": 24,
+            "bit_rate": "2304000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "60.024000",
+          "size": "17287014",
+          "bit_rate": "2304013"
+        }
+      },
+      "loudnessInput": {
+        "input_i": "-40.02",
+        "input_tp": "-26.42",
+        "input_lra": "7.30",
+        "input_thresh": "-50.16",
+        "output_i": "-20.44",
+        "output_tp": "-6.17",
+        "output_lra": "3.10",
+        "output_thresh": "-30.49",
+        "normalization_type": "dynamic",
+        "target_offset": "-2.06"
+      },
+      "loudnessOutput": {
+        "input_i": "-22.50",
+        "input_tp": "-8.90",
+        "input_lra": "7.30",
+        "input_thresh": "-32.66",
+        "output_i": "-20.44",
+        "output_tp": "-6.18",
+        "output_lra": "3.10",
+        "output_thresh": "-30.49",
+        "normalization_type": "dynamic",
+        "target_offset": "-2.06"
+      }
+    },
+    {
+      "id": "amb_gallery_whispers",
+      "category": "ambience",
+      "bus": "ambience",
+      "loop": true,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/ambience/amb_gallery_whispers.mp3",
+      "sourceInputSha256": "fbcb2aedfae6e342ef65a619b9107928e1a2a664c385d462a6198af647e8c64d",
+      "sourceFile": "ambience/amb_gallery_whispers.wav",
+      "sourceSha256": "d3d9fc3b1e0c4d4e400c5faf097b546a4015c2ee855fa9069cc0eda5657dfda9",
+      "decodedPcmSha256": "010a167861fffbca4cb989b7e0c188cab27af6130806925ddb9ac7a81e678711",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 2,
+            "channel_layout": "stereo",
+            "bits_per_sample": 24,
+            "bit_rate": "2304000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "60.024000",
+          "size": "17287014",
+          "bit_rate": "2304013"
+        }
+      },
+      "loudnessInput": {
+        "input_i": "-32.81",
+        "input_tp": "-17.73",
+        "input_lra": "5.00",
+        "input_thresh": "-42.81",
+        "output_i": "-22.02",
+        "output_tp": "-7.40",
+        "output_lra": "4.60",
+        "output_thresh": "-32.02",
+        "normalization_type": "dynamic",
+        "target_offset": "-0.48"
+      },
+      "loudnessOutput": {
+        "input_i": "-22.50",
+        "input_tp": "-7.42",
+        "input_lra": "5.00",
+        "input_thresh": "-32.50",
+        "output_i": "-22.02",
+        "output_tp": "-7.40",
+        "output_lra": "4.60",
+        "output_thresh": "-32.02",
+        "normalization_type": "dynamic",
+        "target_offset": "-0.48"
+      }
+    },
+    {
+      "id": "amb_spotlight_electric",
+      "category": "ambience",
+      "bus": "ambience",
+      "loop": true,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/ambience/amb_spotlight_electric.mp3",
+      "sourceInputSha256": "03844ad92977fd2645f5376beeda47a603439e878a67002424960f6aaa90588b",
+      "sourceFile": "ambience/amb_spotlight_electric.wav",
+      "sourceSha256": "04b574ca398aa05feb687c46064a535dd8e5ca5a6f9ac521aa11c28477f9ac50",
+      "decodedPcmSha256": "19aff6ce18fff6fb570446f6b45dda5dd217946b4fc9eb95665deb5005719fe3",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 2,
+            "channel_layout": "stereo",
+            "bits_per_sample": 24,
+            "bit_rate": "2304000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "45.024000",
+          "size": "12967014",
+          "bit_rate": "2304018"
+        }
+      },
+      "loudnessInput": {
+        "input_i": "-37.03",
+        "input_tp": "-20.16",
+        "input_lra": "0.50",
+        "input_thresh": "-47.03",
+        "output_i": "-22.46",
+        "output_tp": "-5.62",
+        "output_lra": "0.50",
+        "output_thresh": "-32.46",
+        "normalization_type": "dynamic",
+        "target_offset": "-0.04"
+      },
+      "loudnessOutput": {
+        "input_i": "-22.50",
+        "input_tp": "-5.63",
+        "input_lra": "0.40",
+        "input_thresh": "-32.50",
+        "output_i": "-22.46",
+        "output_tp": "-5.62",
+        "output_lra": "0.50",
+        "output_thresh": "-32.46",
+        "normalization_type": "dynamic",
+        "target_offset": "-0.04"
+      }
+    },
+    {
+      "id": "amb_mirror_core_machine",
+      "category": "ambience",
+      "bus": "ambience",
+      "loop": true,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/ambience/amb_mirror_core_machine.mp3",
+      "sourceInputSha256": "7ba19e6c2069c483596209c72aacd394d19e4856b64c63919c1104dea978bdb6",
+      "sourceFile": "ambience/amb_mirror_core_machine.wav",
+      "sourceSha256": "45091d6d46e3667f7162b1730f7434d056657e26dc69e49c32b24427e65d08a7",
+      "decodedPcmSha256": "f27b23bd4c55de0799ff20c8b4498a95a553b07ae11fabc33ed6aa9169bee763",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 2,
+            "channel_layout": "stereo",
+            "bits_per_sample": 24,
+            "bit_rate": "2304000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "60.024000",
+          "size": "17287014",
+          "bit_rate": "2304013"
+        }
+      },
+      "loudnessInput": {
+        "input_i": "-19.12",
+        "input_tp": "0.53",
+        "input_lra": "0.50",
+        "input_thresh": "-29.12",
+        "output_i": "-22.52",
+        "output_tp": "-2.83",
+        "output_lra": "0.50",
+        "output_thresh": "-32.52",
+        "normalization_type": "dynamic",
+        "target_offset": "0.02"
+      },
+      "loudnessOutput": {
+        "input_i": "-22.50",
+        "input_tp": "-2.85",
+        "input_lra": "0.50",
+        "input_thresh": "-32.50",
+        "output_i": "-22.52",
+        "output_tp": "-2.83",
+        "output_lra": "0.50",
+        "output_thresh": "-32.52",
+        "normalization_type": "dynamic",
+        "target_offset": "0.02"
+      }
+    },
+    {
+      "id": "boss_intro_sting",
+      "category": "boss",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/boss/boss_intro_sting.mp3",
+      "sourceInputSha256": "edef825b828ccf29a57337f47d126e4917ee2ccf374d991259ba502dc38eac41",
+      "sourceFile": "boss/boss_intro_sting.wav",
+      "sourceSha256": "d65d994804c234258fc22956f94355a4d2d778e1f5301a88aac13e6af3d26722",
+      "decodedPcmSha256": "69e9c9905a4a856f2bb30f2afc29ad6d8503982ec0afc7b4bdafd96a6a43ef0a",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 2,
+            "channel_layout": "stereo",
+            "bits_per_sample": 24,
+            "bit_rate": "2304000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "3.000000",
+          "size": "864102",
+          "bit_rate": "2304272"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "boss_shield_block",
+      "category": "boss",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/boss/boss_shield_block.mp3",
+      "sourceInputSha256": "7146725e3c1abc720cfb934f9c693bf04f8a9b439ebb5e0d35a8f4337deade21",
+      "sourceFile": "boss/boss_shield_block.wav",
+      "sourceSha256": "d3d095c622ace21152a2ea301a05c103b191f68afaaddcc4ff71991a702edf7e",
+      "decodedPcmSha256": "a1e5bb922e67409584ca9b4779c09287b782b6bfb9b2b418c467e00b7e263770",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 2,
+            "channel_layout": "stereo",
+            "bits_per_sample": 24,
+            "bit_rate": "2304000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.000000",
+          "size": "288102",
+          "bit_rate": "2304816"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "boss_shield_break",
+      "category": "boss",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/boss/boss_shield_break.mp3",
+      "sourceInputSha256": "a0c6397380fbaac7798e64e9413b0d1fc714f61d869cf8f6f685a9e28c622741",
+      "sourceFile": "boss/boss_shield_break.wav",
+      "sourceSha256": "35f34f33465ba1cd6f0d1aaa2e9c3a24bbe512181e13d2550ae0ff0c4526d0e1",
+      "decodedPcmSha256": "ff3a9362c30236594dbbcb8ce68b91e972e45b477bef3c1505a66a394adc788c",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 2,
+            "channel_layout": "stereo",
+            "bits_per_sample": 24,
+            "bit_rate": "2304000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "2.000000",
+          "size": "576102",
+          "bit_rate": "2304408"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "boss_projectile_volley",
+      "category": "boss",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/boss/boss_projectile_volley.mp3",
+      "sourceInputSha256": "4d6bf5f9c97c505294ec3145179f3b4968d3c661af715df0591e5918abce2439",
+      "sourceFile": "boss/boss_projectile_volley.wav",
+      "sourceSha256": "c097cc8398fd1f9f1610e1780d75e37f6e366705009decb9d0c5cc2b570e8818",
+      "decodedPcmSha256": "37afad0b95a804b0e377bcc9271729ee58c55d3e845b873e3ee9567f66eb3a30",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 2,
+            "channel_layout": "stereo",
+            "bits_per_sample": 24,
+            "bit_rate": "2304000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "2.000000",
+          "size": "576102",
+          "bit_rate": "2304408"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "boss_floor_warning",
+      "category": "boss",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/boss/boss_floor_warning.mp3",
+      "sourceInputSha256": "b402f0db4085f2ce7fc6fcaaa1ea3a99a629444ab0781c4ae7aba1d63f52e501",
+      "sourceFile": "boss/boss_floor_warning.wav",
+      "sourceSha256": "a37ca7863ac4897a876b0203496ab6ef330e96ef55c66d1633fba30ec1dfb947",
+      "decodedPcmSha256": "ed0cc9152d1488aee6b0dc3b0291c19058b55d2e1b59cfa34d6a029931a6dc0b",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 2,
+            "channel_layout": "stereo",
+            "bits_per_sample": 24,
+            "bit_rate": "2304000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "2.000000",
+          "size": "576102",
+          "bit_rate": "2304408"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "boss_phase_2",
+      "category": "boss",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/boss/boss_phase_2.mp3",
+      "sourceInputSha256": "4dd5ccd0f68cdc6b1b2f2ed53a4c6b2b16f84d02d4fcf6866323865c8d27e22c",
+      "sourceFile": "boss/boss_phase_2.wav",
+      "sourceSha256": "47b977c053582d2140a5d7f28af415e62aac783236ae8f1c0ace4371e6e36175",
+      "decodedPcmSha256": "4467c2c814e5cfc62aca45a3bda8388aef861cd102fad2fc63c61c8ea9b497db",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 2,
+            "channel_layout": "stereo",
+            "bits_per_sample": 24,
+            "bit_rate": "2304000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "2.000000",
+          "size": "576102",
+          "bit_rate": "2304408"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "boss_phase_3",
+      "category": "boss",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/boss/boss_phase_3.mp3",
+      "sourceInputSha256": "240d5d404b4be1ab1fbd20542dc6ffade0fb3e21c298b6b76e2fbf4aca99112e",
+      "sourceFile": "boss/boss_phase_3.wav",
+      "sourceSha256": "f9829b41b62a49a31842b9d2c2e5a7ae8afade52403963b21104f4450fbde75f",
+      "decodedPcmSha256": "b77bbc1527e4a3c1b1e52f84b99e0d40dfacbc5cd13f266b95a76de3cbfe51ee",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 2,
+            "channel_layout": "stereo",
+            "bits_per_sample": 24,
+            "bit_rate": "2304000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "2.000000",
+          "size": "576102",
+          "bit_rate": "2304408"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "boss_defeat",
+      "category": "boss",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/boss/boss_defeat.mp3",
+      "sourceInputSha256": "080c947ae9c799d024975d83f01e962e8b29f2c526bb0b39e4a1171ac963b8bf",
+      "sourceFile": "boss/boss_defeat.wav",
+      "sourceSha256": "fe8c57ccfdb025125fa879b75713ec63886e84fa567915ce4137e185af0676d5",
+      "decodedPcmSha256": "3b5afcce970c5dd0138074bf30e19e325106f331e332be27d22a38f31b6a2673",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 2,
+            "channel_layout": "stereo",
+            "bits_per_sample": 24,
+            "bit_rate": "2304000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "4.000000",
+          "size": "1152102",
+          "bit_rate": "2304204"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "finale_firework_01",
+      "category": "boss",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/boss/finale_firework_01.mp3",
+      "sourceInputSha256": "5f3152a4791e42d2c6594f0156d3f5df1a13918722133635fec6fdcd6c0fe30d",
+      "sourceFile": "boss/finale_firework_01.wav",
+      "sourceSha256": "0a79ed1d790c59be3025f26ee06a13bc7bf79694ef1316468c40aafada2600bc",
+      "decodedPcmSha256": "e22513b9714d5183b3b67b0b9a20e23d717e598c6cc13cdd02d4129801968a6f",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 2,
+            "channel_layout": "stereo",
+            "bits_per_sample": 24,
+            "bit_rate": "2304000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "3.000000",
+          "size": "864102",
+          "bit_rate": "2304272"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "finale_firework_02",
+      "category": "boss",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/boss/finale_firework_02.mp3",
+      "sourceInputSha256": "d10a60859b8f86552bdee962c81cad9381dc8667aa224613758e9fa77ee5aefe",
+      "sourceFile": "boss/finale_firework_02.wav",
+      "sourceSha256": "e0bd1c818a40e18c37a957639af4c337e4e83aaee19eaff259e038f842dec75c",
+      "decodedPcmSha256": "796f3e6bf474d0e2558da4dbfac55fe7cce6f1ff8fea1ae0fe2ce399038f56cb",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 2,
+            "channel_layout": "stereo",
+            "bits_per_sample": 24,
+            "bit_rate": "2304000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "3.000000",
+          "size": "864102",
+          "bit_rate": "2304272"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "finale_curtain_close",
+      "category": "boss",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/boss/finale_curtain_close.mp3",
+      "sourceInputSha256": "98e4d327500f923e553cabdacddc6ad3389945a2fd56a19afa5cba69ee81b4a0",
+      "sourceFile": "boss/finale_curtain_close.wav",
+      "sourceSha256": "3df6726b7ed2128e5a3c194e66883170497701d18accb0742dd8ea44c62130a0",
+      "decodedPcmSha256": "0c8c72235f564630b02d845c2173d845eb840418ba84eba1053185f600cb1bee",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 2,
+            "channel_layout": "stereo",
+            "bits_per_sample": 24,
+            "bit_rate": "2304000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "3.000000",
+          "size": "864102",
+          "bit_rate": "2304272"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "cane_swing_01",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/combat/cane_swing_01.mp3",
+      "sourceInputSha256": "39be17bd284d6b6a88bdef9a1a624ac537cd5e5e07ae5bf8e0e780dcc218f8e0",
+      "sourceFile": "combat/cane_swing_01.wav",
+      "sourceSha256": "c8d1a7dea8628ba171f0807b45312d6aeeaaf8d37c4e96205114ed0244fe9cd3",
+      "decodedPcmSha256": "96936a9183d06af59d8801284b6a50357843ce1cca5b427222e6bcb574f981cd",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.000000",
+          "size": "144102",
+          "bit_rate": "1152816"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "cane_swing_02",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/combat/cane_swing_02.mp3",
+      "sourceInputSha256": "75db70e812df33026a42f63963cb69ac568cc506e9001305f3fc526eb27eead8",
+      "sourceFile": "combat/cane_swing_02.wav",
+      "sourceSha256": "e82004e43053cc7129a86e1f6bf5ccdd7fee6026d2f0271ec900035f4b35a49c",
+      "decodedPcmSha256": "0ad5ab4a7f7c726977d729cec8342fe879afdf569916207658a2a52cf0f33c68",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.000000",
+          "size": "144102",
+          "bit_rate": "1152816"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "cane_swing_heavy",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/combat/cane_swing_heavy.mp3",
+      "sourceInputSha256": "a94e72786434587dc17b2858bc011743c5024e49299565050cf102107c69cc91",
+      "sourceFile": "combat/cane_swing_heavy.wav",
+      "sourceSha256": "b92a6a9bf3fff0d61f01266e748fdbd7b063e61d61ed0cb28bd2252eef1e9ded",
+      "decodedPcmSha256": "cefc5dec698e02af0136d264c94f7be44bd67bf798e34bee6ffda2866901021b",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.000000",
+          "size": "144102",
+          "bit_rate": "1152816"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "cane_hit_01",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/combat/cane_hit_01.mp3",
+      "sourceInputSha256": "fec3dcef9180166fefcf18b12ee5b8dcd56820d2ec5201473b79a5dc0250cdac",
+      "sourceFile": "combat/cane_hit_01.wav",
+      "sourceSha256": "34bfd6894de8e3f58238fe8a6dcbe29c5735d44a51cbbd14c4bf901e891d5470",
+      "decodedPcmSha256": "c735ee086a7f6ad2a3311915792406b7e80eca58a6484f2f8af13ed9186ec74e",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.000000",
+          "size": "144102",
+          "bit_rate": "1152816"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "cane_hit_02",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/combat/cane_hit_02.mp3",
+      "sourceInputSha256": "63ac246489855d7f91ab53d2618fd410b6723383cd81ec2ee409024f3801e994",
+      "sourceFile": "combat/cane_hit_02.wav",
+      "sourceSha256": "0036b92fb273ed0aed3d971e27442d174241305cc82b4fed9cc9277c616ec089",
+      "decodedPcmSha256": "b39cbb30ee1c398542beb73467afb0e3367633e67670130388e72a8f7313b8a4",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.000000",
+          "size": "144102",
+          "bit_rate": "1152816"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "cane_hit_heavy",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/combat/cane_hit_heavy.mp3",
+      "sourceInputSha256": "5e9b3ad7557deda4c159e3a759a2b27ffe782a3387f37a41fccff3462a548a40",
+      "sourceFile": "combat/cane_hit_heavy.wav",
+      "sourceSha256": "f79b7939f4a9efe135410c9aa91b930566efcd4e95f9109a5f5858882104c7ea",
+      "decodedPcmSha256": "3046b44a2779bbe65fdf41c828f8de6f5824ad86442cf56190b2278955f18580",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.000000",
+          "size": "144102",
+          "bit_rate": "1152816"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "cane_hit_shield",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/combat/cane_hit_shield.mp3",
+      "sourceInputSha256": "64296b35a09d4bead4511fa92fa737235f4a3fcbd8f4d21d1f6a49ed93dddb07",
+      "sourceFile": "combat/cane_hit_shield.wav",
+      "sourceSha256": "eed0d9d5402288586accbdd94859b4ca4331681f77c4b5b80425e7bd64ede63f",
+      "decodedPcmSha256": "06c42280afd5dea86bc9c1348d6912a9058a46385535118aaf8b4af444433ba7",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.000000",
+          "size": "144102",
+          "bit_rate": "1152816"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "combo_finisher",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/combat/combo_finisher.mp3",
+      "sourceInputSha256": "7c81603b4779525e9408a99670905de368373f841596e3a3430bdd4ab3330e0b",
+      "sourceFile": "combat/combo_finisher.wav",
+      "sourceSha256": "0de8a45a0adc5beb16856af4413e0470942151e06b557a9b147760f5a9bcb027",
+      "decodedPcmSha256": "4e00a2f3750e9a326680561e9438adae0686a567e0c1d610f58155d418aead9a",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.000000",
+          "size": "144102",
+          "bit_rate": "1152816"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "grand_card_cast",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/combat/grand_card_cast.mp3",
+      "sourceInputSha256": "7c81603b4779525e9408a99670905de368373f841596e3a3430bdd4ab3330e0b",
+      "sourceFile": "combat/combo_finisher.wav",
+      "sourceSha256": "0de8a45a0adc5beb16856af4413e0470942151e06b557a9b147760f5a9bcb027",
+      "decodedPcmSha256": "4e00a2f3750e9a326680561e9438adae0686a567e0c1d610f58155d418aead9a",
+      "aliasOf": "combo_finisher",
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.000000",
+          "size": "144102",
+          "bit_rate": "1152816"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "grand_card_flight",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/combat/grand_card_flight.mp3",
+      "sourceInputSha256": "6697f85330fdb76f064ac56f6bec9dbe14e9cbda5d3379973a00227b3427a3dd",
+      "sourceFile": "combat/grand_card_flight.wav",
+      "sourceSha256": "99704a139ab189b192992a2879067afbbb29a7a4db650b425e675acebad89da7",
+      "decodedPcmSha256": "7eb1fc646413948b14f9d78057bdbc05ee7a85c114cb842f5ae5083c2982bf3d",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.000000",
+          "size": "144102",
+          "bit_rate": "1152816"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "grand_card_hit",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/combat/grand_card_hit.mp3",
+      "sourceInputSha256": "6697f85330fdb76f064ac56f6bec9dbe14e9cbda5d3379973a00227b3427a3dd",
+      "sourceFile": "combat/grand_card_flight.wav",
+      "sourceSha256": "99704a139ab189b192992a2879067afbbb29a7a4db650b425e675acebad89da7",
+      "decodedPcmSha256": "7eb1fc646413948b14f9d78057bdbc05ee7a85c114cb842f5ae5083c2982bf3d",
+      "aliasOf": "grand_card_flight",
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.000000",
+          "size": "144102",
+          "bit_rate": "1152816"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "spotlight_cast",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/combat/spotlight_cast.mp3",
+      "sourceInputSha256": "25d4e1de0c31fccf2c0e880ef70d939586e729d90b2490fa0555198052d36a90",
+      "sourceFile": "combat/enemy_defeat.wav",
+      "sourceSha256": "4e5f5a22552a6919c01b9d7c2d642d98b3d57f36d6a487ea2e48e8f3313a8a50",
+      "decodedPcmSha256": "8457233def45b55a2b0c3602a88d077fbb2cf368fb37c46491bdd759e3948c24",
+      "aliasOf": "enemy_defeat",
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.000000",
+          "size": "144102",
+          "bit_rate": "1152816"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "spotlight_hit",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/combat/spotlight_hit.mp3",
+      "sourceInputSha256": "1f7d63f2f166b4b808bfcc573d0c0e66f46d8f6ed8dd5b9990d8e85324ed9b7e",
+      "sourceFile": "combat/spotlight_hit.wav",
+      "sourceSha256": "5f31cf10adda5c10062821a6d480d77582262cc1ffd0b5aeebbb2890a6244ac5",
+      "decodedPcmSha256": "ba3214ab9944f11ac88852741d58d733eba0c082448a81472f53c805b9e0210c",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.000000",
+          "size": "144102",
+          "bit_rate": "1152816"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "enemy_defeat",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/combat/enemy_defeat.mp3",
+      "sourceInputSha256": "25d4e1de0c31fccf2c0e880ef70d939586e729d90b2490fa0555198052d36a90",
+      "sourceFile": "combat/enemy_defeat.wav",
+      "sourceSha256": "4e5f5a22552a6919c01b9d7c2d642d98b3d57f36d6a487ea2e48e8f3313a8a50",
+      "decodedPcmSha256": "8457233def45b55a2b0c3602a88d077fbb2cf368fb37c46491bdd759e3948c24",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.000000",
+          "size": "144102",
+          "bit_rate": "1152816"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "stagehand_alert",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/enemies/stagehand_alert.mp3",
+      "sourceInputSha256": "33b803328ae88a5a7e2ad6c882b25b35e84d065201ca3266076676cc603420a8",
+      "sourceFile": "enemies/stagehand_alert.wav",
+      "sourceSha256": "b5c8c10cb4cf7e82ddf12df29deaf427332078e497536238f882033a7502b310",
+      "decodedPcmSha256": "cbe1e8387bd26a3caca66c1679cbc5ef1b880d6b73073eba8a0a9cd87a8c97fa",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.000000",
+          "size": "144102",
+          "bit_rate": "1152816"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "card_enemy_telegraph",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/enemies/card_enemy_telegraph.mp3",
+      "sourceInputSha256": "b32420f04713fc08a4c8988cc7313034c4833344d652ca3f8a077b6555540ee0",
+      "sourceFile": "enemies/card_enemy_telegraph.wav",
+      "sourceSha256": "6b36d11599375619a0cb1c7e03ad01c4d7f255e5089d5629895702cef9763778",
+      "decodedPcmSha256": "1134e0a64183fcc0c5fdac67db1f4e2c9dd55b1d21dad9ca13fbe8009ee1e8b8",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.000000",
+          "size": "144102",
+          "bit_rate": "1152816"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "card_enemy_throw",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/enemies/card_enemy_throw.mp3",
+      "sourceInputSha256": "33c2ffb5de5df697f9819d845d717c2b7859217eb8c1f2ef1a1569a129546e01",
+      "sourceFile": "enemies/card_enemy_throw.wav",
+      "sourceSha256": "d70afc59feb76a134c40d6fa5d6fb9ac9c99f7c4365ca2238db34da51bbf6783",
+      "decodedPcmSha256": "19e0d2cd303daa4e552c2392391bf792de7971629aed0b9dd6f9118097e3fc4d",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.000000",
+          "size": "144102",
+          "bit_rate": "1152816"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "acrobat_telegraph",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/enemies/acrobat_telegraph.mp3",
+      "sourceInputSha256": "b7b1a763744a820e4f90da26b2f476a31ed9e8d254003e32f0cee8375f04903d",
+      "sourceFile": "enemies/acrobat_telegraph.wav",
+      "sourceSha256": "79bc12bd0ac6ca73c45df9d36508e4f447cba53e10aacc16cfd7b00e604abd4b",
+      "decodedPcmSha256": "0c1b56eb00f2bb1035cb9507ed276ef123866360195e7b9aef015d0866bbeda2",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.000000",
+          "size": "144102",
+          "bit_rate": "1152816"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "acrobat_leap",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/enemies/acrobat_leap.mp3",
+      "sourceInputSha256": "3bcaea2a96461e8f19f6f38a028efc6090ad856f8abc57568ecacbae217b8c77",
+      "sourceFile": "enemies/acrobat_leap.wav",
+      "sourceSha256": "ef410b86bac9ad3c4374b65d9d5fd3dde1e756bcf6c7207904303ccd79359c48",
+      "decodedPcmSha256": "10b28305936ee3e3163380e336c00c4219156f8134762d95e6f476ea2faa7174",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.000000",
+          "size": "144102",
+          "bit_rate": "1152816"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "acrobat_land",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/enemies/acrobat_land.mp3",
+      "sourceInputSha256": "5bdaa7404b3d8bb0486ba8033ba30260e26fd8b9b793c3b55e5b2545f86a909b",
+      "sourceFile": "enemies/acrobat_land.wav",
+      "sourceSha256": "51c0a42e13d767e7a3115b5c347bdf1dc84a46c6f8f0f1d2627c498933f05dd0",
+      "decodedPcmSha256": "67e128ab3f8f68329e8dba5b81bf68b6996b5453743feeaa8c3bec07a83613c7",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.000000",
+          "size": "144102",
+          "bit_rate": "1152816"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "wraith_telegraph",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/enemies/wraith_telegraph.mp3",
+      "sourceInputSha256": "758cfe57ea5226ad1656424e586c883773727316820c5321f72173764e1df039",
+      "sourceFile": "enemies/wraith_telegraph.wav",
+      "sourceSha256": "65fde039804c235b052b0e52729b1345bbd0cfb86d68f9819b5c0db9f79e262e",
+      "decodedPcmSha256": "c11cf2d25c2d301f677ed80c3f30129491be600d8f63a8b4cf7b271e01fe976a",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.000000",
+          "size": "144102",
+          "bit_rate": "1152816"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "wraith_charge",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/enemies/wraith_charge.mp3",
+      "sourceInputSha256": "2b86ddaa1359f2ad2ccc8bf866aa4b8004a81dbfa821e3ff971cdde1d7aba5c1",
+      "sourceFile": "enemies/wraith_charge.wav",
+      "sourceSha256": "e9c7aac0ba57c6d3cd2e7acabda8d277ac11d3dcdde62023b8539cb75e0c5713",
+      "decodedPcmSha256": "9e0bd747552f7c8b74673de41cfd60dbd13c255221d6708245f5f56533d60162",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.000000",
+          "size": "144102",
+          "bit_rate": "1152816"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "sentry_lock",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/enemies/sentry_lock.mp3",
+      "sourceInputSha256": "a0dce151eee46c9c5e0b22e431418e9b9528f3d9b4cdea3350bf8d6c73dbd03c",
+      "sourceFile": "enemies/sentry_lock.wav",
+      "sourceSha256": "c4c92edcb4b3ea2331453d7aff78293ea95064a34791bf220f6704ca6e578fca",
+      "decodedPcmSha256": "a9ca3037b554fd205e8014a8259cd13e88061cb2822eccc381a0050149959aad",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.000000",
+          "size": "144102",
+          "bit_rate": "1152816"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "sentry_fire",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/enemies/sentry_fire.mp3",
+      "sourceInputSha256": "a2e79caabc4194def6280f5dc13adf8255d62854bc777fb79d79de04f5fa960d",
+      "sourceFile": "enemies/sentry_fire.wav",
+      "sourceSha256": "5e617e2d9997aa57ae69ba450e01df1e08118cfdaf96ea0120c665f17fcbc68c",
+      "decodedPcmSha256": "ab76872c7ab56ab90b499041c9a011e2eee95caf1ad3c038763c41a1af7d5592",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.000000",
+          "size": "144102",
+          "bit_rate": "1152816"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "echo_duelist_telegraph",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/enemies/echo_duelist_telegraph.mp3",
+      "sourceInputSha256": "2b76efcd5ef3a799991e80d5392c0994d4ebbbe535718b637903b1322359bd54",
+      "sourceFile": "enemies/echo_duelist_telegraph.wav",
+      "sourceSha256": "28160d56192b8cffc308896fb19007d6a16ce068a24cf22c4f32a42fcb58a57f",
+      "decodedPcmSha256": "354935a39c29ef33cb36a8919f34ce957269d3818441fcc4e812830893f27081",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.000000",
+          "size": "144102",
+          "bit_rate": "1152816"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "echo_duelist_dash",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/enemies/echo_duelist_dash.mp3",
+      "sourceInputSha256": "2b30b86bd30ad53eb405b16ba766d3cd31bc8e521063c79334274b229c46bf3d",
+      "sourceFile": "enemies/echo_duelist_dash.wav",
+      "sourceSha256": "0ab53e601e381cb6bae60bb3d17b0a399e4ad2142370118623867315792c72a6",
+      "decodedPcmSha256": "4052c3e656b8dcd4dcd5d4e6aa8bfcf8abe72c10958fa5a115a3684821361186",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.000000",
+          "size": "144102",
+          "bit_rate": "1152816"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "echo_caster_cast",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/enemies/echo_caster_cast.mp3",
+      "sourceInputSha256": "9b92b00fd33de0085ea9f0c229fee31bd2a36a898d05b1b05b8088b5248c13c8",
+      "sourceFile": "enemies/echo_caster_cast.wav",
+      "sourceSha256": "fdd1166d9af351d6b846fce2f72a730bcd33e0183b1031e5ffc488d90b374e2c",
+      "decodedPcmSha256": "3f6003b8a394e121d6e7038e0e4133074d60e79c9c8ed51ddfcc0cd4e087d47d",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.000000",
+          "size": "144102",
+          "bit_rate": "1152816"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "core_mime_record",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/enemies/core_mime_record.mp3",
+      "sourceInputSha256": "784eedae2ed3994c8f097c8abadd133f9e7e651d155d6c79dac955440d4d47a0",
+      "sourceFile": "enemies/core_mime_record.wav",
+      "sourceSha256": "d380974170d352dc32249edec4f1a3f4b6951fff79264f8a63f7e883c3d316a9",
+      "decodedPcmSha256": "9c5530c0580bde8da1da43f7d7eedd1d6c641e24e2a88b3cd6a24ca4b1e7870f",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.000000",
+          "size": "144102",
+          "bit_rate": "1152816"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "core_mime_mimic",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/enemies/core_mime_mimic.mp3",
+      "sourceInputSha256": "2965a3f160eb2401793028628b49a698158c0c27e0735cf10ac7d01d90dbde70",
+      "sourceFile": "enemies/core_mime_mimic.wav",
+      "sourceSha256": "db5bde4495815c67b2720b5017bf1bbd49e1757383b1d3a56a324419e4e340a0",
+      "decodedPcmSha256": "7f5541202e6b10a1e40662d14d96edea0f43eaeb5451054121650514bfec348c",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.000000",
+          "size": "144102",
+          "bit_rate": "1152816"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "player_step_01",
+      "category": "player",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/player/player_step_01.wav",
+      "sourceInputSha256": "55d40af554ef5e46338dd5804412cf9d09795787f93bd77a4cc965771aac52c1",
+      "sourceFile": "player/player_step_01.wav",
+      "sourceSha256": "953d65df6fad5a305bd119e4e6514a7dbf06d9ec62d79c75e09552212c609a44",
+      "decodedPcmSha256": "42f8154bfdac38fa9778dd81273e0b4316786258c997995da6a4bfd8777375f8",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "0.170667",
+          "size": "24678",
+          "bit_rate": "1156778"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "player_step_02",
+      "category": "player",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/player/player_step_02.wav",
+      "sourceInputSha256": "a4fea3efe988ea82798922d45b155bfba39b5f819dc514e1fea182df7e0048e0",
+      "sourceFile": "player/player_step_02.wav",
+      "sourceSha256": "6aa01929e346d16d43424d53cc54c44772a6cceebe6854156d10b32e768f2a67",
+      "decodedPcmSha256": "12687db3614ab2b5460a720cacf0cd7220563033dfc0edd3af80c332b30fb40c",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "0.170667",
+          "size": "24678",
+          "bit_rate": "1156778"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "player_jump",
+      "category": "player",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/player/player_jump.wav",
+      "sourceInputSha256": "e2c5b8c0a7a152ee6ab0c36b32f822034895f86e6b00dd797b4a5ca181135b2d",
+      "sourceFile": "player/player_jump.wav",
+      "sourceSha256": "3ce38d81c459a566ced71d60a271f0d636d2795e35609e8a06936c218951ad8d",
+      "decodedPcmSha256": "b0ad7b2fb15b960056364de2f1a81b52a732eb23cb49589d96ea60b663a7134e",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "0.320000",
+          "size": "46182",
+          "bit_rate": "1154550"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "player_double_jump",
+      "category": "player",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/player/player_double_jump.wav",
+      "sourceInputSha256": "77bfc3d8887b4ceaee935f85e7f5508a3d4c144ce6a694e4dbd6000066eecd42",
+      "sourceFile": "player/player_double_jump.wav",
+      "sourceSha256": "cf896d72e5044cd60c44721e284d8f818bb084969619151ee02b9821f5f647e5",
+      "decodedPcmSha256": "fc17dcbb5a3f70a135cc1504827b8814b57978bb178c83800f6a825f0ad37e0d",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "0.405333",
+          "size": "58470",
+          "bit_rate": "1154014"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "player_dash",
+      "category": "player",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/player/player_dash.wav",
+      "sourceInputSha256": "4114eb780ddcc2eca69bce0836bfe7b15d7c5aeea01d6022d205ae303d4f2997",
+      "sourceFile": "player/player_dash.wav",
+      "sourceSha256": "ac5d5fa98d268812b0af35f440f976a3b3ddadd71197ccaf1a1f0a0c43592af8",
+      "decodedPcmSha256": "5628cffd8aa2062b9a684438a0a343f2b9206c7a5d92e91afb1df95d58c3b4fb",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "0.320000",
+          "size": "46182",
+          "bit_rate": "1154550"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "player_wall_slide_loop",
+      "category": "player",
+      "bus": "sfx",
+      "loop": true,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/player/player_wall_slide_loop.wav",
+      "sourceInputSha256": "18c0f4fe6ad93c9ee11482a69a74a5c0820d809414ebea4774a752708e9f4e8e",
+      "sourceFile": "player/player_wall_slide_loop.wav",
+      "sourceSha256": "6e15538e8f02ccf3b761e71214a2715ee72e0a46365469e6823a31942aeb32f7",
+      "decodedPcmSha256": "6c692aee84615a91e85de7f5b6c2993231284ce2bc143ddcdf173089cb62977a",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.002667",
+          "size": "144486",
+          "bit_rate": "1152813"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "player_wall_jump",
+      "category": "player",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/player/player_wall_jump.wav",
+      "sourceInputSha256": "36009c706425733d76e3f4003500ee97fc4e19998b4b8499b71aee786865faf2",
+      "sourceFile": "player/player_wall_jump.wav",
+      "sourceSha256": "ab6cc341a6c9f882ca1a599c7199fdc4b5d5c8e738c2c5fc19e427e3324818f9",
+      "decodedPcmSha256": "484c2fa778bf1e82225a44ef86770ca825d2a41527eb535df5624e69305e999d",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "0.320000",
+          "size": "46182",
+          "bit_rate": "1154550"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "player_land_soft",
+      "category": "player",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/player/player_land_soft.mp3",
+      "sourceInputSha256": "98c81e9a3be5a1da4a462be02687f80ab18b5397a783fef7249155254a444042",
+      "sourceFile": "player/player_land_soft.wav",
+      "sourceSha256": "f3e9fb09a4843eef14345adedc5e364f37708d1c3d524bcdf132d756560dd9ae",
+      "decodedPcmSha256": "0d602aa871279fa3a78a1bd635a8843c4fbc77a739c1fce292dc126bb10a932c",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.000000",
+          "size": "144102",
+          "bit_rate": "1152816"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "player_land_hard",
+      "category": "player",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/player/player_land_hard.wav",
+      "sourceInputSha256": "97f98207e518ecfc3161705ac87d649f935254d66ad8e1e1f9ea4bd4ff1a699b",
+      "sourceFile": "player/player_land_hard.wav",
+      "sourceSha256": "63ed099d0a1e77ecc1354d698ec8046bad2491dd7f38d6759b7676b1f8f88d77",
+      "decodedPcmSha256": "65f38f38b242606563ddadabc2a932c84990e05b8acb9c7d6fc7223da9915df2",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "0.341333",
+          "size": "49254",
+          "bit_rate": "1154391"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "player_hurt",
+      "category": "player",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/player/player_hurt.mp3",
+      "sourceInputSha256": "c30e83a715fcd1d24365b6b63d42ef3557f91fc4efbf4a231478e33ebee9167d",
+      "sourceFile": "player/player_hurt.wav",
+      "sourceSha256": "29c388689e934429d2692d5a4dc2c84fcf74e44b4e3cdeb52e44bf5b1a5d999f",
+      "decodedPcmSha256": "87f449d226fefe377be018b53353509ba9e08ede62fd8f6209f68f102bbb3b97",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.000000",
+          "size": "144102",
+          "bit_rate": "1152816"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "player_death",
+      "category": "player",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/player/player_death.wav",
+      "sourceInputSha256": "5ef243d8f7b8d2d200130c75112ae3d1878ee6ae698b94204a0184e59efef4ec",
+      "sourceFile": "player/player_death.wav",
+      "sourceSha256": "dee77328782d476e42fa7f3d8d07c41bf4cb248291240a670d44775ed16d265a",
+      "decodedPcmSha256": "559ff4045ab8114607891813a73d03e80f76f62d6e30756b17dcd08c011a1584",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.066667",
+          "size": "153702",
+          "bit_rate": "1152764"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "vo_opening",
+      "category": "voice/en",
+      "bus": "voice",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/voice/en/vo_opening.mp3",
+      "sourceInputSha256": "fdd67f5f7389212d3cf256edec1d69b262881ea587dd021f4fab567f29b8a726",
+      "sourceFile": "voice/en/vo_opening.wav",
+      "sourceSha256": "6934b8e81c46622e55dce483e9a71e29432226ff77afb44bd3d14c7581745a53",
+      "decodedPcmSha256": "27b4f4aeaa12fcbccf41168cd52da3e4face564035edab8a4f6ef8ec7fe1b8ae",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "3.787750",
+          "size": "545538",
+          "bit_rate": "1152215"
+        }
+      },
+      "loudnessInput": {
+        "input_i": "-23.06",
+        "input_tp": "-3.67",
+        "input_lra": "0.80",
+        "input_thresh": "-34.04",
+        "output_i": "-16.69",
+        "output_tp": "-1.00",
+        "output_lra": "0.00",
+        "output_thresh": "-27.22",
+        "normalization_type": "dynamic",
+        "target_offset": "0.69"
+      },
+      "loudnessOutput": {
+        "input_i": "-16.11",
+        "input_tp": "-0.99",
+        "input_lra": "1.00",
+        "input_thresh": "-27.00",
+        "output_i": "-15.93",
+        "output_tp": "-1.00",
+        "output_lra": "0.00",
+        "output_thresh": "-26.46",
+        "normalization_type": "dynamic",
+        "target_offset": "-0.07"
+      }
+    },
+    {
+      "id": "vo_movement_rehearsal",
+      "category": "voice/en",
+      "bus": "voice",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/voice/en/vo_movement_rehearsal.mp3",
+      "sourceInputSha256": "49fbc27d803932209509cd48c862db330649d823b1faac6d0c5e92010dd8bd96",
+      "sourceFile": "voice/en/vo_movement_rehearsal.wav",
+      "sourceSha256": "ebabdcdd957e6a88bb412a17b106ba68e6dcad185d88641dedaa217ec401047d",
+      "decodedPcmSha256": "19a041c1a4f373cc16763379d0f9731676300f0f5f993b8573bf6b2fd9170869",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "4.127354",
+          "size": "594442",
+          "bit_rate": "1152199"
+        }
+      },
+      "loudnessInput": {
+        "input_i": "-23.32",
+        "input_tp": "-4.23",
+        "input_lra": "1.10",
+        "input_thresh": "-34.00",
+        "output_i": "-17.62",
+        "output_tp": "-1.00",
+        "output_lra": "1.10",
+        "output_thresh": "-28.08",
+        "normalization_type": "dynamic",
+        "target_offset": "1.62"
+      },
+      "loudnessOutput": {
+        "input_i": "-16.72",
+        "input_tp": "-1.00",
+        "input_lra": "1.10",
+        "input_thresh": "-27.12",
+        "output_i": "-16.59",
+        "output_tp": "-1.00",
+        "output_lra": "1.10",
+        "output_thresh": "-26.94",
+        "normalization_type": "dynamic",
+        "target_offset": "0.59"
+      }
+    },
+    {
+      "id": "vo_combat_rehearsal",
+      "category": "voice/en",
+      "bus": "voice",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/voice/en/vo_combat_rehearsal.mp3",
+      "sourceInputSha256": "1bfafdd72adec20a0dd81cdbbc5431b292e7e32950ef93454239abdfd3608919",
+      "sourceFile": "voice/en/vo_combat_rehearsal.wav",
+      "sourceSha256": "9d5a4c07c03cad238a47ceaa9eb04b8d319cdaf182f0ce2ea4aaba416b83ad61",
+      "decodedPcmSha256": "815e4f5d6c888bfd76b01c80bbab176658bfa1bf444b8b7342cc91e05cf72c33",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "3.840000",
+          "size": "553062",
+          "bit_rate": "1152212"
+        }
+      },
+      "loudnessInput": {
+        "input_i": "-26.85",
+        "input_tp": "-5.00",
+        "input_lra": "2.10",
+        "input_thresh": "-37.26",
+        "output_i": "-17.31",
+        "output_tp": "-1.00",
+        "output_lra": "0.00",
+        "output_thresh": "-27.69",
+        "normalization_type": "dynamic",
+        "target_offset": "1.31"
+      },
+      "loudnessOutput": {
+        "input_i": "-16.99",
+        "input_tp": "-0.99",
+        "input_lra": "1.60",
+        "input_thresh": "-27.40",
+        "output_i": "-16.20",
+        "output_tp": "-1.00",
+        "output_lra": "0.00",
+        "output_thresh": "-26.57",
+        "normalization_type": "dynamic",
+        "target_offset": "0.20"
+      }
+    },
+    {
+      "id": "vo_backstage_ambush",
+      "category": "voice/en",
+      "bus": "voice",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/voice/en/vo_backstage_ambush.mp3",
+      "sourceInputSha256": "0f6913e703f44414d6ab30aa79af16c47cbdc3b38e8e26920bf2fbda2182b7b9",
+      "sourceFile": "voice/en/vo_backstage_ambush.wav",
+      "sourceSha256": "4d737f8261918a99125868466b06889a61d60f7645e9b70a62437664260a8d89",
+      "decodedPcmSha256": "2231763b22de6918fd4bc62872d642864e02450aab7e024cdbd7de68b8b8602e",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "4.022854",
+          "size": "579394",
+          "bit_rate": "1152204"
+        }
+      },
+      "loudnessInput": {
+        "input_i": "-24.41",
+        "input_tp": "-5.65",
+        "input_lra": "1.40",
+        "input_thresh": "-35.26",
+        "output_i": "-17.36",
+        "output_tp": "-1.00",
+        "output_lra": "1.20",
+        "output_thresh": "-27.86",
+        "normalization_type": "dynamic",
+        "target_offset": "1.36"
+      },
+      "loudnessOutput": {
+        "input_i": "-17.28",
+        "input_tp": "-0.99",
+        "input_lra": "1.30",
+        "input_thresh": "-27.84",
+        "output_i": "-16.33",
+        "output_tp": "-1.00",
+        "output_lra": "1.30",
+        "output_thresh": "-26.82",
+        "normalization_type": "dynamic",
+        "target_offset": "0.33"
+      }
+    },
+    {
+      "id": "vo_grand_gallery",
+      "category": "voice/en",
+      "bus": "voice",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/voice/en/vo_grand_gallery.mp3",
+      "sourceInputSha256": "f1fb7731cf7f2cd03f589be285d1852a429b7ac3ba08859e74c700277795bf52",
+      "sourceFile": "voice/en/vo_grand_gallery.wav",
+      "sourceSha256": "f9074f73a105e28b419b4dec5e9cd24d20a070a7163d770c531afc78e3c81426",
+      "decodedPcmSha256": "fec6847be9e67b77f76cc145fb6ad2d1fdca492325630da204b054e8c3c1cd2b",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "4.205729",
+          "size": "605728",
+          "bit_rate": "1152195"
+        }
+      },
+      "loudnessInput": {
+        "input_i": "-24.73",
+        "input_tp": "-5.79",
+        "input_lra": "1.90",
+        "input_thresh": "-34.85",
+        "output_i": "-17.13",
+        "output_tp": "-1.00",
+        "output_lra": "1.50",
+        "output_thresh": "-27.23",
+        "normalization_type": "dynamic",
+        "target_offset": "1.13"
+      },
+      "loudnessOutput": {
+        "input_i": "-16.90",
+        "input_tp": "-1.00",
+        "input_lra": "1.50",
+        "input_thresh": "-27.01",
+        "output_i": "-16.38",
+        "output_tp": "-1.00",
+        "output_lra": "1.20",
+        "output_thresh": "-26.48",
+        "normalization_type": "dynamic",
+        "target_offset": "0.38"
+      }
+    },
+    {
+      "id": "vo_spotlight_vault",
+      "category": "voice/en",
+      "bus": "voice",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/voice/en/vo_spotlight_vault.mp3",
+      "sourceInputSha256": "b3c6d917f891b3121dc0fb5e62dafcdaeda73b1d736ce35e19cf598c418fdb27",
+      "sourceFile": "voice/en/vo_spotlight_vault.wav",
+      "sourceSha256": "a3da549aa18885ba868cbe027b05d464839cea18cfebb7ba517876e059dea3ed",
+      "decodedPcmSha256": "15abe0bf5fa47584a86d55b3853aca529c5d9bf6f37bb496a536b4fd126670cb",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "4.780417",
+          "size": "688482",
+          "bit_rate": "1152170"
+        }
+      },
+      "loudnessInput": {
+        "input_i": "-23.15",
+        "input_tp": "-6.89",
+        "input_lra": "0.80",
+        "input_thresh": "-33.84",
+        "output_i": "-15.62",
+        "output_tp": "-1.00",
+        "output_lra": "0.10",
+        "output_thresh": "-26.13",
+        "normalization_type": "dynamic",
+        "target_offset": "-0.38"
+      },
+      "loudnessOutput": {
+        "input_i": "-16.07",
+        "input_tp": "-1.00",
+        "input_lra": "1.00",
+        "input_thresh": "-26.76",
+        "output_i": "-15.48",
+        "output_tp": "-1.00",
+        "output_lra": "0.20",
+        "output_thresh": "-25.99",
+        "normalization_type": "dynamic",
+        "target_offset": "-0.52"
+      }
+    },
+    {
+      "id": "vo_card_sanctum",
+      "category": "voice/en",
+      "bus": "voice",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/voice/en/vo_card_sanctum.mp3",
+      "sourceInputSha256": "883c373c6067df23ec6ea128fc49a047aa7de61f5e3cbcc82d120e1caea1033b",
+      "sourceFile": "voice/en/vo_card_sanctum.wav",
+      "sourceSha256": "e40b0d410abcf7b2ddf30cbcbbe7144d5308865c40f03a27e87a245d579f1a4c",
+      "decodedPcmSha256": "853a4d327027ec83133837e662d0c2f26a475bd58e30979734289484921e53d4",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "3.604896",
+          "size": "519208",
+          "bit_rate": "1152228"
+        }
+      },
+      "loudnessInput": {
+        "input_i": "-24.67",
+        "input_tp": "-3.60",
+        "input_lra": "1.70",
+        "input_thresh": "-35.58",
+        "output_i": "-17.46",
+        "output_tp": "-1.00",
+        "output_lra": "0.00",
+        "output_thresh": "-28.15",
+        "normalization_type": "dynamic",
+        "target_offset": "1.46"
+      },
+      "loudnessOutput": {
+        "input_i": "-17.10",
+        "input_tp": "-0.99",
+        "input_lra": "1.10",
+        "input_thresh": "-27.69",
+        "output_i": "-16.35",
+        "output_tp": "-1.00",
+        "output_lra": "0.00",
+        "output_thresh": "-26.90",
+        "normalization_type": "dynamic",
+        "target_offset": "0.35"
+      }
+    },
+    {
+      "id": "vo_royal_box",
+      "category": "voice/en",
+      "bus": "voice",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/voice/en/vo_royal_box.mp3",
+      "sourceInputSha256": "0deca57e7b397f8233d898327810a23db262912407d9eee0f5baef1d8c9c1963",
+      "sourceFile": "voice/en/vo_royal_box.wav",
+      "sourceSha256": "e2225a006fb88bb40ca4fe03f77a8be3fcbf16688159529dcf77272f6ef314ec",
+      "decodedPcmSha256": "9fa8d9894030381cddcc6c6010120224ca574398b9202f4820573e6cf2f36740",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "3.108583",
+          "size": "447738",
+          "bit_rate": "1152262"
+        }
+      },
+      "loudnessInput": {
+        "input_i": "-23.26",
+        "input_tp": "-3.79",
+        "input_lra": "0.30",
+        "input_thresh": "-33.40",
+        "output_i": "-16.64",
+        "output_tp": "-1.00",
+        "output_lra": "0.00",
+        "output_thresh": "-26.79",
+        "normalization_type": "dynamic",
+        "target_offset": "0.64"
+      },
+      "loudnessOutput": {
+        "input_i": "-16.58",
+        "input_tp": "-0.99",
+        "input_lra": "0.30",
+        "input_thresh": "-26.72",
+        "output_i": "-16.14",
+        "output_tp": "-1.00",
+        "output_lra": "0.00",
+        "output_thresh": "-26.29",
+        "normalization_type": "dynamic",
+        "target_offset": "0.14"
+      }
+    },
+    {
+      "id": "vo_mirror_core",
+      "category": "voice/en",
+      "bus": "voice",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/voice/en/vo_mirror_core.mp3",
+      "sourceInputSha256": "10aa1ff921f426ddd6816f6dba48fb84ceb106be28f6eb1dcf95c1f7cedae686",
+      "sourceFile": "voice/en/vo_mirror_core.wav",
+      "sourceSha256": "45cb8c106279b4eb3d3a5bb6352b0b190403072a2ee566bc2f243dbd0c17d7d6",
+      "decodedPcmSha256": "c22b4853424939d75310da2468db5e04688bf22e5b8cb445c19f2340c81ca2d3",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "3.892250",
+          "size": "560586",
+          "bit_rate": "1152209"
+        }
+      },
+      "loudnessInput": {
+        "input_i": "-22.98",
+        "input_tp": "-2.78",
+        "input_lra": "2.70",
+        "input_thresh": "-33.18",
+        "output_i": "-17.52",
+        "output_tp": "-1.00",
+        "output_lra": "0.00",
+        "output_thresh": "-27.64",
+        "normalization_type": "dynamic",
+        "target_offset": "1.52"
+      },
+      "loudnessOutput": {
+        "input_i": "-16.83",
+        "input_tp": "-1.00",
+        "input_lra": "1.70",
+        "input_thresh": "-27.03",
+        "output_i": "-16.48",
+        "output_tp": "-1.00",
+        "output_lra": "0.00",
+        "output_thresh": "-26.61",
+        "normalization_type": "dynamic",
+        "target_offset": "0.48"
+      }
+    },
+    {
+      "id": "vo_boss_intro",
+      "category": "voice/en",
+      "bus": "voice",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/voice/en/vo_boss_intro.mp3",
+      "sourceInputSha256": "7e8260881c9241c29d9a7af170a63e5121af3982324a20f5a1002ab15f1618c0",
+      "sourceFile": "voice/en/vo_boss_intro.wav",
+      "sourceSha256": "1c865e15a8af22c5b071db583624f2b79cae52c4142eaee71781438b4981dd6d",
+      "decodedPcmSha256": "6eeee2cffad832100e98c312b8cbacd31a3f7c65335383cb9956b65100bfa191",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "2.821229",
+          "size": "406360",
+          "bit_rate": "1152292"
+        }
+      },
+      "loudnessInput": {
+        "input_i": "-23.01",
+        "input_tp": "-4.05",
+        "input_lra": "0.00",
+        "input_thresh": "-33.36",
+        "output_i": "-19.96",
+        "output_tp": "-1.00",
+        "output_lra": "0.00",
+        "output_thresh": "-30.30",
+        "normalization_type": "linear",
+        "target_offset": "3.96"
+      },
+      "loudnessOutput": {
+        "input_i": "-19.96",
+        "input_tp": "-1.00",
+        "input_lra": "0.00",
+        "input_thresh": "-30.30",
+        "output_i": "-19.96",
+        "output_tp": "-1.00",
+        "output_lra": "0.00",
+        "output_thresh": "-30.30",
+        "normalization_type": "linear",
+        "target_offset": "3.96"
+      }
+    },
+    {
+      "id": "vo_boss_phase_2",
+      "category": "voice/en",
+      "bus": "voice",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/voice/en/vo_boss_phase_2.mp3",
+      "sourceInputSha256": "e87185f5cd2dddb5f9f24570c9f344ba1a13ad850e6fa8c2a4cda620fd048b25",
+      "sourceFile": "voice/en/vo_boss_phase_2.wav",
+      "sourceSha256": "229d4948ca91f8318a7e903711e6b3ec6856e1cabe6986c0dd5ec21988a6dab3",
+      "decodedPcmSha256": "32a200edf51e792c8c09e971b120b1a32cb2ecf16da0bd8a6bad25cb22e3a9d8",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "2.768979",
+          "size": "398836",
+          "bit_rate": "1152297"
+        }
+      },
+      "loudnessInput": {
+        "input_i": "-24.41",
+        "input_tp": "-6.12",
+        "input_lra": "0.00",
+        "input_thresh": "-34.41",
+        "output_i": "-19.31",
+        "output_tp": "-1.00",
+        "output_lra": "0.00",
+        "output_thresh": "-29.31",
+        "normalization_type": "linear",
+        "target_offset": "3.31"
+      },
+      "loudnessOutput": {
+        "input_i": "-19.31",
+        "input_tp": "-1.00",
+        "input_lra": "0.00",
+        "input_thresh": "-29.31",
+        "output_i": "-19.31",
+        "output_tp": "-1.00",
+        "output_lra": "0.00",
+        "output_thresh": "-29.31",
+        "normalization_type": "linear",
+        "target_offset": "3.31"
+      }
+    },
+    {
+      "id": "vo_boss_phase_3",
+      "category": "voice/en",
+      "bus": "voice",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/voice/en/vo_boss_phase_3.mp3",
+      "sourceInputSha256": "40053713cc7a3b238d93ff6e77c9328cc5b04da3f41beb05f0020fe50d5743c5",
+      "sourceFile": "voice/en/vo_boss_phase_3.wav",
+      "sourceSha256": "0ef04b99c8d17fbf5b909ba56d0b29c91c0fa151817bbc3361b639f8c1abd96a",
+      "decodedPcmSha256": "786ac0f56c27c79b9b59469486b040c2dccc139e1046687e2b30bda69f0d9430",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.985313",
+          "size": "285988",
+          "bit_rate": "1152414"
+        }
+      },
+      "loudnessInput": {
+        "input_i": "-24.09",
+        "input_tp": "-3.10",
+        "input_lra": "0.00",
+        "input_thresh": "-34.65",
+        "output_i": "-21.99",
+        "output_tp": "-1.00",
+        "output_lra": "0.00",
+        "output_thresh": "-32.55",
+        "normalization_type": "linear",
+        "target_offset": "5.99"
+      },
+      "loudnessOutput": {
+        "input_i": "-21.99",
+        "input_tp": "-1.00",
+        "input_lra": "0.00",
+        "input_thresh": "-32.55",
+        "output_i": "-21.99",
+        "output_tp": "-1.00",
+        "output_lra": "0.00",
+        "output_thresh": "-32.55",
+        "normalization_type": "linear",
+        "target_offset": "5.99"
+      }
+    },
+    {
+      "id": "vo_finale",
+      "category": "voice/en",
+      "bus": "voice",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/voice/en/vo_finale.mp3",
+      "sourceInputSha256": "46ae20f00ca0477b052fde3fb77b6061c11f69d51598c716dcafec5881d0d257",
+      "sourceFile": "voice/en/vo_finale.wav",
+      "sourceSha256": "13ff9302c314ad0293657b066ce95c06a1dfb67dcf28a24ff3b1bd01a4941912",
+      "decodedPcmSha256": "23270c1377d1a417b7b5127617e584fcf8de009a9b1c69487c8b760164fb059c",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "3.422042",
+          "size": "492876",
+          "bit_rate": "1152238"
+        }
+      },
+      "loudnessInput": {
+        "input_i": "-23.49",
+        "input_tp": "-3.56",
+        "input_lra": "1.00",
+        "input_thresh": "-33.76",
+        "output_i": "-17.66",
+        "output_tp": "-1.00",
+        "output_lra": "0.00",
+        "output_thresh": "-27.66",
+        "normalization_type": "dynamic",
+        "target_offset": "1.66"
+      },
+      "loudnessOutput": {
+        "input_i": "-16.98",
+        "input_tp": "-1.00",
+        "input_lra": "0.80",
+        "input_thresh": "-26.98",
+        "output_i": "-16.50",
+        "output_tp": "-1.00",
+        "output_lra": "0.00",
+        "output_thresh": "-26.50",
+        "normalization_type": "dynamic",
+        "target_offset": "0.50"
+      }
+    },
+    {
+      "id": "world_checkpoint",
+      "category": "world",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/world/world_checkpoint.mp3",
+      "sourceInputSha256": "3463ed52de00afc0bebb560e44d270d8163ee2a28c15cdafd41d1112e85a9355",
+      "sourceFile": "world/world_checkpoint.wav",
+      "sourceSha256": "c66feeedba5c8b5e32b4aa716f25d6b64ff12c5764e160ef30b5ae424cdbb9b3",
+      "decodedPcmSha256": "973dfab9dd2442930e9b620e47f72955565d6b610c900bd595d6c531989f8f5b",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.000000",
+          "size": "144102",
+          "bit_rate": "1152816"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "world_gate_open",
+      "category": "world",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/world/world_gate_open.mp3",
+      "sourceInputSha256": "900826dcf78d967fe1076e849727efa26b574ba7d9f2ad370dd26d9fcb80e0e7",
+      "sourceFile": "world/world_gate_open.wav",
+      "sourceSha256": "c8b6447cafe290012461cca7e6260364a9604d5cde3fc86ad40fa972c269d957",
+      "decodedPcmSha256": "537d1b3c838c65e514e838210af129f86f24bc8a7df8d4805cc6bc05246a30c8",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "2.000000",
+          "size": "288102",
+          "bit_rate": "1152408"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "world_gate_close",
+      "category": "world",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/world/world_gate_close.mp3",
+      "sourceInputSha256": "d6409ced640c657c88638b9d7540cc674c674b88d5a716b9367a9ddfe7cfd536",
+      "sourceFile": "world/world_gate_close.wav",
+      "sourceSha256": "3176c45e638ab046d58443c4cf95ede262e0a592efaf0aa84a019f84d8a92ef8",
+      "decodedPcmSha256": "1a70b458c4a45de8094f7eef8f5df28043143551c4140af1a7c74b46284a146f",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "2.000000",
+          "size": "288102",
+          "bit_rate": "1152408"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "world_hazard_telegraph",
+      "category": "world",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/world/world_hazard_telegraph.mp3",
+      "sourceInputSha256": "13101072888507f981bc6bb46b6abbeeff97134a64d4677273a58c33b690b34f",
+      "sourceFile": "world/world_hazard_telegraph.wav",
+      "sourceSha256": "59e42ed31bb60c4345520438544ee83f88ef54c5de1638791cfba578f4242739",
+      "decodedPcmSha256": "2eade47033c9d69d54149f7aa7cab031c8a57d8c6c26c054c57093c6020515a7",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "2.000000",
+          "size": "288102",
+          "bit_rate": "1152408"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "world_hazard_active",
+      "category": "world",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/world/world_hazard_active.mp3",
+      "sourceInputSha256": "1d31e5ce8165120f0b467cbea713280a8e11eee8a7930a0d95db5ca082311b0e",
+      "sourceFile": "world/world_hazard_active.wav",
+      "sourceSha256": "4c5f6d75c628aad2953e01ef062cf9f3ee76fc4cd1ab944d599379ee12c084d1",
+      "decodedPcmSha256": "b6ca543b71663303612510e6d9642b03f9a75facb9b691f83ceffb9f65172471",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "2.000000",
+          "size": "288102",
+          "bit_rate": "1152408"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "world_mirror_move_loop",
+      "category": "world",
+      "bus": "sfx",
+      "loop": true,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/world/world_mirror_move_loop.mp3",
+      "sourceInputSha256": "e69f72faec9f4a5797c5fd153d5999109470336d554760cad865ff115f054554",
+      "sourceFile": "world/world_mirror_move_loop.wav",
+      "sourceSha256": "b39ba9bb0a912e5f341a6bd75a180ba790351715ff8359282940efc77c96c878",
+      "decodedPcmSha256": "87998a28a300f89151fa3ae8115825bcee597bbdfc4d5a53ceb1a3403c65dca8",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "2.000000",
+          "size": "288102",
+          "bit_rate": "1152408"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "world_objective_complete",
+      "category": "world",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/world/world_objective_complete.mp3",
+      "sourceInputSha256": "ad0e734a9ef04f3be846fa0c32d45f64898cd5ba5e13ac956dcb586786dadd46",
+      "sourceFile": "world/world_objective_complete.wav",
+      "sourceSha256": "a0fe926c9cf18c6fb6e2726896cc80f2b4a8e7ebce7b3e553184ee5407bcc1b8",
+      "decodedPcmSha256": "9f4580696151cd2aaacc6025707b102e35c5a4949a73326d4db319d10a0e29f9",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "2.000000",
+          "size": "288102",
+          "bit_rate": "1152408"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "world_relay_activate",
+      "category": "world",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/world/world_relay_activate.mp3",
+      "sourceInputSha256": "9920019d2dea1f6cefc8c4a2189d19b23c85888a5dc7a2dd70ba3e0e9abb62f2",
+      "sourceFile": "world/world_relay_activate.wav",
+      "sourceSha256": "5c8c0833082f993092fcbf8ee768f4a9d1406fe4887a639f9cc119d95e847cca",
+      "decodedPcmSha256": "97e1c53585007c46f7e0442f5697173157541faba35a933acc4905b123bc6c7c",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "2.000000",
+          "size": "288102",
+          "bit_rate": "1152408"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "world_rose_pickup",
+      "category": "world",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/world/world_rose_pickup.mp3",
+      "sourceInputSha256": "780cbcd5e87ef1aede9ce5d18a1d8f5e06e56b6ed6617047457beebe55811802",
+      "sourceFile": "world/world_rose_pickup.wav",
+      "sourceSha256": "742deacc9dba34bb017e85073f52eae353d6309cd24e79d9879260c77c8da3c4",
+      "decodedPcmSha256": "05773f20482b13bfa3415ba9dc01e6b9e6de39edc1e5e088f7e55dee1108de25",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.000000",
+          "size": "144102",
+          "bit_rate": "1152816"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "ui_move",
+      "category": "world",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/world/ui_move.mp3",
+      "sourceInputSha256": "faab0cdf37394005259f65b72021e9887a5b8bc26a699868b7f7909ed182628a",
+      "sourceFile": "world/ui_move.wav",
+      "sourceSha256": "e233c58ddf206c0916f6bb5d65eda68f61b157fde7f175f12f5515719cacea0c",
+      "decodedPcmSha256": "b5ad661b3c005dfdc8dd0b1dab5e1ca33cbc4d7dfb5da304d2aff22a21804f0c",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.000000",
+          "size": "144102",
+          "bit_rate": "1152816"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "ui_confirm",
+      "category": "world",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/world/ui_confirm.mp3",
+      "sourceInputSha256": "e7fc733b47b3888a6e4f9a1e04b9050cddb1900afe94b2e188b70d04cf231b02",
+      "sourceFile": "world/ui_confirm.wav",
+      "sourceSha256": "8b3eb319be4a3c9a6a6b75696b22641d9eda686297d2215fb74552919e487200",
+      "decodedPcmSha256": "e89044b36ef73bdeb8816f70e072be102840861b132163a5cd51152d222e07df",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.000000",
+          "size": "144102",
+          "bit_rate": "1152816"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "ui_error",
+      "category": "world",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/world/ui_error.mp3",
+      "sourceInputSha256": "a9440f05b2d7ae26d682f5c490f42f3c542a36d64de70fd30dc8d7efe89521c5",
+      "sourceFile": "world/ui_error.wav",
+      "sourceSha256": "52d135ca587f52b86df8ec968c7ee85bcfc238af75031e727129b5802ba602c4",
+      "decodedPcmSha256": "0a52bb5126419b886c1f5d8c2d37596bf0736bba5251219e9d0f3991588c967d",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.000000",
+          "size": "144102",
+          "bit_rate": "1152816"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "ui_leaderboard_success",
+      "category": "world",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/world/ui_leaderboard_success.mp3",
+      "sourceInputSha256": "3ef5bfffe768fc022967e50a6804402b4c0097e33aa78c5cec680c1b90ef6627",
+      "sourceFile": "world/ui_leaderboard_success.wav",
+      "sourceSha256": "6f10402e0af9a97b8af1a5773ab3bdf31ab20c64806a1f2bce4fe0861a227dc0",
+      "decodedPcmSha256": "3f898e68692955faac7fdf55af74d39c077f2a463623ccffe255e5a27c4bbed9",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.000000",
+          "size": "144102",
+          "bit_rate": "1152816"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    },
+    {
+      "id": "ui_leaderboard_fail",
+      "category": "world",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "sourceInput": "assets/incoming/audio/world/ui_leaderboard_fail.mp3",
+      "sourceInputSha256": "1450219023d5ccc126253867246291173c1b1e0bd4c93c4f0dce29539cbf4eeb",
+      "sourceFile": "world/ui_leaderboard_fail.wav",
+      "sourceSha256": "5e86c37717987e195e23da6fb13be35f8147942bdc0eaa93d5c3bf401a0575c8",
+      "decodedPcmSha256": "e7f45d6542ba7deb936dc0bfccfec7d1f807cb2bc4c048ec9ca5344460272508",
+      "aliasOf": null,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 24,
+            "bit_rate": "1152000"
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "1.000000",
+          "size": "144102",
+          "bit_rate": "1152816"
+        }
+      },
+      "loudnessInput": null,
+      "loudnessOutput": null
+    }
+  ]
+}

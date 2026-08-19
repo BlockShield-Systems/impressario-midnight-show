@@ -1,0 +1,576 @@
+{
+  "schemaVersion": 1,
+  "expectedAssetCount": 95,
+  "assets": [
+    {
+      "id": "music_01_opening_rehearsal",
+      "category": "music",
+      "bus": "music",
+      "loop": true
+    },
+    {
+      "id": "music_02_combat_rehearsal",
+      "category": "music",
+      "bus": "music",
+      "loop": true
+    },
+    {
+      "id": "music_03_backstage_ambush",
+      "category": "music",
+      "bus": "music",
+      "loop": true
+    },
+    {
+      "id": "music_04_grand_gallery",
+      "category": "music",
+      "bus": "music",
+      "loop": true
+    },
+    {
+      "id": "music_05_gallery_gauntlet",
+      "category": "music",
+      "bus": "music",
+      "loop": true
+    },
+    {
+      "id": "music_06_spotlight_vault",
+      "category": "music",
+      "bus": "music",
+      "loop": true
+    },
+    {
+      "id": "music_07_card_sanctum",
+      "category": "music",
+      "bus": "music",
+      "loop": true
+    },
+    {
+      "id": "music_08_royal_box",
+      "category": "music",
+      "bus": "music",
+      "loop": true
+    },
+    {
+      "id": "music_09_mirror_core",
+      "category": "music",
+      "bus": "music",
+      "loop": true
+    },
+    {
+      "id": "music_10_conductor_phase_1",
+      "category": "music",
+      "bus": "music",
+      "loop": true
+    },
+    {
+      "id": "music_11_conductor_phase_2",
+      "category": "music",
+      "bus": "music",
+      "loop": true
+    },
+    {
+      "id": "music_12_conductor_phase_3",
+      "category": "music",
+      "bus": "music",
+      "loop": true
+    },
+    {
+      "id": "music_13_finale",
+      "category": "music",
+      "bus": "music",
+      "loop": false
+    },
+    {
+      "id": "amb_theatre_room",
+      "category": "ambience",
+      "bus": "ambience",
+      "loop": true
+    },
+    {
+      "id": "amb_gallery_whispers",
+      "category": "ambience",
+      "bus": "ambience",
+      "loop": true
+    },
+    {
+      "id": "amb_spotlight_electric",
+      "category": "ambience",
+      "bus": "ambience",
+      "loop": true
+    },
+    {
+      "id": "amb_mirror_core_machine",
+      "category": "ambience",
+      "bus": "ambience",
+      "loop": true
+    },
+    {
+      "id": "boss_intro_sting",
+      "category": "boss",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "boss_shield_block",
+      "category": "boss",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "boss_shield_break",
+      "category": "boss",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "boss_projectile_volley",
+      "category": "boss",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "boss_floor_warning",
+      "category": "boss",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "boss_phase_2",
+      "category": "boss",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "boss_phase_3",
+      "category": "boss",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "boss_defeat",
+      "category": "boss",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "finale_firework_01",
+      "category": "boss",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "finale_firework_02",
+      "category": "boss",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "finale_curtain_close",
+      "category": "boss",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "cane_swing_01",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "cane_swing_02",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "cane_swing_heavy",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "cane_hit_01",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "cane_hit_02",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "cane_hit_heavy",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "cane_hit_shield",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "combo_finisher",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "grand_card_cast",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "grand_card_flight",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "grand_card_hit",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "spotlight_cast",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "spotlight_hit",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "enemy_defeat",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "stagehand_alert",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "card_enemy_telegraph",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "card_enemy_throw",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "acrobat_telegraph",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "acrobat_leap",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "acrobat_land",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "wraith_telegraph",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "wraith_charge",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "sentry_lock",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "sentry_fire",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "echo_duelist_telegraph",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "echo_duelist_dash",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "echo_caster_cast",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "core_mime_record",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "core_mime_mimic",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "player_step_01",
+      "category": "player",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "player_step_02",
+      "category": "player",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "player_jump",
+      "category": "player",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "player_double_jump",
+      "category": "player",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "player_dash",
+      "category": "player",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "player_wall_slide_loop",
+      "category": "player",
+      "bus": "sfx",
+      "loop": true
+    },
+    {
+      "id": "player_wall_jump",
+      "category": "player",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "player_land_soft",
+      "category": "player",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "player_land_hard",
+      "category": "player",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "player_hurt",
+      "category": "player",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "player_death",
+      "category": "player",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "vo_opening",
+      "category": "voice/en",
+      "bus": "voice",
+      "loop": false
+    },
+    {
+      "id": "vo_movement_rehearsal",
+      "category": "voice/en",
+      "bus": "voice",
+      "loop": false
+    },
+    {
+      "id": "vo_combat_rehearsal",
+      "category": "voice/en",
+      "bus": "voice",
+      "loop": false
+    },
+    {
+      "id": "vo_backstage_ambush",
+      "category": "voice/en",
+      "bus": "voice",
+      "loop": false
+    },
+    {
+      "id": "vo_grand_gallery",
+      "category": "voice/en",
+      "bus": "voice",
+      "loop": false
+    },
+    {
+      "id": "vo_spotlight_vault",
+      "category": "voice/en",
+      "bus": "voice",
+      "loop": false
+    },
+    {
+      "id": "vo_card_sanctum",
+      "category": "voice/en",
+      "bus": "voice",
+      "loop": false
+    },
+    {
+      "id": "vo_royal_box",
+      "category": "voice/en",
+      "bus": "voice",
+      "loop": false
+    },
+    {
+      "id": "vo_mirror_core",
+      "category": "voice/en",
+      "bus": "voice",
+      "loop": false
+    },
+    {
+      "id": "vo_boss_intro",
+      "category": "voice/en",
+      "bus": "voice",
+      "loop": false
+    },
+    {
+      "id": "vo_boss_phase_2",
+      "category": "voice/en",
+      "bus": "voice",
+      "loop": false
+    },
+    {
+      "id": "vo_boss_phase_3",
+      "category": "voice/en",
+      "bus": "voice",
+      "loop": false
+    },
+    {
+      "id": "vo_finale",
+      "category": "voice/en",
+      "bus": "voice",
+      "loop": false
+    },
+    {
+      "id": "world_checkpoint",
+      "category": "world",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "world_gate_open",
+      "category": "world",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "world_gate_close",
+      "category": "world",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "world_hazard_telegraph",
+      "category": "world",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "world_hazard_active",
+      "category": "world",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "world_mirror_move_loop",
+      "category": "world",
+      "bus": "sfx",
+      "loop": true
+    },
+    {
+      "id": "world_objective_complete",
+      "category": "world",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "world_relay_activate",
+      "category": "world",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "world_rose_pickup",
+      "category": "world",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "ui_move",
+      "category": "world",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "ui_confirm",
+      "category": "world",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "ui_error",
+      "category": "world",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "ui_leaderboard_success",
+      "category": "world",
+      "bus": "sfx",
+      "loop": false
+    },
+    {
+      "id": "ui_leaderboard_fail",
+      "category": "world",
+      "bus": "sfx",
+      "loop": false
+    }
+  ]
+}

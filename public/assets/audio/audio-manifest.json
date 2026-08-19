@@ -1,0 +1,5426 @@
+{
+  "schemaVersion": 1,
+  "generatedUtc": "2026-08-19T03:36:03.699335+00:00",
+  "assetCount": 95,
+  "physicalAssetCount": 92,
+  "physicalRuntimeFileCount": 184,
+  "primaryCodec": "Opus in Ogg",
+  "fallbackCodec": "MP3",
+  "assets": [
+    {
+      "id": "acrobat_land",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/enemies/acrobat_land.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "fbc97db635ad41dac0f5be8fc36282a08db8614a4eaa3422499f06c3ef3e934c",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.006500",
+            "size": "11684",
+            "bit_rate": "92868"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/enemies/acrobat_land.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "dc743276aea7bfcec8bb72297bc7c0e2fb2ea0344205fcf222687e63e802f110",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.032000",
+            "size": "16941",
+            "bit_rate": "131325"
+          }
+        }
+      }
+    },
+    {
+      "id": "acrobat_leap",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/enemies/acrobat_leap.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "961e963d19d74cc1a1e4e8cb75b2e1ec1e775d804491072f232b795d4c57140e",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.006500",
+            "size": "12224",
+            "bit_rate": "97160"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/enemies/acrobat_leap.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "d9a1ddfbf75a8d82fd14b610de1a3044ebbbb8d2f689fff4fb545b4182963d33",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.032000",
+            "size": "16941",
+            "bit_rate": "131325"
+          }
+        }
+      }
+    },
+    {
+      "id": "acrobat_telegraph",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/enemies/acrobat_telegraph.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "dad67748a05e3779b70bc30748575013e96e7b982e89d00ca87bf0ebf68da5bc",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.006500",
+            "size": "11018",
+            "bit_rate": "87574"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/enemies/acrobat_telegraph.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "4a0606136ce0be0f1aef0210075c2d2d6bef2e9baf468d7660c09a4011c90a87",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.032000",
+            "size": "16941",
+            "bit_rate": "131325"
+          }
+        }
+      }
+    },
+    {
+      "id": "amb_gallery_whispers",
+      "category": "ambience",
+      "bus": "ambience",
+      "loop": true,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/ambience/amb_gallery_whispers.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "071ca10ac695d1dadd271513d1eb33f77d1287ca18c2140e02d78a46ffb76304",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "60.030500",
+            "size": "1143200",
+            "bit_rate": "152349"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/ambience/amb_gallery_whispers.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "dbd486b44bbc77701a34dfeba75b092b40b75d71275f3c61c51fd1badfff2ae1",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0,
+              "bit_rate": "192000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "60.048000",
+            "size": "1441773",
+            "bit_rate": "192082"
+          }
+        }
+      }
+    },
+    {
+      "id": "amb_mirror_core_machine",
+      "category": "ambience",
+      "bus": "ambience",
+      "loop": true,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/ambience/amb_mirror_core_machine.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "a897a5515fc542b0f8722ef888d03875e7cc73861fdde6144d11510bd92d8195",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "60.030500",
+            "size": "1041947",
+            "bit_rate": "138855"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/ambience/amb_mirror_core_machine.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "46a3184d9807ba44d9eb2f430efcb9a6656a4f8ccbc83f09e1fb34128d6e4cb9",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0,
+              "bit_rate": "192000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "60.048000",
+            "size": "1441773",
+            "bit_rate": "192082"
+          }
+        }
+      }
+    },
+    {
+      "id": "amb_spotlight_electric",
+      "category": "ambience",
+      "bus": "ambience",
+      "loop": true,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/ambience/amb_spotlight_electric.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "d28e45c8108c8507d1adfe5ca1b5456b508e6608ec145e9072667f660ac31571",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "45.030500",
+            "size": "843940",
+            "bit_rate": "149932"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/ambience/amb_spotlight_electric.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "ec8e4593d050a4140e152ca40cac3b4033a6ceaabfc5abd7ac9f4fd952d76b82",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0,
+              "bit_rate": "192000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "45.048000",
+            "size": "1081773",
+            "bit_rate": "192110"
+          }
+        }
+      }
+    },
+    {
+      "id": "amb_theatre_room",
+      "category": "ambience",
+      "bus": "ambience",
+      "loop": true,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/ambience/amb_theatre_room.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "54ae7c22a3d98f2f4801566f5ea50886fafcc8f634f49aee8812b0129bf3b808",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "60.030500",
+            "size": "1296968",
+            "bit_rate": "172841"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/ambience/amb_theatre_room.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "0ed7778844e2618287111519edbef4ec424125c43c8c281f273edeb02eb2ca4f",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0,
+              "bit_rate": "192000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "60.048000",
+            "size": "1441773",
+            "bit_rate": "192082"
+          }
+        }
+      }
+    },
+    {
+      "id": "boss_defeat",
+      "category": "boss",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/boss/boss_defeat.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "a2fdc3b1539440322b80837cf857ad92c12ba3a292990425be9ee590d1dcdcd2",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "4.006500",
+            "size": "81997",
+            "bit_rate": "163727"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/boss/boss_defeat.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "f522f2d0aa31b8339e8f867ac8c309f411b45f72e50e9d44f32b15583a6125b7",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0,
+              "bit_rate": "192000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "4.032000",
+            "size": "97389",
+            "bit_rate": "193232"
+          }
+        }
+      }
+    },
+    {
+      "id": "boss_floor_warning",
+      "category": "boss",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/boss/boss_floor_warning.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "88da1960e0e713b1c4679b8a780d6b9e172f222103090343ca17efc8e307e677",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "2.006500",
+            "size": "39633",
+            "bit_rate": "158018"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/boss/boss_floor_warning.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "0ddf9d46247479c4548738540afbb3ef68403478997a65d4a1991ac77b5f0932",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0,
+              "bit_rate": "192000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "2.040000",
+            "size": "49581",
+            "bit_rate": "194435"
+          }
+        }
+      }
+    },
+    {
+      "id": "boss_intro_sting",
+      "category": "boss",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/boss/boss_intro_sting.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "b5e54d8fc8e26b41df212d838b183f52a2ff602b1b86f76992a599de23cc94fd",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "3.006500",
+            "size": "64533",
+            "bit_rate": "171715"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/boss/boss_intro_sting.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "9ac12488d1fa8ed409ebc626ac473fa745155441b5b0803bf87b7d84fdb8f940",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0,
+              "bit_rate": "192000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "3.024000",
+            "size": "73197",
+            "bit_rate": "193642"
+          }
+        }
+      }
+    },
+    {
+      "id": "boss_phase_2",
+      "category": "boss",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/boss/boss_phase_2.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "48c68d71583b2488feeaa74dad0b82f06f039869e64057e7e9036b77c8d32037",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "2.006500",
+            "size": "37895",
+            "bit_rate": "151088"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/boss/boss_phase_2.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "fe32c788af3939ccd7f4e2b9ebd9e187d9c65727db8ad48831f74bef9ac92a16",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0,
+              "bit_rate": "192000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "2.040000",
+            "size": "49581",
+            "bit_rate": "194435"
+          }
+        }
+      }
+    },
+    {
+      "id": "boss_phase_3",
+      "category": "boss",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/boss/boss_phase_3.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "66ee929df8b6a0d65f7472a148c40365543535f478a1b1423b3434423745cb45",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "2.006500",
+            "size": "38948",
+            "bit_rate": "155287"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/boss/boss_phase_3.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "67f249dfd802b432f8af5eedfafde59623f8c1ba43fce1bdc3e40dfb5b590e2d",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0,
+              "bit_rate": "192000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "2.040000",
+            "size": "49581",
+            "bit_rate": "194435"
+          }
+        }
+      }
+    },
+    {
+      "id": "boss_projectile_volley",
+      "category": "boss",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/boss/boss_projectile_volley.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "ee65093c60924015974c3771490890390fdf8e0a09c6aa445910c26316132088",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "2.006500",
+            "size": "38502",
+            "bit_rate": "153509"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/boss/boss_projectile_volley.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "4a6ce17c0c468585e7a5f2c60b660632b4c96eb92eca5b7907a8c3e5c7216070",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0,
+              "bit_rate": "192000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "2.040000",
+            "size": "49581",
+            "bit_rate": "194435"
+          }
+        }
+      }
+    },
+    {
+      "id": "boss_shield_block",
+      "category": "boss",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/boss/boss_shield_block.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "1c0120d50f2731f253223d33f49c8549ebf804d2c701e0a43a3b2cf8953d1115",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.006500",
+            "size": "20573",
+            "bit_rate": "163521"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/boss/boss_shield_block.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "a399ae9ade2fc364caae7021f0c4a61586281a509cb93a694e67c68cb848f08c",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0,
+              "bit_rate": "192000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.032000",
+            "size": "25389",
+            "bit_rate": "196813"
+          }
+        }
+      }
+    },
+    {
+      "id": "boss_shield_break",
+      "category": "boss",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/boss/boss_shield_break.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "4f895ec2ffa136ae5c6d0270660ee6d8e555a8543e31258ae9a01cc4d5f42ef8",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "2.006500",
+            "size": "35779",
+            "bit_rate": "142652"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/boss/boss_shield_break.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "93837f8c2963169cc0b9a82a36e2ad111ce78a7f33d922d7354c51d7c00d8527",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0,
+              "bit_rate": "192000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "2.040000",
+            "size": "49581",
+            "bit_rate": "194435"
+          }
+        }
+      }
+    },
+    {
+      "id": "cane_hit_01",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/combat/cane_hit_01.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "6ae2ab5fefddb2a764573f4815a4597af2b8c1a682353ecd320b2a9230f94a1c",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.006500",
+            "size": "13186",
+            "bit_rate": "104806"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/combat/cane_hit_01.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "b3b108ea5ff9040fa8bad5961281beff18456cbe230aada7b75f54136b111db7",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.032000",
+            "size": "16941",
+            "bit_rate": "131325"
+          }
+        }
+      }
+    },
+    {
+      "id": "cane_hit_02",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/combat/cane_hit_02.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "72282d67fb6eddb3b96ed7bb21a4a987e9512b3f442c22a3d3a3a9a05ca0cf47",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.006500",
+            "size": "12560",
+            "bit_rate": "99831"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/combat/cane_hit_02.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "6c375e683b590510e55aef7142f5c465c41794fdb024ff69d87dac59773c54d5",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.032000",
+            "size": "16941",
+            "bit_rate": "131325"
+          }
+        }
+      }
+    },
+    {
+      "id": "cane_hit_heavy",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/combat/cane_hit_heavy.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "2befec9d365b409da9ed6e5d03c6aa596f883b82479ab3e459b3c0b544db21af",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.006500",
+            "size": "11354",
+            "bit_rate": "90245"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/combat/cane_hit_heavy.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "d6245a6cab2384d558f02dac0ef9e36879ee0467e9110aaabb695855c1f39e33",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.032000",
+            "size": "16941",
+            "bit_rate": "131325"
+          }
+        }
+      }
+    },
+    {
+      "id": "cane_hit_shield",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/combat/cane_hit_shield.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "e5b72704503c5a03870b23683896b2cea31525247638d80b0d0a248030fb4b96",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.006500",
+            "size": "13458",
+            "bit_rate": "106968"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/combat/cane_hit_shield.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "90e7aa4f2dbde5ac1e1efd1175b23d215a88f890a310e1d65bf898ee7653d2c2",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.032000",
+            "size": "16941",
+            "bit_rate": "131325"
+          }
+        }
+      }
+    },
+    {
+      "id": "cane_swing_01",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/combat/cane_swing_01.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "a1a47cb1d87052b9c86c65aee22109596073fe059e02997cf74a3c1ecb87ceae",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.006500",
+            "size": "12807",
+            "bit_rate": "101794"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/combat/cane_swing_01.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "1ce5cfdcc4e27a0eb2273c1a97ffeb9b9199f74b167707057abc7fa4b2496856",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.032000",
+            "size": "16941",
+            "bit_rate": "131325"
+          }
+        }
+      }
+    },
+    {
+      "id": "cane_swing_02",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/combat/cane_swing_02.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "6f68decfe79e9f06ce7440c4af247bd1bc2f4ad8d88229bc20672fd8e13c7e55",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.006500",
+            "size": "11753",
+            "bit_rate": "93416"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/combat/cane_swing_02.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "646f3a44cded8fb288885fd413c5023f9bc02adfac762de08ce20246040fc3e4",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.032000",
+            "size": "16941",
+            "bit_rate": "131325"
+          }
+        }
+      }
+    },
+    {
+      "id": "cane_swing_heavy",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/combat/cane_swing_heavy.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "304622cf785df289149abb849d2c96dce8c60e3dddf1602184ac3b568105a566",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.006500",
+            "size": "12351",
+            "bit_rate": "98169"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/combat/cane_swing_heavy.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "df41566da371bc821f27596c47e6c4ddd3e04f033ca12696bc9241c0e04a298d",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.032000",
+            "size": "16941",
+            "bit_rate": "131325"
+          }
+        }
+      }
+    },
+    {
+      "id": "card_enemy_telegraph",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/enemies/card_enemy_telegraph.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "ecd077ff3b272e2604138e2260a39131fdd1a61a76909cfcf79f162e30a5a65f",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.006500",
+            "size": "12684",
+            "bit_rate": "100816"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/enemies/card_enemy_telegraph.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "01d562b0bc7d7e24cb06a4e1aa730619d7b2f26e0257aab1e81bd1e3387a2c97",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.032000",
+            "size": "16941",
+            "bit_rate": "131325"
+          }
+        }
+      }
+    },
+    {
+      "id": "card_enemy_throw",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/enemies/card_enemy_throw.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "8f42e737f5596d7670f29020fab403f9f01fe965c340b68acb4e038965986c89",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.006500",
+            "size": "12497",
+            "bit_rate": "99330"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/enemies/card_enemy_throw.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "b3dcd4d6b4191828b071d395917d1c419c7dd432306124259c87c78ed5bfa05f",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.032000",
+            "size": "16941",
+            "bit_rate": "131325"
+          }
+        }
+      }
+    },
+    {
+      "id": "combo_finisher",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/combat/combo_finisher.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "1290b1178b0f523c263f9986f3ad3e7b5c0b879b65c52fd6df6607616fe4d8f9",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.006500",
+            "size": "12248",
+            "bit_rate": "97351"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/combat/combo_finisher.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "96caf20364d7639abe4a7d52ab362c2d0e45dc5c21b2b3696b952447d3c23f01",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.032000",
+            "size": "16941",
+            "bit_rate": "131325"
+          }
+        }
+      }
+    },
+    {
+      "id": "core_mime_mimic",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/enemies/core_mime_mimic.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "48d16d4a74d07edb07a98ae63580c4e55be9c76eb722bead170de7433cf9fe70",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.006500",
+            "size": "12964",
+            "bit_rate": "103042"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/enemies/core_mime_mimic.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "e7321d8cf6fc664fad849dd99cd415edeb9b4f3d36e161c0f73ceb327dd00fd6",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.032000",
+            "size": "16941",
+            "bit_rate": "131325"
+          }
+        }
+      }
+    },
+    {
+      "id": "core_mime_record",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/enemies/core_mime_record.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "409a2237b2dbdf8243c88442b9fddd9580940446264a8eb5cde36f2943a663d5",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.006500",
+            "size": "12279",
+            "bit_rate": "97597"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/enemies/core_mime_record.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "e14b828856ae4c80aef73af22e7ec86f42b7a7938704bd5f96ead030bf8c73a5",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.032000",
+            "size": "16941",
+            "bit_rate": "131325"
+          }
+        }
+      }
+    },
+    {
+      "id": "echo_caster_cast",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/enemies/echo_caster_cast.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "a7ee3fb0acb4122df1e1dd4f76fc62eadf1121e4a930d3a84fbc3837863c8601",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.006500",
+            "size": "11711",
+            "bit_rate": "93082"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/enemies/echo_caster_cast.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "6b7ba7cbf55838f07224f853576d340f554e7ba4c12c4573a83575486a9ea2ea",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.032000",
+            "size": "16941",
+            "bit_rate": "131325"
+          }
+        }
+      }
+    },
+    {
+      "id": "echo_duelist_dash",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/enemies/echo_duelist_dash.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "8d510737f8acf82caf0f3896e12d4c1fd59f620b0c504d8bc69271b4cb322bb0",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.006500",
+            "size": "11889",
+            "bit_rate": "94497"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/enemies/echo_duelist_dash.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "86c5d329aef0cbc6e7a042b79e5bbdd6053e59cc573c1b0e51c1199b8b0cf43d",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.032000",
+            "size": "16941",
+            "bit_rate": "131325"
+          }
+        }
+      }
+    },
+    {
+      "id": "echo_duelist_telegraph",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/enemies/echo_duelist_telegraph.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "aa85945dd57effa5eff6a86b70bf5b1556c7eec2e317518f50d605a7bfdfab6e",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.006500",
+            "size": "12039",
+            "bit_rate": "95690"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/enemies/echo_duelist_telegraph.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "56813c7dcf466d19ed631abde7a99e60dcf297c726239b1a376d5dd0b66ee4ac",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.032000",
+            "size": "16941",
+            "bit_rate": "131325"
+          }
+        }
+      }
+    },
+    {
+      "id": "enemy_defeat",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/combat/enemy_defeat.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "11fef55192f2459b257a1d5a33d40ff8baaf0ec5a7ace4030751304dd49bb2b8",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.006500",
+            "size": "11679",
+            "bit_rate": "92828"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/combat/enemy_defeat.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "00a21d859d228cb5d675a43147770ca36a7d97aedd528eeb62957c31f925861a",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.032000",
+            "size": "16941",
+            "bit_rate": "131325"
+          }
+        }
+      }
+    },
+    {
+      "id": "finale_curtain_close",
+      "category": "boss",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/boss/finale_curtain_close.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "ba13e60010035484fe0adbd2fb088929a2ddcb5ec999cb772f41fe384e34a808",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "3.006500",
+            "size": "44464",
+            "bit_rate": "118314"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/boss/finale_curtain_close.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "920337f6efeefc7a8c36975be663570ad156ac47cf02d591e77d27f8a3f6002b",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0,
+              "bit_rate": "192000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "3.024000",
+            "size": "73197",
+            "bit_rate": "193642"
+          }
+        }
+      }
+    },
+    {
+      "id": "finale_firework_01",
+      "category": "boss",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/boss/finale_firework_01.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "303cb562d40ad80510422a54b156506e83a1506850f11478eb2b19d2f791be85",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "3.006500",
+            "size": "55824",
+            "bit_rate": "148542"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/boss/finale_firework_01.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "cba7ef1850991125cb518d4c43c012b9b09f52aace95aaa46d7a6ffdf150e7f0",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0,
+              "bit_rate": "192000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "3.024000",
+            "size": "73197",
+            "bit_rate": "193642"
+          }
+        }
+      }
+    },
+    {
+      "id": "finale_firework_02",
+      "category": "boss",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/boss/finale_firework_02.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "cd5501b6730e50952d6d8eda74cb069a4ec8d2f9328bd9d570c88c1ea568c233",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "3.006500",
+            "size": "58528",
+            "bit_rate": "155737"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/boss/finale_firework_02.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "5d4de01132498907504902fa5db44018abb61c67fa5e5f4d23b66a9d12c15749",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0,
+              "bit_rate": "192000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "3.024000",
+            "size": "73197",
+            "bit_rate": "193642"
+          }
+        }
+      }
+    },
+    {
+      "id": "grand_card_cast",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": "combo_finisher",
+      "primary": {
+        "url": "/assets/audio/combat/combo_finisher.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "1290b1178b0f523c263f9986f3ad3e7b5c0b879b65c52fd6df6607616fe4d8f9",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.006500",
+            "size": "12248",
+            "bit_rate": "97351"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/combat/combo_finisher.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "96caf20364d7639abe4a7d52ab362c2d0e45dc5c21b2b3696b952447d3c23f01",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.032000",
+            "size": "16941",
+            "bit_rate": "131325"
+          }
+        }
+      }
+    },
+    {
+      "id": "grand_card_flight",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/combat/grand_card_flight.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "c7aad9fd8a539ba0458b6d7165ffc4c90c41b5a6d8097feac9f68c0008bcd326",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.006500",
+            "size": "12259",
+            "bit_rate": "97438"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/combat/grand_card_flight.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "6dbbca0fcd332bbe9d9391ec7d0be55fda8f2d293b9c36e4a76b72f569db1fb3",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.032000",
+            "size": "16941",
+            "bit_rate": "131325"
+          }
+        }
+      }
+    },
+    {
+      "id": "grand_card_hit",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": "grand_card_flight",
+      "primary": {
+        "url": "/assets/audio/combat/grand_card_flight.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "c7aad9fd8a539ba0458b6d7165ffc4c90c41b5a6d8097feac9f68c0008bcd326",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.006500",
+            "size": "12259",
+            "bit_rate": "97438"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/combat/grand_card_flight.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "6dbbca0fcd332bbe9d9391ec7d0be55fda8f2d293b9c36e4a76b72f569db1fb3",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.032000",
+            "size": "16941",
+            "bit_rate": "131325"
+          }
+        }
+      }
+    },
+    {
+      "id": "music_01_opening_rehearsal",
+      "category": "music",
+      "bus": "music",
+      "loop": true,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/music/music_01_opening_rehearsal.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "149ae21e36fdd6d9f2a774aca0df5ae02cd3f1dc215148848c950a9406eb784e",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "90.030500",
+            "size": "2003774",
+            "bit_rate": "178052"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/music/music_01_opening_rehearsal.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "6d062227f62649e3b8b4e0e1af694214dd6e86b42fbb904755bfcb7bd3530046",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0,
+              "bit_rate": "192000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "90.048000",
+            "size": "2161773",
+            "bit_rate": "192055"
+          }
+        }
+      }
+    },
+    {
+      "id": "music_02_combat_rehearsal",
+      "category": "music",
+      "bus": "music",
+      "loop": true,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/music/music_02_combat_rehearsal.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "59c4c4859dbea4cad1365e045a4a1576a9fd4f576c802392071d8b91bf9473c5",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "85.038500",
+            "size": "1822190",
+            "bit_rate": "171422"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/music/music_02_combat_rehearsal.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "cdea29c0e8ce57e2984291af1749d331a062f47fbc37de2314c6fddc6bd5f94c",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0,
+              "bit_rate": "192000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "85.056000",
+            "size": "2041965",
+            "bit_rate": "192058"
+          }
+        }
+      }
+    },
+    {
+      "id": "music_03_backstage_ambush",
+      "category": "music",
+      "bus": "music",
+      "loop": true,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/music/music_03_backstage_ambush.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "85e8f86d8a4cb1f55faca959fe0f7220378c04c3f0ccf78a6ec8b7cb462e5952",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "82.038500",
+            "size": "1714704",
+            "bit_rate": "167209"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/music/music_03_backstage_ambush.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "1dab2a052a144b80018028b2ba2b2b27c83f92b9f26be317c62fc8ce4a292f7e",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0,
+              "bit_rate": "192000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "82.056000",
+            "size": "1969965",
+            "bit_rate": "192060"
+          }
+        }
+      }
+    },
+    {
+      "id": "music_04_grand_gallery",
+      "category": "music",
+      "bus": "music",
+      "loop": true,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/music/music_04_grand_gallery.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "2b572008f38621a04b55053fc87795affcc75d3edee74dd69aad7678f4d15fd2",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "95.046500",
+            "size": "2008462",
+            "bit_rate": "169050"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/music/music_04_grand_gallery.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "ff02c242ab86fcfdf04b93d9adfb962081aeb80223ad2be08e8898995d4e76a0",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0,
+              "bit_rate": "192000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "95.064000",
+            "size": "2282157",
+            "bit_rate": "192052"
+          }
+        }
+      }
+    },
+    {
+      "id": "music_05_gallery_gauntlet",
+      "category": "music",
+      "bus": "music",
+      "loop": true,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/music/music_05_gallery_gauntlet.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "4fe008704b45de304084020cfe7aa6797a484c9d9b8f16f2064922a66ece6ede",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "85.038500",
+            "size": "1950511",
+            "bit_rate": "183494"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/music/music_05_gallery_gauntlet.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "e9ce19a70b47942ffbb6a631892a07c12d680ec17eb923bafb13c2f8e081b618",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0,
+              "bit_rate": "192000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "85.056000",
+            "size": "2041965",
+            "bit_rate": "192058"
+          }
+        }
+      }
+    },
+    {
+      "id": "music_06_spotlight_vault",
+      "category": "music",
+      "bus": "music",
+      "loop": true,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/music/music_06_spotlight_vault.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "f0c1b9852a95de65356cf71df1904414ba4d252de4b8b2375b5deb967cecb02c",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "90.030500",
+            "size": "1873844",
+            "bit_rate": "166507"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/music/music_06_spotlight_vault.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "93f27fc5daf14aa5af4191f8c13767e5aa3901affd6ea1a41e70dbb89138aec7",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0,
+              "bit_rate": "192000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "90.048000",
+            "size": "2161773",
+            "bit_rate": "192055"
+          }
+        }
+      }
+    },
+    {
+      "id": "music_07_card_sanctum",
+      "category": "music",
+      "bus": "music",
+      "loop": true,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/music/music_07_card_sanctum.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "c6dd36a3535b832f21f06dcbae695731dcc055d033c6ae8217202e230b76d23e",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "88.038500",
+            "size": "1811517",
+            "bit_rate": "164611"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/music/music_07_card_sanctum.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "abbcf8410ab5009fc25e3b19142cf92d4a421477459bc952efaa20857e089f36",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0,
+              "bit_rate": "192000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "88.056000",
+            "size": "2113965",
+            "bit_rate": "192056"
+          }
+        }
+      }
+    },
+    {
+      "id": "music_08_royal_box",
+      "category": "music",
+      "bus": "music",
+      "loop": true,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/music/music_08_royal_box.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "ae98f23be0966a51aae172e70a2b78cfc0ea0905fa7b31baacffd39c19db85c2",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "92.046500",
+            "size": "1961353",
+            "bit_rate": "170466"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/music/music_08_royal_box.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "e08a3cbecdb1f04c597f95850d038a464865f3b72dce00a338b479841088dfc2",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0,
+              "bit_rate": "192000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "92.064000",
+            "size": "2210157",
+            "bit_rate": "192053"
+          }
+        }
+      }
+    },
+    {
+      "id": "music_09_mirror_core",
+      "category": "music",
+      "bus": "music",
+      "loop": true,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/music/music_09_mirror_core.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "86b6a83cf6244266a098c92314c8245a8486550fcd684a55cbb39d3aedf8855b",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "95.046500",
+            "size": "1879485",
+            "bit_rate": "158194"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/music/music_09_mirror_core.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "cfa8a21a4c2b234d999b6dadc138930ac6a7e1b87b83747ccb7f167b4ecb633b",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0,
+              "bit_rate": "192000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "95.064000",
+            "size": "2282157",
+            "bit_rate": "192052"
+          }
+        }
+      }
+    },
+    {
+      "id": "music_10_conductor_phase_1",
+      "category": "music",
+      "bus": "music",
+      "loop": true,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/music/music_10_conductor_phase_1.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "13877a93a43a164804072000f8b56b458f7b0270a834072de9b3ac9224bf7e64",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "90.030500",
+            "size": "1900934",
+            "bit_rate": "168914"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/music/music_10_conductor_phase_1.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "4d3edb45be8acbde45a1bc2edd29142998e6efaa7a855461f7f8c90e984bdf28",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0,
+              "bit_rate": "192000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "90.048000",
+            "size": "2161773",
+            "bit_rate": "192055"
+          }
+        }
+      }
+    },
+    {
+      "id": "music_11_conductor_phase_2",
+      "category": "music",
+      "bus": "music",
+      "loop": true,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/music/music_11_conductor_phase_2.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "3a3bf452dd192a6291b83fb174b1799bea675c15786f4dda76df5c6c134a3f4c",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "90.030500",
+            "size": "1758376",
+            "bit_rate": "156247"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/music/music_11_conductor_phase_2.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "1b69516c550711b52644b5a8d535ef9a8eec9dc8b8c7e613912c88e179f41f8b",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0,
+              "bit_rate": "192000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "90.048000",
+            "size": "2161773",
+            "bit_rate": "192055"
+          }
+        }
+      }
+    },
+    {
+      "id": "music_12_conductor_phase_3",
+      "category": "music",
+      "bus": "music",
+      "loop": true,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/music/music_12_conductor_phase_3.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "b42d7449a028ae763f15e25869ce769a1adfcc0b6908b87acd62399008ebb433",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "90.030500",
+            "size": "1645853",
+            "bit_rate": "146248"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/music/music_12_conductor_phase_3.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "9995429cc205a3c844ad336ad18a4166ebc378eafae6b16ce5d10b03311a7f37",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0,
+              "bit_rate": "192000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "90.048000",
+            "size": "2161773",
+            "bit_rate": "192055"
+          }
+        }
+      }
+    },
+    {
+      "id": "music_13_finale",
+      "category": "music",
+      "bus": "music",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/music/music_13_finale.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "faa86ca6397f1a1d78fa04dfc0ff9a1c16e5b85fa56763001a9c45b1359c5a56",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "42.030500",
+            "size": "841573",
+            "bit_rate": "160183"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/music/music_13_finale.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "e5383992033a67d3cd39ba540375500c7042a6788b6acdc3219e28f00b2638fb",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 2,
+              "channel_layout": "stereo",
+              "bits_per_sample": 0,
+              "bit_rate": "192000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "42.048000",
+            "size": "1009773",
+            "bit_rate": "192118"
+          }
+        }
+      }
+    },
+    {
+      "id": "player_dash",
+      "category": "player",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/player/player_dash.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "d14805b74650f79653ffe32588ccde923c47bf47c607bd1c28267585847dbbb1",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "0.326500",
+            "size": "4775",
+            "bit_rate": "116998"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/player/player_dash.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "a2efa8f3337ad2baea78082ee5e7309806a2fa3a7c1bb461adea469b50d9f37a",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "0.360000",
+            "size": "6189",
+            "bit_rate": "137533"
+          }
+        }
+      }
+    },
+    {
+      "id": "player_death",
+      "category": "player",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/player/player_death.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "52e3b6283c3df388e1454f95288095846a651b437357187934c3bb363fe8b505",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.073167",
+            "size": "12469",
+            "bit_rate": "92951"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/player/player_death.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "08174f4b90dfb59601c29b84e41fb2156fe46d6df7bd06c0f5e255e801d5249c",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.104000",
+            "size": "18093",
+            "bit_rate": "131108"
+          }
+        }
+      }
+    },
+    {
+      "id": "player_double_jump",
+      "category": "player",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/player/player_double_jump.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "1ea0fae7a1b40f114ea3286e41322e0ac47ff01b43d6bc98b55684bb7decfe7e",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "0.411833",
+            "size": "5362",
+            "bit_rate": "104158"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/player/player_double_jump.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "3d97c0debba9cab8ebd9e42cdb2db333a07fc9a5caeaabcbab5278fe10e69b19",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "0.432000",
+            "size": "7341",
+            "bit_rate": "135944"
+          }
+        }
+      }
+    },
+    {
+      "id": "player_hurt",
+      "category": "player",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/player/player_hurt.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "e41fa5f9bc57f81b5d2b049c04f98c7abfe8f5602ad9d3822b36b15a0cf04bf2",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.006500",
+            "size": "12337",
+            "bit_rate": "98058"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/player/player_hurt.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "225cbfc6110ba7bdd91db92715af5dba383ec8709d86205edb7aa79743ee78cb",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.032000",
+            "size": "16941",
+            "bit_rate": "131325"
+          }
+        }
+      }
+    },
+    {
+      "id": "player_jump",
+      "category": "player",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/player/player_jump.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "ee4fa45d11712f64c33e4679cc16851b2915eaa8045eece446844bfae76f8df7",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "0.326500",
+            "size": "4780",
+            "bit_rate": "117120"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/player/player_jump.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "50d640fe85493ac96f0b3c354820ca6019278c1cc4ae5088e3326a7ca061a506",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "0.360000",
+            "size": "6189",
+            "bit_rate": "137533"
+          }
+        }
+      }
+    },
+    {
+      "id": "player_land_hard",
+      "category": "player",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/player/player_land_hard.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "fd4c4d79c818927174cce2ba7df6b349d967965ff4517b8b87fcbb694ad03683",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "0.347833",
+            "size": "4870",
+            "bit_rate": "112007"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/player/player_land_hard.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "9b480bfa142ea35fc610d79a493c257558d8c2982712efb18b9dd99d03834a6b",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "0.384000",
+            "size": "6573",
+            "bit_rate": "136937"
+          }
+        }
+      }
+    },
+    {
+      "id": "player_land_soft",
+      "category": "player",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/player/player_land_soft.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "3d4b9b3fb2c079326f8790686c2164882ceb0c1a49cce100e0d801c04e98dffe",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.006500",
+            "size": "12489",
+            "bit_rate": "99266"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/player/player_land_soft.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "dc804518abc2da66acd598bc27a27b7b68ec8dd9e585c94998cc884a230782f5",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.032000",
+            "size": "16941",
+            "bit_rate": "131325"
+          }
+        }
+      }
+    },
+    {
+      "id": "player_step_01",
+      "category": "player",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/player/player_step_01.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "96324e0d05caf95b2c9be21f155c0a8a5b88f115b64849d6a04745af9095c1b3",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "0.177167",
+            "size": "2950",
+            "bit_rate": "133207"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/player/player_step_01.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "ac8953d09c1792d99fdc72c01677ad2af7d9ed93694e28a12debb441480c7ebe",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "0.216000",
+            "size": "3885",
+            "bit_rate": "143888"
+          }
+        }
+      }
+    },
+    {
+      "id": "player_step_02",
+      "category": "player",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/player/player_step_02.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "b4cc87dc69fc2007eff1cb3a202e7a94ed64cceb3018f2de60bcc3eba89b0e64",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "0.177167",
+            "size": "2720",
+            "bit_rate": "122821"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/player/player_step_02.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "5605739471bfb850b64feefcf39a8352de69b4cc617a5d2e0ced29cc84a49957",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "0.216000",
+            "size": "3885",
+            "bit_rate": "143888"
+          }
+        }
+      }
+    },
+    {
+      "id": "player_wall_jump",
+      "category": "player",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/player/player_wall_jump.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "d24642a85e2110309eaac4c81aab321fda18d7bc761b742b68f5095497e13d3c",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "0.326500",
+            "size": "4837",
+            "bit_rate": "118517"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/player/player_wall_jump.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "b0d47c69b510522b33f62991bcab8b25a70b18829f0e417595520c8e2c4c30d0",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "0.360000",
+            "size": "6189",
+            "bit_rate": "137533"
+          }
+        }
+      }
+    },
+    {
+      "id": "player_wall_slide_loop",
+      "category": "player",
+      "bus": "sfx",
+      "loop": true,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/player/player_wall_slide_loop.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "2ddacfe839260e53c2978ef3be71fbea96357509277073f688da6ec04214374e",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.009167",
+            "size": "12243",
+            "bit_rate": "97054"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/player/player_wall_slide_loop.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "916543f8a8705d57d7796f6853e863ee549b1cc75a9e7e483677970baa2f68c4",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.032000",
+            "size": "16941",
+            "bit_rate": "131325"
+          }
+        }
+      }
+    },
+    {
+      "id": "sentry_fire",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/enemies/sentry_fire.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "73795d8fe0a720990a89e20b7fe835bbbc9086b6b8841ed6e43906521ede142d",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.006500",
+            "size": "13686",
+            "bit_rate": "108780"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/enemies/sentry_fire.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "4a177c77df42ff6338af4b09ea6cf892376971114bee78552344a7de4641ae42",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.032000",
+            "size": "16941",
+            "bit_rate": "131325"
+          }
+        }
+      }
+    },
+    {
+      "id": "sentry_lock",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/enemies/sentry_lock.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "1640e7d65dbf50b6a4629367f8893c4325d9c109b0cbefb61be27a1bff2591b6",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.006500",
+            "size": "15730",
+            "bit_rate": "125027"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/enemies/sentry_lock.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "73a49bf7e77b6a7dadcaab46d61c29dfaaf39979d447f6a373d188272de62fab",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.032000",
+            "size": "16941",
+            "bit_rate": "131325"
+          }
+        }
+      }
+    },
+    {
+      "id": "spotlight_cast",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": "enemy_defeat",
+      "primary": {
+        "url": "/assets/audio/combat/enemy_defeat.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "11fef55192f2459b257a1d5a33d40ff8baaf0ec5a7ace4030751304dd49bb2b8",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.006500",
+            "size": "11679",
+            "bit_rate": "92828"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/combat/enemy_defeat.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "00a21d859d228cb5d675a43147770ca36a7d97aedd528eeb62957c31f925861a",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.032000",
+            "size": "16941",
+            "bit_rate": "131325"
+          }
+        }
+      }
+    },
+    {
+      "id": "spotlight_hit",
+      "category": "combat",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/combat/spotlight_hit.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "d0508cc0ba60a26ee641841cab33d9c54888bd534afda1c1102487266c209510",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.006500",
+            "size": "12128",
+            "bit_rate": "96397"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/combat/spotlight_hit.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "03432a7583d52e8ae39a240c686ae80940550bee76413d71d6cb62e307109608",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.032000",
+            "size": "16941",
+            "bit_rate": "131325"
+          }
+        }
+      }
+    },
+    {
+      "id": "stagehand_alert",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/enemies/stagehand_alert.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "e387b8cfd8ee90f45b062c635748f03784064ded211afdc14195c376a0ef5ebe",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.006500",
+            "size": "14615",
+            "bit_rate": "116164"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/enemies/stagehand_alert.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "11f473e17884ba03cdf3d207a2bd35fe09591e541cfb2acdc71438a8b201683b",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.032000",
+            "size": "16941",
+            "bit_rate": "131325"
+          }
+        }
+      }
+    },
+    {
+      "id": "ui_confirm",
+      "category": "world",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/world/ui_confirm.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "a12aeb45a7b5e3bc8fd00a0988d70066e983280ea831f2d7d9802832b0531695",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.006500",
+            "size": "14429",
+            "bit_rate": "114686"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/world/ui_confirm.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "d2d25130aade039e563e7ec9ba6de5d22d92db3b1d2156a6bf6585640a56fbd7",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.032000",
+            "size": "16941",
+            "bit_rate": "131325"
+          }
+        }
+      }
+    },
+    {
+      "id": "ui_error",
+      "category": "world",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/world/ui_error.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "8bd2102a82804c511bb3aad9830f14fc7ac34a000d9b816b20392ffca87f0c30",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.006500",
+            "size": "12518",
+            "bit_rate": "99497"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/world/ui_error.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "cc81e8313258a1b41006c418a55477a53ffca509406c2f1570780e5c8ac938fe",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.032000",
+            "size": "16941",
+            "bit_rate": "131325"
+          }
+        }
+      }
+    },
+    {
+      "id": "ui_leaderboard_fail",
+      "category": "world",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/world/ui_leaderboard_fail.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "97aa00edfe4289ae9d87eb96a5d97b950d3fb154aa51bd56a4b15905810b4fdf",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.006500",
+            "size": "12208",
+            "bit_rate": "97033"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/world/ui_leaderboard_fail.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "28f75642237f25ad5d53b24a428d762e1675ec15dbbaa8e6830e518d934419ea",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.032000",
+            "size": "16941",
+            "bit_rate": "131325"
+          }
+        }
+      }
+    },
+    {
+      "id": "ui_leaderboard_success",
+      "category": "world",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/world/ui_leaderboard_success.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "e47f9975bb81ca286de72e23aba9bf1abcd13f27f0a95a6e65a742968ffa4aa1",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.006500",
+            "size": "15091",
+            "bit_rate": "119948"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/world/ui_leaderboard_success.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "d120ca573b6fb179e25694413f43b3bcc0e1b6590478124c3c153f4828a60ad6",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.032000",
+            "size": "16941",
+            "bit_rate": "131325"
+          }
+        }
+      }
+    },
+    {
+      "id": "ui_move",
+      "category": "world",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/world/ui_move.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "f8b1870ad24ece167fda19a1648e29d2e676e084cd49c5177c19444d9f31b6cb",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.006500",
+            "size": "12544",
+            "bit_rate": "99703"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/world/ui_move.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "1d6ee0e220a1c6bc3211f952278a3c9f191ce0f9aa2071280117b4438a9789e6",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.032000",
+            "size": "16941",
+            "bit_rate": "131325"
+          }
+        }
+      }
+    },
+    {
+      "id": "vo_backstage_ambush",
+      "category": "voice/en",
+      "bus": "voice",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/voice/en/vo_backstage_ambush.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "81c45a98ca36f09c8df3918a9316b71f8ed609f6d679eb79909156541a8a2b02",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "4.029354",
+            "size": "60200",
+            "bit_rate": "119522"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/voice/en/vo_backstage_ambush.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "11eddeb5d935a7e567fb35093a7ddbdad7a1babbaa69d26d98bd00f1e6fac173",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "4.056000",
+            "size": "65325",
+            "bit_rate": "128846"
+          }
+        }
+      }
+    },
+    {
+      "id": "vo_boss_intro",
+      "category": "voice/en",
+      "bus": "voice",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/voice/en/vo_boss_intro.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "5999ebe7b6a0ee71f9b2ab12b62ffa3c72d2d2c8675cdd4483d1b4c55c4b575a",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "2.827729",
+            "size": "44213",
+            "bit_rate": "125084"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/voice/en/vo_boss_intro.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "bf9ce07c0a66335d416895f012fb287a9586bb5b20198a064ad77089d4d2c7d0",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "2.856000",
+            "size": "46125",
+            "bit_rate": "129201"
+          }
+        }
+      }
+    },
+    {
+      "id": "vo_boss_phase_2",
+      "category": "voice/en",
+      "bus": "voice",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/voice/en/vo_boss_phase_2.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "78a1bdc973f33496214921f4d663c2ffe2357e5b3c75f0ec171ae172d6e66a5e",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "2.775479",
+            "size": "43906",
+            "bit_rate": "126554"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/voice/en/vo_boss_phase_2.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "ad6947ae680ec9412066fcd7eea81c8fd8182d87c858cb68f860aeef440b189b",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "2.808000",
+            "size": "45357",
+            "bit_rate": "129222"
+          }
+        }
+      }
+    },
+    {
+      "id": "vo_boss_phase_3",
+      "category": "voice/en",
+      "bus": "voice",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/voice/en/vo_boss_phase_3.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "3bc14248dbc43213ec2fb1e269b08431a086b1734c2022a5333b94c956c6ba91",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.991813",
+            "size": "29682",
+            "bit_rate": "119216"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/voice/en/vo_boss_phase_3.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "26e4c7ab25af22f9d3c5f229dc45e7663dcb9ae0b0bfae8ce79718c535671220",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "2.016000",
+            "size": "32685",
+            "bit_rate": "129702"
+          }
+        }
+      }
+    },
+    {
+      "id": "vo_card_sanctum",
+      "category": "voice/en",
+      "bus": "voice",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/voice/en/vo_card_sanctum.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "e1fcda6a6c50184627d1f9ce651476e79f3fc75ab84db3152be89aabb03c9875",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "3.611396",
+            "size": "54092",
+            "bit_rate": "119825"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/voice/en/vo_card_sanctum.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "01b66a0f3e93737cacf4b91a070f96b02477e823cf2e6679136a32a5bf472bb2",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "3.648000",
+            "size": "58797",
+            "bit_rate": "128940"
+          }
+        }
+      }
+    },
+    {
+      "id": "vo_combat_rehearsal",
+      "category": "voice/en",
+      "bus": "voice",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/voice/en/vo_combat_rehearsal.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "cc116359f0a4248d4bb921087be53777a5efe2a7a0619e49d0b3a3d4dc678d14",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "3.846500",
+            "size": "56410",
+            "bit_rate": "117322"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/voice/en/vo_combat_rehearsal.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "71c22d66d3d07379cc76883e0c6bf4680615b5da53e37ecb93ffbd154359143c",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "3.864000",
+            "size": "62253",
+            "bit_rate": "128888"
+          }
+        }
+      }
+    },
+    {
+      "id": "vo_finale",
+      "category": "voice/en",
+      "bus": "voice",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/voice/en/vo_finale.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "0bff4bd925ac8c8bf015c24b6f9d9741d25477fa0eb0b04db95f360608a76c33",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "3.428542",
+            "size": "53098",
+            "bit_rate": "123896"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/voice/en/vo_finale.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "1082c33e1a15c532fb16f7c88450a3118eba3f040d6be3e38db4d4747125988f",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "3.456000",
+            "size": "55725",
+            "bit_rate": "128993"
+          }
+        }
+      }
+    },
+    {
+      "id": "vo_grand_gallery",
+      "category": "voice/en",
+      "bus": "voice",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/voice/en/vo_grand_gallery.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "71601e28152ed07bcb24bf7abdcaee6d5ec6848576e3df95c0e89ce280bb94e6",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "4.212229",
+            "size": "66020",
+            "bit_rate": "125387"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/voice/en/vo_grand_gallery.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "d937612bd36f8e49dd8b76bc8b811b035796a616ff1d18ac8af0ec18d9d5de15",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "4.248000",
+            "size": "68397",
+            "bit_rate": "128807"
+          }
+        }
+      }
+    },
+    {
+      "id": "vo_mirror_core",
+      "category": "voice/en",
+      "bus": "voice",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/voice/en/vo_mirror_core.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "a3e4fb84adbcaebb020799a5b170d92cd4036d3c3683a516b2aaec00d516eeab",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "3.898750",
+            "size": "59623",
+            "bit_rate": "122342"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/voice/en/vo_mirror_core.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "57c13a20bffd347935a6fa775b1a1e1ddd39e60bb75ce05708af81023e0aa084",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "3.936000",
+            "size": "63405",
+            "bit_rate": "128871"
+          }
+        }
+      }
+    },
+    {
+      "id": "vo_movement_rehearsal",
+      "category": "voice/en",
+      "bus": "voice",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/voice/en/vo_movement_rehearsal.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "446776bcd7e13c3788bcd3093f4ab9418d6ca7b3b269600884470917fee385ce",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "4.133854",
+            "size": "63175",
+            "bit_rate": "122258"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/voice/en/vo_movement_rehearsal.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "d91328269d3d285de12d4322f2a4fec973a532c752acbe72dc318e9c1f3279c6",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "4.152000",
+            "size": "66861",
+            "bit_rate": "128826"
+          }
+        }
+      }
+    },
+    {
+      "id": "vo_opening",
+      "category": "voice/en",
+      "bus": "voice",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/voice/en/vo_opening.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "8728225bbe86a4967a293cba962f56be794468b7bacf46bb97a8949e0097477c",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "3.794250",
+            "size": "55017",
+            "bit_rate": "116000"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/voice/en/vo_opening.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "892d8d32692c51542f0286d3445a3e3ca82c5133e58750c83b2251c085cb6c86",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "3.816000",
+            "size": "61485",
+            "bit_rate": "128899"
+          }
+        }
+      }
+    },
+    {
+      "id": "vo_royal_box",
+      "category": "voice/en",
+      "bus": "voice",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/voice/en/vo_royal_box.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "0e1717bb404462af19b7b0a3f9436808d85b827ba207b9b8b02c3d161761be47",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "3.115083",
+            "size": "45549",
+            "bit_rate": "116976"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/voice/en/vo_royal_box.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "ca84b8c2f2a7a3da5c93aa17255c043e3eaaf07c64829485ff4464cc2c1d3b28",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "3.144000",
+            "size": "50733",
+            "bit_rate": "129091"
+          }
+        }
+      }
+    },
+    {
+      "id": "vo_spotlight_vault",
+      "category": "voice/en",
+      "bus": "voice",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/voice/en/vo_spotlight_vault.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "91d623836a639c48911163c06c13360d0abc1050ae1b689c471ee5a266f4502f",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "4.786917",
+            "size": "69288",
+            "bit_rate": "115795"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/voice/en/vo_spotlight_vault.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "02554ca4e138c4e217e1e0245155fb016bed9476bea76a551e5dbc42e7f8d9c5",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "4.824000",
+            "size": "77613",
+            "bit_rate": "128711"
+          }
+        }
+      }
+    },
+    {
+      "id": "world_checkpoint",
+      "category": "world",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/world/world_checkpoint.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "4a6d5b583dea5aa96facb647a7ccd5e259995dffc77d1c1d7e27fc686c1fc6ec",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.006500",
+            "size": "12669",
+            "bit_rate": "100697"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/world/world_checkpoint.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "7bf51fddd9f097c810210be22e31f7bfada5f4bd398010ca43b4ca1ee3e35b03",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.032000",
+            "size": "16941",
+            "bit_rate": "131325"
+          }
+        }
+      }
+    },
+    {
+      "id": "world_gate_close",
+      "category": "world",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/world/world_gate_close.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "af268cc6ab19ebc8424e48f235fa95e9234a41a11359eb6078811d93a9c2b1f0",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "2.006500",
+            "size": "23015",
+            "bit_rate": "91761"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/world/world_gate_close.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "b6bb7da08f5165d4de336f7837fbf4e3cef1ae8502defd9a703a1e96d26cfc69",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "2.040000",
+            "size": "33069",
+            "bit_rate": "129682"
+          }
+        }
+      }
+    },
+    {
+      "id": "world_gate_open",
+      "category": "world",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/world/world_gate_open.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "41eb213468d00e08d510856008de96779b7a26e5273a6a01e433c5e533c3e27f",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "2.006500",
+            "size": "24320",
+            "bit_rate": "96964"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/world/world_gate_open.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "1f6fe3d80d2e20056cad4a6c9cdac7393bdc8e16271602074900810e47f4fcc3",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "2.040000",
+            "size": "33069",
+            "bit_rate": "129682"
+          }
+        }
+      }
+    },
+    {
+      "id": "world_hazard_active",
+      "category": "world",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/world/world_hazard_active.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "39c0520c89ece59a8b70763b873c30c726e1b2899c6bc4cd45d099b88d11a2ee",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "2.006500",
+            "size": "22348",
+            "bit_rate": "89102"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/world/world_hazard_active.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "67248f547b30f7d2f4d0448b386eac9b39a846b83789d2f41fe6d3e9485c5777",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "2.040000",
+            "size": "33069",
+            "bit_rate": "129682"
+          }
+        }
+      }
+    },
+    {
+      "id": "world_hazard_telegraph",
+      "category": "world",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/world/world_hazard_telegraph.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "c4554b4f68c7181ab87b40084c62e6d54a6e5748081dfc618afdd3f144383fdc",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "2.006500",
+            "size": "33966",
+            "bit_rate": "135423"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/world/world_hazard_telegraph.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "8ff8533e0dbb28dfbd512252230e3c057bcf12941c104f2cc57bc2ad64239821",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "2.040000",
+            "size": "33069",
+            "bit_rate": "129682"
+          }
+        }
+      }
+    },
+    {
+      "id": "world_mirror_move_loop",
+      "category": "world",
+      "bus": "sfx",
+      "loop": true,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/world/world_mirror_move_loop.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "e4cd1f6f9cf12ba1b20237b702d104a6f6454e8cba0bce48d633140ece17f6f5",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "2.006500",
+            "size": "25060",
+            "bit_rate": "99915"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/world/world_mirror_move_loop.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "e053960f2f44087979411bfec1c5242111f1a57947db9fc17db056c9e63cfac4",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "2.040000",
+            "size": "33069",
+            "bit_rate": "129682"
+          }
+        }
+      }
+    },
+    {
+      "id": "world_objective_complete",
+      "category": "world",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/world/world_objective_complete.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "cf133fc19285348cdaf4791ad24d82a20d4ec04eac45ed2ceec4d7f5297525ee",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "2.006500",
+            "size": "28556",
+            "bit_rate": "113853"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/world/world_objective_complete.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "b5898bb1962f4c50b9638ac737ca2f0a44d10baa7a86ba2edbd2e5cf663a17b1",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "2.040000",
+            "size": "33069",
+            "bit_rate": "129682"
+          }
+        }
+      }
+    },
+    {
+      "id": "world_relay_activate",
+      "category": "world",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/world/world_relay_activate.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "05762d7697bb6feae20c75a56b6a8c2eefc6071bb7c8efc2beff97cb41526cf3",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "2.006500",
+            "size": "28323",
+            "bit_rate": "112924"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/world/world_relay_activate.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "f5d51c1d744bdcf2c7f724ec3513e82a20c11a018e4b83872cccc085662c6006",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "2.040000",
+            "size": "33069",
+            "bit_rate": "129682"
+          }
+        }
+      }
+    },
+    {
+      "id": "world_rose_pickup",
+      "category": "world",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/world/world_rose_pickup.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "56ea80e6226d1fb1f779674807b7828f1f3b2806a763da5ceb11754f7b757b1f",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.006500",
+            "size": "14251",
+            "bit_rate": "113271"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/world/world_rose_pickup.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "d42e697c42a163d56e534e0145096c63c1cdc65afbe5131464f447b2e2ed6c58",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.032000",
+            "size": "16941",
+            "bit_rate": "131325"
+          }
+        }
+      }
+    },
+    {
+      "id": "wraith_charge",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/enemies/wraith_charge.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "4df09c9c15f2c0e70ff97b4fdcc95137bd0d2dcbd6933f5ea51f4385f8fbd84d",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.006500",
+            "size": "10724",
+            "bit_rate": "85237"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/enemies/wraith_charge.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "c5d7168e8c8c1a5531c24cbbd416ff31ebb02f7f6cb44a1cc7d8de21edc6ce4e",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.032000",
+            "size": "16941",
+            "bit_rate": "131325"
+          }
+        }
+      }
+    },
+    {
+      "id": "wraith_telegraph",
+      "category": "enemies",
+      "bus": "sfx",
+      "loop": false,
+      "required": true,
+      "aliasOf": null,
+      "primary": {
+        "url": "/assets/audio/enemies/wraith_telegraph.ogg",
+        "codec": "opus",
+        "container": "ogg",
+        "sha256": "c99abbacc2f7135f2c959e9c08c154e03dbf2e1cb5682228a1b66e044c617684",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "opus",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0
+            }
+          ],
+          "format": {
+            "format_name": "ogg",
+            "duration": "1.006500",
+            "size": "17974",
+            "bit_rate": "142863"
+          }
+        }
+      },
+      "fallback": {
+        "url": "/assets/audio/enemies/wraith_telegraph.mp3",
+        "codec": "mp3",
+        "container": "mp3",
+        "sha256": "7815f80ad449a3ff1a328842c043636ce69afb043ae9a15a32984ed2599d0abf",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "mp3",
+              "sample_rate": "48000",
+              "channels": 1,
+              "channel_layout": "mono",
+              "bits_per_sample": 0,
+              "bit_rate": "128000"
+            }
+          ],
+          "format": {
+            "format_name": "mp3",
+            "duration": "1.032000",
+            "size": "16941",
+            "bit_rate": "131325"
+          }
+        }
+      }
+    }
+  ]
+}

@@ -14,3 +14,9 @@ assets/source/characters/impressario/*.generated.aseprite
 assets/source/characters/impressario/*.manual-backup.aseprite
 dist/
 node_modules/
+
+/assets/incoming/
+
+__pycache__/
+
+*.py[cod]
