@@ -904,6 +904,16 @@ implements CombatTarget {
   private facing: -1 | 1 = -1;
   private defeatSequenceStarted = false;
 
+  // Each score is approximately 90 seconds. These minimum windows
+  // prevent high damage from skipping an entire musical phase.
+  private phaseElapsed = 0;
+
+  private readonly minimumPhaseDuration = {
+    1: 55,
+    2: 60,
+    3: 70
+  } as const;
+
   private readonly view: BossView;
 
   public constructor(
@@ -973,6 +983,7 @@ implements CombatTarget {
       this.visualMode = "entrance";
       this.visualTimer = 0.82;
       this.previousPhase = this.phase;
+      this.phaseElapsed = 0;
     }
 
     this.updateView();
@@ -1057,10 +1068,30 @@ implements CombatTarget {
 
     const phaseBefore = this.phase;
 
-    this.health = Math.max(
+    const requestedHealth = Math.max(
       0,
       this.health - damage
     );
+
+    const phaseFloor =
+      phaseBefore === 1
+        ? 73
+        : phaseBefore === 2
+          ? 37
+          : 1;
+
+    const phaseDuration =
+      this.minimumPhaseDuration[
+        phaseBefore
+      ];
+
+    this.health =
+      this.phaseElapsed < phaseDuration
+        ? Math.max(
+            requestedHealth,
+            phaseFloor
+          )
+        : requestedHealth;
 
     this.flashTimer = 0.12;
 
@@ -1070,6 +1101,10 @@ implements CombatTarget {
     }
 
     const phaseAfter = this.phase;
+
+    if (phaseAfter !== phaseBefore) {
+      this.phaseElapsed = 0;
+    }
 
     if (
       phaseBefore === 1 &&
@@ -1107,6 +1142,7 @@ implements CombatTarget {
     this.previousPhase = 1;
     this.facing = -1;
     this.defeatSequenceStarted = false;
+    this.phaseElapsed = 0;
 
     this.graphics.clear();
 
@@ -1130,6 +1166,9 @@ implements CombatTarget {
     if (!this.active) {
       return;
     }
+
+    this.phaseElapsed +=
+      deltaSeconds;
 
     this.flashTimer = Math.max(
       0,

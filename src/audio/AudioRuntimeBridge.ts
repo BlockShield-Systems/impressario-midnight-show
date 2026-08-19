@@ -635,7 +635,6 @@ export class AudioRuntimeBridge {
     x: number
   ): void => {
     if (
-      tag.includes("phase_2") ||
       tag === "boss_transition_1_2"
     ) {
       this.music.setMusic(
@@ -656,7 +655,6 @@ export class AudioRuntimeBridge {
         "vo_boss_phase_2"
       );
     } else if (
-      tag.includes("phase_3") ||
       tag === "boss_transition_2_3"
     ) {
       this.music.setMusic(

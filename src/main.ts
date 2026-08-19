@@ -22,6 +22,11 @@ import { AudioDirector } from "./audio/AudioDirector";
 import { MusicDirector } from "./audio/MusicDirector";
 import { AudioRuntimeBridge } from "./audio/AudioRuntimeBridge";
 import { AudioDebugHud } from "./audio/AudioDebugHud";
+import {
+  WORLD_HEIGHT,
+  WORLD_SOLIDS,
+  WORLD_WIDTH
+} from "./world/WorldLayout";
 
 /* -------------------------------------------------------------------------- */
 /* Configuration                                                              */
@@ -29,9 +34,6 @@ import { AudioDebugHud } from "./audio/AudioDebugHud";
 
 const GAME_WIDTH = 640;
 const GAME_HEIGHT = 360;
-
-const WORLD_WIDTH = 17280;
-const WORLD_HEIGHT = 720;
 
 const FIXED_TIMESTEP = 1 / 120;
 const MAX_FRAME_DELTA = 0.05;
@@ -1335,237 +1337,16 @@ class GameScene extends Phaser.Scene {
   }
 
   private createLevel(): Phaser.Geom.Rectangle[] {
-    const solids = [
-      // Existing acts retain their continuous floor.
-      new Phaser.Geom.Rectangle(
-        0,
-        326,
-        6400,
-        34
-      ),
-
-      new Phaser.Geom.Rectangle(245, 282, 105, 16),
-      new Phaser.Geom.Rectangle(390, 242, 90, 16),
-      new Phaser.Geom.Rectangle(520, 202, 85, 16),
-
-      new Phaser.Geom.Rectangle(680, 190, 24, 136),
-      new Phaser.Geom.Rectangle(820, 132, 24, 194),
-      // Accessible wall-jump rehearsal:
-      // staggered safety ledges prevent the player from getting trapped.
-      new Phaser.Geom.Rectangle(704, 282, 42, 14),
-      new Phaser.Geom.Rectangle(778, 230, 42, 14),
-      new Phaser.Geom.Rectangle(704, 176, 52, 14),
-
-      new Phaser.Geom.Rectangle(930, 278, 90, 14),
-      new Phaser.Geom.Rectangle(1110, 232, 100, 14),
-      new Phaser.Geom.Rectangle(1300, 190, 105, 14),
-
-      new Phaser.Geom.Rectangle(1450, 205, 290, 18),
-      new Phaser.Geom.Rectangle(1450, 310, 290, 16),
-
-      new Phaser.Geom.Rectangle(1810, 270, 100, 14),
-      new Phaser.Geom.Rectangle(1950, 222, 100, 14),
-      new Phaser.Geom.Rectangle(2090, 172, 110, 14),
-
-      // Safe descent from the movement rehearsal.
-      new Phaser.Geom.Rectangle(2235, 220, 90, 14),
-      new Phaser.Geom.Rectangle(2345, 270, 90, 14),
-
-      // Combat arena accent platforms.
-      new Phaser.Geom.Rectangle(2390, 244, 90, 14),
-      new Phaser.Geom.Rectangle(2660, 244, 90, 14),
-
-      // Act III: Main Stage combat platforms.
-      new Phaser.Geom.Rectangle(3090, 270, 120, 14),
-      new Phaser.Geom.Rectangle(3270, 225, 110, 14),
-      new Phaser.Geom.Rectangle(3470, 270, 120, 14),
-      new Phaser.Geom.Rectangle(3670, 215, 120, 14),
-      new Phaser.Geom.Rectangle(3880, 260, 120, 14),
-
-      // Exit route unlocked after the Act III encounter.
-      new Phaser.Geom.Rectangle(4260, 275, 120, 14),
-      new Phaser.Geom.Rectangle(4440, 230, 120, 14),
-      new Phaser.Geom.Rectangle(4620, 185, 100, 14),
-
-      // Act IV: The Grand Gallery.
-      new Phaser.Geom.Rectangle(4870, 276, 125, 14),
-      new Phaser.Geom.Rectangle(5060, 232, 120, 14),
-      new Phaser.Geom.Rectangle(5250, 184, 110, 14),
-      new Phaser.Geom.Rectangle(5435, 244, 125, 14),
-      new Phaser.Geom.Rectangle(5640, 198, 110, 14),
-      new Phaser.Geom.Rectangle(5825, 266, 130, 14),
-      new Phaser.Geom.Rectangle(6035, 220, 120, 14),
-      new Phaser.Geom.Rectangle(6210, 170, 105, 14),
-
-      // Act IV-B: Gallery Gauntlet.
-      // Entry and first fatal void.
-      new Phaser.Geom.Rectangle(6320, 270, 130, 14),
-      new Phaser.Geom.Rectangle(6400, 326, 150, 34),
-      new Phaser.Geom.Rectangle(6590, 286, 70, 14),
-      new Phaser.Geom.Rectangle(6675, 236, 70, 14),
-
-      // Lower combat floor.
-      new Phaser.Geom.Rectangle(6710, 430, 340, 34),
-      new Phaser.Geom.Rectangle(6720, 360, 90, 14),
-
-      // Vertical ascent.
-      new Phaser.Geom.Rectangle(7040, 382, 90, 14),
-      new Phaser.Geom.Rectangle(7145, 326, 88, 14),
-      new Phaser.Geom.Rectangle(7255, 270, 88, 14),
-      new Phaser.Geom.Rectangle(7365, 214, 88, 14),
-
-      // Midpoint combat floor.
-      new Phaser.Geom.Rectangle(7475, 326, 330, 34),
-
-      // Second fatal void and exit.
-      new Phaser.Geom.Rectangle(7835, 272, 68, 14),
-      new Phaser.Geom.Rectangle(7920, 218, 68, 14),
-      new Phaser.Geom.Rectangle(7995, 326, 205, 34),
-
-      // Act V: Spotlight Vault.
-      new Phaser.Geom.Rectangle(8200, 326, 1400, 34),
-      new Phaser.Geom.Rectangle(8330, 270, 105, 14),
-      new Phaser.Geom.Rectangle(8520, 235, 120, 14),
-      new Phaser.Geom.Rectangle(8750, 275, 105, 14),
-      new Phaser.Geom.Rectangle(8960, 225, 120, 14),
-      new Phaser.Geom.Rectangle(9170, 270, 105, 14),
-      new Phaser.Geom.Rectangle(9400, 215, 110, 14),
-
-      // Act VI: Card Sanctum entrance.
-      new Phaser.Geom.Rectangle(9600, 326, 180, 34),
-
-      // Upper acrobatics route.
-      new Phaser.Geom.Rectangle(9820, 275, 75, 14),
-      new Phaser.Geom.Rectangle(9945, 220, 72, 14),
-      new Phaser.Geom.Rectangle(10075, 168, 70, 14),
-      new Phaser.Geom.Rectangle(10210, 225, 72, 14),
-
-      // Lower hazard route.
-      new Phaser.Geom.Rectangle(9800, 520, 330, 34),
-      new Phaser.Geom.Rectangle(10200, 520, 260, 34),
-
-      // Wall-jump shaft.
-      new Phaser.Geom.Rectangle(10420, 250, 22, 270),
-      new Phaser.Geom.Rectangle(10575, 170, 22, 350),
-      new Phaser.Geom.Rectangle(10442, 470, 54, 14),
-      new Phaser.Geom.Rectangle(10520, 408, 55, 14),
-      new Phaser.Geom.Rectangle(10442, 346, 55, 14),
-      new Phaser.Geom.Rectangle(10520, 284, 55, 14),
-
-      // Route convergence.
-      new Phaser.Geom.Rectangle(10640, 326, 270, 34),
-      new Phaser.Geom.Rectangle(10955, 270, 80, 14),
-      new Phaser.Geom.Rectangle(11085, 210, 78, 14),
-      new Phaser.Geom.Rectangle(11220, 155, 76, 14),
-
-      // Second lower route.
-      new Phaser.Geom.Rectangle(10980, 520, 300, 34),
-      new Phaser.Geom.Rectangle(11340, 520, 260, 34),
-
-      // Fixed ascent from the lower route after the final sentry.
-      // The opposed walls create a real wall-jump shaft instead of an
-      // unreachable 210-pixel vertical step.
-      new Phaser.Geom.Rectangle(11570, 360, 22, 160),
-      new Phaser.Geom.Rectangle(11690, 270, 22, 250),
-
-      // Final aerial sequence.
-      new Phaser.Geom.Rectangle(11330, 310, 74, 14),
-      new Phaser.Geom.Rectangle(11465, 255, 72, 14),
-      new Phaser.Geom.Rectangle(11610, 205, 72, 14),
-      new Phaser.Geom.Rectangle(11745, 270, 70, 14),
-
-      // Exit floor.
-      new Phaser.Geom.Rectangle(11840, 326, 380, 34),
-
-      // Act VII: The Fractured Royal Box — entry.
-      new Phaser.Geom.Rectangle(12000, 326, 220, 34),
-
-      // First upper technical route.
-      new Phaser.Geom.Rectangle(12245, 270, 72, 14),
-      new Phaser.Geom.Rectangle(12365, 210, 72, 14),
-      new Phaser.Geom.Rectangle(12490, 155, 72, 14),
-      new Phaser.Geom.Rectangle(12625, 215, 74, 14),
-      new Phaser.Geom.Rectangle(12760, 260, 72, 14),
-      new Phaser.Geom.Rectangle(12968, 235, 92, 14),
-
-      // First lower hazard route.
-      new Phaser.Geom.Rectangle(12190, 520, 430, 34),
-      new Phaser.Geom.Rectangle(12680, 520, 280, 34),
-
-      // Mandatory wall-jump shaft from the lower route.
-      new Phaser.Geom.Rectangle(12810, 300, 22, 160),
-      new Phaser.Geom.Rectangle(12940, 230, 22, 290),
-
-      // First convergence arena.
-      new Phaser.Geom.Rectangle(13000, 326, 340, 34),
-
-      // Second upper master route.
-      new Phaser.Geom.Rectangle(13380, 270, 74, 14),
-      new Phaser.Geom.Rectangle(13505, 210, 72, 14),
-      new Phaser.Geom.Rectangle(13635, 150, 72, 14),
-      new Phaser.Geom.Rectangle(13770, 205, 72, 14),
-      new Phaser.Geom.Rectangle(13820, 260, 72, 14),
-
-      // Second lower hazard route.
-      new Phaser.Geom.Rectangle(13370, 520, 320, 34),
-      new Phaser.Geom.Rectangle(13760, 520, 290, 34),
-
-      // Final opposed-wall ascent.
-      new Phaser.Geom.Rectangle(13910, 350, 22, 170),
-      new Phaser.Geom.Rectangle(14040, 270, 22, 250),
-      new Phaser.Geom.Rectangle(14110, 270, 72, 14),
-
-      // Royal Box exit.
-      new Phaser.Geom.Rectangle(14150, 326, 250, 34),
-
-      // Act VIII: The Mirror Core — Refraction Ascent.
-      new Phaser.Geom.Rectangle(14400, 326, 230, 34),
-      new Phaser.Geom.Rectangle(14540, 270, 85, 14),
-      new Phaser.Geom.Rectangle(14690, 225, 82, 14),
-      new Phaser.Geom.Rectangle(14810, 175, 82, 14),
-      new Phaser.Geom.Rectangle(14935, 235, 82, 14),
-
-      // Refraction lower route and safe look-down landings.
-      new Phaser.Geom.Rectangle(14620, 520, 250, 34),
-      new Phaser.Geom.Rectangle(14920, 520, 240, 34),
-
-      // Relay wall-jump convergence.
-      new Phaser.Geom.Rectangle(15080, 350, 22, 170),
-      new Phaser.Geom.Rectangle(15200, 280, 22, 240),
-      new Phaser.Geom.Rectangle(15025, 286, 86, 14),
-      new Phaser.Geom.Rectangle(15125, 286, 110, 14),
-      new Phaser.Geom.Rectangle(15240, 326, 96, 34),
-
-      // Kaleidoscope Gauntlet.
-      new Phaser.Geom.Rectangle(15336, 326, 300, 34),
-      new Phaser.Geom.Rectangle(15670, 270, 90, 14),
-      new Phaser.Geom.Rectangle(15790, 326, 420, 34),
-      new Phaser.Geom.Rectangle(15865, 238, 90, 14),
-      new Phaser.Geom.Rectangle(16010, 190, 88, 14),
-      new Phaser.Geom.Rectangle(16145, 250, 88, 14),
-      new Phaser.Geom.Rectangle(16240, 326, 165, 34),
-
-      // Core Chamber and post-boss exit.
-      new Phaser.Geom.Rectangle(16423, 326, 757, 34),
-      new Phaser.Geom.Rectangle(16530, 255, 100, 14),
-      new Phaser.Geom.Rectangle(16680, 205, 92, 14),
-      new Phaser.Geom.Rectangle(16830, 255, 96, 14),
-      new Phaser.Geom.Rectangle(16985, 210, 95, 14),
-
-      new Phaser.Geom.Rectangle(
-        -20,
-        0,
-        20,
-        WORLD_HEIGHT
-      ),
-
-      new Phaser.Geom.Rectangle(
-        WORLD_WIDTH,
-        0,
-        20,
-        WORLD_HEIGHT
-      )
-    ];
+    const solids =
+      WORLD_SOLIDS.map(
+        solid =>
+          new Phaser.Geom.Rectangle(
+            solid.x,
+            solid.y,
+            solid.width,
+            solid.height
+          )
+      );
 
     const graphics = this.add.graphics();
     graphics.setDepth(0);

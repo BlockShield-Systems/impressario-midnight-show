@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "npm run audio:runtime:validate && tsc --noEmit && vite build",
+    "build": "npm run levels:validate && tsc --noEmit && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "leaderboard:dev": "wrangler dev",
@@ -29,7 +29,9 @@
     "assets:audio:export": "python3 scripts/audio-pipeline.py export",
     "audio:runtime:validate": "node scripts/validate-audio-runtime.mjs",
     "test:audio:e2e": "playwright test tests/audio-runtime.spec.ts",
-    "test:audio:e2e:headed": "playwright test tests/audio-runtime.spec.ts --headed"
+    "test:audio:e2e:headed": "playwright test tests/audio-runtime.spec.ts --headed",
+    "levels:sync": "node scripts/sync-ldtk-world.mjs",
+    "levels:validate": "node scripts/sync-ldtk-world.mjs --check"
   },
   "dependencies": {
     "phaser": "4.2.1"
