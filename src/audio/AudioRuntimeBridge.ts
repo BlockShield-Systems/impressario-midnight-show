@@ -327,7 +327,8 @@ export class AudioRuntimeBridge {
             ? "player_jump"
             : "player_double_jump";
 
-      this.playSpatial(id, 0.75, 90);
+      const gain = id === "player_double_jump" ? 0.375 : 0.75;
+      this.playSpatial(id, gain, 90);
     }
 
     if (
