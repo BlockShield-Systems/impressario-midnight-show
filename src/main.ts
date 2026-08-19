@@ -1101,6 +1101,32 @@ class GameScene extends Phaser.Scene {
     this.audioDirector =
       new AudioDirector(this);
 
+    if (import.meta.env.DEV) {
+      const debugWindow =
+        window as Window & {
+          __IMPRESSARIO_AUDIO_DEBUG__?:
+            () => ReturnType<
+              AudioDirector[
+                "getDebugSnapshot"
+              ]
+            >;
+        };
+
+      debugWindow
+        .__IMPRESSARIO_AUDIO_DEBUG__ =
+          () =>
+            this.audioDirector
+              .getDebugSnapshot();
+
+      this.events.once(
+        Phaser.Scenes.Events.SHUTDOWN,
+        () => {
+          delete debugWindow
+            .__IMPRESSARIO_AUDIO_DEBUG__;
+        }
+      );
+    }
+
     this.musicDirector =
       new MusicDirector(
         this,

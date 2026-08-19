@@ -27,12 +27,15 @@
     "assets:audio:prepare": "python3 scripts/audio-pipeline.py prepare",
     "assets:audio:validate": "python3 scripts/audio-pipeline.py validate",
     "assets:audio:export": "python3 scripts/audio-pipeline.py export",
-    "audio:runtime:validate": "node scripts/validate-audio-runtime.mjs"
+    "audio:runtime:validate": "node scripts/validate-audio-runtime.mjs",
+    "test:audio:e2e": "playwright test tests/audio-runtime.spec.ts",
+    "test:audio:e2e:headed": "playwright test tests/audio-runtime.spec.ts --headed"
   },
   "dependencies": {
     "phaser": "4.2.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.62.1",
     "typescript": "7.0.2",
     "vite": "8.2.1",
     "wrangler": "4.123.0"
