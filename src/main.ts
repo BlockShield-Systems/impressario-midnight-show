@@ -18,6 +18,9 @@ import { RoyalEchoSystem } from "./enemies/RoyalEchoSystem";
 import { RoyalBoxHazardSystem } from "./world/RoyalBoxHazardSystem";
 import { RoyalBoxSupportSystem } from "./world/RoyalBoxSupportSystem";
 import { MirrorCoreSystem } from "./world/MirrorCoreSystem";
+import { AudioDirector } from "./audio/AudioDirector";
+import { MusicDirector } from "./audio/MusicDirector";
+import { AudioRuntimeBridge } from "./audio/AudioRuntimeBridge";
 
 /* -------------------------------------------------------------------------- */
 /* Configuration                                                              */
@@ -830,6 +833,9 @@ class GameScene extends Phaser.Scene {
   private royalBoxSupportSystem!: RoyalBoxSupportSystem;
   private mirrorCoreSystem!: MirrorCoreSystem;
   private playerHealth!: PlayerHealthSystem;
+  private audioDirector!: AudioDirector;
+  private musicDirector!: MusicDirector;
+  private audioBridge!: AudioRuntimeBridge;
 
   private collisionWorld!: CollisionWorld;
 
@@ -929,6 +935,7 @@ class GameScene extends Phaser.Scene {
     PlayerView.preload(this);
     EnemyView.preload(this);
     BossView.preload(this);
+    AudioDirector.preload(this);
   }
 
   public create(): void {
@@ -1089,6 +1096,26 @@ class GameScene extends Phaser.Scene {
         }
       );
 
+    this.audioDirector =
+      new AudioDirector(this);
+
+    this.musicDirector =
+      new MusicDirector(
+        this,
+        this.audioDirector
+      );
+
+    this.audioBridge =
+      new AudioRuntimeBridge(
+        this,
+        this.audioDirector,
+        this.musicDirector,
+        this.player,
+        this.combatSystem,
+        this.playerHealth,
+        this.magicSystem
+      );
+
     this.createLabels();
     this.createEncounterPresentation();
     this.createDebugHud();
@@ -1176,6 +1203,10 @@ class GameScene extends Phaser.Scene {
     this.updateSpotlightVault();
     this.updateCardSanctum();
     this.updateRoyalBox();
+
+    this.audioBridge.update(frameDelta);
+    this.audioDirector.update(frameDelta);
+
     this.updateDebugHud();
   }
 

@@ -244,6 +244,13 @@ export class BossView {
     }
 
     this.currentTag = tag;
+
+    this.scene.events.emit(
+      "audio:boss-tag-changed",
+      tag,
+      this.sprite.x
+    );
+
     this.sprite.play(key);
   }
 
@@ -268,6 +275,13 @@ export class BossView {
     }
 
     this.currentTag = tag;
+
+    this.scene.events.emit(
+      "audio:boss-tag-changed",
+      tag,
+      this.sprite.x
+    );
+
     this.sprite.play(key);
 
     this.sprite.once(

@@ -1109,6 +1109,14 @@ export class CombatSystem {
     definition: AttackDefinition,
     targetBounds: Phaser.Geom.Rectangle
   ): void {
+    this.scene.events.emit(
+      "audio:combat-hit",
+      definition.id === "combo-3" ||
+        definition.id === "launcher" ||
+        definition.id === "down-strike",
+      targetBounds.centerX
+    );
+
     this.effectX =
       targetBounds.centerX;
 

@@ -201,6 +201,13 @@ export class EnemyView {
     this.sprite.setAlpha(1);
     this.defeatFinished = false;
     this.currentTag = tag;
+
+    this.scene.events.emit(
+      "audio:enemy-tag-changed",
+      tag,
+      this.sprite.x
+    );
+
     this.sprite.play(key);
 
     if (!isDefeatTag(tag)) {
