@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 
 import { EnemyView } from "./EnemyView";
+import { getWorldEnemySpawns } from "../world/WorldEnemies";
 
 import type {
   CombatSystem,
@@ -34,23 +35,14 @@ interface SentryProjectile {
   active: boolean;
 }
 
-const SPAWNS: readonly SentrySpawn[] = [
-  {
-    x: 10020,
-    y: 440,
-    phase: 0
-  },
-  {
-    x: 10970,
-    y: 240,
-    phase: Math.PI
-  },
-  {
-    x: 11520,
-    y: 440,
-    phase: Math.PI * 0.5
-  }
-];
+const SPAWNS: readonly SentrySpawn[] =
+  getWorldEnemySpawns("CardSentry").map(
+    spawn => ({
+      x: spawn.x,
+      y: spawn.y,
+      phase: spawn.phase
+    })
+  );
 
 class CardSentry implements CombatTarget {
   public x: number;

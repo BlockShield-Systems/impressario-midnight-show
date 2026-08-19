@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 
 import { EnemyView } from "./EnemyView";
+import { getWorldEnemySpawns } from "../world/WorldEnemies";
 
 import type {
   CombatSystem,
@@ -25,26 +26,15 @@ interface StagehandSpawn {
   readonly patrolRight: number;
 }
 
-const SPAWNS: readonly StagehandSpawn[] = [
-  {
-    x: 3180,
-    y: 296,
-    patrolLeft: 3070,
-    patrolRight: 3350
-  },
-  {
-    x: 3520,
-    y: 296,
-    patrolLeft: 3400,
-    patrolRight: 3670
-  },
-  {
-    x: 4010,
-    y: 296,
-    patrolLeft: 3890,
-    patrolRight: 4140
-  }
-];
+const SPAWNS: readonly StagehandSpawn[] =
+  getWorldEnemySpawns("Stagehand").map(
+    spawn => ({
+      x: spawn.x,
+      y: spawn.y,
+      patrolLeft: spawn.patrolLeft,
+      patrolRight: spawn.patrolRight
+    })
+  );
 
 class MaskedStagehand implements CombatTarget {
   public x: number;

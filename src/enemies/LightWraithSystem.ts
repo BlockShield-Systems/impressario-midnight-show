@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 
 import { EnemyView } from "./EnemyView";
+import { getWorldEnemySpawns } from "../world/WorldEnemies";
 
 import type {
   CombatSystem,
@@ -26,22 +27,16 @@ interface WraithSpawn {
   readonly phase: number;
 }
 
-const SPAWNS: readonly WraithSpawn[] = [
-  {
-    x: 8620,
-    y: 270,
-    left: 8500,
-    right: 8780,
-    phase: 0
-  },
-  {
-    x: 9020,
-    y: 270,
-    left: 8880,
-    right: 9190,
-    phase: Math.PI
-  }
-];
+const SPAWNS: readonly WraithSpawn[] =
+  getWorldEnemySpawns("LightWraith").map(
+    spawn => ({
+      x: spawn.x,
+      y: spawn.y,
+      left: spawn.patrolLeft,
+      right: spawn.patrolRight,
+      phase: spawn.phase
+    })
+  );
 
 class LightWraith implements CombatTarget {
   public x: number;

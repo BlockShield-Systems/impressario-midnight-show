@@ -11,7 +11,7 @@
   "iid": "49475ace-8d6d-5ace-b9c1-bdfa1f69afc7",
   "jsonVersion": "1.5.3",
   "appBuildId": 50300,
-  "nextUid": 20,
+  "nextUid": 27,
   "identifierStyle": "Capitalize",
   "toc": [],
   "worldLayout": "Free",
@@ -431,6 +431,225 @@
             "editorTextSuffix": null,
             "editorTextPrefix": null,
             "useForSmartColor": true,
+            "min": null,
+            "max": null,
+            "regex": null,
+            "acceptFileTypes": null,
+            "defaultOverride": null,
+            "textLanguageMode": null,
+            "symmetricalRef": false,
+            "autoChainRef": true,
+            "allowOutOfLevelRef": true,
+            "allowedRefs": "Any",
+            "allowedRefTags": [],
+            "tilesetUid": null
+          }
+        ]
+      },
+      {
+        "allowOutOfBounds": true,
+        "doc": null,
+        "exportToToc": false,
+        "fillOpacity": 0.45,
+        "hollow": false,
+        "keepAspectRatio": false,
+        "limitBehavior": "DiscardOldOnes",
+        "limitScope": "PerLevel",
+        "lineOpacity": 1,
+        "maxCount": 0,
+        "nineSliceBorders": [],
+        "pivotX": 0,
+        "pivotY": 0,
+        "renderMode": "Rectangle",
+        "resizableX": false,
+        "resizableY": false,
+        "showName": false,
+        "tags": [
+          "Gameplay",
+          "Enemy"
+        ],
+        "tileRect": null,
+        "tileRenderMode": "Cover",
+        "tilesetId": null,
+        "identifier": "EnemySpawn",
+        "uid": 20,
+        "color": "#63E6E2",
+        "width": 16,
+        "height": 16,
+        "fieldDefs": [
+          {
+            "__type": "String",
+            "identifier": "Identifier",
+            "uid": 21,
+            "type": "F_String",
+            "isArray": false,
+            "canBeNull": false,
+            "arrayMinLength": null,
+            "arrayMaxLength": null,
+            "editorDisplayMode": "NameAndValue",
+            "editorDisplayPos": "Above",
+            "editorLinkStyle": "ZigZag",
+            "editorShowInWorld": true,
+            "editorAlwaysShow": true,
+            "editorCutLongValues": false,
+            "editorTextSuffix": null,
+            "editorTextPrefix": null,
+            "useForSmartColor": true,
+            "min": null,
+            "max": null,
+            "regex": null,
+            "acceptFileTypes": null,
+            "defaultOverride": null,
+            "textLanguageMode": null,
+            "symmetricalRef": false,
+            "autoChainRef": true,
+            "allowOutOfLevelRef": true,
+            "allowedRefs": "Any",
+            "allowedRefTags": [],
+            "tilesetUid": null
+          },
+          {
+            "__type": "String",
+            "identifier": "Group",
+            "uid": 22,
+            "type": "F_String",
+            "isArray": false,
+            "canBeNull": false,
+            "arrayMinLength": null,
+            "arrayMaxLength": null,
+            "editorDisplayMode": "NameAndValue",
+            "editorDisplayPos": "Above",
+            "editorLinkStyle": "ZigZag",
+            "editorShowInWorld": true,
+            "editorAlwaysShow": true,
+            "editorCutLongValues": false,
+            "editorTextSuffix": null,
+            "editorTextPrefix": null,
+            "useForSmartColor": true,
+            "min": null,
+            "max": null,
+            "regex": null,
+            "acceptFileTypes": null,
+            "defaultOverride": null,
+            "textLanguageMode": null,
+            "symmetricalRef": false,
+            "autoChainRef": true,
+            "allowOutOfLevelRef": true,
+            "allowedRefs": "Any",
+            "allowedRefTags": [],
+            "tilesetUid": null
+          },
+          {
+            "__type": "String",
+            "identifier": "Kind",
+            "uid": 23,
+            "type": "F_String",
+            "isArray": false,
+            "canBeNull": false,
+            "arrayMinLength": null,
+            "arrayMaxLength": null,
+            "editorDisplayMode": "NameAndValue",
+            "editorDisplayPos": "Above",
+            "editorLinkStyle": "ZigZag",
+            "editorShowInWorld": true,
+            "editorAlwaysShow": true,
+            "editorCutLongValues": false,
+            "editorTextSuffix": null,
+            "editorTextPrefix": null,
+            "useForSmartColor": true,
+            "min": null,
+            "max": null,
+            "regex": null,
+            "acceptFileTypes": null,
+            "defaultOverride": null,
+            "textLanguageMode": null,
+            "symmetricalRef": false,
+            "autoChainRef": true,
+            "allowOutOfLevelRef": true,
+            "allowedRefs": "Any",
+            "allowedRefTags": [],
+            "tilesetUid": null
+          },
+          {
+            "__type": "Int",
+            "identifier": "PatrolLeft",
+            "uid": 24,
+            "type": "F_Int",
+            "isArray": false,
+            "canBeNull": false,
+            "arrayMinLength": null,
+            "arrayMaxLength": null,
+            "editorDisplayMode": "NameAndValue",
+            "editorDisplayPos": "Above",
+            "editorLinkStyle": "ZigZag",
+            "editorShowInWorld": true,
+            "editorAlwaysShow": true,
+            "editorCutLongValues": false,
+            "editorTextSuffix": null,
+            "editorTextPrefix": null,
+            "useForSmartColor": false,
+            "min": null,
+            "max": null,
+            "regex": null,
+            "acceptFileTypes": null,
+            "defaultOverride": null,
+            "textLanguageMode": null,
+            "symmetricalRef": false,
+            "autoChainRef": true,
+            "allowOutOfLevelRef": true,
+            "allowedRefs": "Any",
+            "allowedRefTags": [],
+            "tilesetUid": null
+          },
+          {
+            "__type": "Int",
+            "identifier": "PatrolRight",
+            "uid": 25,
+            "type": "F_Int",
+            "isArray": false,
+            "canBeNull": false,
+            "arrayMinLength": null,
+            "arrayMaxLength": null,
+            "editorDisplayMode": "NameAndValue",
+            "editorDisplayPos": "Above",
+            "editorLinkStyle": "ZigZag",
+            "editorShowInWorld": true,
+            "editorAlwaysShow": true,
+            "editorCutLongValues": false,
+            "editorTextSuffix": null,
+            "editorTextPrefix": null,
+            "useForSmartColor": false,
+            "min": null,
+            "max": null,
+            "regex": null,
+            "acceptFileTypes": null,
+            "defaultOverride": null,
+            "textLanguageMode": null,
+            "symmetricalRef": false,
+            "autoChainRef": true,
+            "allowOutOfLevelRef": true,
+            "allowedRefs": "Any",
+            "allowedRefTags": [],
+            "tilesetUid": null
+          },
+          {
+            "__type": "Float",
+            "identifier": "Phase",
+            "uid": 26,
+            "type": "F_Float",
+            "isArray": false,
+            "canBeNull": false,
+            "arrayMinLength": null,
+            "arrayMaxLength": null,
+            "editorDisplayMode": "NameAndValue",
+            "editorDisplayPos": "Above",
+            "editorLinkStyle": "ZigZag",
+            "editorShowInWorld": true,
+            "editorAlwaysShow": true,
+            "editorCutLongValues": false,
+            "editorTextSuffix": null,
+            "editorTextPrefix": null,
+            "useForSmartColor": false,
             "min": null,
             "max": null,
             "regex": null,
@@ -6240,6 +6459,1406 @@
                 0
               ],
               "width": 18
+            },
+            {
+              "__identifier": "EnemySpawn",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 3180,
+              "__worldY": 296,
+              "defUid": 20,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "MainStageStagehandA",
+                  "defUid": 21,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "Stagehand",
+                  "defUid": 22,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "",
+                  "defUid": 23,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "PatrolLeft",
+                  "__type": "Int",
+                  "__value": 3070,
+                  "defUid": 24,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "PatrolRight",
+                  "__type": "Int",
+                  "__value": 3350,
+                  "defUid": 25,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 0.0,
+                  "defUid": 26,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "aafd3053-99d5-4c2d-b670-7d4bb90ec3ee",
+              "px": [
+                3180,
+                296
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "EnemySpawn",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 3520,
+              "__worldY": 296,
+              "defUid": 20,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "MainStageStagehandB",
+                  "defUid": 21,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "Stagehand",
+                  "defUid": 22,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "",
+                  "defUid": 23,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "PatrolLeft",
+                  "__type": "Int",
+                  "__value": 3400,
+                  "defUid": 24,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "PatrolRight",
+                  "__type": "Int",
+                  "__value": 3670,
+                  "defUid": 25,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 0.0,
+                  "defUid": 26,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "709965e5-3e84-4cfb-94aa-a9f70bed33a0",
+              "px": [
+                3520,
+                296
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "EnemySpawn",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 4010,
+              "__worldY": 296,
+              "defUid": 20,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "MainStageStagehandC",
+                  "defUid": 21,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "Stagehand",
+                  "defUid": 22,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "",
+                  "defUid": 23,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "PatrolLeft",
+                  "__type": "Int",
+                  "__value": 3890,
+                  "defUid": 24,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "PatrolRight",
+                  "__type": "Int",
+                  "__value": 4140,
+                  "defUid": 25,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 0.0,
+                  "defUid": 26,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "ef7b5149-af38-40dd-9b5d-5082d8174188",
+              "px": [
+                4010,
+                296
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "EnemySpawn",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 3340,
+              "__worldY": 296,
+              "defUid": 20,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "MainStageCardThrowerA",
+                  "defUid": 21,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "CardThrower",
+                  "defUid": 22,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "",
+                  "defUid": 23,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "PatrolLeft",
+                  "__type": "Int",
+                  "__value": 3260,
+                  "defUid": 24,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "PatrolRight",
+                  "__type": "Int",
+                  "__value": 3440,
+                  "defUid": 25,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 0.0,
+                  "defUid": 26,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "fb5af2e2-694d-4496-beda-51041b85448d",
+              "px": [
+                3340,
+                296
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "EnemySpawn",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 3760,
+              "__worldY": 296,
+              "defUid": 20,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "MainStageCardThrowerB",
+                  "defUid": 21,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "CardThrower",
+                  "defUid": 22,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "",
+                  "defUid": 23,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "PatrolLeft",
+                  "__type": "Int",
+                  "__value": 3680,
+                  "defUid": 24,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "PatrolRight",
+                  "__type": "Int",
+                  "__value": 3880,
+                  "defUid": 25,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 0.0,
+                  "defUid": 26,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "417b7975-4b45-48b2-a296-ed6958785f6f",
+              "px": [
+                3760,
+                296
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "EnemySpawn",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 6800,
+              "__worldY": 430,
+              "defUid": 20,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "GalleryShadowAcrobatA",
+                  "defUid": 21,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "ShadowAcrobat",
+                  "defUid": 22,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "",
+                  "defUid": 23,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "PatrolLeft",
+                  "__type": "Int",
+                  "__value": 6740,
+                  "defUid": 24,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "PatrolRight",
+                  "__type": "Int",
+                  "__value": 6890,
+                  "defUid": 25,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 0.0,
+                  "defUid": 26,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "f7356825-7a68-4718-934b-eed931065d99",
+              "px": [
+                6800,
+                430
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "EnemySpawn",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 7505,
+              "__worldY": 326,
+              "defUid": 20,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "GalleryShadowAcrobatB",
+                  "defUid": 21,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "ShadowAcrobat",
+                  "defUid": 22,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "",
+                  "defUid": 23,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "PatrolLeft",
+                  "__type": "Int",
+                  "__value": 7480,
+                  "defUid": 24,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "PatrolRight",
+                  "__type": "Int",
+                  "__value": 7605,
+                  "defUid": 25,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 0.0,
+                  "defUid": 26,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "66140cca-87d1-4b47-8daf-9c405cd285d0",
+              "px": [
+                7505,
+                326
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "EnemySpawn",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 8620,
+              "__worldY": 270,
+              "defUid": 20,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "VaultLightWraithA",
+                  "defUid": 21,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "LightWraith",
+                  "defUid": 22,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "",
+                  "defUid": 23,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "PatrolLeft",
+                  "__type": "Int",
+                  "__value": 8500,
+                  "defUid": 24,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "PatrolRight",
+                  "__type": "Int",
+                  "__value": 8780,
+                  "defUid": 25,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 0.0,
+                  "defUid": 26,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "6c6e718e-f010-4221-9ae7-d0fe4fcf32f5",
+              "px": [
+                8620,
+                270
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "EnemySpawn",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 9020,
+              "__worldY": 270,
+              "defUid": 20,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "VaultLightWraithB",
+                  "defUid": 21,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "LightWraith",
+                  "defUid": 22,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "",
+                  "defUid": 23,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "PatrolLeft",
+                  "__type": "Int",
+                  "__value": 8880,
+                  "defUid": 24,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "PatrolRight",
+                  "__type": "Int",
+                  "__value": 9190,
+                  "defUid": 25,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 3.141592653589793,
+                  "defUid": 26,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "d1694997-b32f-4745-a987-ce5413e341e9",
+              "px": [
+                9020,
+                270
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "EnemySpawn",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 10020,
+              "__worldY": 440,
+              "defUid": 20,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "SanctumCardSentryA",
+                  "defUid": 21,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "CardSentry",
+                  "defUid": 22,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "",
+                  "defUid": 23,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "PatrolLeft",
+                  "__type": "Int",
+                  "__value": 10020,
+                  "defUid": 24,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "PatrolRight",
+                  "__type": "Int",
+                  "__value": 10020,
+                  "defUid": 25,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 0.0,
+                  "defUid": 26,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "5ca7fccf-1c91-4ec7-ad15-106479f86a99",
+              "px": [
+                10020,
+                440
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "EnemySpawn",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 10970,
+              "__worldY": 240,
+              "defUid": 20,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "SanctumCardSentryB",
+                  "defUid": 21,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "CardSentry",
+                  "defUid": 22,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "",
+                  "defUid": 23,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "PatrolLeft",
+                  "__type": "Int",
+                  "__value": 10970,
+                  "defUid": 24,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "PatrolRight",
+                  "__type": "Int",
+                  "__value": 10970,
+                  "defUid": 25,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 3.141592653589793,
+                  "defUid": 26,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "3387e5f6-4b0b-45c2-adbf-f71e011a9808",
+              "px": [
+                10970,
+                240
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "EnemySpawn",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 11520,
+              "__worldY": 440,
+              "defUid": 20,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "SanctumCardSentryC",
+                  "defUid": 21,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "CardSentry",
+                  "defUid": 22,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "",
+                  "defUid": 23,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "PatrolLeft",
+                  "__type": "Int",
+                  "__value": 11520,
+                  "defUid": 24,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "PatrolRight",
+                  "__type": "Int",
+                  "__value": 11520,
+                  "defUid": 25,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 1.5707963267948966,
+                  "defUid": 26,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "4f02985c-920f-4fa8-b814-b3a92439ddf3",
+              "px": [
+                11520,
+                440
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "EnemySpawn",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 12110,
+              "__worldY": 294,
+              "defUid": 20,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "RoyalEchoDuelistA",
+                  "defUid": 21,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "RoyalEcho",
+                  "defUid": 22,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "duelist",
+                  "defUid": 23,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "PatrolLeft",
+                  "__type": "Int",
+                  "__value": 12035,
+                  "defUid": 24,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "PatrolRight",
+                  "__type": "Int",
+                  "__value": 12210,
+                  "defUid": 25,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 0.0,
+                  "defUid": 26,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "f69e798c-5603-4091-b522-49cc3d773712",
+              "px": [
+                12110,
+                294
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "EnemySpawn",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 12555,
+              "__worldY": 382,
+              "defUid": 20,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "RoyalEchoCasterA",
+                  "defUid": 21,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "RoyalEcho",
+                  "defUid": 22,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "caster",
+                  "defUid": 23,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "PatrolLeft",
+                  "__type": "Int",
+                  "__value": 12390,
+                  "defUid": 24,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "PatrolRight",
+                  "__type": "Int",
+                  "__value": 12710,
+                  "defUid": 25,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 1.5707963267948966,
+                  "defUid": 26,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "b893845b-d8f2-4239-baf4-9e98ba6acbc3",
+              "px": [
+                12555,
+                382
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "EnemySpawn",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 13120,
+              "__worldY": 294,
+              "defUid": 20,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "RoyalEchoDuelistB",
+                  "defUid": 21,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "RoyalEcho",
+                  "defUid": 22,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "duelist",
+                  "defUid": 23,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "PatrolLeft",
+                  "__type": "Int",
+                  "__value": 13020,
+                  "defUid": 24,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "PatrolRight",
+                  "__type": "Int",
+                  "__value": 13320,
+                  "defUid": 25,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 3.141592653589793,
+                  "defUid": 26,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "d75cd06f-66da-47c6-9fa8-0989a074abef",
+              "px": [
+                13120,
+                294
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "EnemySpawn",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 13820,
+              "__worldY": 255,
+              "defUid": 20,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "RoyalEchoCasterB",
+                  "defUid": 21,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "RoyalEcho",
+                  "defUid": 22,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "caster",
+                  "defUid": 23,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "PatrolLeft",
+                  "__type": "Int",
+                  "__value": 13680,
+                  "defUid": 24,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "PatrolRight",
+                  "__type": "Int",
+                  "__value": 14020,
+                  "defUid": 25,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 4.71238898038469,
+                  "defUid": 26,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "504f8ceb-af9f-4ba3-8aec-4e335bbe1f70",
+              "px": [
+                13820,
+                255
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "EnemySpawn",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 15420,
+              "__worldY": 296,
+              "defUid": 20,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "MirrorCoreDuelist",
+                  "defUid": 21,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "MirrorCore",
+                  "defUid": 22,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "duelist",
+                  "defUid": 23,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "PatrolLeft",
+                  "__type": "Int",
+                  "__value": 15360,
+                  "defUid": 24,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "PatrolRight",
+                  "__type": "Int",
+                  "__value": 15610,
+                  "defUid": 25,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 0.0,
+                  "defUid": 26,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "581adadb-be32-452b-818d-78607cddfd33",
+              "px": [
+                15420,
+                296
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "EnemySpawn",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 15680,
+              "__worldY": 172,
+              "defUid": 20,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "MirrorCoreCasterA",
+                  "defUid": 21,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "MirrorCore",
+                  "defUid": 22,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "caster",
+                  "defUid": 23,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "PatrolLeft",
+                  "__type": "Int",
+                  "__value": 15580,
+                  "defUid": 24,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "PatrolRight",
+                  "__type": "Int",
+                  "__value": 15860,
+                  "defUid": 25,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 0.0,
+                  "defUid": 26,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "780b85bc-679c-4c9f-8cd2-6640b2a2d51c",
+              "px": [
+                15680,
+                172
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "EnemySpawn",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 15920,
+              "__worldY": 296,
+              "defUid": 20,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "MirrorCoreMime",
+                  "defUid": 21,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "MirrorCore",
+                  "defUid": 22,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "mime",
+                  "defUid": 23,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "PatrolLeft",
+                  "__type": "Int",
+                  "__value": 15800,
+                  "defUid": 24,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "PatrolRight",
+                  "__type": "Int",
+                  "__value": 16140,
+                  "defUid": 25,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 0.0,
+                  "defUid": 26,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "e884f4c4-6483-4fa2-bbb0-56a1fbf73c0d",
+              "px": [
+                15920,
+                296
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "EnemySpawn",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 16200,
+              "__worldY": 194,
+              "defUid": 20,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "MirrorCoreCasterB",
+                  "defUid": 21,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "MirrorCore",
+                  "defUid": 22,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Kind",
+                  "__type": "String",
+                  "__value": "caster",
+                  "defUid": 23,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "PatrolLeft",
+                  "__type": "Int",
+                  "__value": 16080,
+                  "defUid": 24,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "PatrolRight",
+                  "__type": "Int",
+                  "__value": 16330,
+                  "defUid": 25,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Phase",
+                  "__type": "Float",
+                  "__value": 0.0,
+                  "defUid": 26,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "201a9c70-a79b-4598-816d-a33af8a556ae",
+              "px": [
+                16200,
+                194
+              ],
+              "width": 16
             }
           ],
           "gridTiles": [],

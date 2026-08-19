@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 
 import { EnemyView } from "./EnemyView";
+import { getWorldEnemySpawns } from "../world/WorldEnemies";
 
 import type {
   CombatSystem,
@@ -35,20 +36,15 @@ interface CardProjectile {
   active: boolean;
 }
 
-const SPAWNS: readonly CardThrowerSpawn[] = [
-  {
-    x: 3340,
-    y: 296,
-    left: 3260,
-    right: 3440
-  },
-  {
-    x: 3760,
-    y: 296,
-    left: 3680,
-    right: 3880
-  }
-];
+const SPAWNS: readonly CardThrowerSpawn[] =
+  getWorldEnemySpawns("CardThrower").map(
+    spawn => ({
+      x: spawn.x,
+      y: spawn.y,
+      left: spawn.patrolLeft,
+      right: spawn.patrolRight
+    })
+  );
 
 class CardThrower implements CombatTarget {
   public x: number;

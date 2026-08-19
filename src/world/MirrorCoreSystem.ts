@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import { getWorldEnemySpawns } from "./WorldEnemies";
 import {
   getWorldCheckpoint,
   getWorldGate,
@@ -98,36 +99,28 @@ interface BossCounter {
 }
 
 const ENEMY_SPAWNS:
-readonly CoreEnemySpawn[] = [
-  {
-    kind: "duelist",
-    x: 15420,
-    y: 296,
-    left: 15360,
-    right: 15610
-  },
-  {
-    kind: "caster",
-    x: 15680,
-    y: 172,
-    left: 15580,
-    right: 15860
-  },
-  {
-    kind: "mime",
-    x: 15920,
-    y: 296,
-    left: 15800,
-    right: 16140
-  },
-  {
-    kind: "caster",
-    x: 16200,
-    y: 194,
-    left: 16080,
-    right: 16330
-  }
-];
+readonly CoreEnemySpawn[] =
+  getWorldEnemySpawns("MirrorCore").map(
+    spawn => {
+      if (
+        spawn.kind !== "duelist" &&
+        spawn.kind !== "caster" &&
+        spawn.kind !== "mime"
+      ) {
+        throw new Error(
+          `Invalid MirrorCore kind: ${spawn.kind}`
+        );
+      }
+
+      return {
+        kind: spawn.kind,
+        x: spawn.x,
+        y: spawn.y,
+        left: spawn.patrolLeft,
+        right: spawn.patrolRight
+      };
+    }
+  );
 
 const ROSE_POSITIONS = [
   [14530, 294],

@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 
 import { EnemyView } from "./EnemyView";
+import { getWorldEnemySpawns } from "../world/WorldEnemies";
 
 import type {
   CombatSystem,
@@ -25,20 +26,15 @@ interface ShadowSpawn {
   readonly patrolRight: number;
 }
 
-const SPAWNS: readonly ShadowSpawn[] = [
-  {
-    x: 6800,
-    groundY: 430,
-    patrolLeft: 6740,
-    patrolRight: 6890
-  },
-  {
-    x: 7505,
-    groundY: 326,
-    patrolLeft: 7480,
-    patrolRight: 7605
-  }
-];
+const SPAWNS: readonly ShadowSpawn[] =
+  getWorldEnemySpawns("ShadowAcrobat").map(
+    spawn => ({
+      x: spawn.x,
+      groundY: spawn.y,
+      patrolLeft: spawn.patrolLeft,
+      patrolRight: spawn.patrolRight
+    })
+  );
 
 class ShadowAcrobat implements CombatTarget {
   public x: number;

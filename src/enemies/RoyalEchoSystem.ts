@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 
 import { EnemyView } from "./EnemyView";
+import { getWorldEnemySpawns } from "../world/WorldEnemies";
 
 import type {
   CombatSystem,
@@ -42,40 +43,28 @@ interface PrismProjectile {
   active: boolean;
 }
 
-const SPAWNS: readonly EchoSpawn[] = [
-  {
-    kind: "duelist",
-    x: 12110,
-    y: 294,
-    left: 12035,
-    right: 12210,
-    phase: 0
-  },
-  {
-    kind: "caster",
-    x: 12555,
-    y: 382,
-    left: 12390,
-    right: 12710,
-    phase: Math.PI * 0.5
-  },
-  {
-    kind: "duelist",
-    x: 13120,
-    y: 294,
-    left: 13020,
-    right: 13320,
-    phase: Math.PI
-  },
-  {
-    kind: "caster",
-    x: 13820,
-    y: 255,
-    left: 13680,
-    right: 14020,
-    phase: Math.PI * 1.5
-  }
-];
+const SPAWNS: readonly EchoSpawn[] =
+  getWorldEnemySpawns("RoyalEcho").map(
+    spawn => {
+      if (
+        spawn.kind !== "duelist" &&
+        spawn.kind !== "caster"
+      ) {
+        throw new Error(
+          `Invalid RoyalEcho kind: ${spawn.kind}`
+        );
+      }
+
+      return {
+        kind: spawn.kind,
+        x: spawn.x,
+        y: spawn.y,
+        left: spawn.patrolLeft,
+        right: spawn.patrolRight,
+        phase: spawn.phase
+      };
+    }
+  );
 
 class RoyalEcho implements CombatTarget {
   public x: number;
