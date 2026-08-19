@@ -1,4 +1,8 @@
 import Phaser from "phaser";
+import {
+  getWorldCheckpoint,
+  type WorldCheckpoint
+} from "../world/WorldGameplay";
 import { leaderboard } from "../leaderboard/LeaderboardClient";
 import type { PlayerController } from "../main";
 
@@ -10,10 +14,19 @@ export class PlayerHealthSystem {
   private hurtTimer = 0;
   private respawnTimer = 0;
 
-  private checkpointX = 72;
-  private checkpointY = 270;
+  private readonly initialCheckpoint =
+    getWorldCheckpoint(
+      "InitialSpawn"
+    );
 
-  private checkpointName = "Movement Rehearsal";
+  private checkpointX =
+    this.initialCheckpoint.x;
+
+  private checkpointY =
+    this.initialCheckpoint.y;
+
+  private checkpointName =
+    this.initialCheckpoint.displayName;
 
   private readonly scene: Phaser.Scene;
   private readonly player: PlayerController;
@@ -96,12 +109,17 @@ export class PlayerHealthSystem {
   }
 
   public setCheckpoint(
-    x: number,
-    y: number,
-    name: string
+    checkpoint: WorldCheckpoint
   ): void {
-    this.checkpointX = x;
-    this.checkpointY = y;
+    const name =
+      checkpoint.displayName;
+
+    this.checkpointX =
+      checkpoint.x;
+
+    this.checkpointY =
+      checkpoint.y;
+
     this.checkpointName = name;
 
     leaderboard.recordCheckpoint(name);

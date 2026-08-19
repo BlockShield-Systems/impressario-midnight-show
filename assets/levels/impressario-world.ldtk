@@ -11,7 +11,7 @@
   "iid": "49475ace-8d6d-5ace-b9c1-bdfa1f69afc7",
   "jsonVersion": "1.5.3",
   "appBuildId": 50300,
-  "nextUid": 14,
+  "nextUid": 20,
   "identifierStyle": "Capitalize",
   "toc": [],
   "worldLayout": "Free",
@@ -243,6 +243,196 @@
             "useForSmartColor": false,
             "min": 240,
             "max": 960,
+            "regex": null,
+            "acceptFileTypes": null,
+            "defaultOverride": null,
+            "textLanguageMode": null,
+            "symmetricalRef": false,
+            "autoChainRef": true,
+            "allowOutOfLevelRef": true,
+            "allowedRefs": "Any",
+            "allowedRefTags": [],
+            "tilesetUid": null
+          }
+        ]
+      },
+      {
+        "allowOutOfBounds": true,
+        "doc": null,
+        "exportToToc": false,
+        "fillOpacity": 0.45,
+        "hollow": false,
+        "keepAspectRatio": false,
+        "limitBehavior": "DiscardOldOnes",
+        "limitScope": "PerLevel",
+        "lineOpacity": 1,
+        "maxCount": 0,
+        "nineSliceBorders": [],
+        "pivotX": 0,
+        "pivotY": 0,
+        "renderMode": "Rectangle",
+        "resizableX": false,
+        "resizableY": false,
+        "showName": false,
+        "tags": [
+          "Gameplay",
+          "Checkpoint"
+        ],
+        "tileRect": null,
+        "tileRenderMode": "Cover",
+        "tilesetId": null,
+        "identifier": "Checkpoint",
+        "uid": 14,
+        "color": "#63E6E2",
+        "width": 16,
+        "height": 16,
+        "fieldDefs": [
+          {
+            "__type": "String",
+            "identifier": "Identifier",
+            "uid": 15,
+            "type": "F_String",
+            "isArray": false,
+            "canBeNull": false,
+            "arrayMinLength": null,
+            "arrayMaxLength": null,
+            "editorDisplayMode": "NameAndValue",
+            "editorDisplayPos": "Above",
+            "editorLinkStyle": "ZigZag",
+            "editorShowInWorld": true,
+            "editorAlwaysShow": true,
+            "editorCutLongValues": false,
+            "editorTextSuffix": null,
+            "editorTextPrefix": null,
+            "useForSmartColor": true,
+            "min": null,
+            "max": null,
+            "regex": null,
+            "acceptFileTypes": null,
+            "defaultOverride": null,
+            "textLanguageMode": null,
+            "symmetricalRef": false,
+            "autoChainRef": true,
+            "allowOutOfLevelRef": true,
+            "allowedRefs": "Any",
+            "allowedRefTags": [],
+            "tilesetUid": null
+          },
+          {
+            "__type": "String",
+            "identifier": "DisplayName",
+            "uid": 16,
+            "type": "F_String",
+            "isArray": false,
+            "canBeNull": false,
+            "arrayMinLength": null,
+            "arrayMaxLength": null,
+            "editorDisplayMode": "NameAndValue",
+            "editorDisplayPos": "Above",
+            "editorLinkStyle": "ZigZag",
+            "editorShowInWorld": true,
+            "editorAlwaysShow": true,
+            "editorCutLongValues": false,
+            "editorTextSuffix": null,
+            "editorTextPrefix": null,
+            "useForSmartColor": false,
+            "min": null,
+            "max": null,
+            "regex": null,
+            "acceptFileTypes": null,
+            "defaultOverride": null,
+            "textLanguageMode": null,
+            "symmetricalRef": false,
+            "autoChainRef": true,
+            "allowOutOfLevelRef": true,
+            "allowedRefs": "Any",
+            "allowedRefTags": [],
+            "tilesetUid": null
+          },
+          {
+            "__type": "Int",
+            "identifier": "TriggerX",
+            "uid": 17,
+            "type": "F_Int",
+            "isArray": false,
+            "canBeNull": false,
+            "arrayMinLength": null,
+            "arrayMaxLength": null,
+            "editorDisplayMode": "NameAndValue",
+            "editorDisplayPos": "Above",
+            "editorLinkStyle": "ZigZag",
+            "editorShowInWorld": true,
+            "editorAlwaysShow": true,
+            "editorCutLongValues": false,
+            "editorTextSuffix": null,
+            "editorTextPrefix": null,
+            "useForSmartColor": false,
+            "min": 0,
+            "max": 18720,
+            "regex": null,
+            "acceptFileTypes": null,
+            "defaultOverride": null,
+            "textLanguageMode": null,
+            "symmetricalRef": false,
+            "autoChainRef": true,
+            "allowOutOfLevelRef": true,
+            "allowedRefs": "Any",
+            "allowedRefTags": [],
+            "tilesetUid": null
+          }
+        ]
+      },
+      {
+        "allowOutOfBounds": true,
+        "doc": null,
+        "exportToToc": false,
+        "fillOpacity": 0.35,
+        "hollow": false,
+        "keepAspectRatio": false,
+        "limitBehavior": "DiscardOldOnes",
+        "limitScope": "PerLevel",
+        "lineOpacity": 1,
+        "maxCount": 0,
+        "nineSliceBorders": [],
+        "pivotX": 0,
+        "pivotY": 0,
+        "renderMode": "Rectangle",
+        "resizableX": true,
+        "resizableY": true,
+        "showName": false,
+        "tags": [
+          "Gameplay",
+          "Gate"
+        ],
+        "tileRect": null,
+        "tileRenderMode": "Cover",
+        "tilesetId": null,
+        "identifier": "GameplayGate",
+        "uid": 18,
+        "color": "#E95ACB",
+        "width": 16,
+        "height": 16,
+        "fieldDefs": [
+          {
+            "__type": "String",
+            "identifier": "Identifier",
+            "uid": 19,
+            "type": "F_String",
+            "isArray": false,
+            "canBeNull": false,
+            "arrayMinLength": null,
+            "arrayMaxLength": null,
+            "editorDisplayMode": "NameAndValue",
+            "editorDisplayPos": "Above",
+            "editorLinkStyle": "ZigZag",
+            "editorShowInWorld": true,
+            "editorAlwaysShow": true,
+            "editorCutLongValues": false,
+            "editorTextSuffix": null,
+            "editorTextPrefix": null,
+            "useForSmartColor": true,
+            "min": null,
+            "max": null,
             "regex": null,
             "acceptFileTypes": null,
             "defaultOverride": null,
@@ -4902,6 +5092,1154 @@
                 326
               ],
               "width": 58
+            },
+            {
+              "__identifier": "Checkpoint",
+              "__grid": [
+                4,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 72,
+              "__worldY": 270,
+              "defUid": 14,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "InitialSpawn",
+                  "defUid": 15,
+                  "realEditorValues": [
+                    {
+                      "id": "0e11c36e-db85-5be8-8bf8-b4e8ec1c1bea",
+                      "params": [
+                        "InitialSpawn"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "DisplayName",
+                  "__type": "String",
+                  "__value": "Movement Rehearsal",
+                  "defUid": 16,
+                  "realEditorValues": [
+                    {
+                      "id": "eaafb977-3709-53b6-a9f4-3d45a54fcabb",
+                      "params": [
+                        "Movement Rehearsal"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "TriggerX",
+                  "__type": "Int",
+                  "__value": 0,
+                  "defUid": 17,
+                  "realEditorValues": [
+                    {
+                      "id": "6a876ada-cd83-5bd8-8754-a45e330986ba",
+                      "params": [
+                        0
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "height": 16,
+              "iid": "6263a327-693d-59b9-93d2-e38a20db110a",
+              "px": [
+                72,
+                270
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "Checkpoint",
+              "__grid": [
+                185,
+                18
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 2960,
+              "__worldY": 296,
+              "defUid": 14,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "MainStage",
+                  "defUid": 15,
+                  "realEditorValues": [
+                    {
+                      "id": "b326cc3b-9080-5f13-a537-6562ef88c9ee",
+                      "params": [
+                        "MainStage"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "DisplayName",
+                  "__type": "String",
+                  "__value": "The Main Stage",
+                  "defUid": 16,
+                  "realEditorValues": [
+                    {
+                      "id": "a2302df8-eba7-5d88-a956-3c71de5229e1",
+                      "params": [
+                        "The Main Stage"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "TriggerX",
+                  "__type": "Int",
+                  "__value": 2940,
+                  "defUid": 17,
+                  "realEditorValues": [
+                    {
+                      "id": "416a5466-e0ef-573c-aad3-ebf007b5ab87",
+                      "params": [
+                        2940
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "height": 16,
+              "iid": "69012fc4-0077-5b10-a55c-bb9a7a1eb038",
+              "px": [
+                2960,
+                296
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "Checkpoint",
+              "__grid": [
+                302,
+                18
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 4840,
+              "__worldY": 296,
+              "defUid": 14,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "GrandGallery",
+                  "defUid": 15,
+                  "realEditorValues": [
+                    {
+                      "id": "045bd359-9319-57a2-b86c-b98c6c397472",
+                      "params": [
+                        "GrandGallery"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "DisplayName",
+                  "__type": "String",
+                  "__value": "The Grand Gallery",
+                  "defUid": 16,
+                  "realEditorValues": [
+                    {
+                      "id": "f493c026-83fd-5c9e-b886-346e95fdad24",
+                      "params": [
+                        "The Grand Gallery"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "TriggerX",
+                  "__type": "Int",
+                  "__value": 4860,
+                  "defUid": 17,
+                  "realEditorValues": [
+                    {
+                      "id": "5f6e6481-63eb-53dc-8f80-af9077a647f9",
+                      "params": [
+                        4860
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "height": 16,
+              "iid": "3dfe6f33-1205-5dff-bdbb-23708d76fc4f",
+              "px": [
+                4840,
+                296
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "Checkpoint",
+              "__grid": [
+                399,
+                18
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 6385,
+              "__worldY": 296,
+              "defUid": 14,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "GalleryGauntlet",
+                  "defUid": 15,
+                  "realEditorValues": [
+                    {
+                      "id": "083c99d6-67d9-5eb7-b27e-c91271c93641",
+                      "params": [
+                        "GalleryGauntlet"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "DisplayName",
+                  "__type": "String",
+                  "__value": "Gallery Gauntlet",
+                  "defUid": 16,
+                  "realEditorValues": [
+                    {
+                      "id": "0794a7c8-72f6-52b3-ab02-bc6d39b144e8",
+                      "params": [
+                        "Gallery Gauntlet"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "TriggerX",
+                  "__type": "Int",
+                  "__value": 6370,
+                  "defUid": 17,
+                  "realEditorValues": [
+                    {
+                      "id": "592956ba-513a-50d5-ab72-f68109fbcf57",
+                      "params": [
+                        6370
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "height": 16,
+              "iid": "da2c18a1-228e-5851-83c6-bf4d2263af18",
+              "px": [
+                6385,
+                296
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "Checkpoint",
+              "__grid": [
+                468,
+                18
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 7490,
+              "__worldY": 296,
+              "defUid": 14,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "GauntletMidpoint",
+                  "defUid": 15,
+                  "realEditorValues": [
+                    {
+                      "id": "6aae9558-0de9-51f9-b626-039ee28571dd",
+                      "params": [
+                        "GauntletMidpoint"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "DisplayName",
+                  "__type": "String",
+                  "__value": "Gauntlet Midpoint",
+                  "defUid": 16,
+                  "realEditorValues": [
+                    {
+                      "id": "b403aa9b-c87a-5ced-8353-72b59a7fc8e6",
+                      "params": [
+                        "Gauntlet Midpoint"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "TriggerX",
+                  "__type": "Int",
+                  "__value": 7490,
+                  "defUid": 17,
+                  "realEditorValues": [
+                    {
+                      "id": "16a2f146-1d18-5045-8d03-f96c6bed4b4c",
+                      "params": [
+                        7490
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "height": 16,
+              "iid": "7629f881-dac2-5e4a-ac39-fcb27644345f",
+              "px": [
+                7490,
+                296
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "Checkpoint",
+              "__grid": [
+                515,
+                18
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 8240,
+              "__worldY": 296,
+              "defUid": 14,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "SpotlightVault",
+                  "defUid": 15,
+                  "realEditorValues": [
+                    {
+                      "id": "b8412eb2-fc98-53bd-a501-54da6e7f3075",
+                      "params": [
+                        "SpotlightVault"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "DisplayName",
+                  "__type": "String",
+                  "__value": "The Spotlight Vault",
+                  "defUid": 16,
+                  "realEditorValues": [
+                    {
+                      "id": "958218b8-4e79-533e-9446-1f21eb598513",
+                      "params": [
+                        "The Spotlight Vault"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "TriggerX",
+                  "__type": "Int",
+                  "__value": 8250,
+                  "defUid": 17,
+                  "realEditorValues": [
+                    {
+                      "id": "87c2a3eb-24b3-53b8-891d-04161a0a50ba",
+                      "params": [
+                        8250
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "height": 16,
+              "iid": "4e5326f1-2ccf-5ccb-bf28-21e16d281fac",
+              "px": [
+                8240,
+                296
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "Checkpoint",
+              "__grid": [
+                601,
+                18
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 9620,
+              "__worldY": 296,
+              "defUid": 14,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "CardSanctum",
+                  "defUid": 15,
+                  "realEditorValues": [
+                    {
+                      "id": "32621517-6e01-5fd9-9956-6a5ebd3e58da",
+                      "params": [
+                        "CardSanctum"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "DisplayName",
+                  "__type": "String",
+                  "__value": "The Card Sanctum",
+                  "defUid": 16,
+                  "realEditorValues": [
+                    {
+                      "id": "f090e74b-7077-59cb-ad00-7b425641cbe1",
+                      "params": [
+                        "The Card Sanctum"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "TriggerX",
+                  "__type": "Int",
+                  "__value": 9620,
+                  "defUid": 17,
+                  "realEditorValues": [
+                    {
+                      "id": "8e5fdbeb-b6b1-5e0a-92b7-6d64bfad3507",
+                      "params": [
+                        9620
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "height": 16,
+              "iid": "1a520b8f-c2b6-503a-859a-580fe6e3d5cc",
+              "px": [
+                9620,
+                296
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "Checkpoint",
+              "__grid": [
+                751,
+                18
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 12030,
+              "__worldY": 296,
+              "defUid": 14,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "RoyalBox",
+                  "defUid": 15,
+                  "realEditorValues": [
+                    {
+                      "id": "53d88034-f2ce-5244-8239-d599c6b750b0",
+                      "params": [
+                        "RoyalBox"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "DisplayName",
+                  "__type": "String",
+                  "__value": "The Fractured Royal Box",
+                  "defUid": 16,
+                  "realEditorValues": [
+                    {
+                      "id": "0783b2ed-6558-5be6-9ceb-907ff3067c2a",
+                      "params": [
+                        "The Fractured Royal Box"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "TriggerX",
+                  "__type": "Int",
+                  "__value": 12020,
+                  "defUid": 17,
+                  "realEditorValues": [
+                    {
+                      "id": "1f6db747-c5d8-5aae-b9c4-8235401f0ab5",
+                      "params": [
+                        12020
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "height": 16,
+              "iid": "715a04fc-23f6-5d64-bddb-e53844514ca9",
+              "px": [
+                12030,
+                296
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "Checkpoint",
+              "__grid": [
+                901,
+                18
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 14430,
+              "__worldY": 296,
+              "defUid": 14,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "MirrorCore",
+                  "defUid": 15,
+                  "realEditorValues": [
+                    {
+                      "id": "10a0685d-7106-550e-b38b-27a9e6591206",
+                      "params": [
+                        "MirrorCore"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "DisplayName",
+                  "__type": "String",
+                  "__value": "The Mirror Core",
+                  "defUid": 16,
+                  "realEditorValues": [
+                    {
+                      "id": "c4f1427f-d848-5af2-a3d2-8e5cff995d37",
+                      "params": [
+                        "The Mirror Core"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "TriggerX",
+                  "__type": "Int",
+                  "__value": 14420,
+                  "defUid": 17,
+                  "realEditorValues": [
+                    {
+                      "id": "674eb27d-d39d-52d3-964d-77c8f44de415",
+                      "params": [
+                        14420
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "height": 16,
+              "iid": "9469967b-dd6e-56f9-b9bb-9b3500cff6b3",
+              "px": [
+                14430,
+                296
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "Checkpoint",
+              "__grid": [
+                959,
+                18
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 15345,
+              "__worldY": 296,
+              "defUid": 14,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "MirrorRelays",
+                  "defUid": 15,
+                  "realEditorValues": [
+                    {
+                      "id": "d2cd5c65-cc37-55df-ab66-42967523ac83",
+                      "params": [
+                        "MirrorRelays"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "DisplayName",
+                  "__type": "String",
+                  "__value": "Mirror Relays",
+                  "defUid": 16,
+                  "realEditorValues": [
+                    {
+                      "id": "1cd5c773-347d-5826-9fd8-ee04a1901b45",
+                      "params": [
+                        "Mirror Relays"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "TriggerX",
+                  "__type": "Int",
+                  "__value": 15345,
+                  "defUid": 17,
+                  "realEditorValues": [
+                    {
+                      "id": "f257f5d2-2879-5bdd-b040-300d7ddf5aa9",
+                      "params": [
+                        15345
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "height": 16,
+              "iid": "59c4edfc-ed16-54b7-b2c2-1714673c1912",
+              "px": [
+                15345,
+                296
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "Checkpoint",
+              "__grid": [
+                1019,
+                18
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 16315,
+              "__worldY": 296,
+              "defUid": 14,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "CoreChamber",
+                  "defUid": 15,
+                  "realEditorValues": [
+                    {
+                      "id": "43c4a58c-e047-5b89-a1f5-c96c2180b21a",
+                      "params": [
+                        "CoreChamber"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "DisplayName",
+                  "__type": "String",
+                  "__value": "Core Chamber",
+                  "defUid": 16,
+                  "realEditorValues": [
+                    {
+                      "id": "60776419-5b5f-5299-a8aa-6c2da4666963",
+                      "params": [
+                        "Core Chamber"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "TriggerX",
+                  "__type": "Int",
+                  "__value": 16315,
+                  "defUid": 17,
+                  "realEditorValues": [
+                    {
+                      "id": "606d2bdc-7ba4-5f48-8f1b-ce8bd16874e4",
+                      "params": [
+                        16315
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "height": 16,
+              "iid": "7b1f6f5a-149a-59a0-a72a-f0adb032b900",
+              "px": [
+                16315,
+                296
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "GameplayGate",
+              "__grid": [
+                188,
+                0
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Gate"
+              ],
+              "__tile": null,
+              "__worldX": 3020,
+              "__worldY": 0,
+              "defUid": 18,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "MainStageLeft",
+                  "defUid": 19,
+                  "realEditorValues": [
+                    {
+                      "id": "93ba6b6e-4600-55ed-85a1-6a1e272b98f4",
+                      "params": [
+                        "MainStageLeft"
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "height": 326,
+              "iid": "dd4d1544-6131-520f-82cd-c68ebeb76f69",
+              "px": [
+                3020,
+                0
+              ],
+              "width": 18
+            },
+            {
+              "__identifier": "GameplayGate",
+              "__grid": [
+                260,
+                0
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Gate"
+              ],
+              "__tile": null,
+              "__worldX": 4170,
+              "__worldY": 0,
+              "defUid": 18,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "MainStageRight",
+                  "defUid": 19,
+                  "realEditorValues": [
+                    {
+                      "id": "fc315c27-eabe-5d3d-b4e3-748ac201b5c2",
+                      "params": [
+                        "MainStageRight"
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "height": 326,
+              "iid": "5c288dfd-7ddf-5c9e-a0a4-e99bd67fc40f",
+              "px": [
+                4170,
+                0
+              ],
+              "width": 18
+            },
+            {
+              "__identifier": "GameplayGate",
+              "__grid": [
+                526,
+                0
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Gate"
+              ],
+              "__tile": null,
+              "__worldX": 8420,
+              "__worldY": 0,
+              "defUid": 18,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "SpotlightVaultLeft",
+                  "defUid": 19,
+                  "realEditorValues": [
+                    {
+                      "id": "65a25a85-6c4a-5ca5-9564-7c4617734b04",
+                      "params": [
+                        "SpotlightVaultLeft"
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "height": 326,
+              "iid": "35c1c393-30bf-59b4-b16e-cf45e10f9ce4",
+              "px": [
+                8420,
+                0
+              ],
+              "width": 18
+            },
+            {
+              "__identifier": "GameplayGate",
+              "__grid": [
+                581,
+                0
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Gate"
+              ],
+              "__tile": null,
+              "__worldX": 9300,
+              "__worldY": 0,
+              "defUid": 18,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "SpotlightVaultRight",
+                  "defUid": 19,
+                  "realEditorValues": [
+                    {
+                      "id": "1b352c37-eda7-5fa2-9236-0d295e70d851",
+                      "params": [
+                        "SpotlightVaultRight"
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "height": 326,
+              "iid": "da93a0ac-8d4f-5214-a4da-6a70dc074807",
+              "px": [
+                9300,
+                0
+              ],
+              "width": 18
+            },
+            {
+              "__identifier": "GameplayGate",
+              "__grid": [
+                738,
+                0
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Gate"
+              ],
+              "__tile": null,
+              "__worldX": 11820,
+              "__worldY": 0,
+              "defUid": 18,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "CardSanctumExit",
+                  "defUid": 19,
+                  "realEditorValues": [
+                    {
+                      "id": "8c788f02-cede-5377-957a-d6e98948ffdd",
+                      "params": [
+                        "CardSanctumExit"
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "height": 520,
+              "iid": "1ca38ce5-d73a-5ff1-b8ff-11467f80d2c2",
+              "px": [
+                11820,
+                0
+              ],
+              "width": 18
+            },
+            {
+              "__identifier": "GameplayGate",
+              "__grid": [
+                888,
+                0
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Gate"
+              ],
+              "__tile": null,
+              "__worldX": 14220,
+              "__worldY": 0,
+              "defUid": 18,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "RoyalBoxExit",
+                  "defUid": 19,
+                  "realEditorValues": [
+                    {
+                      "id": "756830a0-f3de-5be7-917e-6a27f805562f",
+                      "params": [
+                        "RoyalBoxExit"
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "height": 520,
+              "iid": "594b1199-9258-5750-a547-91d23ef408e9",
+              "px": [
+                14220,
+                0
+              ],
+              "width": 18
+            },
+            {
+              "__identifier": "GameplayGate",
+              "__grid": [
+                957,
+                0
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Gate"
+              ],
+              "__tile": null,
+              "__worldX": 15318,
+              "__worldY": 0,
+              "defUid": 18,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "MirrorRelay",
+                  "defUid": 19,
+                  "realEditorValues": [
+                    {
+                      "id": "701b387c-aeda-5bf6-974b-c37636fec55d",
+                      "params": [
+                        "MirrorRelay"
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "height": 520,
+              "iid": "78dee108-b19a-5065-8ca8-d85867c72978",
+              "px": [
+                15318,
+                0
+              ],
+              "width": 18
+            },
+            {
+              "__identifier": "GameplayGate",
+              "__grid": [
+                1115,
+                0
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Gate"
+              ],
+              "__tile": null,
+              "__worldX": 17845,
+              "__worldY": 0,
+              "defUid": 18,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "MirrorBoss",
+                  "defUid": 19,
+                  "realEditorValues": [
+                    {
+                      "id": "7f5a1c68-368d-5058-9d48-e867f5fd0dbd",
+                      "params": [
+                        "MirrorBoss"
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "height": 520,
+              "iid": "d9897477-9814-5327-b3c0-d91ea7358c0e",
+              "px": [
+                17845,
+                0
+              ],
+              "width": 18
+            },
+            {
+              "__identifier": "GameplayGate",
+              "__grid": [
+                1163,
+                0
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Gate"
+              ],
+              "__tile": null,
+              "__worldX": 18618,
+              "__worldY": 0,
+              "defUid": 18,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "MirrorExit",
+                  "defUid": 19,
+                  "realEditorValues": [
+                    {
+                      "id": "64638f1d-2f07-558e-8c32-6074a95e7be6",
+                      "params": [
+                        "MirrorExit"
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "height": 520,
+              "iid": "32dcde8b-fd6d-57ce-90d9-2d55aeaabd6a",
+              "px": [
+                18618,
+                0
+              ],
+              "width": 18
             }
           ],
           "gridTiles": [],

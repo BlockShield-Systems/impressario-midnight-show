@@ -27,6 +27,11 @@ import {
   WORLD_SOLIDS,
   WORLD_WIDTH
 } from "./world/WorldLayout";
+import {
+  getWorldCheckpoint,
+  getWorldGate,
+  type WorldGateId
+} from "./world/WorldGameplay";
 import { EnvironmentTileRenderer } from "./world/EnvironmentTileRenderer";
 
 /* -------------------------------------------------------------------------- */
@@ -95,6 +100,19 @@ function clamp(
   maximum: number
 ): number {
   return Math.max(minimum, Math.min(maximum, value));
+}
+
+function createWorldGate(
+  id: WorldGateId
+): Phaser.Geom.Rectangle {
+  const gate = getWorldGate(id);
+
+  return new Phaser.Geom.Rectangle(
+    gate.x,
+    gate.y,
+    gate.width,
+    gate.height
+  );
 }
 
 /* -------------------------------------------------------------------------- */
@@ -845,20 +863,10 @@ class GameScene extends Phaser.Scene {
   private collisionWorld!: CollisionWorld;
 
   private readonly arenaLeftGate =
-    new Phaser.Geom.Rectangle(
-      3020,
-      0,
-      18,
-      326
-    );
+    createWorldGate("MainStageLeft");
 
   private readonly arenaRightGate =
-    new Phaser.Geom.Rectangle(
-      4170,
-      0,
-      18,
-      326
-    );
+    createWorldGate("MainStageRight");
 
   private arenaGateGraphics!: Phaser.GameObjects.Graphics;
   private encounterText!: Phaser.GameObjects.Text;
@@ -881,20 +889,10 @@ class GameScene extends Phaser.Scene {
   private spotlightVaultCleared = false;
 
   private readonly vaultLeftGate =
-    new Phaser.Geom.Rectangle(
-      8420,
-      0,
-      18,
-      326
-    );
+    createWorldGate("SpotlightVaultLeft");
 
   private readonly vaultRightGate =
-    new Phaser.Geom.Rectangle(
-      9300,
-      0,
-      18,
-      326
-    );
+    createWorldGate("SpotlightVaultRight");
 
   private vaultGateGraphics!: Phaser.GameObjects.Graphics;
   private vaultObjectiveText!: Phaser.GameObjects.Text;
@@ -904,12 +902,7 @@ class GameScene extends Phaser.Scene {
   private cardSanctumCleared = false;
 
   private readonly sanctumExitGate =
-    new Phaser.Geom.Rectangle(
-      11820,
-      0,
-      18,
-      520
-    );
+    createWorldGate("CardSanctumExit");
 
   private sanctumGateGraphics!: Phaser.GameObjects.Graphics;
   private sanctumObjectiveText!: Phaser.GameObjects.Text;
@@ -919,12 +912,7 @@ class GameScene extends Phaser.Scene {
   private royalBoxCleared = false;
 
   private readonly royalBoxExitGate =
-    new Phaser.Geom.Rectangle(
-      14220,
-      0,
-      18,
-      520
-    );
+    createWorldGate("RoyalBoxExit");
 
   private royalBoxGateGraphics!: Phaser.GameObjects.Graphics;
   private royalBoxObjectiveText!: Phaser.GameObjects.Text;
@@ -968,10 +956,15 @@ class GameScene extends Phaser.Scene {
 
     this.playerInput = new PlayerInput();
 
+    const initialCheckpoint =
+      getWorldCheckpoint(
+        "InitialSpawn"
+      );
+
     this.player = new PlayerController(
       this.collisionWorld,
-      72,
-      270
+      initialCheckpoint.x,
+      initialCheckpoint.y
     );
 
     this.playerHealth =
@@ -1842,14 +1835,14 @@ class GameScene extends Phaser.Scene {
   private updateRoyalBox(): void {
     if (
       !this.royalBoxEntered &&
-      this.player.x >= 12020
+      this.player.x >= getWorldCheckpoint("RoyalBox").triggerX
     ) {
       this.royalBoxEntered = true;
 
       this.playerHealth.setCheckpoint(
-        12030,
-        296,
-        "The Fractured Royal Box"
+        getWorldCheckpoint(
+          "RoyalBox"
+        )
       );
 
       this.cameras.main.flash(
@@ -2300,14 +2293,14 @@ class GameScene extends Phaser.Scene {
   private updateCardSanctum(): void {
     if (
       !this.cardSanctumEntered &&
-      this.player.x >= 9620
+      this.player.x >= getWorldCheckpoint("CardSanctum").triggerX
     ) {
       this.cardSanctumEntered = true;
 
       this.playerHealth.setCheckpoint(
-        9620,
-        296,
-        "The Card Sanctum"
+        getWorldCheckpoint(
+          "CardSanctum"
+        )
       );
     }
 
@@ -2698,14 +2691,14 @@ class GameScene extends Phaser.Scene {
   private updateSpotlightVault(): void {
     if (
       !this.spotlightVaultEntered &&
-      this.player.x >= 8250
+      this.player.x >= getWorldCheckpoint("SpotlightVault").triggerX
     ) {
       this.spotlightVaultEntered = true;
 
       this.playerHealth.setCheckpoint(
-        8240,
-        296,
-        "The Spotlight Vault"
+        getWorldCheckpoint(
+          "SpotlightVault"
+        )
       );
 
       this.magicSystem.unlock();
@@ -3095,14 +3088,14 @@ class GameScene extends Phaser.Scene {
   private updateGalleryGauntlet(): void {
     if (
       !this.galleryGauntletEntered &&
-      this.player.x >= 6370
+      this.player.x >= getWorldCheckpoint("GalleryGauntlet").triggerX
     ) {
       this.galleryGauntletEntered = true;
 
       this.playerHealth.setCheckpoint(
-        6385,
-        296,
-        "Gallery Gauntlet"
+        getWorldCheckpoint(
+          "GalleryGauntlet"
+        )
       );
     }
 
@@ -3136,14 +3129,14 @@ class GameScene extends Phaser.Scene {
 
     if (
       !this.galleryMidpointActivated &&
-      this.player.x >= 7490
+      this.player.x >= getWorldCheckpoint("GauntletMidpoint").triggerX
     ) {
       this.galleryMidpointActivated = true;
 
       this.playerHealth.setCheckpoint(
-        7490,
-        296,
-        "Gauntlet Midpoint"
+        getWorldCheckpoint(
+          "GauntletMidpoint"
+        )
       );
     }
 
@@ -3805,14 +3798,14 @@ class GameScene extends Phaser.Scene {
 
     if (
       !this.grandGalleryCheckpointActivated &&
-      this.player.x >= 4860
+      this.player.x >= getWorldCheckpoint("GrandGallery").triggerX
     ) {
       this.grandGalleryCheckpointActivated = true;
 
       this.playerHealth.setCheckpoint(
-        4840,
-        296,
-        "The Grand Gallery"
+        getWorldCheckpoint(
+          "GrandGallery"
+        )
       );
     }
   }
@@ -3849,14 +3842,14 @@ class GameScene extends Phaser.Scene {
   private updateEncounter(): void {
     if (
       !this.checkpointActivated &&
-      this.player.x >= 2940
+      this.player.x >= getWorldCheckpoint("MainStage").triggerX
     ) {
       this.checkpointActivated = true;
 
       this.playerHealth.setCheckpoint(
-        2960,
-        296,
-        "The Main Stage"
+        getWorldCheckpoint(
+          "MainStage"
+        )
       );
     }
 

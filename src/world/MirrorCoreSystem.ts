@@ -1,4 +1,9 @@
 import Phaser from "phaser";
+import {
+  getWorldCheckpoint,
+  getWorldGate,
+  type WorldGateId
+} from "./WorldGameplay";
 import { BossView } from "../boss/BossView";
 import { EnemyView } from "../enemies/EnemyView";
 import { leaderboard } from "../leaderboard/LeaderboardClient";
@@ -21,6 +26,19 @@ import type {
 } from "../player/PlayerHealthSystem";
 
 export const MIRROR_CORE_START_X = 14400;
+
+function createWorldGate(
+  id: WorldGateId
+): Phaser.Geom.Rectangle {
+  const gate = getWorldGate(id);
+
+  return new Phaser.Geom.Rectangle(
+    gate.x,
+    gate.y,
+    gate.width,
+    gate.height
+  );
+}
 export const MIRROR_CORE_END_X = 18720;
 
 interface MovingMirror {
@@ -1506,28 +1524,13 @@ export class MirrorCoreSystem {
     Phaser.GameObjects.Text;
 
   private readonly relayGate =
-    new Phaser.Geom.Rectangle(
-      15318,
-      0,
-      18,
-      520
-    );
+    createWorldGate("MirrorRelay");
 
   private readonly bossGate =
-    new Phaser.Geom.Rectangle(
-      17845,
-      0,
-      18,
-      520
-    );
+    createWorldGate("MirrorBoss");
 
   private readonly exitGate =
-    new Phaser.Geom.Rectangle(
-      18618,
-      0,
-      18,
-      520
-    );
+    createWorldGate("MirrorExit");
 
   private readonly relays:
     MirrorRelay[];
@@ -1989,14 +1992,14 @@ export class MirrorCoreSystem {
   private updateProgression(): void {
     if (
       !this.entered &&
-      this.player.x >= 14420
+      this.player.x >= getWorldCheckpoint("MirrorCore").triggerX
     ) {
       this.entered = true;
 
       this.playerHealth.setCheckpoint(
-        14430,
-        296,
-        "The Mirror Core"
+        getWorldCheckpoint(
+          "MirrorCore"
+        )
       );
 
       this.scene.cameras.main.flash(
@@ -2038,9 +2041,9 @@ export class MirrorCoreSystem {
       this.removeSolid(this.bossGate);
 
       this.playerHealth.setCheckpoint(
-        16315,
-        296,
-        "Core Chamber"
+        getWorldCheckpoint(
+          "CoreChamber"
+        )
       );
 
       this.scene.cameras.main.flash(
@@ -2081,10 +2084,10 @@ export class MirrorCoreSystem {
     this.removeSolid(this.relayGate);
 
     this.playerHealth.setCheckpoint(
-      15345,
-      296,
-      "Mirror Relays"
-    );
+        getWorldCheckpoint(
+          "MirrorRelays"
+        )
+      );
 
     this.scene.cameras.main.shake(
       180,

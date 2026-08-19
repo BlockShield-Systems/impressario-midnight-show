@@ -30,10 +30,10 @@
     "audio:runtime:validate": "node scripts/validate-audio-runtime.mjs",
     "test:audio:e2e": "playwright test tests/audio-runtime.spec.ts",
     "test:audio:e2e:headed": "playwright test tests/audio-runtime.spec.ts --headed",
-    "levels:sync": "node scripts/sync-ldtk-world.mjs",
-    "levels:validate": "node scripts/sync-ldtk-world.mjs --check && node scripts/validate-world-runtime.mjs",
+    "levels:sync": "node scripts/sync-ldtk-world.mjs && node scripts/sync-ldtk-gameplay.mjs",
+    "levels:validate": "node scripts/sync-ldtk-world.mjs --check && node scripts/sync-ldtk-gameplay.mjs --check && node scripts/validate-world-runtime.mjs && node scripts/validate-world-gameplay.mjs",
     "assets:world": "python3 scripts/generate-environment-tiles.py",
-    "world:validate": "node scripts/validate-world-runtime.mjs"
+    "world:validate": "node scripts/validate-world-runtime.mjs && node scripts/validate-world-gameplay.mjs"
   },
   "dependencies": {
     "phaser": "4.2.1"
