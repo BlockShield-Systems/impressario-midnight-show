@@ -28,7 +28,7 @@ if (!level) {
 }
 
 if (
-  Number(level.pxWid) !== 18720 ||
+  Number(level.pxWid) !== 49824 ||
   Number(level.pxHei) !== 720
 ) {
   throw new Error(
@@ -59,9 +59,9 @@ const sections =
       entity.__identifier === "Section"
   );
 
-if (collisions.length !== 141) {
+if (collisions.length !== 472) {
   throw new Error(
-    `Expected 141 collisions, got ${collisions.length}.`
+    `Expected 472 collisions, got ${collisions.length}.`
   );
 }
 
@@ -198,7 +198,7 @@ for (const file of sourceFiles) {
 }
 
 console.log(
-  "World runtime valid: 18720x720, " +
-  "141 collisions, 11 LDtk-driven visual sections, " +
+  "World runtime valid: 49824x720, " +
+  "472 collisions, 11 LDtk-driven visual sections, " +
   "dynamic combat camera bounds."
 );

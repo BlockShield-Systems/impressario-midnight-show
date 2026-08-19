@@ -44,7 +44,7 @@ function createWorldGate(
     gate.height
   );
 }
-export const MIRROR_CORE_END_X = 18720;
+export const MIRROR_CORE_END_X = 49824;
 
 interface MovingMirror {
   readonly solid: Phaser.Geom.Rectangle;
