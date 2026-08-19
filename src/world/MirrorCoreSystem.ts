@@ -1092,10 +1092,6 @@ implements CombatTarget {
   }
 
   public reset(): void {
-    if (this.defeated) {
-      return;
-    }
-
     this.x = 16785;
     this.y = 205;
 

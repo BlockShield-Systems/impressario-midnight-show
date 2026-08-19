@@ -132,6 +132,10 @@ export class BossView {
     this.sequenceActive = false;
     this.currentTag = null;
 
+    // Cancel a pending defeat-sequence callback. Without this, a
+    // simultaneous player/boss death can complete the finale after respawn.
+    this.sprite.off("animationcomplete");
+
     this.scene.tweens.killTweensOf(
       this.sprite
     );
