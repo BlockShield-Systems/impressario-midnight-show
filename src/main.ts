@@ -21,6 +21,7 @@ import { MirrorCoreSystem } from "./world/MirrorCoreSystem";
 import { AudioDirector } from "./audio/AudioDirector";
 import { MusicDirector } from "./audio/MusicDirector";
 import { AudioRuntimeBridge } from "./audio/AudioRuntimeBridge";
+import { AudioDebugHud } from "./audio/AudioDebugHud";
 
 /* -------------------------------------------------------------------------- */
 /* Configuration                                                              */
@@ -836,6 +837,7 @@ class GameScene extends Phaser.Scene {
   private audioDirector!: AudioDirector;
   private musicDirector!: MusicDirector;
   private audioBridge!: AudioRuntimeBridge;
+  private audioDebugHud!: AudioDebugHud;
 
   private collisionWorld!: CollisionWorld;
 
@@ -1116,6 +1118,12 @@ class GameScene extends Phaser.Scene {
         this.magicSystem
       );
 
+    this.audioDebugHud =
+      new AudioDebugHud(
+        this,
+        this.audioDirector
+      );
+
     this.createLabels();
     this.createEncounterPresentation();
     this.createDebugHud();
@@ -1206,6 +1214,7 @@ class GameScene extends Phaser.Scene {
 
     this.audioBridge.update(frameDelta);
     this.audioDirector.update(frameDelta);
+    this.audioDebugHud.update(frameDelta);
 
     this.updateDebugHud();
   }

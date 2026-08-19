@@ -7,6 +7,10 @@ import {
 
 import { AudioSettings } from "./AudioSettings";
 
+import {
+  BOOTSTRAP_AUDIO_IDS
+} from "./AudioLoadPlan";
+
 import type {
   AudioAssetId
 } from "./AudioManifest";
@@ -30,6 +34,9 @@ interface ManagedSound {
 }
 
 const KEY_PREFIX = "audio:";
+
+const LOAD_ERROR_EVENT = "loaderror";
+const LOAD_COMPLETE_EVENT = "complete";
 
 function ownerId(
   id: AudioAssetId
@@ -64,17 +71,21 @@ export class AudioDirector {
   public static preload(
     scene: Phaser.Scene
   ): void {
-    const loadedOwners = new Set<string>();
+    const owners = new Set<AudioAssetId>();
 
-    for (const asset of AUDIO_ASSETS) {
-      const owner =
-        asset.aliasOf ?? asset.id;
+    for (const id of BOOTSTRAP_AUDIO_IDS) {
+      owners.add(ownerId(id));
+    }
 
-      if (loadedOwners.has(owner)) {
-        continue;
+    for (const owner of owners) {
+      const asset =
+        AUDIO_ASSET_BY_ID.get(owner);
+
+      if (!asset) {
+        throw new Error(
+          `Missing bootstrap audio asset: ${owner}`
+        );
       }
-
-      loadedOwners.add(owner);
 
       scene.load.audio(
         `${KEY_PREFIX}${owner}`,
@@ -86,6 +97,14 @@ export class AudioDirector {
     }
   }
 
+  private loadQueue:
+    Promise<void> =
+      Promise.resolve();
+
+  private loadingOwnerCount = 0;
+  private lastLoadError:
+    string | null = null;
+
   public constructor(
     private readonly scene: Phaser.Scene
   ) {
@@ -93,6 +112,125 @@ export class AudioDirector {
       Phaser.Scenes.Events.SHUTDOWN,
       () => this.destroy()
     );
+
+    window.addEventListener(
+      "pointerdown",
+      this.unlockAudio,
+      {
+        passive: true
+      }
+    );
+
+    window.addEventListener(
+      "keydown",
+      this.unlockAudio
+    );
+
+    void this.resumeAudioContext();
+  }
+
+  public preload(
+    ids: readonly AudioAssetId[]
+  ): Promise<void> {
+    const owners =
+      [...new Set(
+        ids.map(id => ownerId(id))
+      )];
+
+    const task =
+      this.loadQueue
+        .catch(() => undefined)
+        .then(
+          () => this.loadOwners(owners)
+        );
+
+    this.loadQueue = task;
+    return task;
+  }
+
+  public getDebugSnapshot(): {
+    readonly activeSounds: number;
+    readonly activeLoops: number;
+    readonly loadingOwners: number;
+    readonly cachedOwners: number;
+    readonly totalOwners: number;
+    readonly contextState: string;
+    readonly lastLoadError: string | null;
+  } {
+    const owners =
+      new Set(
+        AUDIO_ASSETS.map(
+          asset =>
+            ownerId(
+              asset.id as AudioAssetId
+            )
+        )
+      );
+
+    let cachedOwners = 0;
+
+    for (const owner of owners) {
+      if (
+        this.scene.cache.audio.exists(
+          `${KEY_PREFIX}${owner}`
+        )
+      ) {
+        cachedOwners += 1;
+      }
+    }
+
+    const context =
+      this.getAudioContext();
+
+    return {
+      activeSounds:
+        this.managed.size,
+      activeLoops:
+        [...this.managed].filter(
+          item =>
+            AUDIO_ASSET_BY_ID
+              .get(item.id)
+              ?.loop === true
+        ).length,
+      loadingOwners:
+        this.loadingOwnerCount,
+      cachedOwners,
+      totalOwners:
+        owners.size,
+      contextState:
+        context?.state ?? "html5",
+      lastLoadError:
+        this.lastLoadError
+    };
+  }
+
+  public toggleBusMuted(
+    bus: AudioBus
+  ): void {
+    const current =
+      this.settings.get(bus);
+
+    this.settings.setMuted(
+      bus,
+      !current.muted
+    );
+
+    this.refreshVolumes();
+  }
+
+  public adjustBusVolume(
+    bus: AudioBus,
+    delta: number
+  ): void {
+    const current =
+      this.settings.get(bus);
+
+    this.settings.setVolume(
+      bus,
+      current.volume + delta
+    );
+
+    this.refreshVolumes();
   }
 
   public update(
@@ -154,9 +292,21 @@ export class AudioDirector {
     }
 
     const owner = ownerId(id);
+    const key = `${KEY_PREFIX}${owner}`;
+
+    if (
+      !this.scene.cache.audio.exists(key)
+    ) {
+      console.warn(
+        `[audio] Asset not loaded yet: ${id}`
+      );
+
+      return null;
+    }
+
     const sound =
       this.scene.sound.add(
-        `${KEY_PREFIX}${owner}`
+        key
       ) as VolumeControllableSound;
 
     const managed: ManagedSound = {
@@ -346,7 +496,143 @@ export class AudioDirector {
     );
   }
 
+  private async loadOwners(
+    owners: readonly AudioAssetId[]
+  ): Promise<void> {
+    const missing =
+      owners.filter(
+        owner =>
+          !this.scene.cache.audio.exists(
+            `${KEY_PREFIX}${owner}`
+          )
+      );
+
+    if (missing.length === 0) {
+      return;
+    }
+
+    this.loadingOwnerCount =
+      missing.length;
+
+    this.lastLoadError = null;
+
+    await new Promise<void>(
+      (resolve, reject) => {
+        const failed: string[] = [];
+
+        const onLoadError = (
+          file: {
+            readonly key?: string;
+          }
+        ): void => {
+          failed.push(
+            file.key ?? "unknown"
+          );
+        };
+
+        const onComplete = (): void => {
+          this.scene.load.off(
+            LOAD_ERROR_EVENT,
+            onLoadError
+          );
+
+          this.loadingOwnerCount = 0;
+
+          if (failed.length > 0) {
+            this.lastLoadError =
+              failed.join(", ");
+
+            reject(
+              new Error(
+                `Audio loading failed: ${
+                  failed.join(", ")
+                }`
+              )
+            );
+
+            return;
+          }
+
+          resolve();
+        };
+
+        this.scene.load.on(
+          LOAD_ERROR_EVENT,
+          onLoadError
+        );
+
+        this.scene.load.once(
+          LOAD_COMPLETE_EVENT,
+          onComplete
+        );
+
+        for (const owner of missing) {
+          const asset =
+            AUDIO_ASSET_BY_ID.get(owner);
+
+          if (!asset) {
+            failed.push(owner);
+            continue;
+          }
+
+          this.scene.load.audio(
+            `${KEY_PREFIX}${owner}`,
+            [
+              asset.primaryUrl,
+              asset.fallbackUrl
+            ]
+          );
+        }
+
+        this.scene.load.start();
+      }
+    );
+  }
+
+  private getAudioContext():
+    AudioContext | undefined {
+    const manager =
+      this.scene.sound as
+        Phaser.Sound.BaseSoundManager & {
+          context?: AudioContext;
+        };
+
+    return manager.context;
+  }
+
+  private async resumeAudioContext():
+    Promise<void> {
+    const context =
+      this.getAudioContext();
+
+    if (
+      context &&
+      context.state === "suspended"
+    ) {
+      try {
+        await context.resume();
+      } catch {
+        // A later user gesture retries the unlock.
+      }
+    }
+  }
+
+  private readonly unlockAudio =
+    (): void => {
+      void this.resumeAudioContext();
+    };
+
   private destroy(): void {
+    window.removeEventListener(
+      "pointerdown",
+      this.unlockAudio
+    );
+
+    window.removeEventListener(
+      "keydown",
+      this.unlockAudio
+    );
+
     for (const item of this.managed) {
       item.sound.stop();
       item.sound.destroy();

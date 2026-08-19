@@ -4,6 +4,10 @@ import {
   AUDIO_EVENTS
 } from "./AudioEvents";
 
+import {
+  ZONE_AUDIO_IDS
+} from "./AudioLoadPlan";
+
 import type {
   AudioAssetId
 } from "./AudioManifest";
@@ -196,6 +200,7 @@ export class AudioRuntimeBridge {
   private stepVariant = false;
 
   private zoneIndex = -1;
+  private zoneLoadGeneration = 0;
 
   private readonly playedVoice =
     new Set<AudioAssetId>();
@@ -502,48 +507,92 @@ export class AudioRuntimeBridge {
 
     this.zoneIndex = nextIndex;
 
-    const zone =
-      ZONES[nextIndex]!;
+    const generation =
+      ++this.zoneLoadGeneration;
 
-    this.music.setMusic(
-      zone.music,
-      immediate ? 0 : 1200
-    );
+    const required =
+      ZONE_AUDIO_IDS[nextIndex] ??
+      [];
 
-    this.music.setAmbience(
-      zone.ambience,
-      immediate ? 0 : 1000
-    );
+    void this.audio
+      .preload(required)
+      .then(() => {
+        if (
+          generation !==
+          this.zoneLoadGeneration
+        ) {
+          return;
+        }
 
-    if (
-      zone.voice &&
-      !this.playedVoice.has(zone.voice)
-    ) {
-      this.playedVoice.add(zone.voice);
+        const zone =
+          ZONES[nextIndex]!;
 
-      this.scene.time.delayedCall(
-        immediate ? 500 : 300,
-        () => {
-          this.audio.play(
-            zone.voice!,
-            {
-              gain: 1,
-              maxInstances: 1
+        this.music.setMusic(
+          zone.music,
+          immediate ? 0 : 1200
+        );
+
+        this.music.setAmbience(
+          zone.ambience,
+          immediate ? 0 : 1000
+        );
+
+        if (
+          zone.voice &&
+          !this.playedVoice.has(
+            zone.voice
+          )
+        ) {
+          this.playedVoice.add(
+            zone.voice
+          );
+
+          this.scene.time.delayedCall(
+            immediate ? 500 : 300,
+            () => {
+              this.audio.play(
+                zone.voice!,
+                {
+                  gain: 1,
+                  maxInstances: 1
+                }
+              );
             }
           );
         }
-      );
-    }
 
-    if (previous >= 0) {
-      this.audio.play(
-        "world_checkpoint",
-        {
-          gain: 0.5,
-          cooldownMs: 400
+        if (previous >= 0) {
+          this.audio.play(
+            "world_checkpoint",
+            {
+              gain: 0.5,
+              cooldownMs: 400
+            }
+          );
         }
-      );
-    }
+
+        const upcoming =
+          ZONE_AUDIO_IDS[
+            nextIndex + 1
+          ];
+
+        if (upcoming) {
+          void this.audio
+            .preload(upcoming)
+            .catch(error => {
+              console.error(
+                "[audio] Upcoming zone preload failed",
+                error
+              );
+            });
+        }
+      })
+      .catch(error => {
+        console.error(
+          `[audio] Zone ${nextIndex} load failed`,
+          error
+        );
+      });
   }
 
   private readonly onEnemyTag = (

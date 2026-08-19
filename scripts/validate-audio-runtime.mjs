@@ -71,6 +71,39 @@ const missing =
     .filter(id => !ids.has(id))
     .sort();
 
+const loadPlanSource =
+  fs.readFileSync(
+    path.join(
+      root,
+      "src/audio/AudioLoadPlan.ts"
+    ),
+    "utf8"
+  );
+
+const loadPlanReferences =
+  new Set(
+    [...loadPlanSource.matchAll(
+      /["']([a-z0-9_]+)["']/g
+    )]
+      .map(match => match[1])
+      .filter(id =>
+        /^(?:music|amb|vo|boss|finale|cane|combo|grand|spotlight|enemy|stagehand|card_enemy|acrobat|wraith|sentry|echo|core_mime|player|world|ui)_/.test(id)
+      )
+  );
+
+const invalidLoadPlanIds =
+  [...loadPlanReferences]
+    .filter(id => !ids.has(id))
+    .sort();
+
+if (invalidLoadPlanIds.length > 0) {
+  console.error(
+    "Unknown load-plan audio IDs:",
+    invalidLoadPlanIds
+  );
+  process.exit(1);
+}
+
 if (missing.length > 0) {
   console.error(
     "Unknown directly referenced audio IDs:",
@@ -108,6 +141,7 @@ for (const asset of manifest.assets) {
 
 console.log(
   `Audio runtime references valid: ` +
-  `${references.size} referenced IDs, ` +
+  `${references.size} direct IDs, ` +
+  `${loadPlanReferences.size} load-plan IDs, ` +
   `${ids.size} manifest IDs.`
 );
