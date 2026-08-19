@@ -11,7 +11,7 @@
   "iid": "49475ace-8d6d-5ace-b9c1-bdfa1f69afc7",
   "jsonVersion": "1.5.3",
   "appBuildId": 50300,
-  "nextUid": 11,
+  "nextUid": 14,
   "identifierStyle": "Capitalize",
   "toc": [],
   "worldLayout": "Free",
@@ -150,6 +150,99 @@
             "useForSmartColor": false,
             "min": null,
             "max": null,
+            "regex": null,
+            "acceptFileTypes": null,
+            "defaultOverride": null,
+            "textLanguageMode": null,
+            "symmetricalRef": false,
+            "autoChainRef": true,
+            "allowOutOfLevelRef": true,
+            "allowedRefs": "Any",
+            "allowedRefTags": [],
+            "tilesetUid": null
+          },
+          {
+            "__type": "Int",
+            "identifier": "TextureFrame",
+            "uid": 11,
+            "type": "F_Int",
+            "isArray": false,
+            "canBeNull": false,
+            "arrayMinLength": null,
+            "arrayMaxLength": null,
+            "editorDisplayMode": "NameAndValue",
+            "editorDisplayPos": "Above",
+            "editorLinkStyle": "ZigZag",
+            "editorShowInWorld": true,
+            "editorAlwaysShow": true,
+            "editorCutLongValues": false,
+            "editorTextSuffix": null,
+            "editorTextPrefix": null,
+            "useForSmartColor": false,
+            "min": 0,
+            "max": 63,
+            "regex": null,
+            "acceptFileTypes": null,
+            "defaultOverride": null,
+            "textLanguageMode": null,
+            "symmetricalRef": false,
+            "autoChainRef": true,
+            "allowOutOfLevelRef": true,
+            "allowedRefs": "Any",
+            "allowedRefTags": [],
+            "tilesetUid": null
+          },
+          {
+            "__type": "String",
+            "identifier": "LightColor",
+            "uid": 12,
+            "type": "F_String",
+            "isArray": false,
+            "canBeNull": false,
+            "arrayMinLength": null,
+            "arrayMaxLength": null,
+            "editorDisplayMode": "NameAndValue",
+            "editorDisplayPos": "Above",
+            "editorLinkStyle": "ZigZag",
+            "editorShowInWorld": true,
+            "editorAlwaysShow": true,
+            "editorCutLongValues": false,
+            "editorTextSuffix": null,
+            "editorTextPrefix": null,
+            "useForSmartColor": false,
+            "min": null,
+            "max": null,
+            "regex": null,
+            "acceptFileTypes": null,
+            "defaultOverride": null,
+            "textLanguageMode": null,
+            "symmetricalRef": false,
+            "autoChainRef": true,
+            "allowOutOfLevelRef": true,
+            "allowedRefs": "Any",
+            "allowedRefTags": [],
+            "tilesetUid": null
+          },
+          {
+            "__type": "Int",
+            "identifier": "LightSpacing",
+            "uid": 13,
+            "type": "F_Int",
+            "isArray": false,
+            "canBeNull": false,
+            "arrayMinLength": null,
+            "arrayMaxLength": null,
+            "editorDisplayMode": "NameAndValue",
+            "editorDisplayPos": "Above",
+            "editorLinkStyle": "ZigZag",
+            "editorShowInWorld": true,
+            "editorAlwaysShow": true,
+            "editorCutLongValues": false,
+            "editorTextSuffix": null,
+            "editorTextPrefix": null,
+            "useForSmartColor": false,
+            "min": 240,
+            "max": 960,
             "regex": null,
             "acceptFileTypes": null,
             "defaultOverride": null,
@@ -3694,6 +3787,48 @@
                       ]
                     }
                   ]
+                },
+                {
+                  "__identifier": "TextureFrame",
+                  "__type": "Int",
+                  "__value": 0,
+                  "defUid": 11,
+                  "realEditorValues": [
+                    {
+                      "id": "0edcbcfd-3970-55b1-8778-77e2bea9de13",
+                      "params": [
+                        0
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "LightColor",
+                  "__type": "String",
+                  "__value": "#F2C95E",
+                  "defUid": 12,
+                  "realEditorValues": [
+                    {
+                      "id": "07e9bbcc-5d6f-5016-ac39-003c0aa8031f",
+                      "params": [
+                        "#F2C95E"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "LightSpacing",
+                  "__type": "Int",
+                  "__value": 520,
+                  "defUid": 13,
+                  "realEditorValues": [
+                    {
+                      "id": "a1933ff7-6d46-5ca0-a984-f246ec0a9e86",
+                      "params": [
+                        520
+                      ]
+                    }
+                  ]
                 }
               ],
               "height": 720,
@@ -3732,6 +3867,48 @@
                       "id": "549fb4bd-3b8a-500d-9a25-48055bd6a519",
                       "params": [
                         "CombatRehearsal"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "TextureFrame",
+                  "__type": "Int",
+                  "__value": 1,
+                  "defUid": 11,
+                  "realEditorValues": [
+                    {
+                      "id": "28b7e8ee-2e75-54d2-ad3e-ab0d1e02b17a",
+                      "params": [
+                        1
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "LightColor",
+                  "__type": "String",
+                  "__value": "#E0608C",
+                  "defUid": 12,
+                  "realEditorValues": [
+                    {
+                      "id": "8ff289cb-21bd-53ce-bbbf-9d1d66732fac",
+                      "params": [
+                        "#E0608C"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "LightSpacing",
+                  "__type": "Int",
+                  "__value": 480,
+                  "defUid": 13,
+                  "realEditorValues": [
+                    {
+                      "id": "80b9ff1b-8783-53c4-b49a-f62c3c433ded",
+                      "params": [
+                        480
                       ]
                     }
                   ]
@@ -3776,6 +3953,48 @@
                       ]
                     }
                   ]
+                },
+                {
+                  "__identifier": "TextureFrame",
+                  "__type": "Int",
+                  "__value": 2,
+                  "defUid": 11,
+                  "realEditorValues": [
+                    {
+                      "id": "555f3a09-b406-5def-a175-a09fffe31b99",
+                      "params": [
+                        2
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "LightColor",
+                  "__type": "String",
+                  "__value": "#F2C95E",
+                  "defUid": 12,
+                  "realEditorValues": [
+                    {
+                      "id": "8f876222-1135-5491-99a1-ad01a29df814",
+                      "params": [
+                        "#F2C95E"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "LightSpacing",
+                  "__type": "Int",
+                  "__value": 520,
+                  "defUid": 13,
+                  "realEditorValues": [
+                    {
+                      "id": "6dd4528b-c4c7-53dd-8edf-82f2071d33f5",
+                      "params": [
+                        520
+                      ]
+                    }
+                  ]
                 }
               ],
               "height": 720,
@@ -3814,6 +4033,48 @@
                       "id": "1de40a83-aa27-5f15-a936-03da22f311f2",
                       "params": [
                         "GrandGallery"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "TextureFrame",
+                  "__type": "Int",
+                  "__value": 3,
+                  "defUid": 11,
+                  "realEditorValues": [
+                    {
+                      "id": "250940d1-f63b-5ecd-a03d-6f1722a735c8",
+                      "params": [
+                        3
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "LightColor",
+                  "__type": "String",
+                  "__value": "#61DCE9",
+                  "defUid": 12,
+                  "realEditorValues": [
+                    {
+                      "id": "94607fa0-3e62-5929-bbe7-275c71132b50",
+                      "params": [
+                        "#61DCE9"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "LightSpacing",
+                  "__type": "Int",
+                  "__value": 540,
+                  "defUid": 13,
+                  "realEditorValues": [
+                    {
+                      "id": "e77c942b-b1bc-5e95-87ca-e54bd6d56f0e",
+                      "params": [
+                        540
                       ]
                     }
                   ]
@@ -3858,6 +4119,48 @@
                       ]
                     }
                   ]
+                },
+                {
+                  "__identifier": "TextureFrame",
+                  "__type": "Int",
+                  "__value": 4,
+                  "defUid": 11,
+                  "realEditorValues": [
+                    {
+                      "id": "06455ccf-24af-5ac0-b64e-f9faa239a8d2",
+                      "params": [
+                        4
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "LightColor",
+                  "__type": "String",
+                  "__value": "#66E6EF",
+                  "defUid": 12,
+                  "realEditorValues": [
+                    {
+                      "id": "09b32a7b-258f-54c4-87f9-e12bd23801dd",
+                      "params": [
+                        "#66E6EF"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "LightSpacing",
+                  "__type": "Int",
+                  "__value": 480,
+                  "defUid": 13,
+                  "realEditorValues": [
+                    {
+                      "id": "c3efc4f5-cf5d-5eb8-9836-edd9d19fe313",
+                      "params": [
+                        480
+                      ]
+                    }
+                  ]
                 }
               ],
               "height": 720,
@@ -3896,6 +4199,48 @@
                       "id": "900b04cc-95bd-5be9-b442-ea73f717b1ee",
                       "params": [
                         "SpotlightVault"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "TextureFrame",
+                  "__type": "Int",
+                  "__value": 5,
+                  "defUid": 11,
+                  "realEditorValues": [
+                    {
+                      "id": "65c22e42-7448-5b1f-aa4f-e5a29e435d26",
+                      "params": [
+                        5
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "LightColor",
+                  "__type": "String",
+                  "__value": "#E85DCC",
+                  "defUid": 12,
+                  "realEditorValues": [
+                    {
+                      "id": "bd16d08c-444f-5bdf-94fb-d33a1e8b0e9a",
+                      "params": [
+                        "#E85DCC"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "LightSpacing",
+                  "__type": "Int",
+                  "__value": 440,
+                  "defUid": 13,
+                  "realEditorValues": [
+                    {
+                      "id": "3deb658b-ec92-57b8-a54d-f3e3dcc6e614",
+                      "params": [
+                        440
                       ]
                     }
                   ]
@@ -3940,6 +4285,48 @@
                       ]
                     }
                   ]
+                },
+                {
+                  "__identifier": "TextureFrame",
+                  "__type": "Int",
+                  "__value": 6,
+                  "defUid": 11,
+                  "realEditorValues": [
+                    {
+                      "id": "f50bfa69-cf28-5321-b276-1647e474cd0b",
+                      "params": [
+                        6
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "LightColor",
+                  "__type": "String",
+                  "__value": "#E6B754",
+                  "defUid": 12,
+                  "realEditorValues": [
+                    {
+                      "id": "836d1969-5558-5c18-8051-4fcdcd851e73",
+                      "params": [
+                        "#E6B754"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "LightSpacing",
+                  "__type": "Int",
+                  "__value": 520,
+                  "defUid": 13,
+                  "realEditorValues": [
+                    {
+                      "id": "00671c90-210a-56e4-b8cb-3c4d5af9c7fb",
+                      "params": [
+                        520
+                      ]
+                    }
+                  ]
                 }
               ],
               "height": 720,
@@ -3978,6 +4365,48 @@
                       "id": "e7aca760-aaf1-51be-ad85-3c4ca4e5833c",
                       "params": [
                         "RoyalBox"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "TextureFrame",
+                  "__type": "Int",
+                  "__value": 7,
+                  "defUid": 11,
+                  "realEditorValues": [
+                    {
+                      "id": "cb7be247-5beb-5aa9-92b7-1ec0de05f866",
+                      "params": [
+                        7
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "LightColor",
+                  "__type": "String",
+                  "__value": "#66DCE9",
+                  "defUid": 12,
+                  "realEditorValues": [
+                    {
+                      "id": "f6ff22b1-0e08-5a0b-ae05-29eeb492e0b5",
+                      "params": [
+                        "#66DCE9"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "LightSpacing",
+                  "__type": "Int",
+                  "__value": 500,
+                  "defUid": 13,
+                  "realEditorValues": [
+                    {
+                      "id": "f4652c53-9c41-5b92-851f-b198ed5d8259",
+                      "params": [
+                        500
                       ]
                     }
                   ]
@@ -4022,6 +4451,48 @@
                       ]
                     }
                   ]
+                },
+                {
+                  "__identifier": "TextureFrame",
+                  "__type": "Int",
+                  "__value": 8,
+                  "defUid": 11,
+                  "realEditorValues": [
+                    {
+                      "id": "ab41ec6b-758d-5570-b2ca-60120ec9e519",
+                      "params": [
+                        8
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "LightColor",
+                  "__type": "String",
+                  "__value": "#65E4ED",
+                  "defUid": 12,
+                  "realEditorValues": [
+                    {
+                      "id": "cccc7916-0b91-5a2f-bd0f-cc054b30a31b",
+                      "params": [
+                        "#65E4ED"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "LightSpacing",
+                  "__type": "Int",
+                  "__value": 460,
+                  "defUid": 13,
+                  "realEditorValues": [
+                    {
+                      "id": "aba385fe-4ee5-5d28-aba3-27dd02296fe4",
+                      "params": [
+                        460
+                      ]
+                    }
+                  ]
                 }
               ],
               "height": 720,
@@ -4063,6 +4534,48 @@
                       ]
                     }
                   ]
+                },
+                {
+                  "__identifier": "TextureFrame",
+                  "__type": "Int",
+                  "__value": 10,
+                  "defUid": 11,
+                  "realEditorValues": [
+                    {
+                      "id": "636fd971-cfff-5a07-a675-562b273636d5",
+                      "params": [
+                        10
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "LightColor",
+                  "__type": "String",
+                  "__value": "#F2CA58",
+                  "defUid": 12,
+                  "realEditorValues": [
+                    {
+                      "id": "77287281-f467-5573-b9ff-c0b32b157145",
+                      "params": [
+                        "#F2CA58"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "LightSpacing",
+                  "__type": "Int",
+                  "__value": 360,
+                  "defUid": 13,
+                  "realEditorValues": [
+                    {
+                      "id": "25e92e79-8a1d-59ac-bc11-b95c4db2329c",
+                      "params": [
+                        360
+                      ]
+                    }
+                  ]
                 }
               ],
               "height": 720,
@@ -4101,6 +4614,48 @@
                       "id": "e0d69bb1-5359-5652-9c68-6dd71d621453",
                       "params": [
                         "ConductorApproach"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "TextureFrame",
+                  "__type": "Int",
+                  "__value": 9,
+                  "defUid": 11,
+                  "realEditorValues": [
+                    {
+                      "id": "4e0b5f28-8c60-5a65-a7c1-264c7b2ac3fc",
+                      "params": [
+                        9
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "LightColor",
+                  "__type": "String",
+                  "__value": "#E95ACB",
+                  "defUid": 12,
+                  "realEditorValues": [
+                    {
+                      "id": "f307e589-ca3d-5c97-8d5c-4ff72a38bd17",
+                      "params": [
+                        "#E95ACB"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "__identifier": "LightSpacing",
+                  "__type": "Int",
+                  "__value": 400,
+                  "defUid": 13,
+                  "realEditorValues": [
+                    {
+                      "id": "df58bbda-efbf-534a-92f6-826a1588c6a9",
+                      "params": [
+                        400
                       ]
                     }
                   ]

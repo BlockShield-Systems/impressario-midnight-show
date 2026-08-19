@@ -31,8 +31,9 @@
     "test:audio:e2e": "playwright test tests/audio-runtime.spec.ts",
     "test:audio:e2e:headed": "playwright test tests/audio-runtime.spec.ts --headed",
     "levels:sync": "node scripts/sync-ldtk-world.mjs",
-    "levels:validate": "node scripts/sync-ldtk-world.mjs --check",
-    "assets:world": "python3 scripts/generate-environment-tiles.py"
+    "levels:validate": "node scripts/sync-ldtk-world.mjs --check && node scripts/validate-world-runtime.mjs",
+    "assets:world": "python3 scripts/generate-environment-tiles.py",
+    "world:validate": "node scripts/validate-world-runtime.mjs"
   },
   "dependencies": {
     "phaser": "4.2.1"

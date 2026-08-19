@@ -1,5 +1,10 @@
 import Phaser from "phaser";
 
+import {
+  WORLD_HEIGHT,
+  WORLD_WIDTH
+} from "../world/WorldLayout";
+
 import { EnemyView } from "../enemies/EnemyView";
 import type { PlayerController } from "../main";
 
@@ -852,8 +857,8 @@ export class CombatSystem {
     this.scene.cameras.main.setBounds(
       0,
       0,
-      17280,
-      720
+      WORLD_WIDTH,
+      WORLD_HEIGHT
     );
   }
 

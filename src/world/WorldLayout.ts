@@ -15,6 +15,9 @@ export interface WorldSection {
   readonly id: string;
   readonly startX: number;
   readonly endX: number;
+  readonly textureFrame: number;
+  readonly lightColor: number;
+  readonly lightSpacing: number;
 }
 
 export const WORLD_SOLIDS: readonly WorldSolid[] = [
@@ -162,15 +165,15 @@ export const WORLD_SOLIDS: readonly WorldSolid[] = [
 ] as const;
 
 export const WORLD_SECTIONS: readonly WorldSection[] = [
-  { id: "MovementRehearsal", startX: 0, endX: 2380 },
-  { id: "CombatRehearsal", startX: 2380, endX: 3020 },
-  { id: "MainStage", startX: 3020, endX: 4760 },
-  { id: "GrandGallery", startX: 4760, endX: 6400 },
-  { id: "GalleryGauntlet", startX: 6400, endX: 8200 },
-  { id: "SpotlightVault", startX: 8200, endX: 9600 },
-  { id: "CardSanctum", startX: 9600, endX: 12000 },
-  { id: "RoyalBox", startX: 12000, endX: 14400 },
-  { id: "MirrorCore", startX: 14400, endX: 16423 },
-  { id: "ConductorApproach", startX: 16423, endX: 17863 },
-  { id: "MirrorConductor", startX: 17863, endX: 18720 },
+  { id: "MovementRehearsal", startX: 0, endX: 2380, textureFrame: 0, lightColor: 0xf2c95e, lightSpacing: 520 },
+  { id: "CombatRehearsal", startX: 2380, endX: 3020, textureFrame: 1, lightColor: 0xe0608c, lightSpacing: 480 },
+  { id: "MainStage", startX: 3020, endX: 4760, textureFrame: 2, lightColor: 0xf2c95e, lightSpacing: 520 },
+  { id: "GrandGallery", startX: 4760, endX: 6400, textureFrame: 3, lightColor: 0x61dce9, lightSpacing: 540 },
+  { id: "GalleryGauntlet", startX: 6400, endX: 8200, textureFrame: 4, lightColor: 0x66e6ef, lightSpacing: 480 },
+  { id: "SpotlightVault", startX: 8200, endX: 9600, textureFrame: 5, lightColor: 0xe85dcc, lightSpacing: 440 },
+  { id: "CardSanctum", startX: 9600, endX: 12000, textureFrame: 6, lightColor: 0xe6b754, lightSpacing: 520 },
+  { id: "RoyalBox", startX: 12000, endX: 14400, textureFrame: 7, lightColor: 0x66dce9, lightSpacing: 500 },
+  { id: "MirrorCore", startX: 14400, endX: 16423, textureFrame: 8, lightColor: 0x65e4ed, lightSpacing: 460 },
+  { id: "ConductorApproach", startX: 16423, endX: 17863, textureFrame: 9, lightColor: 0xe95acb, lightSpacing: 400 },
+  { id: "MirrorConductor", startX: 17863, endX: 18720, textureFrame: 10, lightColor: 0xf2ca58, lightSpacing: 360 },
 ] as const;

@@ -2,7 +2,8 @@ import Phaser from "phaser";
 
 import {
   WORLD_HEIGHT,
-  WORLD_SECTIONS
+  WORLD_SECTIONS,
+  WORLD_WIDTH
 } from "./WorldLayout";
 
 const TEXTURE_KEY =
@@ -11,37 +12,9 @@ const TEXTURE_KEY =
 const TEXTURE_URL =
   "/assets/world/impressario-environment.png";
 
-const SECTION_FRAME: Readonly<
-  Record<string, number>
-> = {
-  MovementRehearsal: 0,
-  CombatRehearsal: 1,
-  MainStage: 2,
-  GrandGallery: 3,
-  GalleryGauntlet: 4,
-  SpotlightVault: 5,
-  CardSanctum: 6,
-  RoyalBox: 7,
-  MirrorCore: 8,
-  ConductorApproach: 9,
-  MirrorConductor: 10
-};
-
-const SECTION_LIGHT: Readonly<
-  Record<string, number>
-> = {
-  MovementRehearsal: 0xf2c95e,
-  CombatRehearsal: 0xe0608c,
-  MainStage: 0xf2c95e,
-  GrandGallery: 0x61dce9,
-  GalleryGauntlet: 0x66e6ef,
-  SpotlightVault: 0xe85dcc,
-  CardSanctum: 0xe6b754,
-  RoyalBox: 0x66dce9,
-  MirrorCore: 0x65e4ed,
-  ConductorApproach: 0xe95acb,
-  MirrorConductor: 0xf2ca58
-};
+const PARALLAX_FRAME = 11;
+const LOWER_TRIM_FRAME_OFFSET = 16;
+const UPPER_TRIM_FRAME_OFFSET = 24;
 
 export class EnvironmentTileRenderer {
   public static preload(
@@ -66,31 +39,55 @@ export class EnvironmentTileRenderer {
   }
 
   public constructor(
-    private readonly scene:
-      Phaser.Scene
+    private readonly scene: Phaser.Scene
   ) {
+    this.validateTextureFrames();
     this.createParallaxLayer();
     this.createMaterialLayers();
     this.createLighting();
   }
 
-  private createParallaxLayer(): void {
-    const width =
-      this.scene.cameras.main
-        .getBounds().width ||
-      WORLD_SECTIONS[
-        WORLD_SECTIONS.length - 1
-      ]?.endX ||
-      18720;
+  private validateTextureFrames(): void {
+    const texture =
+      this.scene.textures.get(
+        TEXTURE_KEY
+      );
 
+    const frameTotal = texture.frameTotal;
+
+    for (const section of WORLD_SECTIONS) {
+      const requiredFrames = [
+        section.textureFrame,
+        section.textureFrame +
+          LOWER_TRIM_FRAME_OFFSET,
+        section.textureFrame +
+          UPPER_TRIM_FRAME_OFFSET
+      ];
+
+      for (const frame of requiredFrames) {
+        if (
+          frame < 0 ||
+          frame >= frameTotal
+        ) {
+          throw new Error(
+            `Environment frame ${frame} for ` +
+            `${section.id} is unavailable; ` +
+            `texture contains ${frameTotal} frames.`
+          );
+        }
+      }
+    }
+  }
+
+  private createParallaxLayer(): void {
     const layer =
       this.scene.add.tileSprite(
-        width * 0.5,
+        WORLD_WIDTH * 0.5,
         WORLD_HEIGHT * 0.5,
-        width,
+        WORLD_WIDTH,
         WORLD_HEIGHT,
         TEXTURE_KEY,
-        11
+        PARALLAX_FRAME
       );
 
     layer
@@ -101,10 +98,7 @@ export class EnvironmentTileRenderer {
   }
 
   private createMaterialLayers(): void {
-    for (
-      const section of
-      WORLD_SECTIONS
-    ) {
+    for (const section of WORLD_SECTIONS) {
       const width =
         section.endX -
         section.startX;
@@ -113,11 +107,6 @@ export class EnvironmentTileRenderer {
         section.startX +
         width * 0.5;
 
-      const frame =
-        SECTION_FRAME[
-          section.id
-        ] ?? 0;
-
       const background =
         this.scene.add.tileSprite(
           centerX,
@@ -125,7 +114,7 @@ export class EnvironmentTileRenderer {
           width,
           WORLD_HEIGHT,
           TEXTURE_KEY,
-          frame
+          section.textureFrame
         );
 
       background
@@ -141,7 +130,8 @@ export class EnvironmentTileRenderer {
           width,
           18,
           TEXTURE_KEY,
-          frame + 16
+          section.textureFrame +
+            LOWER_TRIM_FRAME_OFFSET
         );
 
       lowerTrim
@@ -157,7 +147,8 @@ export class EnvironmentTileRenderer {
           width,
           8,
           TEXTURE_KEY,
-          frame + 24
+          section.textureFrame +
+            UPPER_TRIM_FRAME_OFFSET
         );
 
       upperTrim
@@ -169,22 +160,17 @@ export class EnvironmentTileRenderer {
   }
 
   private createLighting(): void {
-    for (
-      const section of
-      WORLD_SECTIONS
-    ) {
+    for (const section of WORLD_SECTIONS) {
       const width =
         section.endX -
         section.startX;
 
-      const color =
-        SECTION_LIGHT[
-          section.id
-        ] ?? 0xffffff;
-
       const lightCount = Math.max(
         1,
-        Math.ceil(width / 520)
+        Math.ceil(
+          width /
+          section.lightSpacing
+        )
       );
 
       for (
@@ -194,13 +180,8 @@ export class EnvironmentTileRenderer {
       ) {
         const x =
           section.startX +
-          (
-            index + 0.5
-          ) *
-          (
-            width /
-            lightCount
-          );
+          (index + 0.5) *
+          (width / lightCount);
 
         const halo =
           this.scene.add.ellipse(
@@ -208,7 +189,7 @@ export class EnvironmentTileRenderer {
             112,
             250,
             310,
-            color,
+            section.lightColor,
             0.035
           );
 
@@ -224,7 +205,7 @@ export class EnvironmentTileRenderer {
             x,
             33,
             5,
-            color,
+            section.lightColor,
             0.78
           );
 
