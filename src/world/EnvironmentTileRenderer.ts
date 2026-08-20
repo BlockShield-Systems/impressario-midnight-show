@@ -3,6 +3,7 @@ import Phaser from "phaser";
 import {
   WORLD_HEIGHT,
   WORLD_SECTIONS,
+  WORLD_SOLIDS,
   WORLD_WIDTH
 } from "./WorldLayout";
 
@@ -44,6 +45,39 @@ export class EnvironmentTileRenderer {
     this.validateTextureFrames();
     this.createParallaxLayer();
     this.createMaterialLayers();
+    this.createCollisionVisualsForSection(
+      "MovementRehearsal"
+    );
+    this.createCollisionVisualsForSection(
+      "CombatRehearsal"
+    );
+    this.createCollisionVisualsForSection(
+      "MainStage"
+    );
+    this.createCollisionVisualsForSection(
+      "GrandGallery"
+    );
+    this.createCollisionVisualsForSection(
+      "GalleryGauntlet"
+    );
+    this.createCollisionVisualsForSection(
+      "SpotlightVault"
+    );
+    this.createCollisionVisualsForSection(
+      "CardSanctum"
+    );
+    this.createCollisionVisualsForSection(
+      "RoyalBox"
+    );
+    this.createCollisionVisualsForSection(
+      "MirrorCore"
+    );
+    this.createCollisionVisualsForSection(
+      "ConductorApproach"
+    );
+    this.createCollisionVisualsForSection(
+      "MirrorConductor"
+    );
     this.createLighting();
   }
 
@@ -156,6 +190,77 @@ export class EnvironmentTileRenderer {
         .setScrollFactor(1)
         .setDepth(1)
         .setAlpha(0.48);
+    }
+  }
+
+  private createCollisionVisualsForSection(
+    sectionId: string
+  ): void {
+    const section =
+      WORLD_SECTIONS.find(
+        ({ id }) =>
+          id === sectionId
+      );
+
+    if (!section) {
+      throw new Error(
+        `${sectionId} visual section is unavailable.`
+      );
+    }
+
+    const surfaceFrame =
+      section.textureFrame +
+      UPPER_TRIM_FRAME_OFFSET;
+
+    const bodyFrame =
+      section.textureFrame +
+      LOWER_TRIM_FRAME_OFFSET;
+
+    for (const solid of WORLD_SOLIDS) {
+      const solidEndX =
+        solid.x + solid.width;
+
+      if (
+        solid.x >= section.endX ||
+        solidEndX <= section.startX
+      ) {
+        continue;
+      }
+
+      const body =
+        this.scene.add.tileSprite(
+          solid.x + solid.width * 0.5,
+          solid.y + solid.height * 0.5,
+          solid.width,
+          solid.height,
+          TEXTURE_KEY,
+          bodyFrame
+        );
+
+      body
+        .setOrigin(0.5)
+        .setScrollFactor(1)
+        .setDepth(0.7)
+        .setAlpha(0.96);
+
+      const surfaceHeight =
+        Math.min(4, solid.height);
+
+      const surface =
+        this.scene.add.tileSprite(
+          solid.x + solid.width * 0.5,
+          solid.y + surfaceHeight * 0.5,
+          solid.width,
+          surfaceHeight,
+          TEXTURE_KEY,
+          surfaceFrame
+        );
+
+      surface
+        .setOrigin(0.5)
+        .setScrollFactor(1)
+        .setDepth(0.8)
+        .setAlpha(0.9);
     }
   }
 
