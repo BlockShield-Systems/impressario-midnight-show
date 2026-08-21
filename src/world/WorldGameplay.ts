@@ -64,9 +64,9 @@ export const WORLD_CHECKPOINTS: readonly WorldCheckpoint[] = [
   { id: "SpotlightVault", displayName: "The Spotlight Vault", triggerX: 23568, x: 23600, y: 322 },
   { id: "CardSanctum", displayName: "The Card Sanctum", triggerX: 28000, x: 28032, y: 450 },
   { id: "RoyalBox", displayName: "The Fractured Royal Box", triggerX: 31712, x: 31744, y: 450 },
-  { id: "MirrorCore", displayName: "The Mirror Core", triggerX: 35408, x: 35424, y: 296 },
-  { id: "MirrorRelays", displayName: "Mirror Relays", triggerX: 36224, x: 36224, y: 296 },
-  { id: "CoreChamber", displayName: "Core Chamber", triggerX: 37344, x: 37344, y: 296 },
+  { id: "MirrorCore", displayName: "The Mirror Core", triggerX: 35392, x: 35424, y: 450 },
+  { id: "MirrorRelays", displayName: "Mirror Relays", triggerX: 36112, x: 36128, y: 450 },
+  { id: "CoreChamber", displayName: "Core Chamber", triggerX: 37376, x: 37424, y: 450 },
 ] as const;
 
 export const WORLD_GATES: readonly WorldGate[] = [
@@ -84,9 +84,9 @@ export const WORLD_GATES: readonly WorldGate[] = [
   { id: "SpotlightVaultRight", x: 25856, y: 0, width: 18, height: 688 },
   { id: "CardSanctumExit", x: 31584, y: 0, width: 18, height: 688 },
   { id: "RoyalBoxExit", x: 35264, y: 0, width: 18, height: 688 },
-  { id: "MirrorRelay", x: 36192, y: 0, width: 18, height: 520 },
-  { id: "MirrorBoss", x: 38240, y: 0, width: 18, height: 520 },
-  { id: "MirrorExit", x: 39072, y: 0, width: 18, height: 520 },
+  { id: "MirrorRelay", x: 36192, y: 0, width: 18, height: 688 },
+  { id: "MirrorBoss", x: 37344, y: 0, width: 18, height: 688 },
+  { id: "MirrorExit", x: 39072, y: 0, width: 18, height: 688 },
 ] as const;
 
 export function getWorldCheckpoint(

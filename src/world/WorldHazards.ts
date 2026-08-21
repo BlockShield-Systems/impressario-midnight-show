@@ -457,10 +457,10 @@ export const WORLD_HAZARDS = [
     id: "CoreSpikeA",
     group: "MirrorCore",
     kind: "Spike",
-    x: 35680,
-    y: 507,
-    width: 58,
-    height: 14,
+    x: 36448,
+    y: 496,
+    width: 80,
+    height: 16,
     travelX: 0,
     travelY: 0,
     speed: 0,
@@ -470,10 +470,10 @@ export const WORLD_HAZARDS = [
     id: "CoreSpikeB",
     group: "MirrorCore",
     kind: "Spike",
-    x: 35968,
-    y: 507,
-    width: 56,
-    height: 14,
+    x: 36688,
+    y: 464,
+    width: 80,
+    height: 16,
     travelX: 0,
     travelY: 0,
     speed: 0,
@@ -483,10 +483,10 @@ export const WORLD_HAZARDS = [
     id: "CoreSpikeC",
     group: "MirrorCore",
     kind: "Spike",
-    x: 36544,
-    y: 507,
-    width: 64,
-    height: 14,
+    x: 36976,
+    y: 496,
+    width: 80,
+    height: 16,
     travelX: 0,
     travelY: 0,
     speed: 0,
@@ -496,10 +496,10 @@ export const WORLD_HAZARDS = [
     id: "CoreSpikeD",
     group: "MirrorCore",
     kind: "Spike",
-    x: 37120,
-    y: 507,
-    width: 62,
-    height: 14,
+    x: 37232,
+    y: 464,
+    width: 80,
+    height: 16,
     travelX: 0,
     travelY: 0,
     speed: 0,
@@ -536,25 +536,25 @@ export const WORLD_SUPPORT_PICKUPS = [
     id: "CoreRoseA",
     group: "MirrorCore",
     x: 35488,
-    y: 294
+    y: 480
   },
   {
     id: "CoreRoseB",
     group: "MirrorCore",
-    x: 36240,
-    y: 294
+    x: 36096,
+    y: 272
   },
   {
     id: "CoreRoseC",
     group: "MirrorCore",
-    x: 37360,
-    y: 294
+    x: 37488,
+    y: 352
   },
   {
     id: "CoreRoseD",
     group: "MirrorCore",
-    x: 38944,
-    y: 294
+    x: 38976,
+    y: 304
   },
 ] as const satisfies readonly WorldSupportPickup[];
 

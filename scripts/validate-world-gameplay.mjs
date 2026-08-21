@@ -163,23 +163,23 @@ assertEntity(
   checkpoints,
   "MirrorCore",
   35424,
-  296,
+  450,
   16,
   16
 );
 assertEntity(
   checkpoints,
   "MirrorRelays",
-  36224,
-  296,
+  36128,
+  450,
   16,
   16
 );
 assertEntity(
   checkpoints,
   "CoreChamber",
-  37344,
-  296,
+  37424,
+  450,
   16,
   16
 );
@@ -194,9 +194,29 @@ assertEntity(gates, "SpotlightVaultLeft", 24000, 0, 18, 688);
 assertEntity(gates, "SpotlightVaultRight", 25856, 0, 18, 688);
 assertEntity(gates, "CardSanctumExit", 31584, 0, 18, 688);
 assertEntity(gates, "RoyalBoxExit", 35264, 0, 18, 688);
-assertEntity(gates, "MirrorRelay", 36192, 0, 18, 520);
-assertEntity(gates, "MirrorBoss", 38240, 0, 18, 520);
-assertEntity(gates, "MirrorExit", 39072, 0, 18, 520);
+assertEntity(gates, "MirrorRelay", 36192, 0, 18, 688);
+assertEntity(gates, "MirrorBoss", 37344, 0, 18, 688);
+assertEntity(gates, "MirrorExit", 39072, 0, 18, 688);
+
+for (const [identifier, triggerX] of [
+  ["MirrorCore", 35392],
+  ["MirrorRelays", 36112],
+  ["CoreChamber", 37376]
+]) {
+  const checkpoint = checkpoints.find(
+    candidate =>
+      fieldValue(candidate, "Identifier") === identifier
+  );
+
+  if (
+    !checkpoint ||
+    fieldValue(checkpoint, "TriggerX") !== triggerX
+  ) {
+    throw new Error(
+      `${identifier} does not match its authored trigger.`
+    );
+  }
+}
 
 const main =
   read("src/main.ts");
@@ -319,13 +339,42 @@ for (const required of [
 for (const required of [
   'createWorldGate("MirrorRelay")',
   'createWorldGate("MirrorBoss")',
-  'createWorldGate("MirrorExit")'
+  'createWorldGate("MirrorExit")',
+  'getWorldCheckpoint("MirrorCore")',
+  'getWorldCheckpoint("MirrorRelays")',
+  'getWorldCheckpoint("CoreChamber")',
+  "MIRROR_CORE_START_X",
+  "MIRROR_CORE_END_X"
 ]) {
   if (!mirror.includes(required)) {
     throw new Error(
       `MirrorCoreSystem is missing ${required}.`
     );
   }
+}
+
+for (const forbidden of [
+  "class MirrorConductor",
+  "BossView",
+  "leaderboard.finishRun",
+  "startFinale",
+  "finaleCredits",
+  "THE MIRROR CONDUCTOR"
+]) {
+  if (mirror.includes(forbidden)) {
+    throw new Error(
+      `MirrorCoreSystem retains later-Section ownership: ${forbidden}.`
+    );
+  }
+}
+
+if (
+  !main.includes('import { MirrorCoreVisuals }') ||
+  !main.includes("new MirrorCoreVisuals(this)")
+) {
+  throw new Error(
+    "main.ts does not construct MirrorCoreVisuals."
+  );
 }
 
 if (

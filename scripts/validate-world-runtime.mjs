@@ -59,9 +59,9 @@ const sections =
       entity.__identifier === "Section"
   );
 
-if (collisions.length !== 351) {
+if (collisions.length !== 335) {
   throw new Error(
-    `Expected 351 collisions, got ${collisions.length}.`
+    `Expected 335 collisions, got ${collisions.length}.`
   );
 }
 
@@ -250,6 +250,72 @@ for (const [x, y, width, height] of [
   }
 }
 
+const mirrorCoreCollisions =
+  collisions.filter(
+    entity =>
+      entity.__worldX >= 35344 &&
+      entity.__worldX < 39200
+  );
+
+const expectedMirrorCoreCollisions = [
+  [35344, 480, 304, 32],
+  [35648, 528, 320, 32],
+  [35968, 480, 224, 32],
+  [36210, 512, 320, 32],
+  [36530, 480, 302, 32],
+  [36832, 512, 320, 32],
+  [37152, 480, 192, 32],
+  [37362, 480, 430, 32],
+  [37792, 528, 448, 32],
+  [38258, 480, 462, 32],
+  [38720, 512, 352, 32],
+  [39090, 480, 110, 32],
+  [35456, 384, 160, 16],
+  [35648, 304, 144, 16],
+  [35808, 400, 160, 16],
+  [36000, 272, 160, 16],
+  [36256, 384, 176, 16],
+  [36544, 336, 176, 16],
+  [36848, 368, 176, 16],
+  [37136, 320, 192, 16],
+  [37424, 352, 192, 16],
+  [37744, 304, 208, 16],
+  [38064, 368, 176, 16],
+  [38384, 320, 192, 16],
+  [38688, 368, 176, 16],
+  [38944, 304, 128, 16],
+  [36320, 288, 24, 224],
+  [38192, 288, 24, 240],
+  [35344, 688, 3856, 32]
+];
+
+if (
+  mirrorCoreCollisions.length !==
+  expectedMirrorCoreCollisions.length
+) {
+  throw new Error(
+    "Expected 29 authored MirrorCore collisions, " +
+    `got ${mirrorCoreCollisions.length}.`
+  );
+}
+
+for (const [x, y, width, height] of
+  expectedMirrorCoreCollisions) {
+  if (
+    !mirrorCoreCollisions.some(
+      entity =>
+        entity.__worldX === x &&
+        entity.__worldY === y &&
+        entity.width === width &&
+        entity.height === height
+    )
+  ) {
+    throw new Error(
+      `MirrorCore collision ${x},${y},${width},${height} is missing.`
+    );
+  }
+}
+
 if (sections.length !== 11) {
   throw new Error(
     `Expected 11 sections, got ${sections.length}.`
@@ -422,6 +488,6 @@ for (const file of sourceFiles) {
 
 console.log(
   "World runtime valid: 49824x720, " +
-  "351 collisions, 11 LDtk-driven visual sections, " +
+  "335 collisions, 11 LDtk-driven visual sections, " +
   "dynamic combat camera bounds."
 );

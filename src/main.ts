@@ -15,6 +15,7 @@ import { CardSanctumEncounterSystem } from "./world/CardSanctumEncounterSystem";
 import { RoyalBoxEncounterSystem } from "./world/RoyalBoxEncounterSystem";
 import { RoyalBoxVisuals } from "./world/RoyalBoxVisuals";
 import { MirrorCoreSystem } from "./world/MirrorCoreSystem";
+import { MirrorCoreVisuals } from "./world/MirrorCoreVisuals";
 import { AudioDirector } from "./audio/AudioDirector";
 import { MusicDirector } from "./audio/MusicDirector";
 import { AudioRuntimeBridge } from "./audio/AudioRuntimeBridge";
@@ -925,6 +926,7 @@ class GameScene extends Phaser.Scene {
     new SpotlightVaultVisuals(this);
     new CardSanctumVisuals(this);
     new RoyalBoxVisuals(this);
+    new MirrorCoreVisuals(this);
 
     const solids = this.createLevel();
 

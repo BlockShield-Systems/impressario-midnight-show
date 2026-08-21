@@ -565,11 +565,77 @@
   - Exact moving-mirror, relay, beam, projectile, and progression bounds within `35344..39200`
   - Absence of Mirror Conductor activation, finale, leaderboard completion, and credits from the MirrorCore progression path
 
+## MirrorCore Completion
+
+- Interval: `35344..39200`
+- Gameplay additions:
+  - Twenty-nine deliberate collision rectangles replace forty-five inherited compact-world fragments
+  - RoyalBox arrival and ConductorApproach departure remain aligned on level `y=480` transition surfaces
+  - Three floor-aligned checkpoints define entry, relay completion, and post-gauntlet recovery
+  - Three generated full-height gates own relay completion, Kaleidoscope Gauntlet progression, and Section release
+  - Two Grand Card relays, three moving mirrors, and three timed refraction beams define the ascent route
+  - Four generated Core reflections occupy grounded and elevated gauntlet positions while preserving identifiers, kinds, patrol bounds, and phases
+  - Four spike lanes and four Core Roses align with authored recovery surfaces
+  - Rotating Kaleidoscope beams remain confined to the gauntlet interval
+  - Projectile, hazard, moving-platform, objective, checkpoint, and fall-out behavior is constrained to `35344..39200`
+  - Mirror Conductor activation, boss HUD, boss-only hazards, finale flow, credits, and leaderboard completion were removed from MirrorCore ownership
+- Visual additions:
+  - Fixed-world refraction chambers, lower-core treatment, floor and platform telegraphs, wall-jump framing, five progression landmarks, and ConductorApproach signage
+  - No Mirror Conductor arena or boss signage appears in MirrorCore
+- MirrorCore counts:
+  - Collision rectangles: 29
+  - Checkpoints: 3
+  - Gameplay gates: 3
+  - Enemy spawns: 4 Core reflections
+  - Hazards: 4 spike lanes plus bounded dynamic refraction and gauntlet beams
+  - Support pickups: 4 Core Roses
+  - Dynamic moving mirrors: 3
+  - Grand Card relays: 2
+- World totals after completion:
+  - Collision rectangles: 335
+  - Checkpoints: 14
+  - Gameplay gates: 17
+  - Enemy spawns: 26
+  - Hazards: 36
+  - Support pickups: 8
+- Runtime modules added:
+  - `src/world/MirrorCoreVisuals.ts`
+- Existing runtime modules updated:
+  - `src/main.ts`
+  - `src/world/MirrorCoreSystem.ts`
+  - Generated `src/world/WorldEnemies.ts`, `WorldGameplay.ts`, `WorldHazards.ts`, and `WorldLayout.ts`
+- Validation coverage added:
+  - Exact MirrorCore collision count and all twenty-nine authored rectangles
+  - Exact checkpoint bounds, triggers, and full-height gate bounds
+  - Exact Core reflection positions, patrol bounds, kinds, phases, and Section containment
+  - Exact spike and support positions, dimensions, movement values, and Section containment
+  - Bounded relay, moving-mirror, refraction-beam, gauntlet-beam, projectile, hazard, objective, and fall-out runtime ownership
+  - Absence of Mirror Conductor, boss HUD, finale, credits, and leaderboard completion from `MirrorCoreSystem.ts`
+- Successful validation:
+  - `git diff --check`
+  - `npm run levels:validate`
+  - `npm run world:validate`
+  - `npm run typecheck`
+  - `npm run build`
+  - `npm run audio:runtime:validate`
+  - `npm run assets:audio:validate`
+  - `npm run assets:player:validate`
+  - `npm run assets:enemies:validate`
+  - `npm run assets:boss:validate`
+- Runtime tests actually performed:
+  - Vite development server started successfully on port `5176`
+  - Local HTTP health check returned `200 OK`
+  - Public browser capture was attempted; protected resources returned HTTP 403 before application execution
+  - No manual gameplay-completion claim recorded
+- Unresolved risks:
+  - Full keyboard traversal, relay targeting, moving-mirror routing, beam timing, gauntlet completion, checkpoint respawn, support recovery, death/reset, and both adjacent transitions require browser validation
+  - ConductorApproach and MirrorConductor retain inherited geometry pending sequential M10 authoring
+
 ## Current Section
 
-- Current Section: MirrorCore `35344..39200`
-- Status: pre-mutation inspection complete; interval plan pending separate commit and push
+- Current Section: ConductorApproach `39200..44672`
+- Status: MirrorCore implementation and canonical validation complete; commit, push, and PR update pending
 
 ## Exact Next Action
 
-Commit and push the MirrorCore interval plan, update the open pull request, verify clean local/remote parity, then author MirrorCore from authoritative LDtk data.
+Commit and push the completed MirrorCore implementation, update pull request #1, verify clean local/remote parity, then author ConductorApproach from authoritative LDtk data.

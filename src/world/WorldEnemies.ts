@@ -252,41 +252,41 @@ export const WORLD_ENEMY_SPAWNS = [
     id: "MirrorCoreDuelist",
     group: "MirrorCore",
     kind: "duelist",
-    x: 36400,
-    y: 296,
-    patrolLeft: 36336,
-    patrolRight: 36608,
+    x: 36384,
+    y: 482,
+    patrolLeft: 36256,
+    patrolRight: 36528,
     phase: 0
   },
   {
     id: "MirrorCoreCasterA",
     group: "MirrorCore",
     kind: "caster",
-    x: 36640,
-    y: 172,
-    patrolLeft: 36544,
-    patrolRight: 36832,
-    phase: 0
+    x: 36688,
+    y: 270,
+    patrolLeft: 36560,
+    patrolRight: 36816,
+    phase: 1.5707963267948966
   },
   {
     id: "MirrorCoreMime",
     group: "MirrorCore",
     kind: "mime",
-    x: 36912,
-    y: 296,
-    patrolLeft: 36800,
-    patrolRight: 37136,
-    phase: 0
+    x: 36928,
+    y: 482,
+    patrolLeft: 36864,
+    patrolRight: 37120,
+    phase: 3.141592653589793
   },
   {
     id: "MirrorCoreCasterB",
     group: "MirrorCore",
     kind: "caster",
-    x: 37216,
-    y: 194,
-    patrolLeft: 37104,
-    patrolRight: 37344,
-    phase: 0
+    x: 37184,
+    y: 250,
+    patrolLeft: 37136,
+    patrolRight: 37328,
+    phase: 4.71238898038469
   },
 ] as const satisfies readonly WorldEnemySpawn[];
 

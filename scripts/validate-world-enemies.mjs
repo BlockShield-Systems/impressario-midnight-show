@@ -469,6 +469,66 @@ for (
   }
 }
 
+for (
+  const [id, kind, x, y, left, right, phase] of [
+    [
+      "MirrorCoreDuelist",
+      "duelist",
+      36384,
+      482,
+      36256,
+      36528,
+      0
+    ],
+    [
+      "MirrorCoreCasterA",
+      "caster",
+      36688,
+      270,
+      36560,
+      36816,
+      Math.PI / 2
+    ],
+    [
+      "MirrorCoreMime",
+      "mime",
+      36928,
+      482,
+      36864,
+      37120,
+      Math.PI
+    ],
+    [
+      "MirrorCoreCasterB",
+      "caster",
+      37184,
+      250,
+      37136,
+      37328,
+      Math.PI * 1.5
+    ]
+  ]
+) {
+  const entity = spawns.find(
+    candidate =>
+      fieldValue(candidate, "Identifier") === id
+  );
+
+  if (
+    !entity ||
+    fieldValue(entity, "Kind") !== kind ||
+    entity.px?.[0] !== x ||
+    entity.px?.[1] !== y ||
+    fieldValue(entity, "PatrolLeft") !== left ||
+    fieldValue(entity, "PatrolRight") !== right ||
+    fieldValue(entity, "Phase") !== phase
+  ) {
+    throw new Error(
+      `MirrorCore enemy ${id} does not match its authored LDtk values.`
+    );
+  }
+}
+
 const mainStageIds = [
   "MainStageStagehandA",
   "MainStageStagehandB",

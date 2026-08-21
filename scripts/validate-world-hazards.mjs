@@ -404,6 +404,75 @@ for (const [id, x, y] of [
   }
 }
 
+const mirrorCoreHazards = new Map(
+  hazards
+    .filter(entity =>
+      fieldMap(entity).get("Group") === "MirrorCore"
+    )
+    .map(entity => [
+      fieldMap(entity).get("Identifier"),
+      entity
+    ])
+);
+
+for (const [id, x, y, width, height] of [
+  ["CoreSpikeA", 36448, 496, 80, 16],
+  ["CoreSpikeB", 36688, 464, 80, 16],
+  ["CoreSpikeC", 36976, 496, 80, 16],
+  ["CoreSpikeD", 37232, 464, 80, 16]
+]) {
+  const entity = mirrorCoreHazards.get(id);
+  const fields = entity ? fieldMap(entity) : null;
+
+  if (
+    !entity ||
+    !fields ||
+    fields.get("Kind") !== "Spike" ||
+    entity.__worldX !== x ||
+    entity.__worldY !== y ||
+    entity.width !== width ||
+    entity.height !== height ||
+    fields.get("TravelX") !== 0 ||
+    fields.get("TravelY") !== 0 ||
+    fields.get("Speed") !== 0 ||
+    fields.get("Phase") !== 0
+  ) {
+    fail(
+      `${id} does not match its authored LDtk values.`
+    );
+  }
+}
+
+const mirrorCoreSupports = new Map(
+  supports
+    .filter(entity =>
+      fieldMap(entity).get("Group") === "MirrorCore"
+    )
+    .map(entity => [
+      fieldMap(entity).get("Identifier"),
+      entity
+    ])
+);
+
+for (const [id, x, y] of [
+  ["CoreRoseA", 35488, 480],
+  ["CoreRoseB", 36096, 272],
+  ["CoreRoseC", 37488, 352],
+  ["CoreRoseD", 38976, 304]
+]) {
+  const entity = mirrorCoreSupports.get(id);
+
+  if (
+    !entity ||
+    entity.__worldX !== x ||
+    entity.__worldY !== y
+  ) {
+    fail(
+      `${id} does not match its authored LDtk values.`
+    );
+  }
+}
+
 for (const entity of [
   ...hazards,
   ...supports
@@ -566,6 +635,49 @@ for (const [file, tokens] of consumers) {
         `${file} is missing ${JSON.stringify(token)}.`
       );
     }
+  }
+}
+
+const mirrorCoreSource = read(
+  "src/world/MirrorCoreSystem.ts"
+);
+
+for (const token of [
+  "public readonly x: number",
+  "35720",
+  "36080",
+  "originX: 35616",
+  "originX: 35872",
+  "originX: 36064",
+  "35680",
+  "35888",
+  "36096",
+  "const centerX = 36768",
+  "projectile.x < MIRROR_CORE_START_X",
+  "projectile.x >= MIRROR_CORE_END_X",
+  "this.player.x >= MIRROR_CORE_START_X",
+  "this.player.x < MIRROR_CORE_END_X"
+]) {
+  if (!mirrorCoreSource.includes(token)) {
+    fail(
+      `MirrorCoreSystem is missing bounded runtime token ${JSON.stringify(token)}.`
+    );
+  }
+}
+
+for (const forbidden of [
+  "class MirrorConductor",
+  "BossView",
+  "leaderboard.finishRun",
+  "startFinale",
+  "finaleCredits",
+  "MIRROR_CORE_START_X - 80",
+  "MIRROR_CORE_END_X + 80"
+]) {
+  if (mirrorCoreSource.includes(forbidden)) {
+    fail(
+      `MirrorCoreSystem retains forbidden ownership ${JSON.stringify(forbidden)}.`
+    );
   }
 }
 
