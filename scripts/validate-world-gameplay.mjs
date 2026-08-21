@@ -145,6 +145,14 @@ assertEntity(
 );
 assertEntity(
   checkpoints,
+  "CardSanctum",
+  28032,
+  450,
+  16,
+  16
+);
+assertEntity(
+  checkpoints,
   "RoyalBox",
   31744,
   296,
@@ -184,7 +192,7 @@ assertEntity(gates, "GalleryGauntletSecondLeft", 21088, 0, 18, 688);
 assertEntity(gates, "GalleryGauntletExit", 22480, 0, 18, 688);
 assertEntity(gates, "SpotlightVaultLeft", 24000, 0, 18, 688);
 assertEntity(gates, "SpotlightVaultRight", 25856, 0, 18, 688);
-assertEntity(gates, "CardSanctumExit", 31584, 0, 18, 520);
+assertEntity(gates, "CardSanctumExit", 31584, 0, 18, 688);
 assertEntity(gates, "RoyalBoxExit", 35264, 0, 18, 520);
 assertEntity(gates, "MirrorRelay", 36192, 0, 18, 520);
 assertEntity(gates, "MirrorBoss", 38240, 0, 18, 520);
@@ -201,6 +209,11 @@ const mainStage =
 const spotlightVault =
   read(
     "src/world/SpotlightVaultEncounterSystem.ts"
+  );
+
+const cardSanctum =
+  read(
+    "src/world/CardSanctumEncounterSystem.ts"
   );
 
 const health =
@@ -247,7 +260,6 @@ for (const required of [
   'createWorldGate("CombatTutorialExit")',
   'createWorldGate("CombatArenaLeft")',
   'createWorldGate("CombatArenaRight")',
-  'createWorldGate("CardSanctumExit")',
   'createWorldGate("RoyalBoxExit")'
 ]) {
   if (!main.includes(required)) {
@@ -276,6 +288,16 @@ for (const required of [
   if (!spotlightVault.includes(required)) {
     throw new Error(
       `SpotlightVaultEncounterSystem.ts is missing ${required}.`
+    );
+  }
+}
+
+for (const required of [
+  'createGate("CardSanctumExit")'
+]) {
+  if (!cardSanctum.includes(required)) {
+    throw new Error(
+      `CardSanctumEncounterSystem.ts is missing ${required}.`
     );
   }
 }

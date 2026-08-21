@@ -254,8 +254,13 @@ for (const entity of spawns) {
   }
 
   if (
-    id.startsWith("Sanctum") &&
-    (x < 27984 || x >= 31664)
+    group === "CardSentry" &&
+    (
+      x < 27984 ||
+      x >= 31664 ||
+      left < 27984 ||
+      right > 31664
+    )
   ) {
     throw new Error(
       `${id} is outside the CardSanctum interval.`
@@ -359,6 +364,42 @@ for (
   ) {
     throw new Error(
       `SpotlightVault enemy ${id} does not match its authored LDtk values.`
+    );
+  }
+}
+
+for (
+  const [id, x, y, phase] of [
+    ["SanctumCardSentryA", 28624, 288, 0],
+    [
+      "SanctumCardSentryB",
+      29952,
+      300,
+      Math.PI
+    ],
+    [
+      "SanctumCardSentryC",
+      31008,
+      272,
+      Math.PI / 2
+    ]
+  ]
+) {
+  const entity = spawns.find(
+    candidate =>
+      fieldValue(candidate, "Identifier") === id
+  );
+
+  if (
+    !entity ||
+    entity.px?.[0] !== x ||
+    entity.px?.[1] !== y ||
+    fieldValue(entity, "PatrolLeft") !== x ||
+    fieldValue(entity, "PatrolRight") !== x ||
+    fieldValue(entity, "Phase") !== phase
+  ) {
+    throw new Error(
+      `CardSanctum enemy ${id} does not match its authored LDtk values.`
     );
   }
 }

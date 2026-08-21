@@ -44,6 +44,14 @@ const SPAWNS: readonly SentrySpawn[] =
     })
   );
 
+const PROJECTILE_MIN_X = Math.min(
+  ...SPAWNS.map(spawn => spawn.x)
+) - 640;
+
+const PROJECTILE_MAX_X = Math.max(
+  ...SPAWNS.map(spawn => spawn.x)
+) + 640;
+
 class CardSentry implements CombatTarget {
   public x: number;
   public y: number;
@@ -439,8 +447,8 @@ export class CardSentrySystem {
 
       if (
         projectile.lifetime <= 0 ||
-        projectile.x < 9500 ||
-        projectile.x > 12050 ||
+        projectile.x < PROJECTILE_MIN_X ||
+        projectile.x > PROJECTILE_MAX_X ||
         projectile.y < 10 ||
         projectile.y > 700
       ) {

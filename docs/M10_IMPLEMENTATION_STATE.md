@@ -347,11 +347,71 @@
   - Exact blade and spike positions, dimensions, movement values, and Section containment
   - Dedicated encounter-module ownership of the generated exit gate
 
+## CardSanctum Completion
+
+- Section commit: current `feat(levels): author Card Sanctum encounter` Section commit
+- Interval: `27984..31664`
+- Gameplay additions:
+  - Twenty-four deliberate collision rectangles replace fifty inherited compact-world fragments
+  - SpotlightVault arrival and RoyalBox departure remain aligned on level `y=480` transition surfaces
+  - Safe entry checkpoint moved to `28032,450` with trigger `28000`
+  - One generated enemy-clear exit gate remains at `31584` and now covers the complete `0..688` playable height
+  - Three Card Sentries occupy distinct reachable upper combat positions while preserving their identities and phases
+  - Four blades and four spike lanes align with safe recovery floors, upper attack routes, and the central wall-jump chamber
+  - Full-width lower fall boundary preserves CardSanctum fall-out handling
+  - Card Sentry projectile culling derives from generated Sentry positions instead of compact-world constants
+- Visual additions:
+  - Fixed-world card walls, archive silhouettes, platform telegraphs, wall-jump framing, five route landmarks, and RoyalBox transition signage
+  - Compact-world CardSanctum presentation and encounter logic removed from `src/main.ts`
+- CardSanctum counts:
+  - Collision rectangles: 24
+  - Checkpoints: 1
+  - Gameplay gates: 1
+  - Enemy spawns: 3 Card Sentries
+  - Hazards: 8 (4 blades, 4 spike lanes)
+  - Support pickups: 0
+- World totals after completion:
+  - Collision rectangles: 374
+  - Checkpoints: 14
+  - Gameplay gates: 17
+  - Enemy spawns: 26
+  - Hazards: 36
+  - Support pickups: 8
+- Runtime modules added:
+  - `src/world/CardSanctumEncounterSystem.ts`
+  - `src/world/CardSanctumVisuals.ts`
+- Existing runtime modules updated:
+  - `src/main.ts`
+  - `src/enemies/CardSentrySystem.ts`
+  - Generated `src/world/WorldEnemies.ts`, `WorldGameplay.ts`, `WorldHazards.ts`, and `WorldLayout.ts`
+- Validation coverage added:
+  - Exact CardSanctum collision count and principal entry, floor, wall-jump, exit, and fall-boundary geometry
+  - Exact CardSanctum checkpoint and full-height exit-gate bounds
+  - Exact Card Sentry positions, patrol bounds, phases, and Section containment
+  - Exact blade and spike positions, dimensions, movement values, and Section containment
+  - Dedicated encounter-module ownership of the generated exit gate
+- Successful validation:
+  - Structural LDtk review: unchanged `49824×720` dimensions, 11 fixed Sections, and 486 unique entity IIDs
+  - `npm run levels:validate`
+  - `npm run world:validate`
+  - `npm run typecheck`
+  - `npm run build`
+  - `npm run audio:runtime:validate`
+  - `npm run assets:audio:validate`
+  - `npm run assets:player:validate`
+  - `npm run assets:enemies:validate`
+  - `npm run assets:boss:validate`
+- Runtime tests actually performed:
+  - No browser traversal was completed for CardSanctum
+- Unresolved risks:
+  - Full keyboard traversal, both route choices, wall-jump chamber, Sentry projectile interaction, hazard timing, encounter clear, death/reset, and both adjacent transitions require a browser-capable host
+  - RoyalBox and later Sections retain M9 geometry pending sequential M10 authoring
+
 ## Current Section
 
 - Current Section: CardSanctum `27984..31664`
-- Status: pre-mutation inspection complete; interval plan recorded; LDtk remains unchanged
+- Status: authored and validated locally; implementation commit and remote reconciliation pending
 
 ## Exact Next Action
 
-Commit and push the CardSanctum pre-mutation plan, update the open pull request, verify local/remote parity, then author CardSanctum geometry and semantic entities from LDtk.
+Commit and push the validated CardSanctum implementation, update the open pull request, verify local/remote parity, then inspect RoyalBox before mutation.

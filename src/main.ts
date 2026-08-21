@@ -11,8 +11,7 @@ import { BossView } from "./boss/BossView";
 import { GalleryGauntletEncounterSystem } from "./world/GalleryGauntletEncounterSystem";
 import { SpotlightVaultEncounterSystem } from "./world/SpotlightVaultEncounterSystem";
 import { MagicSystem } from "./magic/MagicSystem";
-import { CardSentrySystem } from "./enemies/CardSentrySystem";
-import { CardSanctumHazardSystem } from "./world/CardSanctumHazardSystem";
+import { CardSanctumEncounterSystem } from "./world/CardSanctumEncounterSystem";
 import { RoyalEchoSystem } from "./enemies/RoyalEchoSystem";
 import { RoyalBoxHazardSystem } from "./world/RoyalBoxHazardSystem";
 import { RoyalBoxSupportSystem } from "./world/RoyalBoxSupportSystem";
@@ -40,6 +39,7 @@ import { MainStageEncounterSystem } from "./world/MainStageEncounterSystem";
 import { GrandGalleryVisuals } from "./world/GrandGalleryVisuals";
 import { GalleryGauntletVisuals } from "./world/GalleryGauntletVisuals";
 import { SpotlightVaultVisuals } from "./world/SpotlightVaultVisuals";
+import { CardSanctumVisuals } from "./world/CardSanctumVisuals";
 
 /* -------------------------------------------------------------------------- */
 /* Configuration                                                              */
@@ -858,8 +858,8 @@ class GameScene extends Phaser.Scene {
   private spotlightVaultEncounterSystem!:
     SpotlightVaultEncounterSystem;
   private magicSystem!: MagicSystem;
-  private cardSentrySystem!: CardSentrySystem;
-  private cardSanctumHazardSystem!: CardSanctumHazardSystem;
+  private cardSanctumEncounterSystem!:
+    CardSanctumEncounterSystem;
   private royalEchoSystem!: RoyalEchoSystem;
   private royalBoxHazardSystem!: RoyalBoxHazardSystem;
   private royalBoxSupportSystem!: RoyalBoxSupportSystem;
@@ -893,16 +893,6 @@ class GameScene extends Phaser.Scene {
   private grandGalleryEntered = false;
   private grandGalleryCheckpointActivated = false;
   private grandGalleryTitle!: Phaser.GameObjects.Text;
-
-  private cardSanctumEntered = false;
-  private cardSanctumActive = false;
-  private cardSanctumCleared = false;
-
-  private readonly sanctumExitGate =
-    createWorldGate("CardSanctumExit");
-
-  private sanctumGateGraphics!: Phaser.GameObjects.Graphics;
-  private sanctumObjectiveText!: Phaser.GameObjects.Text;
 
   private royalBoxEntered = false;
   private royalBoxActive = false;
@@ -945,11 +935,11 @@ class GameScene extends Phaser.Scene {
     new GrandGalleryVisuals(this);
     new GalleryGauntletVisuals(this);
     new SpotlightVaultVisuals(this);
+    new CardSanctumVisuals(this);
 
     const solids = this.createLevel();
 
     this.createGrandGallery();
-    this.createCardSanctum();
     this.createRoyalBox();
 
     this.collisionWorld =
@@ -1084,19 +1074,18 @@ class GameScene extends Phaser.Scene {
         }
       );
 
-    this.cardSentrySystem =
-      new CardSentrySystem(
+    this.cardSanctumEncounterSystem =
+      new CardSanctumEncounterSystem(
         this,
         this.player,
         this.playerHealth,
-        this.combatSystem
-      );
-
-    this.cardSanctumHazardSystem =
-      new CardSanctumHazardSystem(
-        this,
-        this.player,
-        this.playerHealth
+        this.combatSystem,
+        solid => {
+          this.collisionWorld.addSolid(solid);
+        },
+        solid => {
+          this.collisionWorld.removeSolid(solid);
+        }
       );
 
     this.royalEchoSystem =
@@ -1269,8 +1258,7 @@ class GameScene extends Phaser.Scene {
     this.galleryGauntletEncounterSystem.update(frameDelta);
     this.spotlightVaultEncounterSystem.update(frameDelta);
     this.magicSystem.update(frameDelta);
-    this.cardSentrySystem.update(frameDelta);
-    this.cardSanctumHazardSystem.update(frameDelta);
+    this.cardSanctumEncounterSystem.update(frameDelta);
     this.royalEchoSystem.update(frameDelta);
     this.royalBoxHazardSystem.update(frameDelta);
     this.royalBoxSupportSystem.update(frameDelta);
@@ -1278,7 +1266,6 @@ class GameScene extends Phaser.Scene {
 
     this.updateEncounter();
     this.updateGrandGallery();
-    this.updateCardSanctum();
     this.updateRoyalBox();
 
     this.audioBridge.update(frameDelta);
@@ -2051,441 +2038,6 @@ class GameScene extends Phaser.Scene {
     );
   }
 
-  private createCardSanctum(): void {
-    const startX = 9580;
-    const endX = 12000;
-
-    const background = this.add.graphics();
-
-    background
-      .setDepth(-2)
-      .setScrollFactor(1);
-
-    background.fillStyle(
-      0x170817,
-      1
-    );
-
-    background.fillRect(
-      startX,
-      0,
-      endX - startX,
-      WORLD_HEIGHT
-    );
-
-    for (
-      let x = 9600;
-      x < endX;
-      x += 240
-    ) {
-      background.fillStyle(
-        0x2a1029,
-        0.94
-      );
-
-      background.fillRect(
-        x,
-        0,
-        150,
-        WORLD_HEIGHT
-      );
-
-      background.fillStyle(
-        0x10182d,
-        0.88
-      );
-
-      background.fillRect(
-        x + 150,
-        0,
-        90,
-        WORLD_HEIGHT
-      );
-
-      background.lineStyle(
-        3,
-        0xb98c38,
-        0.55
-      );
-
-      background.lineBetween(
-        x + 10,
-        0,
-        x + 10,
-        WORLD_HEIGHT
-      );
-
-      background.lineBetween(
-        x + 140,
-        0,
-        x + 140,
-        WORLD_HEIGHT
-      );
-    }
-
-    // Giant card arches.
-    for (
-      let x = 9720;
-      x < endX;
-      x += 480
-    ) {
-      background.fillStyle(
-        0x0d0d1d,
-        0.95
-      );
-
-      background.fillRoundedRect(
-        x,
-        45,
-        130,
-        205,
-        16
-      );
-
-      background.lineStyle(
-        5,
-        0xd7aa45,
-        0.92
-      );
-
-      background.strokeRoundedRect(
-        x,
-        45,
-        130,
-        205,
-        16
-      );
-
-      background.lineStyle(
-        2,
-        0xd43b6c,
-        0.8
-      );
-
-      background.strokeRoundedRect(
-        x + 10,
-        55,
-        110,
-        185,
-        11
-      );
-
-      background.fillStyle(
-        0xd73a69,
-        0.7
-      );
-
-      background.fillCircle(
-        x + 65,
-        137,
-        18
-      );
-
-      background.fillTriangle(
-        x + 39,
-        142,
-        x + 91,
-        142,
-        x + 65,
-        180
-      );
-    }
-
-    this.add.text(
-      9630,
-      86,
-      "ACT VI — THE CARD SANCTUM",
-      {
-        fontFamily: "monospace",
-        fontSize: "13px",
-        color: "#f1ce69",
-        backgroundColor: "#130714e8",
-        padding: {
-          x: 10,
-          y: 7
-        }
-      }
-    ).setDepth(35);
-
-    this.add.text(
-      9630,
-      123,
-      [
-        "UPPER ROUTE",
-        "Double-jump · Air-dash · Faster"
-      ].join("\n"),
-      {
-        fontFamily: "monospace",
-        fontSize: "9px",
-        color: "#82e8ef",
-        backgroundColor: "#130714dd",
-        padding: {
-          x: 7,
-          y: 6
-        }
-      }
-    ).setDepth(35);
-
-    this.add.text(
-      9700,
-      468,
-      [
-        "LOWER ROUTE",
-        "Longer · Traps · More cover"
-      ].join("\n"),
-      {
-        fontFamily: "monospace",
-        fontSize: "9px",
-        color: "#efbd64",
-        backgroundColor: "#130714dd",
-        padding: {
-          x: 7,
-          y: 6
-        }
-      }
-    ).setDepth(35);
-
-    this.add.text(
-      10395,
-      218,
-      "WALL-JUMP SHAFT",
-      {
-        fontFamily: "monospace",
-        fontSize: "9px",
-        color: "#89e9ef",
-        backgroundColor: "#130714dd",
-        padding: {
-          x: 7,
-          y: 5
-        }
-      }
-    ).setDepth(35);
-
-    this.add.text(
-      11215,
-      112,
-      [
-        "MASTER ROUTE",
-        "Jump → Dash → Double-jump"
-      ].join("\n"),
-      {
-        fontFamily: "monospace",
-        fontSize: "9px",
-        color: "#f0cf69",
-        backgroundColor: "#130714dd",
-        padding: {
-          x: 7,
-          y: 6
-        }
-      }
-    ).setDepth(35);
-
-    this.sanctumGateGraphics =
-      this.add.graphics();
-
-    this.sanctumGateGraphics.setDepth(27);
-
-    this.sanctumObjectiveText = this.add.text(
-      GAME_WIDTH * 0.5,
-      42,
-      "",
-      {
-        fontFamily: "monospace",
-        fontSize: "10px",
-        color: "#ffe29a",
-        backgroundColor: "#130714e8",
-        padding: {
-          x: 9,
-          y: 6
-        }
-      }
-    );
-
-    this.sanctumObjectiveText
-      .setOrigin(0.5, 0)
-      .setScrollFactor(0)
-      .setDepth(1170)
-      .setVisible(false);
-  }
-
-  private updateCardSanctum(): void {
-    if (this.player.x < 27984) {
-      return;
-    }
-
-    if (
-      !this.cardSanctumEntered &&
-      this.player.x >= getWorldCheckpoint("CardSanctum").triggerX
-    ) {
-      this.cardSanctumEntered = true;
-
-      this.playerHealth.setCheckpoint(
-        getWorldCheckpoint(
-          "CardSanctum"
-        )
-      );
-    }
-
-    if (
-      !this.cardSanctumActive &&
-      !this.cardSanctumCleared &&
-      this.player.x >= 9680
-    ) {
-      this.startCardSanctum();
-    }
-
-    if (!this.cardSanctumActive) {
-      return;
-    }
-
-    const remaining =
-      this.cardSentrySystem.remaining;
-
-    this.sanctumObjectiveText.setText(
-      [
-        `CARD SANCTUM — SENTRIES ${3 - remaining}/3`,
-        "Choose your route. Reach and destroy every sentry."
-      ].join("\n")
-    );
-
-    if (remaining === 0) {
-      this.completeCardSanctum();
-    }
-  }
-
-  private startCardSanctum(): void {
-    this.cardSanctumActive = true;
-
-    this.collisionWorld.addSolid(
-      this.sanctumExitGate
-    );
-
-    this.cardSentrySystem
-      .setEnabled(true);
-
-    this.cardSanctumHazardSystem
-      .setEnabled(true);
-
-    this.sanctumObjectiveText
-      .setVisible(true);
-
-    this.redrawSanctumGate();
-  }
-
-  private completeCardSanctum(): void {
-    this.cardSanctumActive = false;
-    this.cardSanctumCleared = true;
-
-    this.collisionWorld.removeSolid(
-      this.sanctumExitGate
-    );
-
-    this.cardSanctumHazardSystem
-      .setEnabled(false);
-
-    this.sanctumGateGraphics.clear();
-
-    this.sanctumObjectiveText.setText(
-      "CARD SANCTUM CLEARED — THE ROYAL BOX AWAITS"
-    );
-
-    this.cameras.main.flash(
-      300,
-      224,
-      180,
-      76,
-      false
-    );
-
-    this.time.delayedCall(
-      2600,
-      () => {
-        this.sanctumObjectiveText
-          .setVisible(false);
-      }
-    );
-  }
-
-  private resetCardSanctumAfterDeath(): void {
-    if (
-      !this.cardSentrySystem ||
-      !this.cardSanctumHazardSystem ||
-      this.cardSanctumCleared
-    ) {
-      return;
-    }
-
-    this.cardSanctumActive = false;
-
-    this.collisionWorld?.removeSolid(
-      this.sanctumExitGate
-    );
-
-    this.cardSentrySystem
-      .resetEncounter();
-
-    this.cardSanctumHazardSystem
-      .reset();
-
-    this.sanctumGateGraphics?.clear();
-
-    this.sanctumObjectiveText
-      ?.setVisible(false)
-      .setText("");
-  }
-
-  private redrawSanctumGate(): void {
-    const g = this.sanctumGateGraphics;
-    g.clear();
-
-    const gate =
-      this.sanctumExitGate;
-
-    g.fillStyle(
-      0x1d0819,
-      0.97
-    );
-
-    g.fillRect(
-      gate.x,
-      gate.y,
-      gate.width,
-      gate.height
-    );
-
-    g.lineStyle(
-      3,
-      0xd83b6a,
-      1
-    );
-
-    for (
-      let y = 8;
-      y < gate.height;
-      y += 24
-    ) {
-      g.lineBetween(
-        gate.x + 2,
-        y,
-        gate.right - 2,
-        y + 14
-      );
-    }
-
-    g.lineStyle(
-      2,
-      0xe4ba55,
-      1
-    );
-
-    g.strokeRect(
-      gate.x,
-      gate.y,
-      gate.width,
-      gate.height
-    );
-  }
-
   private createGrandGallery(): void {
     this.grandGalleryTitle = this.add.text(
       GAME_WIDTH * 0.5,
@@ -2669,7 +2221,7 @@ class GameScene extends Phaser.Scene {
     this.mainStageEncounterSystem?.resetAfterDeath();
     this.galleryGauntletEncounterSystem?.resetAfterDeath();
     this.spotlightVaultEncounterSystem?.resetAfterDeath();
-    this.resetCardSanctumAfterDeath();
+    this.cardSanctumEncounterSystem?.resetAfterDeath();
     this.resetRoyalBoxAfterDeath();
     this.mirrorCoreSystem?.resetAfterDeath();
 

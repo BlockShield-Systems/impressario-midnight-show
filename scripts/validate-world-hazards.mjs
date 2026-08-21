@@ -201,6 +201,85 @@ for (const [id, x, y, width] of [
   }
 }
 
+const cardSanctumHazards = new Map(
+  hazards
+    .filter(entity =>
+      fieldMap(entity).get("Group") === "CardSanctum"
+    )
+    .map(entity => [
+      fieldMap(entity).get("Identifier"),
+      entity
+    ])
+);
+
+for (
+  const [
+    id,
+    x,
+    y,
+    width,
+    travelX,
+    travelY,
+    speed,
+    phase
+  ] of [
+    ["SanctumBladeA", 28496, 440, 16, 96, 0, 1.7, 0],
+    [
+      "SanctumBladeB",
+      29760,
+      392,
+      16,
+      0,
+      88,
+      1.5,
+      Math.PI / 2
+    ],
+    [
+      "SanctumBladeC",
+      30288,
+      400,
+      16,
+      112,
+      0,
+      1.9,
+      Math.PI
+    ],
+    [
+      "SanctumBladeD",
+      31104,
+      368,
+      16,
+      0,
+      80,
+      1.65,
+      Math.PI / 4
+    ],
+    ["SanctumSpikeA", 28320, 528, 80, 0, 0, 0, 0],
+    ["SanctumSpikeB", 28976, 512, 80, 0, 0, 0, 0],
+    ["SanctumSpikeC", 30384, 528, 80, 0, 0, 0, 0],
+    ["SanctumSpikeD", 30880, 512, 80, 0, 0, 0, 0]
+  ]
+) {
+  const entity = cardSanctumHazards.get(id);
+  const fields = entity ? fieldMap(entity) : null;
+
+  if (
+    !entity ||
+    !fields ||
+    entity.__worldX !== x ||
+    entity.__worldY !== y ||
+    entity.width !== width ||
+    fields.get("TravelX") !== travelX ||
+    fields.get("TravelY") !== travelY ||
+    fields.get("Speed") !== speed ||
+    fields.get("Phase") !== phase
+  ) {
+    fail(
+      `${id} does not match its authored LDtk values.`
+    );
+  }
+}
+
 for (const entity of [
   ...hazards,
   ...supports

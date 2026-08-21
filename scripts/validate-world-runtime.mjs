@@ -59,9 +59,9 @@ const sections =
       entity.__identifier === "Section"
   );
 
-if (collisions.length !== 400) {
+if (collisions.length !== 374) {
   throw new Error(
-    `Expected 400 collisions, got ${collisions.length}.`
+    `Expected 374 collisions, got ${collisions.length}.`
   );
 }
 
@@ -172,6 +172,43 @@ for (const [x, y, width, height] of [
   ) {
     throw new Error(
       `SpotlightVault collision ${x},${y},${width},${height} is missing.`
+    );
+  }
+}
+
+const cardSanctumCollisions =
+  collisions.filter(
+    entity =>
+      entity.__worldX >= 27984 &&
+      entity.__worldX < 31664
+  );
+
+if (cardSanctumCollisions.length !== 24) {
+  throw new Error(
+    "Expected 24 authored CardSanctum collisions, " +
+    `got ${cardSanctumCollisions.length}.`
+  );
+}
+
+for (const [x, y, width, height] of [
+  [27984, 480, 256, 32],
+  [28240, 528, 432, 32],
+  [29408, 288, 24, 240],
+  [29568, 240, 24, 272],
+  [31216, 480, 448, 32],
+  [27984, 688, 3680, 32]
+]) {
+  if (
+    !cardSanctumCollisions.some(
+      entity =>
+        entity.__worldX === x &&
+        entity.__worldY === y &&
+        entity.width === width &&
+        entity.height === height
+    )
+  ) {
+    throw new Error(
+      `CardSanctum collision ${x},${y},${width},${height} is missing.`
     );
   }
 }
@@ -348,6 +385,6 @@ for (const file of sourceFiles) {
 
 console.log(
   "World runtime valid: 49824x720, " +
-  "400 collisions, 11 LDtk-driven visual sections, " +
+  "374 collisions, 11 LDtk-driven visual sections, " +
   "dynamic combat camera bounds."
 );

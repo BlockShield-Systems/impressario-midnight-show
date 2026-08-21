@@ -183,7 +183,7 @@ export const WORLD_ENEMY_SPAWNS = [
     group: "CardSentry",
     kind: "",
     x: 28624,
-    y: 440,
+    y: 288,
     patrolLeft: 28624,
     patrolRight: 28624,
     phase: 0
@@ -192,20 +192,20 @@ export const WORLD_ENEMY_SPAWNS = [
     id: "SanctumCardSentryB",
     group: "CardSentry",
     kind: "",
-    x: 29970,
-    y: 240,
-    patrolLeft: 29970,
-    patrolRight: 29970,
+    x: 29952,
+    y: 300,
+    patrolLeft: 29952,
+    patrolRight: 29952,
     phase: 3.141592653589793
   },
   {
     id: "SanctumCardSentryC",
     group: "CardSentry",
     kind: "",
-    x: 30520,
-    y: 440,
-    patrolLeft: 30520,
-    patrolRight: 30520,
+    x: 31008,
+    y: 272,
+    patrolLeft: 31008,
+    patrolRight: 31008,
     phase: 1.5707963267948966
   },
   {
