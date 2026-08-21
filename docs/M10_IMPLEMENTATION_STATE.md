@@ -730,11 +730,77 @@
   - The production boss atlas validator passes with 171 frames and 21 tags; audio, player, enemy, and boss asset validators remain mandatory
   - `test:audio:e2e` is the only package Playwright test; browser execution and controlled gameplay traversal must be reported separately and only if actually completed
 
+## MirrorConductor Completion
+
+- Implementation commits:
+  - `1cd2db9` — `feat(levels): author Mirror Conductor finale`
+  - `da60075` — `test(levels): validate Mirror Conductor semantics`
+- Fixed interval: `44672..49824`; world dimensions remain `49824×720` on grid `16`
+- Authoritative LDtk geometry:
+  - Eleven exact collision rectangles: safe entry apron, broad arena floor, seven recovery platforms, resolution runway, and full-width lower fall boundary
+  - One safe `MirrorConductor` checkpoint at `44752,450` with trigger `44704`
+  - `MirrorConductorEntrance` gate at `45120,0,18,688`
+  - `MirrorConductorResolution` gate at `49344,0,18,688`
+  - Zero LDtk enemy spawns, hazard anchors, and support pickups; the boss and dynamic hazards remain dedicated runtime mechanics
+- Dedicated runtime ownership:
+  - `MirrorConductorSystem.ts` exclusively owns the `MirrorConductor` `CombatTarget`, arena activation, dynamic gates, camera confinement/restoration, checkpoint/fall recovery, projectiles, beams, phase-three floor danger, boss HUD, defeat sequence, finale, credits, and leaderboard completion
+  - `MirrorCoreSystem.ts` and `ConductorApproachVisuals.ts` remain free of boss, finale, credits, and leaderboard ownership
+  - Gate insertion is idempotent across repeated start/reset calls; death clears projectiles and hazards, resets the boss, restores the resolution lock, removes the entrance lock, and restores world camera bounds
+- Preserved boss behavior:
+  - 108 health with phase thresholds at 72 and 36
+  - Minimum phase windows of 55, 60, and 70 seconds
+  - Spotlight cast-count shield break and shield counter projectile
+  - Grand Card ranged-hit integration through `CombatSystem.applyRangedHit()` and `receiveRangedHit()`
+  - Phase-scaled aimed volleys, rotating beams, alternating phase-three floor danger, marked real-Conductor presentation, phase transitions, hurt states, and full defeat/fireworks sequence
+  - Production boss atlas remains 171 frames, 21 tags, and `128×128` frames
+- Finale and completion safety:
+  - Boss completion and finale startup both require confirmed `conductor.isDefeated`
+  - Finale restores repeated firework bursts, player procession, finale hint, curtain fade, credits, and final-world presentation
+  - `finaleSubmitted` guards the only `leaderboard.finishRun()` source call; the leaderboard client retains its independent `finishing` guard
+  - `BossView.reset()` cancels pending defeat callbacks, preventing simultaneous player/boss death from completing the finale after respawn
+- Audio:
+  - The fixed boss zone still begins exactly at `44672` with phase-one music, machine ambience, and boss-intro voiceover
+  - BossView tags continue to drive phase-two, phase-three, defeat, and finale music/SFX/voice transitions
+  - Semantic boss-action events drive intro, shield block/break, projectile volley, floor warning, repeated fireworks, and curtain-close SFX without pretending those actions are atlas tags
+- Exact validation coverage:
+  - All eleven MirrorConductor collision rectangles, all Section bounds, shared transition, and world end
+  - Exact checkpoint, trigger, and both full-height gates
+  - Empty LDtk enemy/hazard/support inventory and dedicated `CombatTarget` ownership
+  - Runtime/visual construction, health thresholds, phase windows, Spotlight/Grand Card integration, camera restoration, fall handling, bounded projectiles and hazards, defeat-only finale, and exactly one leaderboard completion call
+  - Explicit absence of boss/finale ownership from MirrorCore and ConductorApproach
+- Successful validation:
+  - `npm run levels:sync`
+  - `git diff --check`
+  - `npm run levels:validate`
+  - `npm run world:validate`
+  - `npm run typecheck`
+  - `npm run build`
+  - `npm run audio:runtime:validate`
+  - `npm run assets:audio:validate`
+  - `npm run assets:player:validate`
+  - `npm run assets:enemies:validate`
+  - `npm run assets:boss:validate` — 171 frames and 21 tags
+  - `npm run test:audio:e2e` — one Playwright test passed after installing Chromium and extracting its missing shared libraries into ignored workspace-local caches only
+- Browser validation actually performed:
+  - Vite served locally with HTTP 200 and delivered the MirrorConductor-integrated main module
+  - Playwright opened the start overlay, began a run, rendered one visible canvas, unlocked WebAudio, loaded audio lazily, exercised movement/jump/dash/combat/HUD input, and completed without page or console errors
+  - A separate controlled browser probe confirmed the overlay closed, the canvas remained active, WebAudio was running with two loops, all loading completed, and no audio load error occurred
+  - The public sandbox URL remained blocked by HTTP 403 for protected resources
+  - No full eleven-Section keyboard traversal or live MirrorConductor phase/defeat completion is claimed: the production build intentionally exposes no teleport/debug scene hook, and bypassing prior progression would not be an honest end-to-end gameplay test
+- Final eleven-Section integration audit:
+  - Section order is contiguous from `0` through `49824`; dimensions, grid, generated boundaries, and the `44672` audio transition are unchanged
+  - Current totals are 296 collisions, 15 checkpoints, 19 gates, 26 enemy spawns, 36 static hazards, and 8 supports
+  - All 411 LDtk entity IIDs are unique
+  - Structural comparison with the planning commit found zero semantic entity changes outside `44672..49824`; the large LDtk text diff is entity ordering plus the final-Section authoring
+  - ConductorApproach remains exactly 31 collisions with empty checkpoint/gate/enemy/hazard/support inventory
+  - Worker, Wrangler, package manifests, D1 configuration, milestone branches, and tags were not changed; no deployment or D1 operation was run
+
 ## Current Section
 
 - Current Section: MirrorConductor `44672..49824`
-- Status: read-only recovery, authoritative inventory, historical boss inspection, and pre-mutation planning complete
+- Status: implementation, exact validation, production build, asset validation, Playwright smoke coverage, documentation, and final structural integration audit complete
+- Remaining manual risk: full keyboard traversal through all progression gates and live boss phase/death/finale timing require a browser session capable of playing the complete run without bypassing production progression
 
 ## Exact Next Action
 
-Commit and push this MirrorConductor pre-mutation plan, update pull request #1, then author the fixed boss interval without changing completed Sections.
+Commit and push this reviewed implementation-state update, refresh pull request #1, and verify clean local/remote parity without merging or closing the pull request.
