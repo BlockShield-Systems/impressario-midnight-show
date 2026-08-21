@@ -36,8 +36,10 @@ import {
 import { EnvironmentTileRenderer } from "./world/EnvironmentTileRenderer";
 import { MovementRehearsalVisuals } from "./world/MovementRehearsalVisuals";
 import {
+  MOVEMENT_SECTION_LABELS,
   MOVEMENT_TUTORIAL_SIGNAGE_DEPTH,
-  OPENING_CONTROL_INSTRUCTIONS
+  OPENING_CONTROL_INSTRUCTIONS,
+  OPENING_CONTROL_PANEL
 } from "./world/MovementTutorial";
 import { CombatRehearsalVisuals } from "./world/CombatRehearsalVisuals";
 import { CombatRehearsalHazardSystem } from "./world/CombatRehearsalHazardSystem";
@@ -1423,16 +1425,25 @@ class GameScene extends Phaser.Scene {
 
   private createLabels(): void {
     this.add.text(
-      46,
-      245,
+      OPENING_CONTROL_PANEL.x,
+      OPENING_CONTROL_PANEL.y,
       OPENING_CONTROL_INSTRUCTIONS.join(
         "\n"
       ),
       {
         fontFamily: "monospace",
-        fontSize: "10px",
+        fontSize: "9px",
         color: "#ead8b4",
-        lineSpacing: 3
+        backgroundColor: "#100711d9",
+        fixedWidth: OPENING_CONTROL_PANEL.width,
+        fixedHeight: OPENING_CONTROL_PANEL.height,
+        lineSpacing: 2,
+        padding: {
+          x: 10,
+          y: 7
+        },
+        stroke: "#08040a",
+        strokeThickness: 1
       }
     )
       .setScrollFactor(1)
@@ -1440,67 +1451,30 @@ class GameScene extends Phaser.Scene {
         MOVEMENT_TUTORIAL_SIGNAGE_DEPTH
       );
 
-    this.add.text(
-      680,
-      88,
-      "WALL-JUMP\nSHAFT",
-      {
-        align: "center",
-        fontFamily: "monospace",
-        fontSize: "11px",
-        color: "#d6a94c"
-      }
-    )
-      .setScrollFactor(1)
-      .setDepth(
-        MOVEMENT_TUTORIAL_SIGNAGE_DEPTH
-      );
-
-    this.add.text(
-      930,
-      249,
-      "AIR-DASH",
-      {
-        fontFamily: "monospace",
-        fontSize: "11px",
-        color: "#d6a94c"
-      }
-    )
-      .setScrollFactor(1)
-      .setDepth(
-        MOVEMENT_TUTORIAL_SIGNAGE_DEPTH
-      );
-
-    this.add.text(
-      1485,
-      250,
-      "FAST-FALL TUNNEL",
-      {
-        fontFamily: "monospace",
-        fontSize: "11px",
-        color: "#d6a94c"
-      }
-    )
-      .setScrollFactor(1)
-      .setDepth(
-        MOVEMENT_TUTORIAL_SIGNAGE_DEPTH
-      );
-
-    this.add.text(
-      2070,
-      132,
-      "TO COMBAT\nREHEARSAL →",
-      {
-        align: "center",
-        fontFamily: "monospace",
-        fontSize: "11px",
-        color: "#f0c95e"
-      }
-    )
-      .setScrollFactor(1)
-      .setDepth(
-        MOVEMENT_TUTORIAL_SIGNAGE_DEPTH
-      );
+    for (
+      const label of
+      MOVEMENT_SECTION_LABELS
+    ) {
+      this.add.text(
+        label.x,
+        label.y,
+        label.text,
+        {
+          align: label.align,
+          fontFamily: "monospace",
+          fontSize: "11px",
+          color: label.text.startsWith(
+            "TO COMBAT"
+          )
+            ? "#f0c95e"
+            : "#d6a94c"
+        }
+      )
+        .setScrollFactor(1)
+        .setDepth(
+          MOVEMENT_TUTORIAL_SIGNAGE_DEPTH
+        );
+    }
 
   }
 

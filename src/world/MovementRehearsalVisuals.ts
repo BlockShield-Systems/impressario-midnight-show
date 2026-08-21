@@ -7,7 +7,9 @@ import {
   MOVEMENT_ENVIRONMENT_FOREGROUND_DEPTH,
   MOVEMENT_TUTORIAL_MARKER_DEPTH,
   MOVEMENT_TUTORIAL_SIGNAGE_DEPTH,
-  MOVEMENT_TUTORIAL_SIGNS
+  MOVEMENT_TUTORIAL_SIGNS,
+  OPENING_TUTORIAL_SUBTITLE,
+  OPENING_TUTORIAL_TITLE
 } from "./MovementTutorial";
 
 const SECTION_START = 0;
@@ -646,7 +648,7 @@ export class MovementRehearsalVisuals {
     ) {
       scene.add.text(
         sign.x,
-        274,
+        sign.y,
         `${sign.title}\n${sign.hint}`,
         {
           align: "center",
@@ -655,6 +657,8 @@ export class MovementRehearsalVisuals {
           color: "#f4d277",
           backgroundColor:
             "#120812dd",
+          fixedWidth: sign.width,
+          fixedHeight: sign.height,
           padding: {
             x: 7,
             y: 5
@@ -663,7 +667,7 @@ export class MovementRehearsalVisuals {
           strokeThickness: 2
         }
       )
-        .setOrigin(0.5, 1)
+        .setOrigin(0.5, 0)
         .setScrollFactor(1)
         .setDepth(
           MOVEMENT_TUTORIAL_SIGNAGE_DEPTH
@@ -684,11 +688,14 @@ export class MovementRehearsalVisuals {
         0.82
       );
 
+      const markerTop =
+        sign.y + sign.height + 3;
+
       marker.lineBetween(
         sign.x,
-        278,
+        markerTop,
         sign.x,
-        310
+        markerTop + 10
       );
 
       marker.fillStyle(
@@ -698,17 +705,17 @@ export class MovementRehearsalVisuals {
 
       marker.fillTriangle(
         sign.x,
-        316,
-        sign.x - 6,
-        307,
-        sign.x + 6,
-        307
+        markerTop + 16,
+        sign.x - 5,
+        markerTop + 9,
+        sign.x + 5,
+        markerTop + 9
       );
     }
 
     scene.add.text(
-      34,
-      42,
+      OPENING_TUTORIAL_TITLE.x,
+      OPENING_TUTORIAL_TITLE.y,
       "ACT I — MOVEMENT REHEARSAL",
       {
         fontFamily: "monospace",
@@ -730,8 +737,8 @@ export class MovementRehearsalVisuals {
       );
 
     scene.add.text(
-      34,
-      78,
+      OPENING_TUTORIAL_SUBTITLE.x,
+      OPENING_TUTORIAL_SUBTITLE.y,
       "Learn the stage. Keep the rhythm.",
       {
         fontFamily: "monospace",
