@@ -407,11 +407,57 @@
   - Full keyboard traversal, both route choices, wall-jump chamber, Sentry projectile interaction, hazard timing, encounter clear, death/reset, and both adjacent transitions require a browser-capable host
   - RoyalBox and later Sections retain M9 geometry pending sequential M10 authoring
 
+## RoyalBox Pre-Mutation Plan
+
+- Fixed interval: `31664..35344`
+- Adjacent transition constraints:
+  - Preserve the authored CardSanctum exit surface at `31216,480,448,32`
+  - Begin RoyalBox on a safe `y=480` entry surface at the fixed `31664` boundary
+  - End RoyalBox on a `y=480` surface aligned with the inherited MirrorCore entry at `35344,480,112,16`
+  - Do not mutate MirrorCore geometry or semantic entities during RoyalBox authoring
+- Inherited inventory:
+  - 47 collision rectangles, including 21 unrelated ceiling fragments at `y=0` and 25 repeating lower stepping or entry fragments
+  - 1 checkpoint at `31744,296` with trigger `31712`, vertically inconsistent with the inherited `y=480` entry surface
+  - 1 enemy-clear exit gate at `35264,0,18,520`
+  - 4 Royal Echoes: 2 duelists and 2 prism casters
+  - 13 hazards: 5 spike lanes, 4 moving blades, and 4 timed lasers
+  - 4 Royal Rose support pickups
+- Authored interval plan:
+  - `31664..32000`: safe CardSanctum arrival, floor-aligned checkpoint, Grand Card unlock, and readable encounter approach
+  - `32000..32800`: first fractured-box duel pairing a grounded duelist with an elevated caster, separated laser timing, and optional upper cover
+  - `32800..33664`: central reflected gallery pairing the second duelist with the second caster across alternating platforms, blades, and recovery roses
+  - `33664..35264`: final mastery traversal combining readable laser cycles, spike lanes, moving blades, and converging lower and upper routes
+  - `35264..35344`: enemy-clear gate and level `y=480` MirrorCore transition
+- Planned collision structure:
+  - Replace all 47 inherited fragments with deliberate fixed-world entry and exit floors, combat platforms, projectile cover, wall-jump surfaces, and a full-width lower fall boundary
+  - Keep all mandatory combat positions reachable with existing jump, double-jump, dash, air-dash, wall-slide, and wall-jump systems
+  - Preserve safe recovery space between laser, blade, and spike combinations so damage is avoidable and route decisions remain legible
+  - Maintain distinct lower and upper routes through the first two combat segments before a controlled final convergence
+- Planned semantic changes:
+  - Retain the existing RoyalBox checkpoint identity and align it to the authored `y=480` entry floor
+  - Retain `RoyalBoxExit` as the sole encounter gate and expand it to the full `0..688` playable height
+  - Reposition all four Royal Echoes onto authored combat surfaces while preserving identifiers, kinds, and phases
+  - Reposition all thirteen hazards and four Royal Roses to match authored surfaces while preserving semantic identities
+  - Derive Royal Echo projectile bounds and RoyalBox support unlock/projectile bounds from the fixed Section interval or generated spawn data instead of compact-world constants
+- Planned runtime architecture:
+  - Add `RoyalBoxVisuals.ts` for fixed-world fractured mirrors, route telegraphs, hazard framing, encounter landmarks, and MirrorCore transition signage
+  - Add `RoyalBoxEncounterSystem.ts` for checkpoint activation, Royal Echo activation, generated exit-gate ownership, objective state, clear state, and death/reset lifecycle
+  - Preserve `RoyalBoxHazardSystem` as the LDtk-driven blade, laser, spike, and fall-out owner; keep fall recovery active while encounter hazards are disabled
+  - Preserve `RoyalBoxSupportSystem` as the Grand Card unlock, Royal Rose, projectile, and look-down owner while replacing compact-world bounds
+  - Remove compact-world RoyalBox presentation and encounter state from `src/main.ts`
+- Planned validation coverage:
+  - Exact RoyalBox collision count and principal entry, combat, exit, and fall-boundary geometry
+  - Exact checkpoint and full-height exit-gate bounds
+  - Exact Royal Echo positions, patrol bounds, kinds, phases, and Section containment
+  - Exact hazard and support positions, dimensions, movement values, phases, and Section containment
+  - Dedicated encounter-module ownership of the generated exit gate
+  - Absence of stale compact-world RoyalBox presentation, encounter triggers, and projectile bounds
+
 ## Current Section
 
-- Current Section: CardSanctum `27984..31664`
-- Status: authored and validated locally; implementation commit and remote reconciliation pending
+- Current Section: RoyalBox `31664..35344`
+- Status: pre-mutation inspection complete; interval plan pending separate commit and push
 
 ## Exact Next Action
 
-Commit and push the validated CardSanctum implementation, update the open pull request, verify local/remote parity, then inspect RoyalBox before mutation.
+Commit and push the RoyalBox interval plan, update the open pull request, verify local/remote parity, then author RoyalBox from authoritative LDtk data.
