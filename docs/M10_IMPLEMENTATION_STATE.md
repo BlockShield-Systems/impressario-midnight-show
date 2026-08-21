@@ -303,11 +303,55 @@
   - Full keyboard traversal, Spotlight range instruction, Show recovery, encounter clear, death/reset, and both adjacent transitions require a browser-capable host
   - CardSanctum and later Sections retain M9 geometry pending sequential M10 authoring
 
+## CardSanctum Pre-Mutation Plan
+
+- Fixed interval: `27984..31664`
+- Adjacent transition constraints:
+  - Preserve the authored SpotlightVault exit surface at `27776,480,208,32`
+  - Begin CardSanctum on a safe `y=480` entry surface at the fixed `27984` boundary
+  - End CardSanctum on a `y=480` surface aligned with the inherited RoyalBox entry at `31664,480,112,16`
+  - Do not mutate RoyalBox geometry or semantic entities during CardSanctum authoring
+- Inherited inventory:
+  - 50 collision rectangles, including 26 unrelated ceiling fragments at `y=0` and 24 repeating lower stepping stones
+  - 1 checkpoint at `28016,450` with trigger `28000`
+  - 1 enemy-clear exit gate at `31584,0,18,520`
+  - 3 stationary Card Sentries
+  - 8 hazards: 4 moving blades and 4 spike lanes
+  - 0 support pickups
+- Authored interval plan:
+  - `27984..28240`: safe SpotlightVault arrival, floor-aligned checkpoint, route introduction, and encounter approach
+  - `28240..29120`: lower trap route and upper attack route around the first Card Sentry, with cover against aimed cards
+  - `29120..30368`: central wall-jump chamber around the elevated second Card Sentry, combining vertical blade timing with a safe recovery floor
+  - `30368..31584`: final route convergence around the third Card Sentry, alternating spike lanes and moving blades before the exit lock
+  - `31584..31664`: enemy-clear gate and level `y=480` RoyalBox transition
+- Planned collision structure:
+  - Replace all 50 inherited fragments with deliberate fixed-world floors, upper-route platforms, wall-jump surfaces, projectile cover, and a full-width lower fall boundary
+  - Keep every mandatory encounter route completable with the existing jump, double-jump, dash, air-dash, wall-slide, and wall-jump systems
+  - Preserve at least one readable lower route and one optional elevated route through the first two encounter segments
+  - Keep hazards separated by safe landing and recovery surfaces rather than stacking unavoidable damage zones
+- Planned semantic changes:
+  - Retain the existing CardSanctum checkpoint identity and align its position to the authored entry floor
+  - Retain `CardSanctumExit` as the sole encounter gate; no additional LDtk gate is required because the Section is an enemy-clear traversal rather than a sealed arena
+  - Reposition all three existing Card Sentries onto distinct, reachable combat platforms while preserving their identifiers and phases
+  - Reposition all four blades and all four spike lanes to match the authored route geometry while preserving their semantic identities
+  - Derive Card Sentry projectile culling bounds from generated Card Sentry spawn data instead of compact-world constants
+- Planned runtime architecture:
+  - Add `CardSanctumVisuals.ts` for fixed-world card arches, route telegraphs, hazard framing, encounter landmarks, and RoyalBox transition signage
+  - Add `CardSanctumEncounterSystem.ts` for checkpoint activation, Sentry activation, generated exit-gate ownership, objective state, clear state, and death/reset lifecycle
+  - Preserve `CardSanctumHazardSystem` as the LDtk-driven blade/spike and global fall-out owner; its update must continue while encounter hazards are disabled
+  - Remove compact-world CardSanctum presentation and encounter state from `src/main.ts`
+- Planned validation coverage:
+  - Exact CardSanctum collision count and principal entry, route, exit, and fall-boundary geometry
+  - Exact checkpoint and exit-gate bounds
+  - Exact Card Sentry positions, phases, and Section containment
+  - Exact blade and spike positions, dimensions, movement values, and Section containment
+  - Dedicated encounter-module ownership of the generated exit gate
+
 ## Current Section
 
-- Current Section: SpotlightVault `23552..27984`
-- Status: authored and validated locally; commit and remote reconciliation pending
+- Current Section: CardSanctum `27984..31664`
+- Status: pre-mutation inspection complete; interval plan recorded; LDtk remains unchanged
 
 ## Exact Next Action
 
-Commit and push the validated SpotlightVault implementation, update the open pull request, verify local/remote parity, then inspect CardSanctum before mutation.
+Commit and push the CardSanctum pre-mutation plan, update the open pull request, verify local/remote parity, then author CardSanctum geometry and semantic entities from LDtk.
