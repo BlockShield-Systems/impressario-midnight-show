@@ -5,7 +5,11 @@ import {
 } from "./AudioEvents";
 
 import {
-  ZONE_AUDIO_IDS
+  SECTION_AUDIO_IDS
+} from "./AudioLoadPlan";
+
+import type {
+  AudioSectionId
 } from "./AudioLoadPlan";
 
 import type {
@@ -41,112 +45,86 @@ import type {
   PlayerController
 } from "../main";
 
-interface Zone {
-  readonly start: number;
+import {
+  WORLD_SECTIONS
+} from "../world/WorldLayout";
+
+interface SectionAudioAssignment {
+  readonly section: AudioSectionId;
   readonly music: AudioAssetId;
   readonly ambience: AudioAssetId;
   readonly voice?: AudioAssetId;
 }
 
-const ZONES: readonly Zone[] = [
+export const SECTION_AUDIO_ASSIGNMENTS:
+readonly SectionAudioAssignment[] = [
   {
-    start: 0,
-    music:
-      "music_01_opening_rehearsal",
-    ambience:
-      "amb_theatre_room",
-    voice:
-      "vo_opening"
+    section: "MovementRehearsal",
+    music: "music_01_opening_rehearsal",
+    ambience: "amb_theatre_room",
+    voice: "vo_opening"
   },
   {
-    start: 700,
-    music:
-      "music_01_opening_rehearsal",
-    ambience:
-      "amb_theatre_room",
-    voice:
-      "vo_movement_rehearsal"
+    section: "CombatRehearsal",
+    music: "music_02_combat_rehearsal",
+    ambience: "amb_theatre_room",
+    voice: "vo_combat_rehearsal"
   },
   {
-    start: 5376,
-    music:
-      "music_02_combat_rehearsal",
-    ambience:
-      "amb_theatre_room",
-    voice:
-      "vo_combat_rehearsal"
+    section: "MainStage",
+    music: "music_03_backstage_ambush",
+    ambience: "amb_theatre_room",
+    voice: "vo_backstage_ambush"
   },
   {
-    start: 10464,
-    music:
-      "music_03_backstage_ambush",
-    ambience:
-      "amb_theatre_room",
-    voice:
-      "vo_backstage_ambush"
+    section: "GrandGallery",
+    music: "music_04_grand_gallery",
+    ambience: "amb_gallery_whispers",
+    voice: "vo_grand_gallery"
   },
   {
-    start: 13744,
-    music:
-      "music_04_grand_gallery",
-    ambience:
-      "amb_gallery_whispers",
-    voice:
-      "vo_grand_gallery"
+    section: "GalleryGauntlet",
+    music: "music_05_gallery_gauntlet",
+    ambience: "amb_gallery_whispers"
   },
   {
-    start: 19456,
-    music:
-      "music_05_gallery_gauntlet",
-    ambience:
-      "amb_gallery_whispers"
+    section: "SpotlightVault",
+    music: "music_06_spotlight_vault",
+    ambience: "amb_spotlight_electric",
+    voice: "vo_spotlight_vault"
   },
   {
-    start: 23552,
-    music:
-      "music_06_spotlight_vault",
-    ambience:
-      "amb_spotlight_electric",
-    voice:
-      "vo_spotlight_vault"
+    section: "CardSanctum",
+    music: "music_07_card_sanctum",
+    ambience: "amb_spotlight_electric",
+    voice: "vo_card_sanctum"
   },
   {
-    start: 27984,
-    music:
-      "music_07_card_sanctum",
-    ambience:
-      "amb_spotlight_electric",
-    voice:
-      "vo_card_sanctum"
+    section: "RoyalBox",
+    music: "music_08_royal_box",
+    ambience: "amb_gallery_whispers",
+    voice: "vo_royal_box"
   },
   {
-    start: 31664,
-    music:
-      "music_08_royal_box",
-    ambience:
-      "amb_gallery_whispers",
-    voice:
-      "vo_royal_box"
+    section: "MirrorCore",
+    music: "music_09_mirror_core",
+    ambience: "amb_mirror_core_machine",
+    voice: "vo_mirror_core"
   },
   {
-    start: 35344,
-    music:
-      "music_09_mirror_core",
-    ambience:
-      "amb_mirror_core_machine",
-    voice:
-      "vo_mirror_core"
+    section: "ConductorApproach",
+    music: "music_09_mirror_core",
+    ambience: "amb_mirror_core_machine"
   },
   {
-    start: 44672,
-    music:
-      "music_10_conductor_phase_1",
-    ambience:
-      "amb_mirror_core_machine",
-    voice:
-      "vo_boss_intro"
+    section: "MirrorConductor",
+    music: "music_10_conductor_phase_1",
+    ambience: "amb_mirror_core_machine",
+    voice: "vo_boss_intro"
   }
 ];
+
+const MOVEMENT_REHEARSAL_VOICE_CUE_X = 700;
 
 const BOSS_ACTION_AUDIO:
 Readonly<Record<string, AudioAssetId>> = {
@@ -210,8 +188,9 @@ export class AudioRuntimeBridge {
   private stepDistance = 0;
   private stepVariant = false;
 
-  private zoneIndex = -1;
-  private zoneLoadGeneration = 0;
+  private sectionIndex = -1;
+  private sectionLoadGeneration = 0;
+  private movementVoiceCuePlayed = false;
 
   private readonly playedVoice =
     new Set<AudioAssetId>();
@@ -274,7 +253,7 @@ export class AudioRuntimeBridge {
       this
     );
 
-    this.updateZone(true);
+    this.updateSection(true);
   }
 
   public update(
@@ -284,7 +263,8 @@ export class AudioRuntimeBridge {
     this.updateCombat();
     this.updateHealth();
     this.updateMagic();
-    this.updateZone(false);
+    this.updateSection(false);
+    this.updateAuxiliaryVoiceCues();
 
     this.previousState =
       this.player.state;
@@ -479,7 +459,7 @@ export class AudioRuntimeBridge {
       this.previousHealth <= 0 &&
       health > 0
     ) {
-      this.updateZone(true, true);
+      this.updateSection(true, true);
     }
   }
 
@@ -500,82 +480,80 @@ export class AudioRuntimeBridge {
     );
   }
 
-  private updateZone(
+  private updateSection(
     immediate: boolean,
     force = false
   ): void {
-    let nextIndex = 0;
-
-    for (
-      let index = 0;
-      index < ZONES.length;
-      index += 1
-    ) {
-      if (
-        this.player.x >=
-        ZONES[index]!.start
-      ) {
-        nextIndex = index;
-      }
-    }
+    const nextIndex = Math.max(
+      0,
+      WORLD_SECTIONS.findIndex(
+        section =>
+          this.player.x >= section.startX &&
+          this.player.x < section.endX
+      )
+    );
 
     if (
       !force &&
-      nextIndex === this.zoneIndex
+      nextIndex === this.sectionIndex
     ) {
       return;
     }
 
     const previous =
-      this.zoneIndex;
+      this.sectionIndex;
 
-    this.zoneIndex = nextIndex;
+    this.sectionIndex = nextIndex;
 
     const generation =
-      ++this.zoneLoadGeneration;
+      ++this.sectionLoadGeneration;
+
+    const section =
+      WORLD_SECTIONS[nextIndex]!;
 
     const required =
-      ZONE_AUDIO_IDS[nextIndex] ??
-      [];
+      SECTION_AUDIO_IDS[
+        section.id as AudioSectionId
+      ];
 
     void this.audio
       .preload(required)
       .then(() => {
         if (
           generation !==
-          this.zoneLoadGeneration
+          this.sectionLoadGeneration
         ) {
           return;
         }
 
-        const zone =
-          ZONES[nextIndex]!;
+        const assignment =
+          SECTION_AUDIO_ASSIGNMENTS[nextIndex]!;
 
         this.music.setMusic(
-          zone.music,
+          assignment.music,
           immediate ? 0 : 1200
         );
 
         this.music.setAmbience(
-          zone.ambience,
+          assignment.ambience,
           immediate ? 0 : 1000
         );
 
         if (
-          zone.voice &&
+          assignment.voice &&
           !this.playedVoice.has(
-            zone.voice
+            assignment.voice
           )
         ) {
           this.playedVoice.add(
-            zone.voice
+            assignment.voice
           );
 
           this.scene.time.delayedCall(
             immediate ? 500 : 300,
             () => {
               this.audio.play(
-                zone.voice!,
+                assignment.voice!,
                 {
                   gain: 1,
                   maxInstances: 1
@@ -595,10 +573,14 @@ export class AudioRuntimeBridge {
           );
         }
 
-        const upcoming =
-          ZONE_AUDIO_IDS[
-            nextIndex + 1
-          ];
+        const upcomingSection =
+          WORLD_SECTIONS[nextIndex + 1];
+
+        const upcoming = upcomingSection
+          ? SECTION_AUDIO_IDS[
+              upcomingSection.id as AudioSectionId
+            ]
+          : undefined;
 
         if (upcoming) {
           void this.audio
@@ -613,10 +595,26 @@ export class AudioRuntimeBridge {
       })
       .catch(error => {
         console.error(
-          `[audio] Zone ${nextIndex} load failed`,
+          `[audio] Section ${section.id} load failed`,
           error
         );
       });
+  }
+
+  private updateAuxiliaryVoiceCues(): void {
+    if (
+      this.movementVoiceCuePlayed ||
+      this.sectionIndex !== 0 ||
+      this.player.x <
+        MOVEMENT_REHEARSAL_VOICE_CUE_X
+    ) {
+      return;
+    }
+
+    this.movementVoiceCuePlayed = true;
+    this.playVoiceOnce(
+      "vo_movement_rehearsal"
+    );
   }
 
   private readonly onEnemyTag = (

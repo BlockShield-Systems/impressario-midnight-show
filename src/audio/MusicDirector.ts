@@ -25,6 +25,9 @@ export class MusicDirector {
   private ambienceId:
     AudioAssetId | null = null;
 
+  private readonly soundtrackRequests =
+    new Map<AudioAssetId, number>();
+
   public constructor(
     private readonly scene: Phaser.Scene,
     private readonly audio: AudioDirector
@@ -34,6 +37,11 @@ export class MusicDirector {
     id: AudioAssetId,
     duration = 1200
   ): void {
+    this.soundtrackRequests.set(
+      id,
+      (this.soundtrackRequests.get(id) ?? 0) + 1
+    );
+
     if (id === this.musicId) {
       return;
     }
@@ -62,6 +70,33 @@ export class MusicDirector {
       id,
       duration
     );
+  }
+
+  public getDebugSnapshot(): {
+    readonly currentSoundtrack: AudioAssetId | null;
+    readonly currentAmbience: AudioAssetId | null;
+    readonly currentBossThemePart: 1 | 2 | 3 | null;
+    readonly soundtrackRequests: Readonly<Record<string, number>>;
+  } {
+    const phaseMatch =
+      this.musicId?.match(
+        /^music_1([0-2])_conductor_phase_([1-3])$/
+      );
+
+    return {
+      currentSoundtrack: this.musicId,
+      currentAmbience: this.ambienceId,
+      currentBossThemePart:
+        phaseMatch
+          ? Number(
+              phaseMatch[2]
+            ) as 1 | 2 | 3
+          : null,
+      soundtrackRequests:
+        Object.fromEntries(
+          this.soundtrackRequests
+        )
+    };
   }
 
   public stopMusic(
@@ -104,17 +139,24 @@ export class MusicDirector {
       this.ambience = next;
     }
 
-    const fade = { gain: 0 };
+    if (duration <= 0) {
+      next.setGain(1);
+    } else {
+      const fade = { gain: 0 };
 
-    this.scene.tweens.add({
-      targets: fade,
-      gain: 1,
-      duration,
-      ease: "Sine.InOut",
-      onUpdate: () => {
-        next.setGain(fade.gain);
-      }
-    });
+      this.scene.tweens.add({
+        targets: fade,
+        gain: 1,
+        duration,
+        ease: "Sine.InOut",
+        onUpdate: () => {
+          next.setGain(fade.gain);
+        },
+        onComplete: () => {
+          next.setGain(1);
+        }
+      });
+    }
 
     if (previous) {
       this.fadeOut(previous, duration);
@@ -125,6 +167,11 @@ export class MusicDirector {
     handle: ManagedAudioHandle,
     duration: number
   ): void {
+    if (duration <= 0) {
+      handle.stop();
+      return;
+    }
+
     const fade = { gain: 1 };
 
     this.scene.tweens.add({

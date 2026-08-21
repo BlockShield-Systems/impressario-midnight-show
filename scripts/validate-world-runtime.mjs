@@ -59,9 +59,57 @@ const sections =
       entity.__identifier === "Section"
   );
 
-if (collisions.length !== 296) {
+if (collisions.length !== 287) {
   throw new Error(
-    `Expected 296 collisions, got ${collisions.length}.`
+    `Expected 287 collisions, got ${collisions.length}.`
+  );
+}
+
+const movementRehearsalCollisions =
+  collisions.filter(
+    entity =>
+      entity.__worldX >= 0 &&
+      entity.__worldX < 5376
+  );
+
+if (
+  movementRehearsalCollisions.some(
+    entity => entity.__worldY >= 512
+  )
+) {
+  throw new Error(
+    "MovementRehearsal must not expose the removed lower recovery route."
+  );
+}
+
+for (const [x, y, width, height] of [
+  [1680, 402, 136, 20],
+  [1840, 370, 176, 20]
+]) {
+  if (
+    !movementRehearsalCollisions.some(
+      entity =>
+        entity.__worldX === x &&
+        entity.__worldY === y &&
+        entity.width === width &&
+        entity.height === height
+    )
+  ) {
+    throw new Error(
+      `MovementRehearsal platform ${x},${y},${width},${height} is missing.`
+    );
+  }
+}
+
+if (
+  !collisions.some(
+    entity =>
+      entity.__worldX >= 5376 &&
+      entity.__worldY >= 512
+  )
+) {
+  throw new Error(
+    "Later authored lower/checkpoint geometry must remain intact."
   );
 }
 
@@ -625,6 +673,6 @@ for (const file of sourceFiles) {
 
 console.log(
   "World runtime valid: 49824x720, " +
-  "296 collisions, 11 LDtk-driven lighting sections, " +
+  "287 collisions, 11 LDtk-driven lighting sections, " +
   "exact MirrorConductor geometry and world end."
 );

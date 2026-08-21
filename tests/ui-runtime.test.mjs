@@ -19,9 +19,12 @@ import {
   rectanglesOverlap
 } from "../src/world/MovementTutorial.ts";
 import {
+  WORLD_HEIGHT,
+  WORLD_SECTIONS,
   WORLD_SOLIDS
 } from "../src/world/WorldLayout.ts";
 import {
+  WORLD_CHECKPOINTS,
   getWorldCheckpoint
 } from "../src/world/WorldGameplay.ts";
 
@@ -107,11 +110,81 @@ test("environment rendering removes repeated full-world textures", async () => {
     "MovementRehearsal visuals must initialize once"
   );
   assert.equal(
-    (main.match(/new Phaser\.Game\(config\)/g) ?? []).length,
+    (main.match(/new Phaser\.Game\(\{/g) ?? []).length,
     1,
     "the application must create one Phaser game"
   );
   assert.match(main, /type: Phaser\.WEBGL/);
+});
+
+test("MovementRehearsal alone restricts camera and lower fall recovery", async () => {
+  const movement = WORLD_SECTIONS.find(
+    section => section.id === "MovementRehearsal"
+  );
+  const combat = WORLD_SECTIONS.find(
+    section => section.id === "CombatRehearsal"
+  );
+
+  assert.ok(movement);
+  assert.ok(combat);
+  assert.equal(movement.startX, 0);
+  assert.equal(movement.endX, combat.startX);
+  assert.equal(WORLD_HEIGHT, 720);
+
+  const movementSolids = WORLD_SOLIDS.filter(solid =>
+    solid.x < movement.endX
+  );
+  const laterSolids = WORLD_SOLIDS.filter(solid =>
+    solid.x >= movement.endX
+  );
+
+  assert.equal(
+    movementSolids.some(solid => solid.y >= 512),
+    false,
+    "the unintended lower fallback route must be absent only from MovementRehearsal"
+  );
+  assert.equal(
+    laterSolids.some(solid => solid.y >= 512),
+    true,
+    "later authored lower geometry must remain intact"
+  );
+  assert.ok(
+    movementSolids.some(solid =>
+      solid.x === 1680 && solid.y === 402 &&
+      solid.width === 136 && solid.height === 20
+    )
+  );
+  assert.ok(
+    movementSolids.some(solid =>
+      solid.x === 1840 && solid.y === 370 &&
+      solid.width === 176 && solid.height === 20
+    )
+  );
+
+  for (const checkpoint of WORLD_CHECKPOINTS) {
+    const supportingSolid = WORLD_SOLIDS.find(solid =>
+      checkpoint.x >= solid.x &&
+      checkpoint.x <= solid.x + solid.width &&
+      solid.y >= checkpoint.y + 30 &&
+      solid.y - checkpoint.y <= 64
+    );
+
+    assert.ok(
+      supportingSolid,
+      `${checkpoint.id} must retain authored supporting geometry`
+    );
+  }
+
+  const main = await source("src/main.ts");
+  const bounds = await source("src/world/MovementRouteBounds.ts");
+
+  assert.match(main, /restrictToMovementRoute\s*\?\s*MOVEMENT_ROUTE_CAMERA_HEIGHT\s*:\s*WORLD_HEIGHT/s);
+  assert.match(main, /this\.updateCameraBounds\(\)/);
+  assert.match(bounds, /WORLD_SECTIONS\.find/);
+  assert.match(bounds, /MOVEMENT_ROUTE_CAMERA_HEIGHT = 360/);
+  assert.match(bounds, /playerY > MOVEMENT_ROUTE_FALL_OUT_Y/);
+  assert.doesNotMatch(bounds, /5376/);
+  assert.doesNotMatch(main, /skipMissedFrames:\s*true/);
 });
 
 test("opening tutorial has one readable control presentation outside the player route", async () => {

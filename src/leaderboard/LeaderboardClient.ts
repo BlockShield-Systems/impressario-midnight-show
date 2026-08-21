@@ -200,13 +200,13 @@ class LeaderboardClient {
   private onlineRun = false;
   private finishing = false;
 
-  private startGame:
-    (() => void) | undefined;
+  private prepareGame:
+    (() => () => void) | undefined;
 
   public async boot(
-    startGame: () => void
+    prepareGame: () => () => void
   ): Promise<void> {
-    this.startGame = startGame;
+    this.prepareGame = prepareGame;
     await this.showStartScreen();
   }
 
@@ -596,6 +596,9 @@ class LeaderboardClient {
       this.localStartedAt =
         Date.now();
 
+      const startPreparedGame =
+        this.prepareGame?.();
+
       try {
         if (
           !localDevelopment &&
@@ -652,7 +655,7 @@ class LeaderboardClient {
       }
 
       overlay.remove();
-      this.startGame?.();
+      startPreparedGame?.();
     };
 
     beginButton.addEventListener(

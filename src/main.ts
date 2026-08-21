@@ -24,6 +24,18 @@ import { MusicDirector } from "./audio/MusicDirector";
 import { AudioRuntimeBridge } from "./audio/AudioRuntimeBridge";
 import { AudioDebugHud } from "./audio/AudioDebugHud";
 import {
+  runQaAudioCatalogHarness
+} from "./audio/AudioQaCatalogHarness";
+import {
+  advanceFixedStepFrame,
+  FIXED_TIMESTEP_SECONDS
+} from "./runtime/FixedStepTiming";
+import {
+  MOVEMENT_ROUTE_CAMERA_HEIGHT,
+  isBelowMovementRoute,
+  isInMovementRehearsal
+} from "./world/MovementRouteBounds";
+import {
   WORLD_HEIGHT,
   WORLD_SOLIDS,
   WORLD_WIDTH
@@ -57,8 +69,12 @@ import { CardSanctumVisuals } from "./world/CardSanctumVisuals";
 const GAME_WIDTH = 640;
 const GAME_HEIGHT = 360;
 
-const FIXED_TIMESTEP = 1 / 120;
-const MAX_FRAME_DELTA = 0.05;
+const QA_RUNTIME_INSPECTION =
+  import.meta.env.VITE_QA_RUNTIME_INSPECTION ===
+  "1";
+
+let preparedAudioContext:
+  AudioContext | undefined;
 
 const MOVEMENT = {
   bodyWidth: 18,
@@ -905,6 +921,7 @@ class GameScene extends Phaser.Scene {
 
   private debugText!: Phaser.GameObjects.Text;
   private accumulator = 0;
+  private movementCameraRestricted = false;
 
   public constructor() {
     super("game");
@@ -1141,9 +1158,13 @@ class GameScene extends Phaser.Scene {
       );
 
     this.audioDirector =
-      new AudioDirector(this);
+      new AudioDirector(
+        this,
+        preparedAudioContext,
+        QA_RUNTIME_INSPECTION
+      );
 
-    if (import.meta.env.DEV) {
+    if (QA_RUNTIME_INSPECTION) {
       const debugWindow =
         window as Window & {
           __IMPRESSARIO_AUDIO_DEBUG__?:
@@ -1156,9 +1177,12 @@ class GameScene extends Phaser.Scene {
 
       debugWindow
         .__IMPRESSARIO_AUDIO_DEBUG__ =
-          () =>
-            this.audioDirector
-              .getDebugSnapshot();
+          () => ({
+            ...this.audioDirector
+              .getDebugSnapshot(),
+            ...this.musicDirector
+              .getDebugSnapshot()
+          });
 
       this.events.once(
         Phaser.Scenes.Events.SHUTDOWN,
@@ -1192,6 +1216,13 @@ class GameScene extends Phaser.Scene {
         this.audioDirector
       );
 
+    if (QA_RUNTIME_INSPECTION) {
+      runQaAudioCatalogHarness(
+        this.audioDirector,
+        this.musicDirector
+      );
+    }
+
     this.createLabels();
     this.createEncounterPresentation();
     this.createDebugHud();
@@ -1215,6 +1246,8 @@ class GameScene extends Phaser.Scene {
       WORLD_HEIGHT
     );
 
+    this.updateCameraBounds(true);
+
     this.cameras.main.startFollow(
       this.playerView.container,
       true,
@@ -1231,31 +1264,50 @@ class GameScene extends Phaser.Scene {
   ): void {
     this.playerInput.update();
 
-    const frameDelta = Math.min(
-      deltaMilliseconds / 1000,
-      MAX_FRAME_DELTA
-    );
+    const fixedFrame =
+      advanceFixedStepFrame(
+        deltaMilliseconds,
+        this.accumulator
+      );
+
+    const frameDelta =
+      fixedFrame.acceptedSeconds;
 
     this.playerHealth.update(frameDelta);
 
     if (this.playerHealth.controlsLocked) {
       this.accumulator = 0;
     } else {
-      this.accumulator += frameDelta;
-
       let consumeInputEdges = true;
 
-      while (this.accumulator >= FIXED_TIMESTEP) {
+      for (
+        let step = 0;
+        step < fixedFrame.steps;
+        step += 1
+      ) {
         this.player.fixedUpdate(
-          FIXED_TIMESTEP,
+          FIXED_TIMESTEP_SECONDS,
           this.playerInput.snapshot(
             consumeInputEdges
           )
         );
 
         consumeInputEdges = false;
-        this.accumulator -= FIXED_TIMESTEP;
       }
+
+      this.accumulator =
+        fixedFrame.accumulatorSeconds;
+    }
+
+    this.updateCameraBounds();
+
+    if (
+      isBelowMovementRoute(
+        this.player.centerX,
+        this.player.y
+      )
+    ) {
+      this.playerHealth.fallOut();
     }
 
     this.combatSystem.update(frameDelta);
@@ -1280,6 +1332,35 @@ class GameScene extends Phaser.Scene {
     this.audioDebugHud.update(frameDelta);
 
     this.updateDebugHud();
+  }
+
+  private updateCameraBounds(
+    force = false
+  ): void {
+    const restrictToMovementRoute =
+      isInMovementRehearsal(
+        this.player.centerX
+      );
+
+    if (
+      !force &&
+      restrictToMovementRoute ===
+        this.movementCameraRestricted
+    ) {
+      return;
+    }
+
+    this.movementCameraRestricted =
+      restrictToMovementRoute;
+
+    this.cameras.main.setBounds(
+      0,
+      0,
+      WORLD_WIDTH,
+      restrictToMovementRoute
+        ? MOVEMENT_ROUTE_CAMERA_HEIGHT
+        : WORLD_HEIGHT
+    );
   }
 
   private createBackdrop(): void {
@@ -1907,5 +1988,25 @@ const config: Phaser.Types.Core.GameConfig = {
 };
 
 void leaderboard.boot(() => {
-  new Phaser.Game(config);
+  const audioContext =
+    typeof AudioContext === "undefined"
+      ? undefined
+      : new AudioContext();
+
+  preparedAudioContext = audioContext;
+
+  if (audioContext) {
+    void audioContext.resume();
+  }
+
+  return () => {
+    new Phaser.Game({
+      ...config,
+      audio: audioContext
+        ? {
+            context: audioContext
+          }
+        : undefined
+    });
+  };
 });
