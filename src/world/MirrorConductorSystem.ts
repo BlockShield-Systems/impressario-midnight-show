@@ -8,6 +8,10 @@ import type { CombatSystem, CombatTarget } from "../combat/CombatSystem";
 import type { MagicSystem } from "../magic/MagicSystem";
 import type { PlayerHealthSystem } from "../player/PlayerHealthSystem";
 import type { PlayerController } from "../main";
+import {
+  applyMirrorConductorDamage,
+  getMirrorConductorPhase
+} from "./MirrorConductorPhase";
 
 export const MIRROR_CONDUCTOR_START_X = 44672;
 export const MIRROR_CONDUCTOR_END_X = 49824;
@@ -153,12 +157,6 @@ implements CombatTarget {
   // prevent high damage from skipping an entire musical phase.
   private phaseElapsed = 0;
 
-  private readonly minimumPhaseDuration = {
-    1: 55,
-    2: 60,
-    3: 70
-  } as const;
-
   private readonly view: BossView;
 
   public constructor(
@@ -190,15 +188,9 @@ implements CombatTarget {
   }
 
   public get phase(): 1 | 2 | 3 {
-    if (this.health <= 36) {
-      return 3;
-    }
-
-    if (this.health <= 72) {
-      return 2;
-    }
-
-    return 1;
+    return getMirrorConductorPhase(
+      this.health
+    );
   }
 
   public get isShielded(): boolean {
@@ -317,30 +309,11 @@ implements CombatTarget {
 
     const phaseBefore = this.phase;
 
-    const requestedHealth = Math.max(
-      0,
-      this.health - damage
+    this.health = applyMirrorConductorDamage(
+      this.health,
+      damage,
+      this.phaseElapsed
     );
-
-    const phaseFloor =
-      phaseBefore === 1
-        ? 73
-        : phaseBefore === 2
-          ? 37
-          : 1;
-
-    const phaseDuration =
-      this.minimumPhaseDuration[
-        phaseBefore
-      ];
-
-    this.health =
-      this.phaseElapsed < phaseDuration
-        ? Math.max(
-            requestedHealth,
-            phaseFloor
-          )
-        : requestedHealth;
 
     this.flashTimer = 0.12;
 

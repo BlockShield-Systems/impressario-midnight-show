@@ -309,6 +309,11 @@ const mirrorConductorVisuals =
     "src/world/MirrorConductorVisuals.ts"
   );
 
+const mirrorConductorPhase =
+  read(
+    "src/world/MirrorConductorPhase.ts"
+  );
+
 const runtime =
   read(
     "src/world/WorldGameplay.ts"
@@ -467,11 +472,8 @@ for (const required of [
   'createWorldGate(\n    "MirrorConductorResolution"',
   'getWorldCheckpoint(\n        "MirrorConductor"',
   "private health = 108",
-  "if (this.health <= 72)",
-  "if (this.health <= 36)",
-  "1: 55",
-  "2: 60",
-  "3: 70",
+  "getMirrorConductorPhase(",
+  "applyMirrorConductorDamage(",
   "public receiveRangedHit(",
   "this.magicSystem.castsPerformed",
   "combatSystem.registerTarget(this.conductor)",
@@ -488,6 +490,26 @@ for (const required of [
   if (!mirrorConductor.includes(required)) {
     throw new Error(
       `MirrorConductorSystem is missing ${JSON.stringify(required)}.`
+    );
+  }
+}
+
+for (const required of [
+  "export const MIRROR_CONDUCTOR_MINIMUM_PHASE_DURATION",
+  "if (health <= 72)",
+  "if (health <= 36)",
+  "1: 55",
+  "2: 60",
+  "3: 70",
+  "phaseElapsed <",
+  "? 73",
+  ": 37",
+  ": 1",
+  ": 0"
+]) {
+  if (!mirrorConductorPhase.includes(required)) {
+    throw new Error(
+      `MirrorConductorPhase is missing ${JSON.stringify(required)}.`
     );
   }
 }
