@@ -68,7 +68,7 @@ const ZONES: readonly Zone[] = [
       "vo_movement_rehearsal"
   },
   {
-    start: 2240,
+    start: 5376,
     music:
       "music_02_combat_rehearsal",
     ambience:
@@ -77,7 +77,7 @@ const ZONES: readonly Zone[] = [
       "vo_combat_rehearsal"
   },
   {
-    start: 2880,
+    start: 10464,
     music:
       "music_03_backstage_ambush",
     ambience:
@@ -86,7 +86,7 @@ const ZONES: readonly Zone[] = [
       "vo_backstage_ambush"
   },
   {
-    start: 4800,
+    start: 13744,
     music:
       "music_04_grand_gallery",
     ambience:
@@ -95,14 +95,14 @@ const ZONES: readonly Zone[] = [
       "vo_grand_gallery"
   },
   {
-    start: 6400,
+    start: 19456,
     music:
       "music_05_gallery_gauntlet",
     ambience:
       "amb_gallery_whispers"
   },
   {
-    start: 8200,
+    start: 23552,
     music:
       "music_06_spotlight_vault",
     ambience:
@@ -111,7 +111,7 @@ const ZONES: readonly Zone[] = [
       "vo_spotlight_vault"
   },
   {
-    start: 9600,
+    start: 27984,
     music:
       "music_07_card_sanctum",
     ambience:
@@ -120,7 +120,7 @@ const ZONES: readonly Zone[] = [
       "vo_card_sanctum"
   },
   {
-    start: 12000,
+    start: 31664,
     music:
       "music_08_royal_box",
     ambience:
@@ -129,7 +129,7 @@ const ZONES: readonly Zone[] = [
       "vo_royal_box"
   },
   {
-    start: 14400,
+    start: 35344,
     music:
       "music_09_mirror_core",
     ambience:
@@ -138,7 +138,7 @@ const ZONES: readonly Zone[] = [
       "vo_mirror_core"
   },
   {
-    start: 17840,
+    start: 44672,
     music:
       "music_10_conductor_phase_1",
     ambience:

@@ -8,6 +8,10 @@ import {
 import { EnemyView } from "../enemies/EnemyView";
 import type { PlayerController } from "../main";
 
+const TUTORIAL_START = 5792;
+const TUTORIAL_END = 6688;
+const TUTORIAL_PLATFORM_TOP = 326;
+
 export type AttackId =
   | "combo-1"
   | "combo-2"
@@ -357,7 +361,7 @@ export interface CombatTarget {
 
 class TrainingDummy implements CombatTarget {
   public readonly active = true;
-  public x = 2530;
+  public x = 6256;
   public y = 296;
 
   public readonly width = 18;
@@ -409,9 +413,9 @@ class TrainingDummy implements CombatTarget {
       250 * deltaSeconds
     );
 
-    const platformLeft = 2290;
-    const platformRight = 2790;
-    const platformTop = 326;
+    const platformLeft = 5888;
+    const platformRight = 6608;
+    const platformTop = TUTORIAL_PLATFORM_TOP;
 
     this.x = Phaser.Math.Clamp(
       this.x,
@@ -536,8 +540,8 @@ export class CombatSystem {
     this.effectGraphics.setDepth(101);
 
     scene.add.text(
-      2425,
-      62,
+      5488,
+      68,
       "ACT II — COMBAT REHEARSAL",
       {
         fontFamily: "monospace",
@@ -615,11 +619,11 @@ export class CombatSystem {
     this.updateEffects(deltaSeconds);
 
     const tutorialActive =
-      this.player.x >= 2280;
+      this.player.x >= TUTORIAL_START;
 
     this.objectiveText.setVisible(
       tutorialActive &&
-      this.player.x < 2880
+      this.player.x < TUTORIAL_END
     );
 
     if (
@@ -633,6 +637,10 @@ export class CombatSystem {
     if (tutorialActive) {
       this.updateTutorialPrompt();
     }
+  }
+
+  public get completed(): boolean {
+    return this.tutorialCompleted;
   }
 
   public get animationState():
@@ -835,9 +843,9 @@ export class CombatSystem {
     this.arenaCameraLocked = true;
 
     this.scene.cameras.main.setBounds(
-      2240,
+      TUTORIAL_START,
       0,
-      640,
+      TUTORIAL_END - TUTORIAL_START,
       360
     );
 
@@ -1173,7 +1181,7 @@ export class CombatSystem {
       this.releaseArenaCamera();
 
       this.scene.add.text(
-        2800,
+        6512,
         76,
         "CONTINUE TO ACT III →",
         {

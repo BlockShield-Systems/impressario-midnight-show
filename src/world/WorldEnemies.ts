@@ -29,104 +29,54 @@ export interface WorldEnemySpawn {
 
 export const WORLD_ENEMY_SPAWNS = [
   {
-    id: "MainStageStagehandA",
+    id: "CombatStagehandA",
     group: "Stagehand",
     kind: "",
-    x: 3180,
+    x: 7008,
     y: 296,
-    patrolLeft: 3070,
-    patrolRight: 3350,
+    patrolLeft: 6912,
+    patrolRight: 7136,
     phase: 0
   },
   {
-    id: "MainStageCardThrowerA",
+    id: "CombatStagehandB",
+    group: "Stagehand",
+    kind: "",
+    x: 7352,
+    y: 296,
+    patrolLeft: 7248,
+    patrolRight: 7584,
+    phase: 0
+  },
+  {
+    id: "CombatCardThrowerA",
     group: "CardThrower",
     kind: "",
-    x: 3340,
+    x: 7984,
     y: 296,
-    patrolLeft: 3260,
-    patrolRight: 3440,
+    patrolLeft: 7808,
+    patrolRight: 8144,
     phase: 0
   },
   {
-    id: "MainStageStagehandB",
+    id: "CombatStagehandC",
     group: "Stagehand",
     kind: "",
-    x: 3520,
+    x: 8872,
     y: 296,
-    patrolLeft: 3400,
-    patrolRight: 3670,
+    patrolLeft: 8784,
+    patrolRight: 9072,
     phase: 0
   },
   {
-    id: "MainStageCardThrowerB",
+    id: "CombatCardThrowerB",
     group: "CardThrower",
     kind: "",
-    x: 3760,
+    x: 9304,
     y: 296,
-    patrolLeft: 3680,
-    patrolRight: 3880,
-    phase: 0
-  },
-  {
-    id: "MainStageStagehandC",
-    group: "Stagehand",
-    kind: "",
-    x: 4010,
-    y: 296,
-    patrolLeft: 3890,
-    patrolRight: 4140,
-    phase: 0
-  },
-  {
-    id: "GalleryShadowAcrobatA",
-    group: "ShadowAcrobat",
-    kind: "",
-    x: 6800,
-    y: 430,
-    patrolLeft: 6740,
-    patrolRight: 6890,
-    phase: 0
-  },
-  {
-    id: "GalleryShadowAcrobatB",
-    group: "ShadowAcrobat",
-    kind: "",
-    x: 7505,
-    y: 326,
-    patrolLeft: 7480,
-    patrolRight: 7605,
-    phase: 0
-  },
-  {
-    id: "VaultLightWraithA",
-    group: "LightWraith",
-    kind: "",
-    x: 8620,
-    y: 270,
-    patrolLeft: 8500,
-    patrolRight: 8780,
-    phase: 0
-  },
-  {
-    id: "VaultLightWraithB",
-    group: "LightWraith",
-    kind: "",
-    x: 9020,
-    y: 270,
-    patrolLeft: 8880,
-    patrolRight: 9190,
+    patrolLeft: 9152,
+    patrolRight: 9536,
     phase: 3.141592653589793
-  },
-  {
-    id: "SanctumCardSentryA",
-    group: "CardSentry",
-    kind: "",
-    x: 10020,
-    y: 440,
-    patrolLeft: 10020,
-    patrolRight: 10020,
-    phase: 0
   },
   {
     id: "SanctumCardSentryB",
@@ -189,6 +139,26 @@ export const WORLD_ENEMY_SPAWNS = [
     phase: 4.71238898038469
   },
   {
+    id: "GalleryShadowAcrobatA",
+    group: "ShadowAcrobat",
+    kind: "",
+    x: 14560,
+    y: 430,
+    patrolLeft: 14480,
+    patrolRight: 14720,
+    phase: 0
+  },
+  {
+    id: "GalleryShadowAcrobatB",
+    group: "ShadowAcrobat",
+    kind: "",
+    x: 15104,
+    y: 326,
+    patrolLeft: 15040,
+    patrolRight: 15264,
+    phase: 0
+  },
+  {
     id: "MirrorCoreDuelist",
     group: "MirrorCore",
     kind: "duelist",
@@ -226,6 +196,36 @@ export const WORLD_ENEMY_SPAWNS = [
     y: 194,
     patrolLeft: 16080,
     patrolRight: 16330,
+    phase: 0
+  },
+  {
+    id: "VaultLightWraithA",
+    group: "LightWraith",
+    kind: "",
+    x: 24240,
+    y: 270,
+    patrolLeft: 24096,
+    patrolRight: 24448,
+    phase: 0
+  },
+  {
+    id: "VaultLightWraithB",
+    group: "LightWraith",
+    kind: "",
+    x: 25120,
+    y: 270,
+    patrolLeft: 24960,
+    patrolRight: 25312,
+    phase: 3.141592653589793
+  },
+  {
+    id: "SanctumCardSentryA",
+    group: "CardSentry",
+    kind: "",
+    x: 28624,
+    y: 440,
+    patrolLeft: 28624,
+    patrolRight: 28624,
     phase: 0
   },
 ] as const satisfies readonly WorldEnemySpawn[];

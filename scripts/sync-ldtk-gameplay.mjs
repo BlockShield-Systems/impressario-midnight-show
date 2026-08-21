@@ -108,17 +108,17 @@ const gates =
         left.y - right.y
     );
 
-if (checkpoints.length !== 11) {
+if (checkpoints.length !== 13) {
   throw new Error(
-    `Expected 11 checkpoints, got ${
+    `Expected 13 checkpoints, got ${
       checkpoints.length
     }.`
   );
 }
 
-if (gates.length !== 9) {
+if (gates.length !== 10) {
   throw new Error(
-    `Expected 9 gameplay gates, got ${
+    `Expected 10 gameplay gates, got ${
       gates.length
     }.`
   );

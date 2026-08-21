@@ -34,6 +34,8 @@ import {
 } from "./world/WorldGameplay";
 import { EnvironmentTileRenderer } from "./world/EnvironmentTileRenderer";
 import { MovementRehearsalVisuals } from "./world/MovementRehearsalVisuals";
+import { CombatRehearsalVisuals } from "./world/CombatRehearsalVisuals";
+import { CombatRehearsalHazardSystem } from "./world/CombatRehearsalHazardSystem";
 
 /* -------------------------------------------------------------------------- */
 /* Configuration                                                              */
@@ -845,6 +847,7 @@ class GameScene extends Phaser.Scene {
   private combatSystem!: CombatSystem;
   private stagehandSystem!: StagehandSystem;
   private cardThrowerSystem!: CardThrowerSystem;
+  private combatHazardSystem!: CombatRehearsalHazardSystem;
   private shadowAcrobatSystem!: ShadowAcrobatSystem;
   private galleryHazardSystem!: GalleryHazardSystem;
   private lightWraithSystem!: LightWraithSystem;
@@ -863,18 +866,23 @@ class GameScene extends Phaser.Scene {
 
   private collisionWorld!: CollisionWorld;
 
+  private readonly tutorialExitGate =
+    createWorldGate("CombatTutorialExit");
+
   private readonly arenaLeftGate =
-    createWorldGate("MainStageLeft");
+    createWorldGate("CombatArenaLeft");
 
   private readonly arenaRightGate =
-    createWorldGate("MainStageRight");
+    createWorldGate("CombatArenaRight");
 
   private arenaGateGraphics!: Phaser.GameObjects.Graphics;
   private encounterText!: Phaser.GameObjects.Text;
 
   private encounterActive = false;
   private encounterCleared = false;
+  private tutorialExitLocked = true;
   private checkpointActivated = false;
+  private masteryCheckpointActivated = false;
 
   private grandGalleryEntered = false;
   private grandGalleryCheckpointActivated = false;
@@ -944,6 +952,7 @@ class GameScene extends Phaser.Scene {
       this
     );
     new MovementRehearsalVisuals(this);
+    new CombatRehearsalVisuals(this);
 
     const solids = this.createLevel();
 
@@ -955,6 +964,10 @@ class GameScene extends Phaser.Scene {
 
     this.collisionWorld =
       new CollisionWorld(solids);
+
+    this.collisionWorld.addSolid(
+      this.tutorialExitGate
+    );
 
     this.playerInput = new PlayerInput();
 
@@ -1003,6 +1016,13 @@ class GameScene extends Phaser.Scene {
         this.player,
         this.playerHealth,
         this.combatSystem
+      );
+
+    this.combatHazardSystem =
+      new CombatRehearsalHazardSystem(
+        this,
+        this.player,
+        this.playerHealth
       );
 
     this.shadowAcrobatSystem =
@@ -1225,6 +1245,7 @@ class GameScene extends Phaser.Scene {
     this.playerView.update(frameDelta);
     this.stagehandSystem.update(frameDelta);
     this.cardThrowerSystem.update(frameDelta);
+    this.combatHazardSystem.update();
     this.shadowAcrobatSystem.update(frameDelta);
     this.galleryHazardSystem.update(frameDelta);
     this.lightWraithSystem.update(frameDelta);
@@ -1835,6 +1856,10 @@ class GameScene extends Phaser.Scene {
   }
 
   private updateRoyalBox(): void {
+    if (this.player.x < 31664) {
+      return;
+    }
+
     if (
       !this.royalBoxEntered &&
       this.player.x >= getWorldCheckpoint("RoyalBox").triggerX
@@ -2293,6 +2318,10 @@ class GameScene extends Phaser.Scene {
   }
 
   private updateCardSanctum(): void {
+    if (this.player.x < 27984) {
+      return;
+    }
+
     if (
       !this.cardSanctumEntered &&
       this.player.x >= getWorldCheckpoint("CardSanctum").triggerX
@@ -2691,6 +2720,10 @@ class GameScene extends Phaser.Scene {
   }
 
   private updateSpotlightVault(): void {
+    if (this.player.x < 23552) {
+      return;
+    }
+
     if (
       !this.spotlightVaultEntered &&
       this.player.x >= getWorldCheckpoint("SpotlightVault").triggerX
@@ -3088,6 +3121,10 @@ class GameScene extends Phaser.Scene {
   }
 
   private updateGalleryGauntlet(): void {
+    if (this.player.x < 19456) {
+      return;
+    }
+
     if (
       !this.galleryGauntletEntered &&
       this.player.x >= getWorldCheckpoint("GalleryGauntlet").triggerX
@@ -3768,6 +3805,10 @@ class GameScene extends Phaser.Scene {
   }
 
   private updateGrandGallery(): void {
+    if (this.player.x < 13744) {
+      return;
+    }
+
     if (
       !this.grandGalleryEntered &&
       this.player.x >= 4800
@@ -3839,28 +3880,53 @@ class GameScene extends Phaser.Scene {
       .setScrollFactor(0)
       .setDepth(1050)
       .setVisible(false);
+
+    this.redrawArenaGates();
   }
 
   private updateEncounter(): void {
     if (
       !this.checkpointActivated &&
-      this.player.x >= getWorldCheckpoint("MainStage").triggerX
+      this.player.x >= getWorldCheckpoint("CombatEntry").triggerX
     ) {
       this.checkpointActivated = true;
 
       this.playerHealth.setCheckpoint(
         getWorldCheckpoint(
-          "MainStage"
+          "CombatEntry"
         )
       );
     }
 
     if (
+      this.tutorialExitLocked &&
+      this.combatSystem.completed
+    ) {
+      this.tutorialExitLocked = false;
+      this.collisionWorld.removeSolid(
+        this.tutorialExitGate
+      );
+      this.redrawArenaGates();
+    }
+
+    if (
       !this.encounterActive &&
       !this.encounterCleared &&
-      this.player.x >= 3070
+      this.combatSystem.completed &&
+      this.player.x >= 6728
     ) {
       this.startEncounter();
+    }
+
+    if (
+      this.encounterCleared &&
+      !this.masteryCheckpointActivated &&
+      this.player.x >= getWorldCheckpoint("CombatMastery").triggerX
+    ) {
+      this.masteryCheckpointActivated = true;
+      this.playerHealth.setCheckpoint(
+        getWorldCheckpoint("CombatMastery")
+      );
     }
 
     if (
@@ -3879,7 +3945,7 @@ class GameScene extends Phaser.Scene {
       this.cardThrowerSystem.total;
 
     this.encounterText.setText(
-      `ACT III — DEFEAT THE TROUPE   ${total - remaining}/${total}`
+      `COMBAT MASTERY — DEFEAT THE TROUPE   ${total - remaining}/${total}`
     );
 
     if (remaining === 0) {
@@ -3889,6 +3955,7 @@ class GameScene extends Phaser.Scene {
 
   private resetEncounterAfterDeath(): void {
     this.shadowAcrobatSystem?.resetEncounter();
+    this.combatHazardSystem?.reset();
     this.galleryHazardSystem?.reset();
     this.resetSpotlightVaultAfterDeath();
     this.resetCardSanctumAfterDeath();
@@ -3942,9 +4009,11 @@ class GameScene extends Phaser.Scene {
     this.cardThrowerSystem
       .setEncounterActive(true);
 
+    this.combatHazardSystem.setEnabled(true);
+
     this.encounterText
       .setText(
-        "ACT III — DEFEAT THE TROUPE   0/5"
+        "COMBAT MASTERY — DEFEAT THE TROUPE   0/5"
       )
       .setVisible(true);
 
@@ -3977,9 +4046,10 @@ class GameScene extends Phaser.Scene {
     );
 
     this.arenaGateGraphics.clear();
+    this.combatHazardSystem.setEnabled(false);
 
     this.encounterText.setText(
-      "ACT III COMPLETE — THE EXIT IS OPEN"
+      "COMBAT REHEARSAL COMPLETE — THE EXIT IS OPEN"
     );
 
     this.cameras.main.flash(
@@ -3998,9 +4068,9 @@ class GameScene extends Phaser.Scene {
     );
 
     this.add.text(
-      4240,
+      10096,
       238,
-      "TO THE GRAND GALLERY →",
+      "TO THE MAIN STAGE →",
       {
         fontFamily: "monospace",
         fontSize: "10px",
@@ -4020,8 +4090,12 @@ class GameScene extends Phaser.Scene {
 
     for (
       const gate of [
-        this.arenaLeftGate,
-        this.arenaRightGate
+        ...(this.tutorialExitLocked
+          ? [this.tutorialExitGate]
+          : []),
+        ...(this.encounterActive
+          ? [this.arenaLeftGate, this.arenaRightGate]
+          : [])
       ]
     ) {
       g.fillStyle(

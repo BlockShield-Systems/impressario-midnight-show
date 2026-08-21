@@ -59,9 +59,9 @@ const sections =
       entity.__identifier === "Section"
   );
 
-if (collisions.length !== 472) {
+if (collisions.length !== 471) {
   throw new Error(
-    `Expected 472 collisions, got ${collisions.length}.`
+    `Expected 471 collisions, got ${collisions.length}.`
   );
 }
 
@@ -199,6 +199,6 @@ for (const file of sourceFiles) {
 
 console.log(
   "World runtime valid: 49824x720, " +
-  "472 collisions, 11 LDtk-driven visual sections, " +
+  "471 collisions, 11 LDtk-driven visual sections, " +
   "dynamic combat camera bounds."
 );

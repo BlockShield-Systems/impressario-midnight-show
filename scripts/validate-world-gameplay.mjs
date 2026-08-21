@@ -51,11 +51,11 @@ const gates =
   );
 
 if (
-  checkpoints.length !== 11 ||
-  gates.length !== 9
+  checkpoints.length !== 13 ||
+  gates.length !== 10
 ) {
   throw new Error(
-    "Expected 11 checkpoints and 9 gates; " +
+    "Expected 13 checkpoints and 10 gates; " +
     `got ${checkpoints.length} and ${
       gates.length
     }.`
@@ -106,8 +106,9 @@ if (
 }
 
 for (const required of [
-  'createWorldGate("MainStageLeft")',
-  'createWorldGate("MainStageRight")',
+  'createWorldGate("CombatTutorialExit")',
+  'createWorldGate("CombatArenaLeft")',
+  'createWorldGate("CombatArenaRight")',
   'createWorldGate("SpotlightVaultLeft")',
   'createWorldGate("SpotlightVaultRight")',
   'createWorldGate("CardSanctumExit")',
@@ -147,6 +148,6 @@ if (
 
 console.log(
   "World gameplay runtime valid: " +
-  "11 LDtk checkpoints, 9 LDtk gates, " +
+  "13 LDtk checkpoints, 10 LDtk gates, " +
   "typed checkpoint API."
 );

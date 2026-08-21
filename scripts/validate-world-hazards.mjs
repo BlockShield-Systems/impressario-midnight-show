@@ -116,9 +116,9 @@ const supports = entities.filter(
     entity.__identifier === "SupportPickup"
 );
 
-if (hazards.length !== 29) {
+if (hazards.length !== 32) {
   fail(
-    `Expected 29 hazards, got ${hazards.length}.`
+    `Expected 32 hazards, got ${hazards.length}.`
   );
 }
 
@@ -177,7 +177,7 @@ assertCounts(
       fieldMap(entity).get("Kind")
   ),
   {
-    Spike: 15,
+    Spike: 18,
     Pendulum: 2,
     Blade: 8,
     Laser: 4
@@ -192,6 +192,7 @@ assertCounts(
       fieldMap(entity).get("Group")
   ),
   {
+    CombatRehearsal: 3,
     Gallery: 4,
     CardSanctum: 8,
     RoyalBox: 13,
@@ -214,6 +215,14 @@ assertCounts(
 );
 
 const consumers = [
+  [
+    "src/world/CombatRehearsalHazardSystem.ts",
+    [
+      "getWorldHazards",
+      '"CombatRehearsal"',
+      '"Spike"'
+    ]
+  ],
   [
     "src/world/GalleryHazardSystem.ts",
     [
@@ -341,7 +350,7 @@ for (const name of [
 
 console.log(
   "LDtk hazard runtime valid: " +
-  "29 hazards, 8 supports, " +
-  "4 hazard consumers, " +
+  "32 hazards, 8 supports, " +
+  "5 hazard consumers, " +
   "2 support consumers."
 );

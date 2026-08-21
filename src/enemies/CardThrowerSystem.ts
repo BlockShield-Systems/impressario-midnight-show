@@ -26,6 +26,9 @@ interface CardThrowerSpawn {
   readonly right: number;
 }
 
+const PROJECTILE_LEFT = 6688;
+const PROJECTILE_RIGHT = 9664;
+
 interface CardProjectile {
   x: number;
   y: number;
@@ -550,8 +553,8 @@ export class CardThrowerSystem {
 
       if (
         projectile.lifetime <= 0 ||
-        projectile.x < 3000 ||
-        projectile.x > 4220 ||
+        projectile.x < PROJECTILE_LEFT ||
+        projectile.x > PROJECTILE_RIGHT ||
         projectile.y < 20 ||
         projectile.y > 340
       ) {

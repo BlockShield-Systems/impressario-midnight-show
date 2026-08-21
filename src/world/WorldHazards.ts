@@ -2,6 +2,7 @@
 /* Edit assets/levels/impressario-world.ldtk, not this file. */
 
 export type WorldHazardGroup =
+  | "CombatRehearsal"
   | "Gallery"
   | "CardSanctum"
   | "RoyalBox"
@@ -36,64 +37,25 @@ export interface WorldSupportPickup {
 
 export const WORLD_HAZARDS = [
   {
-    id: "GalleryPendulumA",
-    group: "Gallery",
-    kind: "Pendulum",
-    x: 6625,
-    y: 86,
-    width: 16,
-    height: 16,
-    travelX: 0,
-    travelY: 165,
-    speed: 1.65,
-    phase: 0
-  },
-  {
-    id: "GallerySpikeA",
-    group: "Gallery",
+    id: "CombatSpikeA",
+    group: "CombatRehearsal",
     kind: "Spike",
-    x: 6915,
-    y: 430,
-    width: 62,
-    height: 15,
-    travelX: 0,
-    travelY: 0,
-    speed: 0,
-    phase: 0
-  },
-  {
-    id: "GallerySpikeB",
-    group: "Gallery",
-    kind: "Spike",
-    x: 7625,
+    x: 7584,
     y: 326,
-    width: 58,
-    height: 15,
+    width: 64,
+    height: 16,
     travelX: 0,
     travelY: 0,
     speed: 0,
     phase: 0
   },
   {
-    id: "GalleryPendulumB",
-    group: "Gallery",
-    kind: "Pendulum",
-    x: 7875,
-    y: 82,
-    width: 16,
-    height: 16,
-    travelX: 0,
-    travelY: 175,
-    speed: 1.65,
-    phase: 3.141592653589793
-  },
-  {
-    id: "SanctumSpikeA",
-    group: "CardSanctum",
+    id: "CombatSpikeB",
+    group: "CombatRehearsal",
     kind: "Spike",
-    x: 9850,
-    y: 520,
-    width: 70,
+    x: 8448,
+    y: 326,
+    width: 72,
     height: 16,
     travelX: 0,
     travelY: 0,
@@ -101,43 +63,17 @@ export const WORLD_HAZARDS = [
     phase: 0
   },
   {
-    id: "SanctumBladeA",
-    group: "CardSanctum",
-    kind: "Blade",
-    x: 9950,
-    y: 390,
-    width: 16,
-    height: 16,
-    travelX: 90,
-    travelY: 0,
-    speed: 1.7,
-    phase: 0
-  },
-  {
-    id: "SanctumSpikeB",
-    group: "CardSanctum",
+    id: "CombatSpikeC",
+    group: "CombatRehearsal",
     kind: "Spike",
-    x: 10160,
-    y: 520,
-    width: 75,
+    x: 9072,
+    y: 326,
+    width: 80,
     height: 16,
     travelX: 0,
     travelY: 0,
     speed: 0,
     phase: 0
-  },
-  {
-    id: "SanctumBladeB",
-    group: "CardSanctum",
-    kind: "Blade",
-    x: 10460,
-    y: 275,
-    width: 16,
-    height: 16,
-    travelX: 0,
-    travelY: 105,
-    speed: 1.5,
-    phase: 1.5707963267948966
   },
   {
     id: "SanctumSpikeC",
@@ -411,6 +347,110 @@ export const WORLD_HAZARDS = [
     travelY: 0,
     speed: 0,
     phase: 0
+  },
+  {
+    id: "GalleryPendulumA",
+    group: "Gallery",
+    kind: "Pendulum",
+    x: 19681,
+    y: 86,
+    width: 16,
+    height: 16,
+    travelX: 0,
+    travelY: 165,
+    speed: 1.65,
+    phase: 0
+  },
+  {
+    id: "GallerySpikeA",
+    group: "Gallery",
+    kind: "Spike",
+    x: 19971,
+    y: 430,
+    width: 62,
+    height: 15,
+    travelX: 0,
+    travelY: 0,
+    speed: 0,
+    phase: 0
+  },
+  {
+    id: "GallerySpikeB",
+    group: "Gallery",
+    kind: "Spike",
+    x: 20681,
+    y: 326,
+    width: 58,
+    height: 15,
+    travelX: 0,
+    travelY: 0,
+    speed: 0,
+    phase: 0
+  },
+  {
+    id: "GalleryPendulumB",
+    group: "Gallery",
+    kind: "Pendulum",
+    x: 20931,
+    y: 82,
+    width: 16,
+    height: 16,
+    travelX: 0,
+    travelY: 175,
+    speed: 1.65,
+    phase: 3.141592653589793
+  },
+  {
+    id: "SanctumSpikeA",
+    group: "CardSanctum",
+    kind: "Spike",
+    x: 28234,
+    y: 520,
+    width: 70,
+    height: 16,
+    travelX: 0,
+    travelY: 0,
+    speed: 0,
+    phase: 0
+  },
+  {
+    id: "SanctumBladeA",
+    group: "CardSanctum",
+    kind: "Blade",
+    x: 28334,
+    y: 390,
+    width: 16,
+    height: 16,
+    travelX: 90,
+    travelY: 0,
+    speed: 1.7,
+    phase: 0
+  },
+  {
+    id: "SanctumSpikeB",
+    group: "CardSanctum",
+    kind: "Spike",
+    x: 28544,
+    y: 520,
+    width: 75,
+    height: 16,
+    travelX: 0,
+    travelY: 0,
+    speed: 0,
+    phase: 0
+  },
+  {
+    id: "SanctumBladeB",
+    group: "CardSanctum",
+    kind: "Blade",
+    x: 28844,
+    y: 275,
+    width: 16,
+    height: 16,
+    travelX: 0,
+    travelY: 105,
+    speed: 1.5,
+    phase: 1.5707963267948966
   },
 ] as const satisfies readonly WorldHazard[];
 
