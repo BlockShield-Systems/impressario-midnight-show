@@ -33,6 +33,7 @@ import {
   type WorldGateId
 } from "./world/WorldGameplay";
 import { EnvironmentTileRenderer } from "./world/EnvironmentTileRenderer";
+import { MovementRehearsalVisuals } from "./world/MovementRehearsalVisuals";
 
 /* -------------------------------------------------------------------------- */
 /* Configuration                                                              */
@@ -942,6 +943,7 @@ class GameScene extends Phaser.Scene {
     new EnvironmentTileRenderer(
       this
     );
+    new MovementRehearsalVisuals(this);
 
     const solids = this.createLevel();
 
