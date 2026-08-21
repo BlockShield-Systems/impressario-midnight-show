@@ -239,8 +239,25 @@
 ## Current Section
 
 - Current Section: GalleryGauntlet `19456..23552`
-- Status: not started
+- Status: inspected; interval plan recorded before mutation
+- Authored interval plan:
+  - `19456..19904`: safe GrandGallery landing, entry checkpoint, and pendulum timing introduction
+  - `19904..20448`: first Shadow Acrobat duel on a stable lower route with optional height advantage
+  - `20448..21120`: midpoint refuge followed by a spike-and-pendulum rhythm crossing
+  - `21120..22464`: second Shadow Acrobat duel in a gated fractured salon with readable upper routes
+  - `22464..23552`: cleared traversal and controlled ascent to the SpotlightVault transition surface
+- Planned runtime progression:
+  - Entry checkpoint activates before hazards or combat
+  - The first Shadow Acrobat blocks midpoint progression until defeated
+  - The midpoint checkpoint becomes valid only after the first duel clears
+  - The second Shadow Acrobat blocks the exit until defeated
+  - Gallery hazards remain active during traversal and reset consistently after death
+  - Cleared state opens the SpotlightVault transition and disables encounter hazards
+- Planned LDtk ownership:
+  - Replace forty inherited compact-world collision fragments with deliberate fixed-world route geometry
+  - Author GalleryGauntlet progression gates in LDtk and synchronize generated TypeScript through canonical scripts
+  - Preserve both Section boundaries and align checkpoints, enemy ground planes, hazards, and transitions to authored surfaces
 
 ## Exact Next Action
 
-Inspect GalleryGauntlet collision, checkpoint placement, Shadow Acrobat encounter flow, Gallery hazards, stale compact-world presentation and activation thresholds, and fixed `19456..23552` transitions; then write the GalleryGauntlet interval plan before mutation.
+Author the recorded GalleryGauntlet geometry, checkpoints, progression gates, Shadow Acrobat encounters, hazards, fixed-world presentation, and death/reset flow; then synchronize and validate all LDtk-owned runtime modules.
