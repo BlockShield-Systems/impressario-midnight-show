@@ -84,11 +84,11 @@ const assertEntity = (
 };
 
 if (
-  checkpoints.length !== 14 ||
-  gates.length !== 17
+  checkpoints.length !== 15 ||
+  gates.length !== 19
 ) {
   throw new Error(
-    "Expected 14 checkpoints and 17 gates; " +
+    "Expected 15 checkpoints and 19 gates; " +
     `got ${checkpoints.length} and ${
       gates.length
     }.`
@@ -183,6 +183,14 @@ assertEntity(
   16,
   16
 );
+assertEntity(
+  checkpoints,
+  "MirrorConductor",
+  44752,
+  450,
+  16,
+  16
+);
 assertEntity(gates, "MainStageLeft", 10704, 0, 18, 326);
 assertEntity(gates, "MainStageWave", 12096, 0, 18, 326);
 assertEntity(gates, "MainStageExit", 13472, 0, 18, 326);
@@ -197,11 +205,28 @@ assertEntity(gates, "RoyalBoxExit", 35264, 0, 18, 688);
 assertEntity(gates, "MirrorRelay", 36192, 0, 18, 688);
 assertEntity(gates, "MirrorBoss", 37344, 0, 18, 688);
 assertEntity(gates, "MirrorExit", 39072, 0, 18, 688);
+assertEntity(
+  gates,
+  "MirrorConductorEntrance",
+  45120,
+  0,
+  18,
+  688
+);
+assertEntity(
+  gates,
+  "MirrorConductorResolution",
+  49344,
+  0,
+  18,
+  688
+);
 
 for (const [identifier, triggerX] of [
   ["MirrorCore", 35392],
   ["MirrorRelays", 36112],
-  ["CoreChamber", 37376]
+  ["CoreChamber", 37376],
+  ["MirrorConductor", 44704]
 ]) {
   const checkpoint = checkpoints.find(
     candidate =>
@@ -274,6 +299,16 @@ const mirror =
     "src/world/MirrorCoreSystem.ts"
   );
 
+const mirrorConductor =
+  read(
+    "src/world/MirrorConductorSystem.ts"
+  );
+
+const mirrorConductorVisuals =
+  read(
+    "src/world/MirrorConductorVisuals.ts"
+  );
+
 const runtime =
   read(
     "src/world/WorldGameplay.ts"
@@ -297,7 +332,8 @@ const legacyCheckpoint =
 
 if (
   legacyCheckpoint.test(main) ||
-  legacyCheckpoint.test(mirror)
+  legacyCheckpoint.test(mirror) ||
+  legacyCheckpoint.test(mirrorConductor)
 ) {
   throw new Error(
     "Legacy numeric setCheckpoint call remains."
@@ -409,6 +445,97 @@ if (
   );
 }
 
+for (const required of [
+  'import { MirrorConductorSystem }',
+  'import { MirrorConductorVisuals }',
+  "new MirrorConductorVisuals(this)",
+  "new MirrorConductorSystem(",
+  "this.mirrorConductorSystem.update(",
+  "this.mirrorConductorSystem?.resetAfterDeath()"
+]) {
+  if (!main.includes(required)) {
+    throw new Error(
+      `main.ts is missing MirrorConductor integration ${required}.`
+    );
+  }
+}
+
+for (const required of [
+  "export const MIRROR_CONDUCTOR_START_X = 44672",
+  "export const MIRROR_CONDUCTOR_END_X = 49824",
+  'createWorldGate(\n    "MirrorConductorEntrance"',
+  'createWorldGate(\n    "MirrorConductorResolution"',
+  'getWorldCheckpoint(\n        "MirrorConductor"',
+  "private health = 108",
+  "if (this.health <= 72)",
+  "if (this.health <= 36)",
+  "1: 55",
+  "2: 60",
+  "3: 70",
+  "public receiveRangedHit(",
+  "this.magicSystem.castsPerformed",
+  "combatSystem.registerTarget(this.conductor)",
+  "this.player.x >= 45312",
+  "this.player.x < MIRROR_CONDUCTOR_END_X",
+  "this.playerHealth.fallOut()",
+  "ARENA_RIGHT - ARENA_LEFT",
+  "WORLD_WIDTH",
+  "WORLD_HEIGHT",
+  "private finaleSubmitted = false",
+  "if (!this.finaleSubmitted)",
+  "!this.conductor.isDefeated"
+]) {
+  if (!mirrorConductor.includes(required)) {
+    throw new Error(
+      `MirrorConductorSystem is missing ${JSON.stringify(required)}.`
+    );
+  }
+}
+
+for (const required of [
+  "const START_X = 44672",
+  "const END_X = 49824",
+  "[45472, 400, 256]",
+  "[46048, 352, 256]",
+  "[46624, 416, 256]",
+  "[47200, 352, 288]",
+  "[47840, 416, 256]",
+  "[48416, 352, 256]",
+  "[48992, 400, 256]"
+]) {
+  if (!mirrorConductorVisuals.includes(required)) {
+    throw new Error(
+      `MirrorConductorVisuals is missing ${JSON.stringify(required)}.`
+    );
+  }
+}
+
+const sourceCallCount = (
+  read("src/world/MirrorConductorSystem.ts").match(
+    /leaderboard\.finishRun\(\)/g
+  ) ?? []
+).length;
+
+const earlierCallCount = [
+  main,
+  mirror,
+  read("src/world/ConductorApproachVisuals.ts")
+].reduce(
+  (count, source) =>
+    count +
+    (source.match(/leaderboard\.finishRun\(\)/g) ?? []).length,
+  0
+);
+
+if (
+  sourceCallCount !== 1 ||
+  earlierCallCount !== 0
+) {
+  throw new Error(
+    "Expected exactly one leaderboard.finishRun() call in MirrorConductorSystem."
+  );
+}
+
 const conductorApproach = read(
   "src/world/ConductorApproachVisuals.ts"
 );
@@ -442,6 +569,6 @@ if (
 
 console.log(
   "World gameplay runtime valid: " +
-  "14 LDtk checkpoints, 17 LDtk gates, " +
-  "typed checkpoint API."
+  "15 LDtk checkpoints, 19 LDtk gates, " +
+  "dedicated defeat-gated MirrorConductor finale."
 );

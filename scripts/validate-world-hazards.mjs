@@ -149,6 +149,28 @@ if (
   );
 }
 
+const mirrorConductorHazards = hazards.filter(
+  entity =>
+    entity.__worldX >= 44672 &&
+    entity.__worldX < 49824
+);
+
+const mirrorConductorSupports = supports.filter(
+  entity =>
+    entity.__worldX >= 44672 &&
+    entity.__worldX < 49824
+);
+
+if (
+  mirrorConductorHazards.length !== 0 ||
+  mirrorConductorSupports.length !== 0
+) {
+  fail(
+    "MirrorConductor must have zero LDtk hazards and supports; " +
+    "its hazards are dedicated dynamic boss mechanics."
+  );
+}
+
 const ids = [];
 
 for (const entity of [
@@ -702,6 +724,53 @@ for (const forbidden of [
   }
 }
 
+const mirrorConductorSource = read(
+  "src/world/MirrorConductorSystem.ts"
+);
+
+for (const token of [
+  "const ARENA_LEFT = 45120",
+  "const ARENA_RIGHT = 49344",
+  "this.player.x >= MIRROR_CONDUCTOR_START_X",
+  "this.player.x < MIRROR_CONDUCTOR_END_X",
+  "projectile.x < ARENA_LEFT",
+  "projectile.x > ARENA_RIGHT",
+  "projectile.y < 0",
+  "projectile.y > 688",
+  "if (this.bossStarted)",
+  "this.updateProjectiles(deltaSeconds)",
+  "this.updateHazards()",
+  "this.conductor.isDefeated",
+  "if (phase === 3)",
+  "dangerousLeft ? 45160 : 47232",
+  "2072",
+  '"floor-warning"'
+]) {
+  if (!mirrorConductorSource.includes(token)) {
+    fail(
+      `MirrorConductorSystem is missing bounded dynamic hazard token ${JSON.stringify(token)}.`
+    );
+  }
+}
+
+const conductorApproachSource = read(
+  "src/world/ConductorApproachVisuals.ts"
+);
+
+for (const forbidden of [
+  "BossProjectile",
+  "updateHazards",
+  "floor-warning",
+  "leaderboard.finishRun",
+  "BossView"
+]) {
+  if (conductorApproachSource.includes(forbidden)) {
+    fail(
+      `ConductorApproach retains boss hazard ownership ${JSON.stringify(forbidden)}.`
+    );
+  }
+}
+
 const legacyData = [
   [
     "src/world/GalleryHazardSystem.ts",
@@ -773,6 +842,6 @@ for (const name of [
 console.log(
   "LDtk hazard runtime valid: " +
   "36 hazards, 8 supports, " +
-  "6 hazard consumers, " +
-  "2 support consumers."
+  "zero MirrorConductor static inventory, " +
+  "bounded dedicated dynamic boss hazards."
 );

@@ -59,9 +59,9 @@ const sections =
       entity.__identifier === "Section"
   );
 
-if (collisions.length !== 323) {
+if (collisions.length !== 296) {
   throw new Error(
-    `Expected 323 collisions, got ${collisions.length}.`
+    `Expected 296 collisions, got ${collisions.length}.`
   );
 }
 
@@ -384,9 +384,59 @@ for (const [x, y, width, height] of
   }
 }
 
+const mirrorConductorCollisions =
+  collisions.filter(
+    entity =>
+      entity.__worldX >= 44672 &&
+      entity.__worldX < 49824
+  );
+
+const expectedMirrorConductorCollisions = [
+  [44672, 480, 448, 32],
+  [45120, 520, 4224, 32],
+  [49344, 480, 480, 32],
+  [45472, 400, 256, 16],
+  [46048, 352, 256, 16],
+  [46624, 416, 256, 16],
+  [47200, 352, 288, 16],
+  [47840, 416, 256, 16],
+  [48416, 352, 256, 16],
+  [48992, 400, 256, 16],
+  [44672, 688, 5152, 32]
+];
+
+if (
+  mirrorConductorCollisions.length !==
+  expectedMirrorConductorCollisions.length
+) {
+  throw new Error(
+    "Expected 11 authored MirrorConductor collisions, " +
+    `got ${mirrorConductorCollisions.length}.`
+  );
+}
+
+for (const [x, y, width, height] of
+  expectedMirrorConductorCollisions) {
+  if (
+    !mirrorConductorCollisions.some(
+      entity =>
+        entity.__worldX === x &&
+        entity.__worldY === y &&
+        entity.width === width &&
+        entity.height === height
+    )
+  ) {
+    throw new Error(
+      `MirrorConductor collision ${x},${y},${width},${height} is missing.`
+    );
+  }
+}
+
 for (const [label, x, y, width, height] of [
   ["MirrorCore exit", 39090, 480, 110, 32],
-  ["MirrorConductor entry", 44672, 480, 112, 16]
+  ["ConductorApproach exit", 44288, 480, 384, 32],
+  ["MirrorConductor entry", 44672, 480, 448, 32],
+  ["MirrorConductor world end", 49344, 480, 480, 32]
 ]) {
   if (
     !collisions.some(
@@ -560,7 +610,9 @@ const sourceFiles = [
   "src/main.ts",
   "src/combat/CombatSystem.ts",
   "src/world/EnvironmentTileRenderer.ts",
-  "src/world/MirrorCoreSystem.ts"
+  "src/world/MirrorCoreSystem.ts",
+  "src/world/MirrorConductorSystem.ts",
+  "src/world/MirrorConductorVisuals.ts"
 ];
 
 for (const file of sourceFiles) {
@@ -575,6 +627,6 @@ for (const file of sourceFiles) {
 
 console.log(
   "World runtime valid: 49824x720, " +
-  "323 collisions, 11 LDtk-driven visual sections, " +
-  "dynamic combat camera bounds."
+  "296 collisions, 11 LDtk-driven visual sections, " +
+  "exact MirrorConductor geometry and world end."
 );

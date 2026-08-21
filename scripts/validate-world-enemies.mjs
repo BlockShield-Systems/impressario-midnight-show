@@ -152,6 +152,41 @@ if (conductorApproachSpawns.length !== 0) {
   );
 }
 
+const mirrorConductorSpawns =
+  spawns.filter(
+    entity =>
+      entity.__worldX >= 44672 &&
+      entity.__worldX < 49824
+  );
+
+if (mirrorConductorSpawns.length !== 0) {
+  throw new Error(
+    "MirrorConductor must have zero LDtk EnemySpawn entities; " +
+    "the dedicated CombatTarget owns the boss."
+  );
+}
+
+const mirrorConductorSource =
+  fs.readFileSync(
+    path.join(
+      root,
+      "src/world/MirrorConductorSystem.ts"
+    ),
+    "utf8"
+  );
+
+for (const required of [
+  "class MirrorConductor",
+  "implements CombatTarget",
+  "combatSystem.registerTarget(this.conductor)"
+]) {
+  if (!mirrorConductorSource.includes(required)) {
+    throw new Error(
+      `MirrorConductor dedicated CombatTarget is missing ${required}.`
+    );
+  }
+}
+
 const ids = new Set();
 const counts = new Map();
 
@@ -614,5 +649,6 @@ if (
 
 console.log(
   "LDtk enemy runtime valid: " +
-  "26 spawns, 7 consumers."
+  "26 spawns, 7 consumers, " +
+  "zero MirrorConductor LDtk spawns."
 );
