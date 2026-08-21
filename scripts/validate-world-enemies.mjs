@@ -268,8 +268,13 @@ for (const entity of spawns) {
   }
 
   if (
-    id.startsWith("RoyalEcho") &&
-    (x < 31664 || x >= 35344)
+    group === "RoyalEcho" &&
+    (
+      x < 31664 ||
+      x >= 35344 ||
+      left < 31664 ||
+      right > 35344
+    )
   ) {
     throw new Error(
       `${id} is outside the RoyalBox interval.`
@@ -400,6 +405,66 @@ for (
   ) {
     throw new Error(
       `CardSanctum enemy ${id} does not match its authored LDtk values.`
+    );
+  }
+}
+
+for (
+  const [id, kind, x, y, left, right, phase] of [
+    [
+      "RoyalEchoDuelistA",
+      "duelist",
+      32112,
+      496,
+      32032,
+      32384,
+      0
+    ],
+    [
+      "RoyalEchoCasterA",
+      "caster",
+      32608,
+      304,
+      32496,
+      32736,
+      Math.PI / 2
+    ],
+    [
+      "RoyalEchoDuelistB",
+      "duelist",
+      33024,
+      448,
+      32928,
+      33312,
+      Math.PI
+    ],
+    [
+      "RoyalEchoCasterB",
+      "caster",
+      34144,
+      256,
+      34032,
+      34320,
+      Math.PI * 1.5
+    ]
+  ]
+) {
+  const entity = spawns.find(
+    candidate =>
+      fieldValue(candidate, "Identifier") === id
+  );
+
+  if (
+    !entity ||
+    fieldValue(entity, "Kind") !== kind ||
+    entity.px?.[0] !== x ||
+    entity.px?.[1] !== y ||
+    fieldValue(entity, "PatrolLeft") !== left ||
+    fieldValue(entity, "PatrolRight") !== right ||
+    fieldValue(entity, "Phase") !== phase
+  ) {
+    throw new Error(
+      `RoyalBox enemy ${id} does not match its authored LDtk values.`
     );
   }
 }

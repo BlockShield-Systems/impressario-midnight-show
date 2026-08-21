@@ -98,16 +98,16 @@ export class RoyalBoxHazardSystem {
   }
 
   public update(deltaSeconds: number): void {
+    if (this.player.y > 675) {
+      this.playerHealth.fallOut();
+      return;
+    }
+
     if (!this.enabled) {
       return;
     }
 
     this.elapsed += deltaSeconds;
-
-    if (this.player.y > 675) {
-      this.playerHealth.fallOut();
-      return;
-    }
 
     this.checkSpikes();
     this.checkBlades();

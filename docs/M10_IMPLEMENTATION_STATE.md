@@ -453,11 +453,77 @@
   - Dedicated encounter-module ownership of the generated exit gate
   - Absence of stale compact-world RoyalBox presentation, encounter triggers, and projectile bounds
 
+## RoyalBox Completion
+
+- Section commit: pending `feat(levels): author Royal Box encounter` Section commit
+- Interval: `31664..35344`
+- Gameplay additions:
+  - Twenty-four deliberate collision rectangles replace forty-seven inherited compact-world fragments
+  - CardSanctum arrival and MirrorCore departure remain aligned on level `y=480` transition surfaces
+  - Safe entry checkpoint moved to `31744,450` with trigger `31712`
+  - The generated enemy-clear exit gate remains at `35264` and now covers the complete `0..688` playable height
+  - Four Royal Echoes occupy distinct grounded and elevated combat positions while preserving their identities, kinds, and phases
+  - Five spike lanes, four blades, and four timed lasers align with recovery floors, upper routes, and cover structures
+  - Four Royal Roses align with safe recovery positions throughout the Section
+  - Full-width lower fall boundary preserves RoyalBox fall-out handling while encounter hazards are disabled
+  - Royal Echo and Grand Card projectile culling use generated or fixed-world RoyalBox bounds instead of compact-world constants
+  - Grounded look-down camera behavior is constrained to `31664..35344` and resets outside RoyalBox
+- Visual additions:
+  - Fixed-world fractured mirror walls, dark lower royal boxes, platform telegraphs, wall-jump framing, five progression landmarks, and MirrorCore transition signage
+  - Compact-world RoyalBox presentation and encounter logic removed from `src/main.ts`
+- RoyalBox counts:
+  - Collision rectangles: 24
+  - Checkpoints: 1
+  - Gameplay gates: 1
+  - Enemy spawns: 4 Royal Echoes
+  - Hazards: 13 (5 spike lanes, 4 blades, 4 lasers)
+  - Support pickups: 4 Royal Roses
+- World totals after completion:
+  - Collision rectangles: 351
+  - Checkpoints: 14
+  - Gameplay gates: 17
+  - Enemy spawns: 26
+  - Hazards: 36
+  - Support pickups: 8
+- Runtime modules added:
+  - `src/world/RoyalBoxEncounterSystem.ts`
+  - `src/world/RoyalBoxVisuals.ts`
+- Existing runtime modules updated:
+  - `src/main.ts`
+  - `src/enemies/RoyalEchoSystem.ts`
+  - `src/world/RoyalBoxHazardSystem.ts`
+  - `src/world/RoyalBoxSupportSystem.ts`
+  - Generated `src/world/WorldEnemies.ts`, `WorldGameplay.ts`, `WorldHazards.ts`, and `WorldLayout.ts`
+- Validation coverage added:
+  - Exact RoyalBox collision count and principal entry, combat, exit, wall, and fall-boundary geometry
+  - Exact RoyalBox checkpoint and full-height exit-gate bounds
+  - Exact Royal Echo positions, patrol bounds, kinds, phases, and Section containment
+  - Exact hazard and support positions, dimensions, movement values, phases, and Section containment
+  - Dedicated encounter-module ownership of the generated exit gate
+  - Absence of stale compact-world RoyalBox presentation and encounter state in `src/main.ts`
+- Successful validation:
+  - Structural LDtk review: unchanged `49824×720` dimensions, 11 fixed Sections, 463 unique entity IIDs, exact RoyalBox semantic counts, and unchanged MirrorCore entry geometry
+  - `git diff --check`
+  - `npm run levels:validate`
+  - `npm run world:validate`
+  - `npm run typecheck`
+  - `npm run build`
+  - `npm run audio:runtime:validate`
+  - `npm run assets:audio:validate`
+  - `npm run assets:player:validate`
+  - `npm run assets:enemies:validate`
+  - `npm run assets:boss:validate`
+- Runtime tests actually performed:
+  - No browser traversal was completed for RoyalBox
+- Unresolved risks:
+  - Full keyboard traversal, Royal Echo encounter completion, hazard timing, Grand Card behavior, Royal Rose recovery, look-down camera behavior, death/reset, and both adjacent transitions require browser validation
+  - MirrorCore and later Sections retain inherited geometry pending sequential M10 authoring
+
 ## Current Section
 
-- Current Section: RoyalBox `31664..35344`
-- Status: pre-mutation inspection complete; interval plan pending separate commit and push
+- Current Section: MirrorCore `35344..39200`
+- Status: RoyalBox implementation validated locally; commit, push, and pull-request update pending before MirrorCore pre-mutation inspection
 
 ## Exact Next Action
 
-Commit and push the RoyalBox interval plan, update the open pull request, verify local/remote parity, then author RoyalBox from authoritative LDtk data.
+Commit and push the validated RoyalBox implementation, update the open pull request, verify clean local/remote parity, then inspect MirrorCore before mutation.

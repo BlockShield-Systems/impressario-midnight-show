@@ -280,6 +280,130 @@ for (
   }
 }
 
+const royalBoxHazards = new Map(
+  hazards
+    .filter(entity =>
+      fieldMap(entity).get("Group") === "RoyalBox"
+    )
+    .map(entity => [
+      fieldMap(entity).get("Identifier"),
+      entity
+    ])
+);
+
+for (
+  const [
+    id,
+    kind,
+    x,
+    y,
+    width,
+    height,
+    travelX,
+    travelY,
+    speed,
+    phase
+  ] of [
+    ["RoyalLaserA", "Laser", 32384, 240, 8, 288, 0, 0, 0, 0],
+    ["RoyalSpikeA", "Spike", 32064, 528, 80, 16, 0, 0, 0, 0],
+    ["RoyalBladeA", "Blade", 32416, 416, 16, 16, 96, 0, 1.8, 0],
+    ["RoyalSpikeB", "Spike", 32544, 512, 80, 16, 0, 0, 0, 0],
+    [
+      "RoyalBladeB",
+      "Blade",
+      33248,
+      400,
+      16,
+      16,
+      0,
+      80,
+      1.6,
+      Math.PI / 2
+    ],
+    ["RoyalLaserB", "Laser", 32992, 208, 8, 272, 0, 0, 0, 0.85],
+    ["RoyalSpikeC", "Spike", 33504, 528, 80, 16, 0, 0, 0, 0],
+    ["RoyalSpikeD", "Spike", 34096, 512, 80, 16, 0, 0, 0, 0],
+    [
+      "RoyalBladeC",
+      "Blade",
+      34256,
+      400,
+      16,
+      16,
+      96,
+      0,
+      2.05,
+      Math.PI
+    ],
+    ["RoyalLaserC", "Laser", 33904, 224, 8, 288, 0, 0, 0, 1.55],
+    ["RoyalSpikeE", "Spike", 34480, 480, 80, 16, 0, 0, 0, 0],
+    [
+      "RoyalBladeD",
+      "Blade",
+      35008,
+      400,
+      16,
+      16,
+      0,
+      64,
+      1.75,
+      Math.PI / 4
+    ],
+    ["RoyalLaserD", "Laser", 34784, 208, 8, 272, 0, 0, 0, 0.35]
+  ]
+) {
+  const entity = royalBoxHazards.get(id);
+  const fields = entity ? fieldMap(entity) : null;
+
+  if (
+    !entity ||
+    !fields ||
+    fields.get("Kind") !== kind ||
+    entity.__worldX !== x ||
+    entity.__worldY !== y ||
+    entity.width !== width ||
+    entity.height !== height ||
+    fields.get("TravelX") !== travelX ||
+    fields.get("TravelY") !== travelY ||
+    fields.get("Speed") !== speed ||
+    fields.get("Phase") !== phase
+  ) {
+    fail(
+      `${id} does not match its authored LDtk values.`
+    );
+  }
+}
+
+const royalBoxSupports = new Map(
+  supports
+    .filter(entity =>
+      fieldMap(entity).get("Group") === "RoyalBox"
+    )
+    .map(entity => [
+      fieldMap(entity).get("Identifier"),
+      entity
+    ])
+);
+
+for (const [id, x, y] of [
+  ["RoyalRoseA", 31888, 448],
+  ["RoyalRoseB", 32784, 272],
+  ["RoyalRoseC", 33792, 320],
+  ["RoyalRoseD", 35072, 352]
+]) {
+  const entity = royalBoxSupports.get(id);
+
+  if (
+    !entity ||
+    entity.__worldX !== x ||
+    entity.__worldY !== y
+  ) {
+    fail(
+      `${id} does not match its authored LDtk values.`
+    );
+  }
+}
+
 for (const entity of [
   ...hazards,
   ...supports

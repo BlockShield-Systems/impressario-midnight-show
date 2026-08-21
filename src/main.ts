@@ -12,9 +12,8 @@ import { GalleryGauntletEncounterSystem } from "./world/GalleryGauntletEncounter
 import { SpotlightVaultEncounterSystem } from "./world/SpotlightVaultEncounterSystem";
 import { MagicSystem } from "./magic/MagicSystem";
 import { CardSanctumEncounterSystem } from "./world/CardSanctumEncounterSystem";
-import { RoyalEchoSystem } from "./enemies/RoyalEchoSystem";
-import { RoyalBoxHazardSystem } from "./world/RoyalBoxHazardSystem";
-import { RoyalBoxSupportSystem } from "./world/RoyalBoxSupportSystem";
+import { RoyalBoxEncounterSystem } from "./world/RoyalBoxEncounterSystem";
+import { RoyalBoxVisuals } from "./world/RoyalBoxVisuals";
 import { MirrorCoreSystem } from "./world/MirrorCoreSystem";
 import { AudioDirector } from "./audio/AudioDirector";
 import { MusicDirector } from "./audio/MusicDirector";
@@ -860,9 +859,8 @@ class GameScene extends Phaser.Scene {
   private magicSystem!: MagicSystem;
   private cardSanctumEncounterSystem!:
     CardSanctumEncounterSystem;
-  private royalEchoSystem!: RoyalEchoSystem;
-  private royalBoxHazardSystem!: RoyalBoxHazardSystem;
-  private royalBoxSupportSystem!: RoyalBoxSupportSystem;
+  private royalBoxEncounterSystem!:
+    RoyalBoxEncounterSystem;
   private mirrorCoreSystem!: MirrorCoreSystem;
   private playerHealth!: PlayerHealthSystem;
   private audioDirector!: AudioDirector;
@@ -893,16 +891,6 @@ class GameScene extends Phaser.Scene {
   private grandGalleryEntered = false;
   private grandGalleryCheckpointActivated = false;
   private grandGalleryTitle!: Phaser.GameObjects.Text;
-
-  private royalBoxEntered = false;
-  private royalBoxActive = false;
-  private royalBoxCleared = false;
-
-  private readonly royalBoxExitGate =
-    createWorldGate("RoyalBoxExit");
-
-  private royalBoxGateGraphics!: Phaser.GameObjects.Graphics;
-  private royalBoxObjectiveText!: Phaser.GameObjects.Text;
 
   private debugText!: Phaser.GameObjects.Text;
   private accumulator = 0;
@@ -936,11 +924,11 @@ class GameScene extends Phaser.Scene {
     new GalleryGauntletVisuals(this);
     new SpotlightVaultVisuals(this);
     new CardSanctumVisuals(this);
+    new RoyalBoxVisuals(this);
 
     const solids = this.createLevel();
 
     this.createGrandGallery();
-    this.createRoyalBox();
 
     this.collisionWorld =
       new CollisionWorld(solids);
@@ -1088,28 +1076,19 @@ class GameScene extends Phaser.Scene {
         }
       );
 
-    this.royalEchoSystem =
-      new RoyalEchoSystem(
-        this,
-        this.player,
-        this.playerHealth,
-        this.combatSystem
-      );
-
-    this.royalBoxHazardSystem =
-      new RoyalBoxHazardSystem(
-        this,
-        this.player,
-        this.playerHealth
-      );
-
-    this.royalBoxSupportSystem =
-      new RoyalBoxSupportSystem(
+    this.royalBoxEncounterSystem =
+      new RoyalBoxEncounterSystem(
         this,
         this.player,
         this.playerHealth,
         this.combatSystem,
-        this.magicSystem
+        this.magicSystem,
+        solid => {
+          this.collisionWorld.addSolid(solid);
+        },
+        solid => {
+          this.collisionWorld.removeSolid(solid);
+        }
       );
 
     this.mirrorCoreSystem =
@@ -1259,14 +1238,11 @@ class GameScene extends Phaser.Scene {
     this.spotlightVaultEncounterSystem.update(frameDelta);
     this.magicSystem.update(frameDelta);
     this.cardSanctumEncounterSystem.update(frameDelta);
-    this.royalEchoSystem.update(frameDelta);
-    this.royalBoxHazardSystem.update(frameDelta);
-    this.royalBoxSupportSystem.update(frameDelta);
+    this.royalBoxEncounterSystem.update(frameDelta);
     this.mirrorCoreSystem.update(frameDelta);
 
     this.updateEncounter();
     this.updateGrandGallery();
-    this.updateRoyalBox();
 
     this.audioBridge.update(frameDelta);
     this.audioDirector.update(frameDelta);
@@ -1490,554 +1466,6 @@ class GameScene extends Phaser.Scene {
 
 
 
-  private createRoyalBox(): void {
-    const startX = 11980;
-    const endX = 14400;
-
-    const background = this.add.graphics();
-
-    background
-      .setDepth(-1)
-      .setScrollFactor(1);
-
-    background.fillStyle(0x090713, 1);
-
-    background.fillRect(
-      startX,
-      0,
-      endX - startX,
-      WORLD_HEIGHT
-    );
-
-    for (
-      let x = 12000;
-      x < endX;
-      x += 260
-    ) {
-      background.fillStyle(
-        0x22102f,
-        0.96
-      );
-
-      background.fillRect(
-        x,
-        0,
-        150,
-        WORLD_HEIGHT
-      );
-
-      background.fillStyle(
-        0x091d2c,
-        0.96
-      );
-
-      background.fillRect(
-        x + 150,
-        0,
-        110,
-        WORLD_HEIGHT
-      );
-
-      background.lineStyle(
-        3,
-        0xe15bbd,
-        0.38
-      );
-
-      background.lineBetween(
-        x + 12,
-        0,
-        x + 12,
-        WORLD_HEIGHT
-      );
-
-      background.lineStyle(
-        2,
-        0x72e5ed,
-        0.34
-      );
-
-      background.lineBetween(
-        x + 145,
-        0,
-        x + 145,
-        WORLD_HEIGHT
-      );
-    }
-
-    // Broken mirror panels.
-    for (
-      let x = 12110;
-      x < endX;
-      x += 390
-    ) {
-      background.fillStyle(
-        0x10182b,
-        0.94
-      );
-
-      background.fillRoundedRect(
-        x,
-        42,
-        116,
-        205,
-        14
-      );
-
-      background.lineStyle(
-        4,
-        0xc7a34b,
-        0.9
-      );
-
-      background.strokeRoundedRect(
-        x,
-        42,
-        116,
-        205,
-        14
-      );
-
-      background.lineStyle(
-        2,
-        0x79e6ef,
-        0.62
-      );
-
-      background.lineBetween(
-        x + 58,
-        48,
-        x + 37,
-        128
-      );
-
-      background.lineBetween(
-        x + 37,
-        128,
-        x + 77,
-        170
-      );
-
-      background.lineBetween(
-        x + 77,
-        170,
-        x + 50,
-        241
-      );
-
-      background.lineStyle(
-        2,
-        0xe05ebd,
-        0.65
-      );
-
-      background.lineBetween(
-        x + 58,
-        48,
-        x + 91,
-        104
-      );
-
-      background.lineBetween(
-        x + 91,
-        104,
-        x + 77,
-        170
-      );
-
-      background.lineBetween(
-        x + 37,
-        128,
-        x + 10,
-        184
-      );
-    }
-
-    // Route lights make safe surfaces readable.
-    const routeLights = [
-      [12245, 270, 72],
-      [12365, 210, 72],
-      [12490, 155, 72],
-      [12625, 215, 74],
-      [12760, 260, 72],
-      [12968, 235, 92],
-      [13000, 326, 340],
-      [13380, 270, 74],
-      [13505, 210, 72],
-      [13635, 150, 72],
-      [13770, 205, 72],
-      [13820, 260, 72],
-      [14110, 270, 72],
-      [14150, 326, 250]
-    ] as const;
-
-    const foreground = this.add.graphics();
-
-    foreground
-      .setDepth(2)
-      .setScrollFactor(1);
-
-    for (const route of routeLights) {
-      const [x, y, width] = route;
-
-      foreground.fillStyle(
-        0x73e7ef,
-        0.95
-      );
-
-      foreground.fillRect(
-        x,
-        y,
-        width,
-        3
-      );
-
-      foreground.lineStyle(
-        1,
-        0xe461c0,
-        0.82
-      );
-
-      foreground.lineBetween(
-        x,
-        y + 4,
-        x + width,
-        y + 4
-      );
-    }
-
-    this.add.text(
-      12040,
-      76,
-      "ACT VII — THE FRACTURED ROYAL BOX",
-      {
-        fontFamily: "monospace",
-        fontSize: "13px",
-        color: "#f17bd0",
-        backgroundColor: "#080611e8",
-        padding: {
-          x: 10,
-          y: 7
-        }
-      }
-    ).setDepth(36);
-
-    this.add.text(
-      12040,
-      112,
-      [
-        "Every reflection lies.",
-        "Read the lasers. Choose your route."
-      ].join("\n"),
-      {
-        fontFamily: "monospace",
-        fontSize: "9px",
-        color: "#8cebf2",
-        backgroundColor: "#080611dd",
-        padding: {
-          x: 8,
-          y: 6
-        }
-      }
-    ).setDepth(36);
-
-    this.add.text(
-      12215,
-      470,
-      "LOWER ROUTE — TRAPS / COVER",
-      {
-        fontFamily: "monospace",
-        fontSize: "9px",
-        color: "#edc75f",
-        backgroundColor: "#080611dd",
-        padding: {
-          x: 7,
-          y: 5
-        }
-      }
-    ).setDepth(36);
-
-    this.add.text(
-      12320,
-      126,
-      "UPPER ROUTE — DOUBLE-JUMP / AIR-DASH",
-      {
-        fontFamily: "monospace",
-        fontSize: "9px",
-        color: "#84e9f0",
-        backgroundColor: "#080611dd",
-        padding: {
-          x: 7,
-          y: 5
-        }
-      }
-    ).setDepth(36);
-
-    this.add.text(
-      12800,
-      548,
-      "WALL-JUMP ASCENT",
-      {
-        fontFamily: "monospace",
-        fontSize: "9px",
-        color: "#ef73cf",
-        backgroundColor: "#080611dd",
-        padding: {
-          x: 7,
-          y: 5
-        }
-      }
-    ).setDepth(36);
-
-    this.add.text(
-      13520,
-      112,
-      "MASTER SEQUENCE — JUMP → DASH → DOUBLE-JUMP",
-      {
-        fontFamily: "monospace",
-        fontSize: "9px",
-        color: "#efca62",
-        backgroundColor: "#080611dd",
-        padding: {
-          x: 7,
-          y: 5
-        }
-      }
-    ).setDepth(36);
-
-    this.royalBoxGateGraphics =
-      this.add.graphics();
-
-    this.royalBoxGateGraphics.setDepth(34);
-
-    this.royalBoxObjectiveText = this.add.text(
-      GAME_WIDTH * 0.5,
-      62,
-      "",
-      {
-        fontFamily: "monospace",
-        fontSize: "10px",
-        color: "#ffd9f7",
-        backgroundColor: "#080611e8",
-        padding: {
-          x: 9,
-          y: 6
-        }
-      }
-    );
-
-    this.royalBoxObjectiveText
-      .setOrigin(0.5, 0)
-      .setScrollFactor(0)
-      .setDepth(1180)
-      .setVisible(false);
-  }
-
-  private updateRoyalBox(): void {
-    if (this.player.x < 31664) {
-      return;
-    }
-
-    if (
-      !this.royalBoxEntered &&
-      this.player.x >= getWorldCheckpoint("RoyalBox").triggerX
-    ) {
-      this.royalBoxEntered = true;
-
-      this.playerHealth.setCheckpoint(
-        getWorldCheckpoint(
-          "RoyalBox"
-        )
-      );
-
-      this.cameras.main.flash(
-        260,
-        220,
-        76,
-        187,
-        false
-      );
-    }
-
-    if (
-      !this.royalBoxActive &&
-      !this.royalBoxCleared &&
-      this.player.x >= 12080
-    ) {
-      this.startRoyalBox();
-    }
-
-    if (!this.royalBoxActive) {
-      return;
-    }
-
-    const remaining =
-      this.royalEchoSystem.remaining;
-
-    this.royalBoxObjectiveText.setText(
-      [
-        `ROYAL ECHOES ${4 - remaining}/4`,
-        "Duelists rush. Prism Casters control the air."
-      ].join("\n")
-    );
-
-    if (remaining === 0) {
-      this.completeRoyalBox();
-    }
-  }
-
-  private startRoyalBox(): void {
-    this.royalBoxActive = true;
-
-    this.collisionWorld.addSolid(
-      this.royalBoxExitGate
-    );
-
-    this.royalEchoSystem
-      .setEnabled(true);
-
-    this.royalBoxHazardSystem
-      .setEnabled(true);
-
-    this.royalBoxObjectiveText
-      .setVisible(true);
-
-    this.redrawRoyalBoxGate();
-  }
-
-  private completeRoyalBox(): void {
-    this.royalBoxActive = false;
-    this.royalBoxCleared = true;
-
-    this.collisionWorld.removeSolid(
-      this.royalBoxExitGate
-    );
-
-    this.royalEchoSystem
-      .setEnabled(false);
-
-    this.royalBoxHazardSystem
-      .setEnabled(false);
-
-    this.royalBoxGateGraphics.clear();
-
-    this.royalBoxObjectiveText.setText(
-      "ROYAL BOX CLEARED — THE MIRROR CORE OPENS"
-    );
-
-    this.cameras.main.flash(
-      320,
-      230,
-      92,
-      202,
-      false
-    );
-
-    this.time.delayedCall(
-      2800,
-      () => {
-        this.royalBoxObjectiveText
-          .setVisible(false);
-      }
-    );
-
-    this.add.text(
-      14145,
-      235,
-      "TO THE MIRROR CORE →",
-      {
-        fontFamily: "monospace",
-        fontSize: "10px",
-        color: "#8ceaf1",
-        backgroundColor: "#080611dd",
-        padding: {
-          x: 8,
-          y: 6
-        }
-      }
-    ).setDepth(36);
-  }
-
-  private resetRoyalBoxAfterDeath(): void {
-    if (
-      !this.royalEchoSystem ||
-      !this.royalBoxHazardSystem ||
-      this.royalBoxCleared
-    ) {
-      return;
-    }
-
-    this.royalBoxActive = false;
-
-    this.collisionWorld?.removeSolid(
-      this.royalBoxExitGate
-    );
-
-    this.royalEchoSystem
-      .resetEncounter();
-
-    this.royalBoxHazardSystem
-      .reset();
-
-    this.royalBoxSupportSystem
-      .resetAfterDeath();
-
-    this.royalBoxGateGraphics?.clear();
-
-    this.royalBoxObjectiveText
-      ?.setVisible(false)
-      .setText("");
-  }
-
-  private redrawRoyalBoxGate(): void {
-    const g = this.royalBoxGateGraphics;
-    g.clear();
-
-    const gate =
-      this.royalBoxExitGate;
-
-    g.fillStyle(0x100819, 0.97);
-
-    g.fillRect(
-      gate.x,
-      gate.y,
-      gate.width,
-      gate.height
-    );
-
-    g.lineStyle(
-      3,
-      0xe85fc5,
-      1
-    );
-
-    for (
-      let y = 8;
-      y < gate.height;
-      y += 25
-    ) {
-      g.lineBetween(
-        gate.x + 2,
-        y,
-        gate.right - 2,
-        y + 15
-      );
-    }
-
-    g.lineStyle(
-      2,
-      0x77e5ed,
-      1
-    );
-
-    g.strokeRect(
-      gate.x,
-      gate.y,
-      gate.width,
-      gate.height
-    );
-  }
-
   private createGrandGallery(): void {
     this.grandGalleryTitle = this.add.text(
       GAME_WIDTH * 0.5,
@@ -2222,7 +1650,7 @@ class GameScene extends Phaser.Scene {
     this.galleryGauntletEncounterSystem?.resetAfterDeath();
     this.spotlightVaultEncounterSystem?.resetAfterDeath();
     this.cardSanctumEncounterSystem?.resetAfterDeath();
-    this.resetRoyalBoxAfterDeath();
+    this.royalBoxEncounterSystem?.resetAfterDeath();
     this.mirrorCoreSystem?.resetAfterDeath();
 
     if (this.encounterCleared) {

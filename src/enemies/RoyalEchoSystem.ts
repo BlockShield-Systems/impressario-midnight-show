@@ -66,6 +66,14 @@ const SPAWNS: readonly EchoSpawn[] =
     }
   );
 
+const PROJECTILE_MIN_X = Math.min(
+  ...SPAWNS.map(spawn => spawn.left)
+) - 640;
+
+const PROJECTILE_MAX_X = Math.max(
+  ...SPAWNS.map(spawn => spawn.right)
+) + 640;
+
 class RoyalEcho implements CombatTarget {
   public x: number;
   public y: number;
@@ -810,8 +818,8 @@ export class RoyalEchoSystem {
 
       if (
         projectile.lifetime <= 0 ||
-        projectile.x < 11950 ||
-        projectile.x > 14450 ||
+        projectile.x < PROJECTILE_MIN_X ||
+        projectile.x > PROJECTILE_MAX_X ||
         projectile.y < 0 ||
         projectile.y > 720
       ) {

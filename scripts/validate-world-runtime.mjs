@@ -59,9 +59,9 @@ const sections =
       entity.__identifier === "Section"
   );
 
-if (collisions.length !== 374) {
+if (collisions.length !== 351) {
   throw new Error(
-    `Expected 374 collisions, got ${collisions.length}.`
+    `Expected 351 collisions, got ${collisions.length}.`
   );
 }
 
@@ -209,6 +209,43 @@ for (const [x, y, width, height] of [
   ) {
     throw new Error(
       `CardSanctum collision ${x},${y},${width},${height} is missing.`
+    );
+  }
+}
+
+const royalBoxCollisions =
+  collisions.filter(
+    entity =>
+      entity.__worldX >= 31664 &&
+      entity.__worldX < 35344
+  );
+
+if (royalBoxCollisions.length !== 24) {
+  throw new Error(
+    "Expected 24 authored RoyalBox collisions, " +
+    `got ${royalBoxCollisions.length}.`
+  );
+}
+
+for (const [x, y, width, height] of [
+  [31664, 480, 336, 32],
+  [32000, 528, 384, 32],
+  [32896, 480, 448, 32],
+  [33376, 288, 24, 240],
+  [34912, 480, 432, 32],
+  [31664, 688, 3680, 32]
+]) {
+  if (
+    !royalBoxCollisions.some(
+      entity =>
+        entity.__worldX === x &&
+        entity.__worldY === y &&
+        entity.width === width &&
+        entity.height === height
+    )
+  ) {
+    throw new Error(
+      `RoyalBox collision ${x},${y},${width},${height} is missing.`
     );
   }
 }
@@ -385,6 +422,6 @@ for (const file of sourceFiles) {
 
 console.log(
   "World runtime valid: 49824x720, " +
-  "374 collisions, 11 LDtk-driven visual sections, " +
+  "351 collisions, 11 LDtk-driven visual sections, " +
   "dynamic combat camera bounds."
 );
