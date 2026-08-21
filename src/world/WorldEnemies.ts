@@ -142,60 +142,20 @@ export const WORLD_ENEMY_SPAWNS = [
     id: "GalleryShadowAcrobatA",
     group: "ShadowAcrobat",
     kind: "",
-    x: 14560,
-    y: 430,
-    patrolLeft: 14480,
-    patrolRight: 14720,
+    x: 20128,
+    y: 480,
+    patrolLeft: 20096,
+    patrolRight: 20256,
     phase: 0
   },
   {
     id: "GalleryShadowAcrobatB",
     group: "ShadowAcrobat",
     kind: "",
-    x: 15104,
-    y: 326,
-    patrolLeft: 15040,
-    patrolRight: 15264,
-    phase: 0
-  },
-  {
-    id: "MirrorCoreDuelist",
-    group: "MirrorCore",
-    kind: "duelist",
-    x: 15420,
-    y: 296,
-    patrolLeft: 15360,
-    patrolRight: 15610,
-    phase: 0
-  },
-  {
-    id: "MirrorCoreCasterA",
-    group: "MirrorCore",
-    kind: "caster",
-    x: 15680,
-    y: 172,
-    patrolLeft: 15580,
-    patrolRight: 15860,
-    phase: 0
-  },
-  {
-    id: "MirrorCoreMime",
-    group: "MirrorCore",
-    kind: "mime",
-    x: 15920,
-    y: 296,
-    patrolLeft: 15800,
-    patrolRight: 16140,
-    phase: 0
-  },
-  {
-    id: "MirrorCoreCasterB",
-    group: "MirrorCore",
-    kind: "caster",
-    x: 16200,
-    y: 194,
-    patrolLeft: 16080,
-    patrolRight: 16330,
+    x: 20768,
+    y: 480,
+    patrolLeft: 20736,
+    patrolRight: 20912,
     phase: 0
   },
   {
@@ -287,6 +247,46 @@ export const WORLD_ENEMY_SPAWNS = [
     patrolLeft: 33360,
     patrolRight: 33700,
     phase: 4.71238898038469
+  },
+  {
+    id: "MirrorCoreDuelist",
+    group: "MirrorCore",
+    kind: "duelist",
+    x: 36400,
+    y: 296,
+    patrolLeft: 36336,
+    patrolRight: 36608,
+    phase: 0
+  },
+  {
+    id: "MirrorCoreCasterA",
+    group: "MirrorCore",
+    kind: "caster",
+    x: 36640,
+    y: 172,
+    patrolLeft: 36544,
+    patrolRight: 36832,
+    phase: 0
+  },
+  {
+    id: "MirrorCoreMime",
+    group: "MirrorCore",
+    kind: "mime",
+    x: 36912,
+    y: 296,
+    patrolLeft: 36800,
+    patrolRight: 37136,
+    phase: 0
+  },
+  {
+    id: "MirrorCoreCasterB",
+    group: "MirrorCore",
+    kind: "caster",
+    x: 37216,
+    y: 194,
+    patrolLeft: 37104,
+    patrolRight: 37344,
+    phase: 0
   },
 ] as const satisfies readonly WorldEnemySpawn[];
 

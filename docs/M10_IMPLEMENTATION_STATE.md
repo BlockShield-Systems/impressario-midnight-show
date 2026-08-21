@@ -167,11 +167,80 @@
   - Full keyboard traversal, all three wave transitions, hazard interaction, death/reset, post-clear respawn, and GrandGallery transition require a browser-capable host
   - GrandGallery and later Sections retain M9 geometry pending sequential M10 authoring
 
+### GrandGallery
+
+- Latest successful commit: current `feat(levels): author Grand Gallery traversal` Section commit
+- Interval: `13744..19456`
+- Authored interval plan:
+  - `13744..14992`: safe MainStage transition, entry checkpoint, and readable low-risk portrait walk
+  - `14992..16912`: alternating floor elevations with optional upper-platform observation routes
+  - `16912..18720`: card salon traversal with denser vertical route choices
+  - `18720..19456`: controlled descending exhibit aligned to the GalleryGauntlet entry platform
+- Gameplay additions:
+  - Twenty-three deliberate collision rectangles replace forty-nine disconnected compact-world remnants
+  - Continuous lower route with readable 32–48 pixel elevation changes and thirteen optional upper platforms
+  - Full-width lower fall boundary preserves existing fall-out handling
+  - GrandGallery checkpoint moved to `13824,296` with trigger `13792`
+  - GalleryGauntlet entry checkpoint aligned to the inherited `y=480` transition platform
+  - Shadow Acrobat spawns relocated into the fixed GalleryGauntlet interval for the following Section
+  - Gallery hazards confirmed inside the fixed GalleryGauntlet interval
+  - Deferred MirrorCore checkpoints, gates, enemies, hazards, supports, dynamic platforms, relays, boss coordinates, and presentation assumptions relocated into `35344..39200`
+- Visual additions:
+  - Deterministic fixed-world wall panels, tall night windows, card portraits, chandeliers, and transition framing
+  - Six route landmarks from the MainStage threshold through the descending exhibit
+  - Cyan and gold telegraphs align with all thirteen upper platforms
+  - Compact-world GrandGallery presentation coordinates removed from `src/main.ts`
+- GrandGallery counts:
+  - Collision rectangles: 23
+  - Checkpoints: 1
+  - Gameplay gates: 0
+  - Enemy spawns: 0
+  - Hazards: 0
+  - Support pickups: 0
+  - Route landmarks: 6
+- World totals after completion:
+  - Collision rectangles: 431
+  - Checkpoints: 14
+  - Gameplay gates: 13
+  - Enemy spawns: 26
+  - Hazards: 36
+  - Support pickups: 8
+- Runtime modules added:
+  - `src/world/GrandGalleryVisuals.ts`
+- Existing runtime modules updated:
+  - `src/main.ts`
+  - `src/world/MirrorCoreSystem.ts`
+  - Generated `src/world/WorldEnemies.ts`, `WorldGameplay.ts`, `WorldHazards.ts`, and `WorldLayout.ts`
+- Validation coverage added:
+  - Exact GrandGallery collision count and principal floor geometry are asserted in `validate-world-runtime.mjs`
+  - GrandGallery, GalleryGauntlet, and relocated MirrorCore checkpoint/gate bounds are asserted in `validate-world-gameplay.mjs`
+  - GalleryGauntlet Shadow Acrobat and MirrorCore enemy intervals are asserted in `validate-world-enemies.mjs`
+  - GalleryGauntlet and MirrorCore hazard/support intervals are asserted in `validate-world-hazards.mjs`
+- Successful validation:
+  - Structural LDtk review: unchanged definitions, unchanged `49824×720` dimensions, 11 fixed Sections, and unique entity IIDs
+  - `npm run levels:validate`
+  - `npm run world:validate`
+  - `npm run typecheck`
+  - `npm run build`
+  - `npm run audio:runtime:validate`
+  - `npm run assets:audio:validate`
+  - `npm run assets:player:validate`
+  - `npm run assets:enemies:validate`
+  - `npm run assets:boss:validate`
+- Runtime tests actually performed:
+  - Vite development server started successfully on port `5175`
+  - Local HTTP health check returned `200 OK`
+  - Browser capture was attempted; the Playwright browser context closed during navigation before application execution
+  - No manual gameplay-completion claim recorded
+- Unresolved risks:
+  - Full keyboard traversal, optional upper-route coverage, checkpoint respawn, fall recovery, and both adjacent transitions require a browser-capable host
+  - GalleryGauntlet and later Sections retain M9 geometry pending sequential M10 authoring
+
 ## Current Section
 
-- Current Section: GrandGallery `13744..19456`
+- Current Section: GalleryGauntlet `19456..23552`
 - Status: not started
 
 ## Exact Next Action
 
-Inspect GrandGallery LDtk collision, checkpoints, Shadow Acrobat consumers, Gallery hazards, encounter flow, environment presentation, and fixed `13744..19456` transitions; then write the GrandGallery interval plan before mutation.
+Inspect GalleryGauntlet collision, checkpoint placement, Shadow Acrobat encounter flow, Gallery hazards, stale compact-world presentation and activation thresholds, and fixed `19456..23552` transitions; then write the GalleryGauntlet interval plan before mutation.

@@ -129,58 +129,6 @@ export const WORLD_HAZARDS = [
     phase: 0
   },
   {
-    id: "CoreSpikeA",
-    group: "MirrorCore",
-    kind: "Spike",
-    x: 14790,
-    y: 507,
-    width: 58,
-    height: 14,
-    travelX: 0,
-    travelY: 0,
-    speed: 0,
-    phase: 0
-  },
-  {
-    id: "CoreSpikeB",
-    group: "MirrorCore",
-    kind: "Spike",
-    x: 15010,
-    y: 507,
-    width: 56,
-    height: 14,
-    travelX: 0,
-    travelY: 0,
-    speed: 0,
-    phase: 0
-  },
-  {
-    id: "CoreSpikeC",
-    group: "MirrorCore",
-    kind: "Spike",
-    x: 15530,
-    y: 507,
-    width: 64,
-    height: 14,
-    travelX: 0,
-    travelY: 0,
-    speed: 0,
-    phase: 0
-  },
-  {
-    id: "CoreSpikeD",
-    group: "MirrorCore",
-    kind: "Spike",
-    x: 16000,
-    y: 507,
-    width: 62,
-    height: 14,
-    travelX: 0,
-    travelY: 0,
-    speed: 0,
-    phase: 0
-  },
-  {
     id: "GalleryPendulumA",
     group: "Gallery",
     kind: "Pendulum",
@@ -505,33 +453,61 @@ export const WORLD_HAZARDS = [
     speed: 0,
     phase: 0.35
   },
+  {
+    id: "CoreSpikeA",
+    group: "MirrorCore",
+    kind: "Spike",
+    x: 35680,
+    y: 507,
+    width: 58,
+    height: 14,
+    travelX: 0,
+    travelY: 0,
+    speed: 0,
+    phase: 0
+  },
+  {
+    id: "CoreSpikeB",
+    group: "MirrorCore",
+    kind: "Spike",
+    x: 35968,
+    y: 507,
+    width: 56,
+    height: 14,
+    travelX: 0,
+    travelY: 0,
+    speed: 0,
+    phase: 0
+  },
+  {
+    id: "CoreSpikeC",
+    group: "MirrorCore",
+    kind: "Spike",
+    x: 36544,
+    y: 507,
+    width: 64,
+    height: 14,
+    travelX: 0,
+    travelY: 0,
+    speed: 0,
+    phase: 0
+  },
+  {
+    id: "CoreSpikeD",
+    group: "MirrorCore",
+    kind: "Spike",
+    x: 37120,
+    y: 507,
+    width: 62,
+    height: 14,
+    travelX: 0,
+    travelY: 0,
+    speed: 0,
+    phase: 0
+  },
 ] as const satisfies readonly WorldHazard[];
 
 export const WORLD_SUPPORT_PICKUPS = [
-  {
-    id: "CoreRoseA",
-    group: "MirrorCore",
-    x: 14530,
-    y: 294
-  },
-  {
-    id: "CoreRoseB",
-    group: "MirrorCore",
-    x: 15360,
-    y: 294
-  },
-  {
-    id: "CoreRoseC",
-    group: "MirrorCore",
-    x: 16250,
-    y: 294
-  },
-  {
-    id: "CoreRoseD",
-    group: "MirrorCore",
-    x: 17920,
-    y: 294
-  },
   {
     id: "RoyalRoseA",
     group: "RoyalBox",
@@ -555,6 +531,30 @@ export const WORLD_SUPPORT_PICKUPS = [
     group: "RoyalBox",
     x: 33826,
     y: 242
+  },
+  {
+    id: "CoreRoseA",
+    group: "MirrorCore",
+    x: 35488,
+    y: 294
+  },
+  {
+    id: "CoreRoseB",
+    group: "MirrorCore",
+    x: 36240,
+    y: 294
+  },
+  {
+    id: "CoreRoseC",
+    group: "MirrorCore",
+    x: 37360,
+    y: 294
+  },
+  {
+    id: "CoreRoseD",
+    group: "MirrorCore",
+    x: 38944,
+    y: 294
   },
 ] as const satisfies readonly WorldSupportPickup[];
 

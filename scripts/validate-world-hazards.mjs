@@ -218,6 +218,13 @@ for (const entity of [
   }
 
   if (
+    group === "Gallery" &&
+    (x < 19456 || x >= 23552)
+  ) {
+    fail(`${id} is outside the GalleryGauntlet interval.`);
+  }
+
+  if (
     group === "CardSanctum" &&
     (x < 27984 || x >= 31664)
   ) {
@@ -229,6 +236,13 @@ for (const entity of [
     (x < 31664 || x >= 35344)
   ) {
     fail(`${id} is outside the RoyalBox interval.`);
+  }
+
+  if (
+    group === "MirrorCore" &&
+    (x < 35344 || x >= 39200)
+  ) {
+    fail(`${id} is outside the MirrorCore interval.`);
   }
 }
 

@@ -3,19 +3,19 @@
 
 export type WorldCheckpointId =
   | "InitialSpawn"
-  | "GrandGallery"
   | "CombatEntry"
   | "CombatMastery"
   | "MainStage"
   | "MainStageClear"
-  | "MirrorCore"
-  | "MirrorRelays"
-  | "CoreChamber"
+  | "GrandGallery"
   | "GalleryGauntlet"
   | "GauntletMidpoint"
   | "SpotlightVault"
   | "CardSanctum"
-  | "RoyalBox";
+  | "RoyalBox"
+  | "MirrorCore"
+  | "MirrorRelays"
+  | "CoreChamber";
 
 export type WorldGateId =
   | "CombatTutorialExit"
@@ -24,13 +24,13 @@ export type WorldGateId =
   | "MainStageLeft"
   | "MainStageWave"
   | "MainStageExit"
-  | "MirrorRelay"
-  | "MirrorBoss"
-  | "MirrorExit"
   | "SpotlightVaultLeft"
   | "SpotlightVaultRight"
   | "CardSanctumExit"
-  | "RoyalBoxExit";
+  | "RoyalBoxExit"
+  | "MirrorRelay"
+  | "MirrorBoss"
+  | "MirrorExit";
 
 export interface WorldCheckpoint {
   readonly id: WorldCheckpointId;
@@ -50,19 +50,19 @@ export interface WorldGate {
 
 export const WORLD_CHECKPOINTS: readonly WorldCheckpoint[] = [
   { id: "InitialSpawn", displayName: "Movement Rehearsal", triggerX: 0, x: 72, y: 270 },
-  { id: "GrandGallery", displayName: "The Grand Gallery", triggerX: 4860, x: 4840, y: 296 },
   { id: "CombatEntry", displayName: "Combat Rehearsal", triggerX: 5408, x: 5456, y: 296 },
   { id: "CombatMastery", displayName: "Combat Rehearsal Mastery", triggerX: 9728, x: 9760, y: 296 },
   { id: "MainStage", displayName: "The Main Stage", triggerX: 10496, x: 10528, y: 296 },
   { id: "MainStageClear", displayName: "Main Stage Curtain Call", triggerX: 13520, x: 13552, y: 296 },
-  { id: "MirrorCore", displayName: "The Mirror Core", triggerX: 14420, x: 14430, y: 296 },
-  { id: "MirrorRelays", displayName: "Mirror Relays", triggerX: 15345, x: 15345, y: 296 },
-  { id: "CoreChamber", displayName: "Core Chamber", triggerX: 16315, x: 16315, y: 296 },
-  { id: "GalleryGauntlet", displayName: "Gallery Gauntlet", triggerX: 19472, x: 19488, y: 498 },
+  { id: "GrandGallery", displayName: "The Grand Gallery", triggerX: 13792, x: 13824, y: 296 },
+  { id: "GalleryGauntlet", displayName: "Gallery Gauntlet", triggerX: 19472, x: 19488, y: 450 },
   { id: "GauntletMidpoint", displayName: "Gauntlet Midpoint", triggerX: 20560, x: 20576, y: 498 },
   { id: "SpotlightVault", displayName: "The Spotlight Vault", triggerX: 23568, x: 23584, y: 498 },
   { id: "CardSanctum", displayName: "The Card Sanctum", triggerX: 28000, x: 28016, y: 450 },
   { id: "RoyalBox", displayName: "The Fractured Royal Box", triggerX: 31712, x: 31744, y: 296 },
+  { id: "MirrorCore", displayName: "The Mirror Core", triggerX: 35408, x: 35424, y: 296 },
+  { id: "MirrorRelays", displayName: "Mirror Relays", triggerX: 36224, x: 36224, y: 296 },
+  { id: "CoreChamber", displayName: "Core Chamber", triggerX: 37344, x: 37344, y: 296 },
 ] as const;
 
 export const WORLD_GATES: readonly WorldGate[] = [
@@ -72,13 +72,13 @@ export const WORLD_GATES: readonly WorldGate[] = [
   { id: "MainStageLeft", x: 10704, y: 0, width: 18, height: 326 },
   { id: "MainStageWave", x: 12096, y: 0, width: 18, height: 326 },
   { id: "MainStageExit", x: 13472, y: 0, width: 18, height: 326 },
-  { id: "MirrorRelay", x: 15318, y: 0, width: 18, height: 520 },
-  { id: "MirrorBoss", x: 17845, y: 0, width: 18, height: 520 },
-  { id: "MirrorExit", x: 18618, y: 0, width: 18, height: 520 },
   { id: "SpotlightVaultLeft", x: 23936, y: 0, width: 18, height: 326 },
   { id: "SpotlightVaultRight", x: 25856, y: 0, width: 18, height: 326 },
   { id: "CardSanctumExit", x: 31584, y: 0, width: 18, height: 520 },
   { id: "RoyalBoxExit", x: 35264, y: 0, width: 18, height: 520 },
+  { id: "MirrorRelay", x: 36192, y: 0, width: 18, height: 520 },
+  { id: "MirrorBoss", x: 38240, y: 0, width: 18, height: 520 },
+  { id: "MirrorExit", x: 39072, y: 0, width: 18, height: 520 },
 ] as const;
 
 export function getWorldCheckpoint(

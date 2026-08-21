@@ -30,7 +30,7 @@ import type {
   PlayerHealthSystem
 } from "../player/PlayerHealthSystem";
 
-export const MIRROR_CORE_START_X = 14400;
+export const MIRROR_CORE_START_X = 35344;
 
 function createWorldGate(
   id: WorldGateId
@@ -44,7 +44,7 @@ function createWorldGate(
     gate.height
   );
 }
-export const MIRROR_CORE_END_X = 49824;
+export const MIRROR_CORE_END_X = 39200;
 
 interface MovingMirror {
   readonly solid: Phaser.Geom.Rectangle;
@@ -880,7 +880,7 @@ implements CombatTarget {
 
 class MirrorConductor
 implements CombatTarget {
-  public x = 18225;
+  public x = 38640;
   public y = 205;
 
   public readonly width = 42;
@@ -1131,7 +1131,7 @@ implements CombatTarget {
   }
 
   public reset(): void {
-    this.x = 18225;
+    this.x = 38640;
     this.y = 205;
 
     this.health = 108;
@@ -1724,13 +1724,13 @@ export class MirrorCoreSystem {
     this.relays = [
       new MirrorRelay(
         scene,
-        14865,
+        35808,
         198,
         () => this.onRelayActivated()
       ),
       new MirrorRelay(
         scene,
-        15225,
+        36096,
         292,
         () => this.onRelayActivated()
       )
@@ -1805,52 +1805,52 @@ export class MirrorCoreSystem {
       {
         solid:
           new Phaser.Geom.Rectangle(
-            14710,
+            35648,
             408,
             82,
             14
           ),
-        originX: 14710,
+        originX: 35648,
         originY: 408,
         travelX: 0,
         travelY: -82,
         speed: 1.25,
         phase: 0,
-        previousX: 14710,
+        previousX: 35648,
         previousY: 408
       },
       {
         solid:
           new Phaser.Geom.Rectangle(
-            15018,
+            35936,
             390,
             82,
             14
           ),
-        originX: 15018,
+        originX: 35936,
         originY: 390,
         travelX: 86,
         travelY: 0,
         speed: 1.05,
         phase: 1.4,
-        previousX: 15018,
+        previousX: 35936,
         previousY: 390
       },
       {
         solid:
           new Phaser.Geom.Rectangle(
-            15805,
+            36832,
             375,
             86,
             14
           ),
-        originX: 15805,
+        originX: 36832,
         originY: 375,
         travelX: 0,
         travelY: -105,
         speed: 1.45,
         phase: 2.1,
-        previousX: 15805,
+        previousX: 36832,
         previousY: 375
       }
     ];
@@ -2000,7 +2000,7 @@ export class MirrorCoreSystem {
     if (
       !this.gauntletStarted &&
       this.relaysCheckpointReached &&
-      this.player.x >= 15345
+      this.player.x >= 36224
     ) {
       this.gauntletStarted = true;
 
@@ -2045,7 +2045,7 @@ export class MirrorCoreSystem {
       this.gauntletCleared &&
       !this.bossStarted &&
       !this.bossDefeated &&
-      this.player.x >= 17880
+      this.player.x >= 38272
     ) {
       this.bossStarted = true;
 
@@ -2512,7 +2512,7 @@ export class MirrorCoreSystem {
       index += 1
     ) {
       const x =
-        14645 + index * 295;
+        35584 + index * 295;
 
       const cycle =
         (
@@ -2548,8 +2548,8 @@ export class MirrorCoreSystem {
     ) {
       const centerX =
         this.bossStarted
-          ? 18240
-          : 15900;
+          ? 38656
+          : 36928;
 
       const centerY =
         this.bossStarted
@@ -2635,13 +2635,13 @@ export class MirrorCoreSystem {
       const floorHazard =
         dangerousLeft
           ? new Phaser.Geom.Rectangle(
-              17865,
+              38256,
               312,
               340,
               18
             )
           : new Phaser.Geom.Rectangle(
-              18205,
+              38608,
               312,
               390,
               18
@@ -2793,19 +2793,19 @@ export class MirrorCoreSystem {
       .setAlpha(0);
 
     this.spawnFinaleBurst(
-      18242,
+      38658,
       225,
       48
     );
 
     this.spawnFinaleBurst(
-      18195,
+      38611,
       185,
       30
     );
 
     this.spawnFinaleBurst(
-      18292,
+      38708,
       175,
       30
     );
@@ -2916,8 +2916,8 @@ export class MirrorCoreSystem {
       ) {
         const burstX =
           Phaser.Math.Between(
-            18080,
-            18460
+            38496,
+            38876
           );
 
         const burstY =
@@ -2940,7 +2940,7 @@ export class MirrorCoreSystem {
     } else if (
       this.finaleTime < 8.7
     ) {
-      const targetX = 18570;
+      const targetX = 39008;
 
       const direction =
         targetX >
@@ -3116,7 +3116,7 @@ export class MirrorCoreSystem {
     }
 
     // Majestic illuminated gate.
-    const gateX = 18582;
+    const gateX = 39020;
     const gateY = 82;
     const gateWidth = 92;
     const gateHeight = 244;
@@ -3324,8 +3324,8 @@ export class MirrorCoreSystem {
     }
 
     for (
-      let x = 14520;
-      x < 18640;
+      let x = 35456;
+      x < 39168;
       x += 360
     ) {
       g.lineStyle(
@@ -3379,7 +3379,7 @@ export class MirrorCoreSystem {
     }
 
     this.scene.add.text(
-      14445,
+      35389,
       66,
       "ACT VIII — THE MIRROR CORE",
       {
@@ -3395,7 +3395,7 @@ export class MirrorCoreSystem {
     ).setDepth(41);
 
     this.scene.add.text(
-      14445,
+      35389,
       104,
       [
         "Refraction Ascent",
@@ -3414,7 +3414,7 @@ export class MirrorCoreSystem {
     ).setDepth(41);
 
     this.scene.add.text(
-      15355,
+      36235,
       88,
       "KALEIDOSCOPE GAUNTLET",
       {
@@ -3430,7 +3430,7 @@ export class MirrorCoreSystem {
     ).setDepth(41);
 
     this.scene.add.text(
-      17895,
+      38287,
       82,
       "CORE CHAMBER — MIRROR CONDUCTOR",
       {
@@ -3503,7 +3503,7 @@ export class MirrorCoreSystem {
       index += 1
     ) {
       const x =
-        14645 + index * 295;
+        35584 + index * 295;
 
       const cycle =
         (
@@ -3682,8 +3682,8 @@ export class MirrorCoreSystem {
     ) {
       const centerX =
         this.bossStarted
-          ? 18240
-          : 15900;
+          ? 38656
+          : 36928;
 
       const centerY =
         this.bossStarted

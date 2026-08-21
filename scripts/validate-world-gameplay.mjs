@@ -113,8 +113,48 @@ assertEntity(
 );
 assertEntity(
   checkpoints,
+  "GrandGallery",
+  13824,
+  296,
+  16,
+  16
+);
+assertEntity(
+  checkpoints,
+  "GalleryGauntlet",
+  19488,
+  450,
+  16,
+  16
+);
+assertEntity(
+  checkpoints,
   "RoyalBox",
   31744,
+  296,
+  16,
+  16
+);
+assertEntity(
+  checkpoints,
+  "MirrorCore",
+  35424,
+  296,
+  16,
+  16
+);
+assertEntity(
+  checkpoints,
+  "MirrorRelays",
+  36224,
+  296,
+  16,
+  16
+);
+assertEntity(
+  checkpoints,
+  "CoreChamber",
+  37344,
   296,
   16,
   16
@@ -124,6 +164,9 @@ assertEntity(gates, "MainStageWave", 12096, 0, 18, 326);
 assertEntity(gates, "MainStageExit", 13472, 0, 18, 326);
 assertEntity(gates, "CardSanctumExit", 31584, 0, 18, 520);
 assertEntity(gates, "RoyalBoxExit", 35264, 0, 18, 520);
+assertEntity(gates, "MirrorRelay", 36192, 0, 18, 520);
+assertEntity(gates, "MirrorBoss", 38240, 0, 18, 520);
+assertEntity(gates, "MirrorExit", 39072, 0, 18, 520);
 
 const main =
   read("src/main.ts");

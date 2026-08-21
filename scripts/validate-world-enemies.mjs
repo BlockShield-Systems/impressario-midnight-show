@@ -226,6 +226,20 @@ for (const entity of spawns) {
   }
 
   if (
+    group === "ShadowAcrobat" &&
+    (
+      x < 19456 ||
+      x >= 23552 ||
+      left < 19456 ||
+      right > 23552
+    )
+  ) {
+    throw new Error(
+      `${id} is outside the GalleryGauntlet interval.`
+    );
+  }
+
+  if (
     id.startsWith("Sanctum") &&
     (x < 27984 || x >= 31664)
   ) {
@@ -254,6 +268,20 @@ for (const entity of spawns) {
 
   if (
     group === "MirrorCore" &&
+    (
+      x < 35344 ||
+      x >= 39200 ||
+      left < 35344 ||
+      right > 39200
+    )
+  ) {
+    throw new Error(
+      `${id} is outside the MirrorCore interval.`
+    );
+  }
+
+  if (
+    group === "MirrorCore" &&
     ![
       "duelist",
       "caster",
@@ -269,6 +297,17 @@ for (const entity of spawns) {
     group,
     (counts.get(group) ?? 0) + 1
   );
+}
+
+for (const id of [
+  "GalleryShadowAcrobatA",
+  "GalleryShadowAcrobatB"
+]) {
+  if (!ids.has(id)) {
+    throw new Error(
+      `GalleryGauntlet enemy ${id} is missing.`
+    );
+  }
 }
 
 const mainStageIds = [

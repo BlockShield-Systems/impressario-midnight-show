@@ -59,10 +59,47 @@ const sections =
       entity.__identifier === "Section"
   );
 
-if (collisions.length !== 457) {
+if (collisions.length !== 431) {
   throw new Error(
-    `Expected 457 collisions, got ${collisions.length}.`
+    `Expected 431 collisions, got ${collisions.length}.`
   );
+}
+
+const grandGalleryCollisions =
+  collisions.filter(
+    entity =>
+      entity.__worldX >= 13744 &&
+      entity.__worldX < 19456
+  );
+
+if (grandGalleryCollisions.length !== 23) {
+  throw new Error(
+    "Expected 23 authored GrandGallery collisions, " +
+    `got ${grandGalleryCollisions.length}.`
+  );
+}
+
+for (const [x, y, width, height] of [
+  [13744, 326, 1248, 34],
+  [14992, 358, 768, 34],
+  [15760, 326, 1152, 34],
+  [16912, 374, 832, 34],
+  [17744, 326, 976, 34],
+  [13744, 640, 5712, 32]
+]) {
+  if (
+    !grandGalleryCollisions.some(
+      entity =>
+        entity.__worldX === x &&
+        entity.__worldY === y &&
+        entity.width === width &&
+        entity.height === height
+    )
+  ) {
+    throw new Error(
+      `GrandGallery collision ${x},${y},${width},${height} is missing.`
+    );
+  }
 }
 
 if (sections.length !== 11) {
@@ -237,6 +274,6 @@ for (const file of sourceFiles) {
 
 console.log(
   "World runtime valid: 49824x720, " +
-  "457 collisions, 11 LDtk-driven visual sections, " +
+  "431 collisions, 11 LDtk-driven visual sections, " +
   "dynamic combat camera bounds."
 );
