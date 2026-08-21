@@ -3,6 +3,12 @@ import Phaser from "phaser";
 import {
   WORLD_SOLIDS
 } from "./WorldLayout";
+import {
+  MOVEMENT_ENVIRONMENT_FOREGROUND_DEPTH,
+  MOVEMENT_TUTORIAL_MARKER_DEPTH,
+  MOVEMENT_TUTORIAL_SIGNAGE_DEPTH,
+  MOVEMENT_TUTORIAL_SIGNS
+} from "./MovementTutorial";
 
 const SECTION_START = 0;
 const SECTION_END = 5376;
@@ -210,7 +216,9 @@ export class MovementRehearsalVisuals {
     const curtain = scene.add.graphics();
 
     curtain
-      .setDepth(8)
+      .setDepth(
+        MOVEMENT_ENVIRONMENT_FOREGROUND_DEPTH
+      )
       .setScrollFactor(1);
 
     curtain.fillStyle(
@@ -632,40 +640,10 @@ export class MovementRehearsalVisuals {
   private createMovementLanguage(
     scene: Phaser.Scene
   ): void {
-    const signs = [
-      {
-        x: 110,
-        title: "MOVE",
-        hint: "A / D"
-      },
-      {
-        x: 690,
-        title: "JUMP",
-        hint: "SPACE"
-      },
-      {
-        x: 1270,
-        title: "DOUBLE",
-        hint: "SPACE ×2"
-      },
-      {
-        x: 1900,
-        title: "WALL",
-        hint: "HOLD + JUMP"
-      },
-      {
-        x: 2550,
-        title: "DASH",
-        hint: "SHIFT"
-      },
-      {
-        x: 4420,
-        title: "FINALE",
-        hint: "CHAIN THE MOVES"
-      }
-    ] as const;
-
-    for (const sign of signs) {
+    for (
+      const sign of
+      MOVEMENT_TUTORIAL_SIGNS
+    ) {
       scene.add.text(
         sign.x,
         274,
@@ -686,13 +664,18 @@ export class MovementRehearsalVisuals {
         }
       )
         .setOrigin(0.5, 1)
-        .setDepth(6);
+        .setScrollFactor(1)
+        .setDepth(
+          MOVEMENT_TUTORIAL_SIGNAGE_DEPTH
+        );
 
       const marker =
         scene.add.graphics();
 
       marker
-        .setDepth(5)
+        .setDepth(
+          MOVEMENT_TUTORIAL_MARKER_DEPTH
+        )
         .setScrollFactor(1);
 
       marker.lineStyle(
@@ -740,7 +723,11 @@ export class MovementRehearsalVisuals {
         stroke: "#08040a",
         strokeThickness: 2
       }
-    ).setDepth(6);
+    )
+      .setScrollFactor(1)
+      .setDepth(
+        MOVEMENT_TUTORIAL_SIGNAGE_DEPTH
+      );
 
     scene.add.text(
       34,
@@ -757,6 +744,10 @@ export class MovementRehearsalVisuals {
           y: 5
         }
       }
-    ).setDepth(6);
+    )
+      .setScrollFactor(1)
+      .setDepth(
+        MOVEMENT_TUTORIAL_SIGNAGE_DEPTH
+      );
   }
 }

@@ -31,6 +31,7 @@
     "test:audio:e2e": "playwright test tests/audio-runtime.spec.ts",
     "test:audio:e2e:headed": "playwright test tests/audio-runtime.spec.ts --headed",
     "test:mirror-conductor": "node --test tests/mirror-conductor-phase.test.mjs",
+    "test:ui-runtime": "node --test tests/ui-runtime.test.mjs && playwright test tests/ui-runtime.spec.ts",
     "levels:sync": "node scripts/sync-ldtk-world.mjs && node scripts/sync-ldtk-gameplay.mjs && node scripts/sync-ldtk-enemies.mjs && node scripts/sync-ldtk-hazards.mjs",
     "levels:validate": "node scripts/sync-ldtk-world.mjs --check && node scripts/sync-ldtk-gameplay.mjs --check && node scripts/sync-ldtk-enemies.mjs --check && node scripts/validate-world-runtime.mjs && node scripts/validate-world-gameplay.mjs && node scripts/validate-world-enemies.mjs && node scripts/sync-ldtk-hazards.mjs --check && node scripts/validate-world-hazards.mjs",
     "assets:world": "python3 scripts/generate-environment-tiles.py",

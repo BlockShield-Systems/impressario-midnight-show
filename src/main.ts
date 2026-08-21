@@ -35,6 +35,10 @@ import {
 } from "./world/WorldGameplay";
 import { EnvironmentTileRenderer } from "./world/EnvironmentTileRenderer";
 import { MovementRehearsalVisuals } from "./world/MovementRehearsalVisuals";
+import {
+  MOVEMENT_TUTORIAL_SIGNAGE_DEPTH,
+  OPENING_CONTROL_INSTRUCTIONS
+} from "./world/MovementTutorial";
 import { CombatRehearsalVisuals } from "./world/CombatRehearsalVisuals";
 import { CombatRehearsalHazardSystem } from "./world/CombatRehearsalHazardSystem";
 import { MainStageVisuals } from "./world/MainStageVisuals";
@@ -1421,24 +1425,20 @@ class GameScene extends Phaser.Scene {
     this.add.text(
       46,
       245,
-      [
-        "MOVEMENT REHEARSAL",
-        "",
-        "A / D or arrows   Move",
-        "Space             Jump / Double Jump",
-        "Shift             Dash",
-        "J                 Cane Attack",
-        "S or down         Fast Fall",
-        "",
-        "Gamepad: Left Stick / A / RT or B"
-      ].join("\n"),
+      OPENING_CONTROL_INSTRUCTIONS.join(
+        "\n"
+      ),
       {
         fontFamily: "monospace",
         fontSize: "10px",
         color: "#ead8b4",
         lineSpacing: 3
       }
-    );
+    )
+      .setScrollFactor(1)
+      .setDepth(
+        MOVEMENT_TUTORIAL_SIGNAGE_DEPTH
+      );
 
     this.add.text(
       680,
@@ -1450,7 +1450,11 @@ class GameScene extends Phaser.Scene {
         fontSize: "11px",
         color: "#d6a94c"
       }
-    );
+    )
+      .setScrollFactor(1)
+      .setDepth(
+        MOVEMENT_TUTORIAL_SIGNAGE_DEPTH
+      );
 
     this.add.text(
       930,
@@ -1461,7 +1465,11 @@ class GameScene extends Phaser.Scene {
         fontSize: "11px",
         color: "#d6a94c"
       }
-    );
+    )
+      .setScrollFactor(1)
+      .setDepth(
+        MOVEMENT_TUTORIAL_SIGNAGE_DEPTH
+      );
 
     this.add.text(
       1485,
@@ -1472,7 +1480,11 @@ class GameScene extends Phaser.Scene {
         fontSize: "11px",
         color: "#d6a94c"
       }
-    );
+    )
+      .setScrollFactor(1)
+      .setDepth(
+        MOVEMENT_TUTORIAL_SIGNAGE_DEPTH
+      );
 
     this.add.text(
       2070,
@@ -1484,7 +1496,11 @@ class GameScene extends Phaser.Scene {
         fontSize: "11px",
         color: "#f0c95e"
       }
-    );
+    )
+      .setScrollFactor(1)
+      .setDepth(
+        MOVEMENT_TUTORIAL_SIGNAGE_DEPTH
+      );
 
   }
 
