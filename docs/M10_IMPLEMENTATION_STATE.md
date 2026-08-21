@@ -684,11 +684,57 @@
 - `git diff --check`, canonical level/world validation, typecheck, production build, and all production asset validators passed
 - Vite served locally on port `5177` with HTTP 200; public browser capture was blocked by HTTP 403 before application execution, so full traversal remains pending on a browser-capable host
 
+## MirrorConductor Pre-Mutation Plan
+
+- Fixed interval: `44672..49824`; preserve the `49824×720` world, grid `16`, the ConductorApproach entry surface at `44672,480,112,16`, and the world end at `49824`
+- Inherited authoritative inventory:
+  - 38 `CollisionRect` entities: five disconnected ceiling fragments and thirty-three repeating entry or stepping fragments
+  - 0 checkpoints, 0 gameplay gates, 0 enemy spawns, 0 hazards, and 0 support pickups
+  - 1 fixed `MirrorConductor` Section entity spanning the complete interval
+- Existing boss implementation:
+  - The M9 `MirrorCoreSystem.ts` history contains the complete `MirrorConductor` combat target, three-phase health state machine, shield counter, projectile volleys, rotating beams, phase-three floor collapse, boss HUD, defeat sequence, finale, credits, and leaderboard completion
+  - MirrorCore authoring correctly removed that later-Section ownership; the implementation will be restored under a dedicated `MirrorConductorSystem.ts` without returning boss behavior to MirrorCore or ConductorApproach
+  - Health remains 108 with phase thresholds at 72 and 36 and minimum phase windows of 55, 60, and 70 seconds so high damage cannot skip a musical phase
+- Boss atlas and animation ownership:
+  - Reuse `BossView.ts`, the production `mirror-conductor` atlas, all 171 frames, and all 21 validated tags
+  - Preserve dormant, entrance, phase idle/telegraph/cast/counter, phase transitions, phase hurt, defeat, and fireworks sequences
+- Arena geometry and transition plan:
+  - Replace inherited fragments with a safe entry apron, checkpoint surface, full-height entrance lock, broad principal arena floor, separated recovery platforms, telegraphed phase-three floor lanes, finale runway, illuminated resolution gate, and full-width lower fall boundary
+  - Keep every collision, dynamic hazard, projectile bound, camera constraint, and completion coordinate inside `44672..49824`
+  - Preserve ConductorApproach except for no change beyond validating the shared `44672` transition
+- Checkpoint, gates, camera, and reset behavior:
+  - Add one authoritative safe pre-fight checkpoint and authoritative entrance and resolution gates in LDtk, then regenerate typed gameplay data only through `npm run levels:sync`
+  - Activate the checkpoint before arena closure; close the entrance only after the player enters the arena and keep the resolution gate closed until confirmed boss defeat
+  - Constrain the combat camera to the authored arena while active, restore world camera bounds on death or defeat, clear projectiles and temporary hazards on death, reset the boss and gates deterministically, and preserve the safe pre-fight respawn
+- Hazards, projectiles, and recovery:
+  - Preserve shield counter projectiles, phase-scaled aimed volleys, rotating phase beams, and alternating phase-three floor danger with explicit telegraphs
+  - Provide safe landing space and bounded recovery opportunities between attacks; add authoritative support pickups only if required by the authored arena and keep them boss-local
+  - Retain existing player damage immunity, knockback, fall-out, and health recovery APIs rather than adding parallel combat rules
+- Player capabilities at entry:
+  - The route assumes the previously acquired jump, double jump, ground dash, air dash, wall slide, wall jump, Spotlight, and Grand Card capabilities
+  - Spotlight breaks the opening shield at close range; Grand Card marks the real Conductor during the mirror phase; no new ability is introduced in the boss Section
+- Audio and presentation:
+  - Preserve the existing `44672` transition to `music_10_conductor_phase_1`, machine ambience, and `vo_boss_intro`
+  - Preserve BossView tag-driven transitions to phase-two and phase-three music, SFX, and voiceover, plus boss defeat and finale audio
+  - Add deterministic fixed-world arena visuals, readable gate framing, phase hazard telegraphs, boss landmarks, finale runway, and valid world-end presentation
+- Completion ownership:
+  - Start defeat and finale flow only after boss health reaches zero after the phase-three minimum window
+  - Keep finale, credits, and `leaderboard.finishRun()` exclusively in MirrorConductor ownership
+  - Guard finale startup and leaderboard submission with explicit one-shot state in addition to the leaderboard client's existing `finishing` guard
+- Generated runtime and validation ownership:
+  - LDtk remains authoritative for Section bounds, collision, checkpoint, gates, and any static hazards or supports added by the plan
+  - Generated `WorldLayout.ts`, `WorldGameplay.ts`, `WorldEnemies.ts`, and `WorldHazards.ts` change only through synchronization scripts
+  - Exact validators will cover every authored rectangle and semantic entity, interval containment, transition continuity, dedicated runtime construction, phase windows, gate/checkpoint ownership, projectile and camera bounds, defeat-only finale, and single leaderboard completion call
+- Existing tests and required validation:
+  - Baseline `git diff --check`, level/world validators, typecheck, and production build pass at `eabc295`
+  - The production boss atlas validator passes with 171 frames and 21 tags; audio, player, enemy, and boss asset validators remain mandatory
+  - `test:audio:e2e` is the only package Playwright test; browser execution and controlled gameplay traversal must be reported separately and only if actually completed
+
 ## Current Section
 
 - Current Section: MirrorConductor `44672..49824`
-- Status: ConductorApproach implementation and canonical validation complete; commit, push, PR update, and parity verification in progress
+- Status: read-only recovery, authoritative inventory, historical boss inspection, and pre-mutation planning complete
 
 ## Exact Next Action
 
-Commit and push the completed ConductorApproach implementation, update pull request #1, verify clean local/remote parity, then begin MirrorConductor inspection without moving the fixed `44672` boundary.
+Commit and push this MirrorConductor pre-mutation plan, update pull request #1, then author the fixed boss interval without changing completed Sections.
