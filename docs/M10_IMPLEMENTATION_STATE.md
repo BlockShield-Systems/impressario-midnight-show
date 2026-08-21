@@ -455,7 +455,7 @@
 
 ## RoyalBox Completion
 
-- Section commit: pending `feat(levels): author Royal Box encounter` Section commit
+- Section commit: `e9649e3289d8747db163e013c4d337c61e528582` (`feat(levels): author Royal Box encounter`)
 - Interval: `31664..35344`
 - Gameplay additions:
   - Twenty-four deliberate collision rectangles replace forty-seven inherited compact-world fragments
@@ -519,11 +519,57 @@
   - Full keyboard traversal, Royal Echo encounter completion, hazard timing, Grand Card behavior, Royal Rose recovery, look-down camera behavior, death/reset, and both adjacent transitions require browser validation
   - MirrorCore and later Sections retain inherited geometry pending sequential M10 authoring
 
+## MirrorCore Pre-Mutation Plan
+
+- Fixed interval: `35344..39200`
+- Adjacent transition constraints:
+  - Preserve the authored RoyalBox exit surface at `34912,480,432,32`
+  - Begin MirrorCore on the inherited safe `y=480` entry surface at the fixed `35344` boundary
+  - End MirrorCore on a `y=480` surface aligned with the inherited ConductorApproach entry at `39200,480,112,16`
+  - Do not mutate ConductorApproach collision geometry or author its semantic entities during MirrorCore work
+- Inherited inventory:
+  - 45 collision rectangles, including 21 ceiling fragments and 24 repeating lower entry or stepping fragments
+  - 3 checkpoints: `MirrorCore` at `35424,296`, `MirrorRelays` at `36224,296`, and `CoreChamber` at `37344,296`
+  - 3 gates at `36192`, `38240`, and `39072`, each stopping at `y=520`
+  - 4 Core reflections: 1 duelist, 2 casters, and 1 mime
+  - 4 spike hazards and 4 Royal Rose support pickups
+  - 2 hard-coded Grand Card relays, 3 hard-coded moving mirrors, 3 timed refraction beams, rotating gauntlet beams, and fixed projectile bounds
+  - A Mirror Conductor boss, boss HUD, phase hazards, finale, leaderboard completion, and credits are incorrectly owned and activated inside MirrorCore before the later ConductorApproach and MirrorConductor Sections
+- Authored interval plan:
+  - `35344..35648`: safe RoyalBox arrival, floor-aligned entry checkpoint, Grand Card relay instruction, and low-risk route introduction
+  - `35648..36192`: refraction ascent using three readable moving mirrors, three telegraphed vertical beam windows, two ranged relays, and recovery routes
+  - `36192..37344`: Kaleidoscope Gauntlet with four generated Core reflections, separated spike lanes, rotating beam pressure, and safe combat platforms
+  - `37344..39072`: post-gauntlet stabilization traversal, safe CoreChamber checkpoint, optional upper movement route, recovery roses, and a readable release toward ConductorApproach
+  - `39072..39200`: objective-clear exit gate and level `y=480` ConductorApproach transition
+- Planned collision structure:
+  - Replace all 45 inherited fragments with deliberate fixed-world entry and exit floors, relay-ascent supports, gauntlet platforms, wall-jump surfaces, projectile cover, stabilization-route platforms, and a full-width lower fall boundary
+  - Keep every required relay and combat position reachable with existing jump, double-jump, dash, air-dash, wall-slide, wall-jump, Grand Card, and Spotlight systems
+  - Place checkpoints only on authored safe surfaces and keep recovery space between spikes, vertical beams, moving mirrors, and rotating gauntlet beams
+  - Preserve a readable lower recovery route beneath optional moving-mirror and upper-platform choices
+- Planned semantic changes:
+  - Retain all three checkpoint identities while aligning their positions and triggers to authored safe surfaces
+  - Retain the three generated gate identities, expand active locks through `y=688`, and assign them to relay completion, gauntlet progression, and Section release without permitting an early boss encounter
+  - Reposition all four Core reflections onto authored combat surfaces while preserving identifiers, kinds, and phases
+  - Reposition all four spikes and four Royal Roses to match authored surfaces while preserving semantic identities
+  - Keep MirrorCore projectile and hazard bounds constrained to `35344..39200`
+- Planned runtime architecture:
+  - Add `MirrorCoreVisuals.ts` for fixed-world refraction chambers, platform telegraphs, relay framing, gauntlet landmarks, stabilization presentation, and ConductorApproach signage
+  - Refactor `MirrorCoreSystem.ts` around checkpoint activation, relays, moving mirrors, generated gates, Core reflections, hazards, supports, objective state, clear state, and death/reset lifecycle
+  - Separate inherited Mirror Conductor boss, boss HUD, phase hazards, finale, leaderboard completion, and credits from MirrorCore ownership; no boss or run-completion path may activate before the later fixed MirrorConductor interval is authored
+  - Preserve existing production enemy, boss, combat, magic, health, audio, and leaderboard systems for their appropriate Sections rather than replacing them
+- Planned validation coverage:
+  - Exact MirrorCore collision count and principal entry, ascent, gauntlet, stabilization, exit, and fall-boundary geometry
+  - Exact checkpoint and full-height gate bounds
+  - Exact Core reflection positions, patrol bounds, kinds, phases, and Section containment
+  - Exact spike and support positions, dimensions, and Section containment
+  - Exact moving-mirror, relay, beam, projectile, and progression bounds within `35344..39200`
+  - Absence of Mirror Conductor activation, finale, leaderboard completion, and credits from the MirrorCore progression path
+
 ## Current Section
 
 - Current Section: MirrorCore `35344..39200`
-- Status: RoyalBox implementation validated locally; commit, push, and pull-request update pending before MirrorCore pre-mutation inspection
+- Status: pre-mutation inspection complete; interval plan pending separate commit and push
 
 ## Exact Next Action
 
-Commit and push the validated RoyalBox implementation, update the open pull request, verify clean local/remote parity, then inspect MirrorCore before mutation.
+Commit and push the MirrorCore interval plan, update the open pull request, verify clean local/remote parity, then author MirrorCore from authoritative LDtk data.
