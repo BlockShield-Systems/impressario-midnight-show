@@ -40,6 +40,14 @@ interface AudioDebugSnapshot {
     readonly configuredGain: number;
     readonly effectiveGain: number;
   }>>;
+  readonly finalOutput: {
+    readonly contextMatchesDestination: boolean;
+    readonly phaserDestinationMatchesContext: boolean;
+    readonly masterMuted: boolean;
+    readonly masterGain: number;
+    readonly effectiveGain: number;
+    readonly analyserInFinalOutputPath: boolean;
+  };
   readonly analyser: {
     readonly rms: number;
     readonly peak: number;
@@ -47,6 +55,22 @@ interface AudioDebugSnapshot {
     readonly observedPeak: number;
   };
   readonly lastLoadError: string | null;
+  readonly timing: {
+    readonly wallSeconds: number;
+    readonly rawSeconds: number;
+    readonly acceptedSeconds: number;
+    readonly discardedSeconds: number;
+    readonly fixedSteps: number;
+    readonly maximumSteps: number;
+    readonly maximumAccumulatorBefore: number;
+    readonly maximumAccumulatorAfter: number;
+    readonly averageUpdateCostMilliseconds: number;
+    readonly maximumUpdateCostMilliseconds: number;
+    readonly longTaskCount: number;
+    readonly maximumLongTaskMilliseconds: number;
+    readonly wallToGameRatio: number;
+    readonly playerDisplacement: number;
+  };
 }
 
 declare global {
@@ -152,6 +176,105 @@ async function snapshot(
   return result!;
 }
 
+async function beginRankedRaceRun(
+  page: Page,
+  startStatus: number
+): Promise<{
+  readonly requests: string[];
+  readonly pageErrors: string[];
+}> {
+  const requests: string[] = [];
+  const pageErrors: string[] = [];
+
+  page.on("pageerror", error => {
+    pageErrors.push(error.message);
+  });
+  page.on("request", request => {
+    const url = new URL(request.url());
+
+    if (url.pathname.startsWith("/api/")) {
+      requests.push(
+        `${request.method()} ${url.pathname}`
+      );
+    }
+  });
+
+  await page.route("**/api/config", route =>
+    route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        turnstileSiteKey: "",
+        buildVersion: "race-test"
+      })
+    })
+  );
+  await page.route("**/api/runs", async route => {
+    await new Promise(resolve =>
+      setTimeout(resolve, 500)
+    );
+
+    if (startStatus >= 400) {
+      await route.fulfill({
+        status: startStatus,
+        contentType: "application/json",
+        body: JSON.stringify({
+          error: "deterministic test failure"
+        })
+      });
+      return;
+    }
+
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        runId: "race-run",
+        token: "race-token",
+        playerName: "Race Tester",
+        startedAt: Date.now()
+      })
+    });
+  });
+
+  await page.goto("http://0.0.0.0:4173/");
+  const overlay = page.locator(
+    ".leaderboard-overlay"
+  );
+  const input = overlay.locator(
+    "input.leaderboard-name"
+  );
+  const beginButton = overlay.getByRole(
+    "button",
+    { name: "BEGIN THE SHOW" }
+  );
+
+  await input.fill("Race Tester");
+  await expect(beginButton).toBeEnabled();
+
+  const retainedButton =
+    await beginButton.elementHandle();
+
+  await beginButton.click();
+  await retainedButton?.evaluate(button => {
+    button.click();
+  });
+
+  await expect(page.locator("canvas"))
+    .toBeVisible({ timeout: 20_000 });
+  await expect(page.locator("canvas"))
+    .toHaveCount(1);
+
+  await page.keyboard.press("ArrowRight");
+  await page.keyboard.press("Space");
+  await page.waitForTimeout(800);
+
+  return {
+    requests,
+    pageErrors
+  };
+}
+
 async function proveCatalogPlayback(
   page: Page,
   id: string,
@@ -185,6 +308,16 @@ async function proveCatalogPlayback(
   expect(evidence.preparedContextInUse).toBe(true);
   expect(evidence.soundManagerLocked).toBe(false);
   expect(evidence.lastLoadError).toBeNull();
+  expect(evidence.finalOutput.contextMatchesDestination)
+    .toBe(true);
+  expect(evidence.finalOutput.phaserDestinationMatchesContext)
+    .toBe(true);
+  expect(evidence.finalOutput.masterMuted)
+    .toBe(false);
+  expect(evidence.finalOutput.effectiveGain)
+    .toBeGreaterThan(0);
+  expect(evidence.finalOutput.analyserInFinalOutputPath)
+    .toBe(true);
   expect(evidence.busStates.master.effectiveGain)
     .toBeGreaterThan(0);
   expect(
@@ -192,6 +325,44 @@ async function proveCatalogPlayback(
       .every(count => count <= 1)
   ).toBe(true);
 }
+
+test(
+  "ranked startup creates one game and one delayed online session",
+  async ({ page }) => {
+    const { requests, pageErrors } =
+      await beginRankedRaceRun(page, 200);
+
+    expect(requests.filter(request =>
+      request === "GET /api/config"
+    )).toHaveLength(1);
+    expect(requests.filter(request =>
+      request === "POST /api/runs"
+    )).toHaveLength(1);
+    expect(requests.some(request =>
+      /\/events$|\/finish$/.test(request)
+    )).toBe(false);
+    expect(pageErrors).toEqual([]);
+  }
+);
+
+test(
+  "ranked session failure stays unranked without retrying or stopping gameplay",
+  async ({ page }) => {
+    const { requests, pageErrors } =
+      await beginRankedRaceRun(page, 503);
+
+    expect(requests.filter(request =>
+      request === "GET /api/config"
+    )).toHaveLength(1);
+    expect(requests.filter(request =>
+      request === "POST /api/runs"
+    )).toHaveLength(1);
+    expect(requests.some(request =>
+      /\/events$|\/finish$/.test(request)
+    )).toBe(false);
+    expect(pageErrors).toEqual([]);
+  }
+);
 
 test(
   "BEGIN THE SHOW unlocks the prepared context and every representative family produces signal",
@@ -242,6 +413,42 @@ test(
       .toEqual([]);
     expect(consoleErrors, consoleErrors.join("\n"))
       .toEqual([]);
+  }
+);
+
+test(
+  "first sixty playable seconds remain synchronized without retained fixed-step backlog",
+  async ({ page }) => {
+    test.setTimeout(90_000);
+    await beginShow(
+      page,
+      "?qaAudio=player_jump",
+      "QaTiming"
+    );
+
+    await page.keyboard.down("ArrowRight");
+    await page.waitForTimeout(60_000);
+    await page.keyboard.up("ArrowRight");
+
+    const evidence = await snapshot(page);
+    const timing = evidence.timing;
+
+    console.info(
+      `QA_TIMING_SNAPSHOT=${JSON.stringify(timing)}`
+    );
+
+    expect(timing.wallSeconds).toBeGreaterThanOrEqual(59);
+    expect(timing.maximumSteps).toBeLessThanOrEqual(48);
+    expect(timing.maximumAccumulatorBefore)
+      .toBeLessThan(1 / 120);
+    expect(timing.maximumAccumulatorAfter)
+      .toBeLessThan(1 / 120);
+    expect(timing.wallToGameRatio)
+      .toBeGreaterThan(0.95);
+    expect(timing.wallToGameRatio)
+      .toBeLessThanOrEqual(1.01);
+    expect(Math.abs(timing.playerDisplacement))
+      .toBeGreaterThan(10);
   }
 );
 
@@ -382,6 +589,12 @@ test(
       .toBeGreaterThan(0.00001);
     expect(evidence.contextState).toBe("running");
     expect(evidence.preparedContextInUse).toBe(true);
+    expect(evidence.finalOutput.contextMatchesDestination)
+      .toBe(true);
+    expect(evidence.finalOutput.effectiveGain)
+      .toBeGreaterThan(0);
+    expect(evidence.finalOutput.analyserInFinalOutputPath)
+      .toBe(true);
     expect(evidence.busStates.music.muted).toBe(false);
     expect(evidence.busStates.music.effectiveGain)
       .toBeGreaterThan(0);

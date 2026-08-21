@@ -921,7 +921,25 @@ class GameScene extends Phaser.Scene {
 
   private debugText!: Phaser.GameObjects.Text;
   private accumulator = 0;
+  private fixedStepInitialized = false;
   private movementCameraRestricted = false;
+  private timingObserver: PerformanceObserver | null = null;
+  private readonly timingMetrics = {
+    startedAt: 0,
+    frames: 0,
+    rawSeconds: 0,
+    acceptedSeconds: 0,
+    discardedSeconds: 0,
+    fixedSteps: 0,
+    maximumSteps: 0,
+    maximumAccumulatorBefore: 0,
+    maximumAccumulatorAfter: 0,
+    updateCostMilliseconds: 0,
+    maximumUpdateCostMilliseconds: 0,
+    longTaskCount: 0,
+    maximumLongTaskMilliseconds: 0,
+    playerStartX: 0
+  };
 
   public constructor() {
     super("game");
@@ -967,6 +985,20 @@ class GameScene extends Phaser.Scene {
 
     this.playerInput = new PlayerInput();
 
+    document.addEventListener(
+      "visibilitychange",
+      this.handleVisibilityChange
+    );
+    this.events.once(
+      Phaser.Scenes.Events.SHUTDOWN,
+      () => {
+        document.removeEventListener(
+          "visibilitychange",
+          this.handleVisibilityChange
+        );
+      }
+    );
+
     const initialCheckpoint =
       getWorldCheckpoint(
         "InitialSpawn"
@@ -977,6 +1009,35 @@ class GameScene extends Phaser.Scene {
       initialCheckpoint.x,
       initialCheckpoint.y
     );
+
+    if (QA_RUNTIME_INSPECTION) {
+      this.timingMetrics.startedAt =
+        performance.now();
+      this.timingMetrics.playerStartX =
+        this.player.x;
+
+      if (typeof PerformanceObserver !== "undefined") {
+        this.timingObserver =
+          new PerformanceObserver(list => {
+            for (const entry of list.getEntries()) {
+              this.timingMetrics.longTaskCount += 1;
+              this.timingMetrics.maximumLongTaskMilliseconds =
+                Math.max(
+                  this.timingMetrics.maximumLongTaskMilliseconds,
+                  entry.duration
+                );
+            }
+          });
+
+        try {
+          this.timingObserver.observe({
+            entryTypes: ["longtask"]
+          });
+        } catch {
+          this.timingObserver = null;
+        }
+      }
+    }
 
     this.playerHealth =
       new PlayerHealthSystem(
@@ -1181,7 +1242,9 @@ class GameScene extends Phaser.Scene {
             ...this.audioDirector
               .getDebugSnapshot(),
             ...this.musicDirector
-              .getDebugSnapshot()
+              .getDebugSnapshot(),
+            timing:
+              this.getTimingDebugSnapshot()
           });
 
       this.events.once(
@@ -1189,6 +1252,8 @@ class GameScene extends Phaser.Scene {
         () => {
           delete debugWindow
             .__IMPRESSARIO_AUDIO_DEBUG__;
+          this.timingObserver?.disconnect();
+          this.timingObserver = null;
         }
       );
     }
@@ -1260,15 +1325,27 @@ class GameScene extends Phaser.Scene {
 
   public update(
     _time: number,
-    deltaMilliseconds: number
+    _deltaMilliseconds: number
   ): void {
+    const updateStarted =
+      QA_RUNTIME_INSPECTION
+        ? performance.now()
+        : 0;
+    const accumulatorBefore =
+      this.accumulator;
+    const rawDeltaMilliseconds =
+      this.game.loop.rawDelta;
+
     this.playerInput.update();
 
     const fixedFrame =
       advanceFixedStepFrame(
-        deltaMilliseconds,
-        this.accumulator
+        rawDeltaMilliseconds,
+        this.accumulator,
+        !this.fixedStepInitialized
       );
+
+    this.fixedStepInitialized = true;
 
     const frameDelta =
       fixedFrame.acceptedSeconds;
@@ -1332,6 +1409,95 @@ class GameScene extends Phaser.Scene {
     this.audioDebugHud.update(frameDelta);
 
     this.updateDebugHud();
+
+    if (QA_RUNTIME_INSPECTION) {
+      const updateCost =
+        performance.now() - updateStarted;
+      const metrics = this.timingMetrics;
+
+      metrics.frames += 1;
+      metrics.rawSeconds +=
+        Math.max(
+          0,
+          rawDeltaMilliseconds / 1000
+        );
+      metrics.acceptedSeconds +=
+        fixedFrame.acceptedSeconds;
+      metrics.discardedSeconds +=
+        fixedFrame.discardedSeconds;
+      metrics.fixedSteps += fixedFrame.steps;
+      metrics.maximumSteps = Math.max(
+        metrics.maximumSteps,
+        fixedFrame.steps
+      );
+      metrics.maximumAccumulatorBefore = Math.max(
+        metrics.maximumAccumulatorBefore,
+        accumulatorBefore
+      );
+      metrics.maximumAccumulatorAfter = Math.max(
+        metrics.maximumAccumulatorAfter,
+        this.accumulator
+      );
+      metrics.updateCostMilliseconds +=
+        updateCost;
+      metrics.maximumUpdateCostMilliseconds =
+        Math.max(
+          metrics.maximumUpdateCostMilliseconds,
+          updateCost
+        );
+    }
+  }
+
+  private readonly handleVisibilityChange =
+    (): void => {
+      this.accumulator = 0;
+      this.fixedStepInitialized = false;
+    };
+
+  private getTimingDebugSnapshot() {
+    const metrics = this.timingMetrics;
+    const wallSeconds =
+      metrics.startedAt > 0
+        ? Math.max(
+            0,
+            (performance.now() -
+              metrics.startedAt) /
+              1000
+          )
+        : 0;
+
+    return {
+      wallSeconds,
+      rawSeconds: metrics.rawSeconds,
+      acceptedSeconds:
+        metrics.acceptedSeconds,
+      discardedSeconds:
+        metrics.discardedSeconds,
+      fixedSteps: metrics.fixedSteps,
+      maximumSteps: metrics.maximumSteps,
+      maximumAccumulatorBefore:
+        metrics.maximumAccumulatorBefore,
+      maximumAccumulatorAfter:
+        metrics.maximumAccumulatorAfter,
+      averageUpdateCostMilliseconds:
+        metrics.frames > 0
+          ? metrics.updateCostMilliseconds /
+            metrics.frames
+          : 0,
+      maximumUpdateCostMilliseconds:
+        metrics.maximumUpdateCostMilliseconds,
+      longTaskCount: metrics.longTaskCount,
+      maximumLongTaskMilliseconds:
+        metrics.maximumLongTaskMilliseconds,
+      wallToGameRatio:
+        wallSeconds > 0
+          ? metrics.acceptedSeconds /
+            wallSeconds
+          : 0,
+      playerDisplacement:
+        this.player.x -
+        metrics.playerStartX
+    };
   }
 
   private updateCameraBounds(
@@ -1999,14 +2165,12 @@ void leaderboard.boot(() => {
     void audioContext.resume();
   }
 
-  return () => {
-    new Phaser.Game({
-      ...config,
-      audio: audioContext
-        ? {
-            context: audioContext
-          }
-        : undefined
-    });
-  };
+  new Phaser.Game({
+    ...config,
+    audio: audioContext
+      ? {
+          context: audioContext
+        }
+      : undefined
+  });
 });

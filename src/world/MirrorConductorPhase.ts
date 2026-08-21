@@ -6,6 +6,29 @@ export const MIRROR_CONDUCTOR_MINIMUM_PHASE_DURATION = {
   3: 70
 } as const;
 
+export interface MirrorConductorThresholdCueState {
+  readonly insideSection: boolean;
+  readonly bossStarted: boolean;
+  readonly bossDefeated: boolean;
+  readonly finaleActive: boolean;
+  readonly controlsLocked: boolean;
+  readonly playerX: number;
+  readonly thresholdX: number;
+}
+
+export function shouldShowMirrorConductorThresholdCue(
+  state: MirrorConductorThresholdCueState
+): boolean {
+  return (
+    state.insideSection &&
+    !state.bossStarted &&
+    !state.bossDefeated &&
+    !state.finaleActive &&
+    !state.controlsLocked &&
+    state.playerX < state.thresholdX
+  );
+}
+
 export function getMirrorConductorPhase(
   health: number
 ): MirrorConductorPhase {

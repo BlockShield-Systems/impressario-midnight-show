@@ -82,6 +82,52 @@ test("player identity copy and same-origin production payload remain compatible"
   assert.match(migration, /player_name TEXT NOT NULL/);
 });
 
+test("ranked startup coordinates early events and completion without delaying game boot", async () => {
+  const client = await source(
+    "src/leaderboard/LeaderboardClient.ts"
+  );
+
+  assert.match(
+    client,
+    /private readonly pendingEvents:\s*RunEvent\[\] = \[\]/
+  );
+  assert.match(
+    client,
+    /if \(this\.rankedRunPending\) \{\s*this\.pendingEvents\.push\(event\)/s
+  );
+  assert.match(
+    client,
+    /this\.onlineRun = true;\s*this\.flushPendingEvents\(\)/s
+  );
+  assert.match(
+    client,
+    /await this\.sessionInitialization;[\s\S]*?this\.flushPendingEvents\(\);\s*await this\.eventQueue;[\s\S]*?\/finish/
+  );
+  assert.match(
+    client,
+    /if \(this\.finishing\) \{\s*return;\s*\}\s*this\.finishing = true/s
+  );
+  assert.match(
+    client,
+    /if \(this\.gameStarted\) \{\s*return;\s*\}\s*this\.gameStarted = true/s
+  );
+
+  const startGameIndex = client.indexOf(
+    "this.startGame?.();"
+  );
+  const sessionIndex = client.indexOf(
+    "this.sessionInitialization ="
+  );
+
+  assert.ok(startGameIndex >= 0);
+  assert.ok(sessionIndex > startGameIndex);
+  assert.doesNotMatch(
+    client.slice(startGameIndex, sessionIndex),
+    /await\b/,
+    "game construction must remain inside transient user activation"
+  );
+});
+
 test("environment rendering removes repeated full-world textures", async () => {
   const environment = await source(
     "src/world/EnvironmentTileRenderer.ts"
@@ -185,6 +231,38 @@ test("MovementRehearsal alone restricts camera and lower fall recovery", async (
   assert.match(bounds, /playerY > MOVEMENT_ROUTE_FALL_OUT_Y/);
   assert.doesNotMatch(bounds, /5376/);
   assert.doesNotMatch(main, /skipMissedFrames:\s*true/);
+});
+
+test("Mirror Conductor threshold cue has section-owned lifecycle cleanup", async () => {
+  const system = await source(
+    "src/world/MirrorConductorSystem.ts"
+  );
+
+  assert.equal(
+    (
+      system.match(
+        /"CROSS THE THRESHOLD WHEN READY"/g
+      ) ?? []
+    ).length,
+    1,
+    "the cue must have one owner and cannot be duplicated"
+  );
+  assert.match(
+    system,
+    /shouldShowMirrorConductorThresholdCue\(\{\s*insideSection,\s*bossStarted: this\.bossStarted,\s*bossDefeated: this\.bossDefeated,\s*finaleActive: this\.finaleActive,\s*controlsLocked:\s*this\.playerHealth\.controlsLocked,\s*playerX: this\.player\.x,\s*thresholdX:\s*MIRROR_CONDUCTOR_THRESHOLD_X\s*\}\)/s
+  );
+  assert.match(
+    system,
+    /private clearThresholdCue\(\): void \{\s*this\.hud\s*\.setText\(""\)\s*\.setVisible\(false\)/s
+  );
+  assert.match(
+    system,
+    /public resetAfterDeath\(\): void[\s\S]*?this\.clearThresholdCue\(\)/
+  );
+  assert.match(
+    system,
+    /private startBoss\(\): void[\s\S]*?this\.clearThresholdCue\(\)/
+  );
 });
 
 test("opening tutorial has one readable control presentation outside the player route", async () => {

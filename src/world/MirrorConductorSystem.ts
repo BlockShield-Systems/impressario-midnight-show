@@ -10,11 +10,13 @@ import type { PlayerHealthSystem } from "../player/PlayerHealthSystem";
 import type { PlayerController } from "../main";
 import {
   applyMirrorConductorDamage,
-  getMirrorConductorPhase
+  getMirrorConductorPhase,
+  shouldShowMirrorConductorThresholdCue
 } from "./MirrorConductorPhase";
 
 export const MIRROR_CONDUCTOR_START_X = 44672;
 export const MIRROR_CONDUCTOR_END_X = 49824;
+export const MIRROR_CONDUCTOR_THRESHOLD_X = 45312;
 const ARENA_LEFT = 45120;
 const ARENA_RIGHT = 49344;
 const ARENA_CENTER_X = 47232;
@@ -914,10 +916,12 @@ export class MirrorConductorSystem {
       );
     }
 
+    this.updateThresholdCue(insideSection);
+
     if (
       !this.bossStarted &&
       !this.bossDefeated &&
-      this.player.x >= 45312 &&
+      this.player.x >= MIRROR_CONDUCTOR_THRESHOLD_X &&
       this.player.x < MIRROR_CONDUCTOR_END_X
     ) {
       this.startBoss();
@@ -954,20 +958,52 @@ export class MirrorConductorSystem {
 
     this.restoreCamera();
     this.hideBossHud();
-
-    this.hud
-      .setVisible(true)
-      .setText(
-        "CROSS THE THRESHOLD WHEN READY"
-      );
+    this.clearThresholdCue();
 
     this.previousSpotlightCasts =
       this.magicSystem.castsPerformed;
   }
 
+  private updateThresholdCue(
+    insideSection: boolean
+  ): void {
+    const visible =
+      shouldShowMirrorConductorThresholdCue({
+        insideSection,
+        bossStarted: this.bossStarted,
+        bossDefeated: this.bossDefeated,
+        finaleActive: this.finaleActive,
+        controlsLocked:
+          this.playerHealth.controlsLocked,
+        playerX: this.player.x,
+        thresholdX:
+          MIRROR_CONDUCTOR_THRESHOLD_X
+      });
+
+    if (visible) {
+      this.hud
+        .setText(
+          "CROSS THE THRESHOLD WHEN READY"
+        )
+        .setVisible(true);
+      return;
+    }
+
+    if (!this.bossStarted) {
+      this.clearThresholdCue();
+    }
+  }
+
+  private clearThresholdCue(): void {
+    this.hud
+      .setText("")
+      .setVisible(false);
+  }
+
   private startBoss(): void {
     this.bossStarted = true;
     this.floorWarningSide = null;
+    this.clearThresholdCue();
 
     this.removeSolid(this.entranceGate);
     this.removeSolid(this.resolutionGate);

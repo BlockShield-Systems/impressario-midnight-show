@@ -3,6 +3,7 @@ import test from "node:test";
 
 import {
   FIXED_TIMESTEP_SECONDS,
+  MAX_ACCUMULATOR_SECONDS,
   MAX_ACTIVE_FRAME_SECONDS,
   MAX_CATCH_UP_STEPS,
   advanceFixedStepFrame
@@ -158,11 +159,54 @@ test(
 );
 
 test(
+  "startup-sized active stalls cannot leave retained catch-up backlog",
+  () => {
+    const frame = advanceFixedStepFrame(
+      399,
+      30
+    );
+
+    assert.equal(
+      frame.steps,
+      MAX_CATCH_UP_STEPS
+    );
+    assert.ok(
+      frame.accumulatorSeconds <
+        FIXED_TIMESTEP_SECONDS
+    );
+    assert.ok(
+      frame.acceptedSeconds <=
+        MAX_ACCUMULATOR_SECONDS
+    );
+    assert.ok(
+      frame.discardedSeconds > 0
+    );
+  }
+);
+
+test(
+  "first playable frame can resynchronize without simulating pre-game time",
+  () => {
+    const frame = advanceFixedStepFrame(
+      250,
+      FIXED_TIMESTEP_SECONDS / 2,
+      true
+    );
+
+    assert.equal(frame.acceptedSeconds, 0);
+    assert.equal(frame.discardedSeconds, 0.25);
+    assert.equal(frame.steps, 0);
+    assert.equal(frame.accumulatorSeconds, 0);
+  }
+);
+
+test(
   "inactive-tab resume is discarded instead of causing uncontrolled catch-up",
   () => {
     const frame = advanceFixedStepFrame(
       5000,
-      FIXED_TIMESTEP_SECONDS / 2
+      FIXED_TIMESTEP_SECONDS / 2,
+      true
     );
 
     assert.equal(
@@ -175,6 +219,30 @@ test(
     assert.equal(
       frame.accumulatorSeconds,
       0
+    );
+  }
+);
+
+test(
+  "very slow active rendering advances a bounded slice without retaining backlog",
+  () => {
+    const frame = advanceFixedStepFrame(
+      5000,
+      0
+    );
+
+    assert.equal(
+      frame.acceptedSeconds,
+      MAX_ACTIVE_FRAME_SECONDS
+    );
+    assert.equal(frame.discardedSeconds, 4.6);
+    assert.equal(
+      frame.steps,
+      MAX_CATCH_UP_STEPS
+    );
+    assert.ok(
+      frame.accumulatorSeconds <
+        FIXED_TIMESTEP_SECONDS
     );
   }
 );

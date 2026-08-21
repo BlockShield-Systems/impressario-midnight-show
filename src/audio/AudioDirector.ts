@@ -36,7 +36,11 @@ interface ManagedSound {
 interface WebAudioManagerSnapshotSource {
   readonly context?: AudioContext;
   readonly locked?: boolean;
+  readonly masterMuteNode?: GainNode;
   readonly masterVolumeNode?: GainNode;
+  readonly destination?: AudioNode;
+  readonly mute?: boolean;
+  readonly volume?: number;
 }
 
 const AUDIO_BUSES: readonly AudioBus[] = [
@@ -86,6 +90,7 @@ export class AudioDirector {
     Float32Array<ArrayBuffer> | null = null;
   private observedRms = 0;
   private observedPeak = 0;
+  private analyserInFinalOutputPath = false;
   private readonly startedCounts =
     new Map<AudioAssetId, number>();
   private readonly completedCounts =
@@ -317,6 +322,32 @@ export class AudioDirector {
         context === this.preparedContext,
       soundManagerLocked:
         manager.locked ?? false,
+      finalOutput: {
+        contextMatchesDestination:
+          context !== undefined &&
+          context ===
+            manager.masterVolumeNode?.context &&
+          context ===
+            context.destination.context,
+        phaserDestinationMatchesContext:
+          manager.destination?.context ===
+            context,
+        masterMuted:
+          manager.mute ?? false,
+        masterGain:
+          manager.volume ??
+          manager.masterVolumeNode?.gain.value ??
+          0,
+        effectiveGain:
+          (manager.mute ? 0 : 1) *
+          (
+            manager.volume ??
+            manager.masterVolumeNode?.gain.value ??
+            0
+          ),
+        analyserInFinalOutputPath:
+          this.analyserInFinalOutputPath
+      },
       analyser,
       lastLoadError:
         this.lastLoadError
@@ -776,7 +807,14 @@ export class AudioDirector {
           Float32Array.BYTES_PER_ELEMENT
         )
       );
+
+    // In QA builds the analyser is inserted serially into Phaser's
+    // real final-output route. This measures exactly the signal sent
+    // to this context's destination instead of a parallel branch.
+    masterVolumeNode.disconnect();
     masterVolumeNode.connect(this.analyser);
+    this.analyser.connect(context.destination);
+    this.analyserInFinalOutputPath = true;
   }
 
   private observeAnalyser(): void {
@@ -876,7 +914,28 @@ export class AudioDirector {
       this.stopManaged(item);
     }
 
-    this.analyser?.disconnect();
+    if (this.analyserInFinalOutputPath) {
+      const manager =
+        this.scene.sound as
+          Phaser.Sound.BaseSoundManager &
+          WebAudioManagerSnapshotSource;
+
+      manager.masterVolumeNode?.disconnect();
+      this.analyser?.disconnect();
+
+      if (
+        manager.masterVolumeNode &&
+        manager.context
+      ) {
+        manager.masterVolumeNode.connect(
+          manager.context.destination
+        );
+      }
+    } else {
+      this.analyser?.disconnect();
+    }
+
+    this.analyserInFinalOutputPath = false;
     this.analyser = null;
     this.analyserSamples = null;
     this.observedRms = 0;

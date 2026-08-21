@@ -6,6 +6,10 @@ export const MAX_ACTIVE_FRAME_SECONDS =
 
 export const MAX_CATCH_UP_STEPS = 48;
 
+export const MAX_ACCUMULATOR_SECONDS =
+  MAX_CATCH_UP_STEPS *
+  FIXED_TIMESTEP_SECONDS;
+
 export interface FixedStepFrame {
   readonly acceptedSeconds: number;
   readonly discardedSeconds: number;
@@ -15,7 +19,8 @@ export interface FixedStepFrame {
 
 export function advanceFixedStepFrame(
   deltaMilliseconds: number,
-  accumulatorSeconds: number
+  accumulatorSeconds: number,
+  resynchronize = false
 ): FixedStepFrame {
   const elapsedSeconds =
     Number.isFinite(deltaMilliseconds)
@@ -25,20 +30,36 @@ export function advanceFixedStepFrame(
         )
       : 0;
 
-  const activeFrame =
-    elapsedSeconds <=
-    MAX_ACTIVE_FRAME_SECONDS;
+  if (resynchronize) {
+    return {
+      acceptedSeconds: 0,
+      discardedSeconds: elapsedSeconds,
+      steps: 0,
+      accumulatorSeconds: 0
+    };
+  }
 
-  const acceptedSeconds =
-    activeFrame
-      ? elapsedSeconds
+  const safeAccumulator =
+    Number.isFinite(accumulatorSeconds)
+      ? Math.max(
+          0,
+          Math.min(
+            accumulatorSeconds,
+            FIXED_TIMESTEP_SECONDS
+          )
+        )
       : 0;
+
+  const acceptedSeconds = Math.min(
+    elapsedSeconds,
+    MAX_ACTIVE_FRAME_SECONDS,
+    MAX_ACCUMULATOR_SECONDS -
+      safeAccumulator
+  );
 
   let nextAccumulator =
-    activeFrame
-      ? accumulatorSeconds +
-        acceptedSeconds
-      : 0;
+    safeAccumulator +
+    acceptedSeconds;
 
   const availableSteps = Math.floor(
     (
@@ -59,8 +80,11 @@ export function advanceFixedStepFrame(
   return {
     acceptedSeconds,
     discardedSeconds:
-      elapsedSeconds -
-      acceptedSeconds,
+      Math.max(
+        0,
+        elapsedSeconds -
+          acceptedSeconds
+      ),
     steps,
     accumulatorSeconds:
       Math.max(0, nextAccumulator)

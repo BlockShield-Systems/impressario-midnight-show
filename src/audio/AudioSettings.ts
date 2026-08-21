@@ -5,7 +5,7 @@ import type {
 } from "./audio-types";
 
 const STORAGE_KEY =
-  "impressario.audio-settings.v1";
+  "impressario.audio-settings.v2";
 
 const DEFAULT_SETTINGS: AudioSettingsState = {
   master: {

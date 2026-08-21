@@ -193,20 +193,28 @@ class LeaderboardClient {
   private eventQueue:
     Promise<void> = Promise.resolve();
 
+  private sessionInitialization:
+    Promise<void> = Promise.resolve();
+
+  private readonly pendingEvents:
+    RunEvent[] = [];
+
   private localHits = 0;
   private localDeaths = 0;
   private localStartedAt = 0;
 
   private onlineRun = false;
+  private rankedRunPending = false;
   private finishing = false;
+  private gameStarted = false;
 
-  private prepareGame:
-    (() => () => void) | undefined;
+  private startGame:
+    (() => void) | undefined;
 
   public async boot(
-    prepareGame: () => () => void
+    startGame: () => void
   ): Promise<void> {
-    this.prepareGame = prepareGame;
+    this.startGame = startGame;
     await this.showStartScreen();
   }
 
@@ -245,12 +253,21 @@ class LeaderboardClient {
     let result:
       FinishResponse | undefined;
 
+    await this.sessionInitialization;
+
     if (
       this.onlineRun &&
       this.session
     ) {
       try {
+        this.flushPendingEvents();
         await this.eventQueue;
+
+        if (!this.onlineRun) {
+          throw new Error(
+            "Run event delivery failed before completion"
+          );
+        }
 
         const response = await fetch(
           `${API_BASE}/runs/${encodeURIComponent(
@@ -290,15 +307,31 @@ class LeaderboardClient {
   private queueEvent(
     event: RunEvent
   ): void {
-    if (
-      !this.onlineRun ||
-      !this.session ||
-      this.finishing
-    ) {
+    if (this.finishing) {
       return;
     }
 
+    if (
+      this.onlineRun &&
+      this.session
+    ) {
+      this.enqueueOnlineEvent(event);
+      return;
+    }
+
+    if (this.rankedRunPending) {
+      this.pendingEvents.push(event);
+    }
+  }
+
+  private enqueueOnlineEvent(
+    event: RunEvent
+  ): void {
     const session = this.session;
+
+    if (!session) {
+      return;
+    }
 
     this.eventQueue =
       this.eventQueue.then(
@@ -344,6 +377,23 @@ class LeaderboardClient {
           error
         );
       });
+  }
+
+  private flushPendingEvents(): void {
+    if (
+      !this.onlineRun ||
+      !this.session
+    ) {
+      this.pendingEvents.length = 0;
+      return;
+    }
+
+    const events =
+      this.pendingEvents.splice(0);
+
+    for (const event of events) {
+      this.enqueueOnlineEvent(event);
+    }
   }
 
   private async showStartScreen():
@@ -574,70 +624,56 @@ class LeaderboardClient {
         "Leaderboard unavailable — the game will start unranked.";
     }
 
-    const begin = async (): Promise<void> => {
-      const playerName =
-        normalizePlayerName(input.value);
+    const startRankedRun = async (
+      playerName: string
+    ): Promise<void> => {
+      const shouldStart =
+        !localDevelopment &&
+        config !== undefined &&
+        (
+          !turnstileRequired ||
+          turnstileToken.length > 0
+        );
 
-      if (!playerName) {
-        status.textContent =
-          "Use 3–20 letters, numbers, spaces, _ or -.";
-        input.focus();
+      if (!shouldStart) {
         return;
       }
 
-      beginButton.disabled = true;
-      leaderboardButton.disabled = true;
-
-      localStorage.setItem(
-        PLAYER_STORAGE_KEY,
-        playerName
-      );
-
-      this.localStartedAt =
-        Date.now();
-
-      const startPreparedGame =
-        this.prepareGame?.();
+      this.rankedRunPending = true;
 
       try {
-        if (
-          !localDevelopment &&
-          config &&
-          (
-            !turnstileRequired ||
-            turnstileToken
-          )
-        ) {
-          const response = await fetch(
-            `${API_BASE}/runs`,
-            {
-              method: "POST",
-              headers: {
-                "content-type":
-                  "application/json"
-              },
-              body: JSON.stringify({
-                playerName,
-                turnstileToken
-              })
-            }
+        const response = await fetch(
+          `${API_BASE}/runs`,
+          {
+            method: "POST",
+            headers: {
+              "content-type":
+                "application/json"
+            },
+            body: JSON.stringify({
+              playerName,
+              turnstileToken
+            })
+          }
+        );
+
+        const started =
+          await readJson<StartResponse>(
+            response
           );
 
-          const started =
-            await readJson<StartResponse>(
-              response
-            );
+        this.session = {
+          runId: started.runId,
+          token: started.token,
+          sequence: 0
+        };
 
-          this.session = {
-            runId: started.runId,
-            token: started.token,
-            sequence: 0
-          };
-
-          this.onlineRun = true;
-        }
+        this.onlineRun = true;
+        this.flushPendingEvents();
       } catch (error) {
         this.onlineRun = false;
+        this.session = undefined;
+        this.pendingEvents.length = 0;
 
         console.error(
           "Ranked run unavailable:",
@@ -652,16 +688,53 @@ class LeaderboardClient {
             widgetId
           );
         }
+      } finally {
+        this.rankedRunPending = false;
+      }
+    };
+
+    const begin = (): void => {
+      const playerName =
+        normalizePlayerName(input.value);
+
+      if (!playerName) {
+        status.textContent =
+          "Use 3–20 letters, numbers, spaces, _ or -.";
+        input.focus();
+        return;
       }
 
+      if (this.gameStarted) {
+        return;
+      }
+
+      this.gameStarted = true;
+      beginButton.disabled = true;
+      leaderboardButton.disabled = true;
+
+      localStorage.setItem(
+        PLAYER_STORAGE_KEY,
+        playerName
+      );
+
+      this.localStartedAt =
+        Date.now();
+
       overlay.remove();
-      startPreparedGame?.();
+
+      // Construct and unlock Phaser's actual AudioContext while
+      // this click still owns transient user activation. Ranked-run
+      // network work starts only after the game is already booting.
+      this.startGame?.();
+      this.sessionInitialization =
+        startRankedRun(playerName);
+      void this.sessionInitialization;
     };
 
     beginButton.addEventListener(
       "click",
       () => {
-        void begin();
+        begin();
       }
     );
 
@@ -672,7 +745,7 @@ class LeaderboardClient {
           event.key === "Enter" &&
           !beginButton.disabled
         ) {
-          void begin();
+          begin();
         }
       }
     );
