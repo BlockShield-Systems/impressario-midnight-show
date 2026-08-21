@@ -218,6 +218,29 @@ for (const [identifier, triggerX] of [
   }
 }
 
+const conductorApproachCheckpoints =
+  checkpoints.filter(
+    checkpoint =>
+      checkpoint.__worldX >= 39200 &&
+      checkpoint.__worldX < 44672
+  );
+
+const conductorApproachGates =
+  gates.filter(
+    gate =>
+      gate.__worldX < 44672 &&
+      gate.__worldX + gate.width > 39200
+  );
+
+if (
+  conductorApproachCheckpoints.length !== 0 ||
+  conductorApproachGates.length !== 0
+) {
+  throw new Error(
+    "ConductorApproach must remain a checkpoint-free and gate-free traversal."
+  );
+}
+
 const main =
   read("src/main.ts");
 
@@ -375,6 +398,33 @@ if (
   throw new Error(
     "main.ts does not construct MirrorCoreVisuals."
   );
+}
+
+if (
+  !main.includes('import { ConductorApproachVisuals }') ||
+  !main.includes("new ConductorApproachVisuals(this)")
+) {
+  throw new Error(
+    "main.ts does not construct ConductorApproachVisuals."
+  );
+}
+
+const conductorApproach = read(
+  "src/world/ConductorApproachVisuals.ts"
+);
+
+for (const forbidden of [
+  "BossView",
+  "leaderboard.finishRun",
+  "startFinale",
+  "finaleCredits",
+  "class MirrorConductor"
+]) {
+  if (conductorApproach.includes(forbidden)) {
+    throw new Error(
+      `ConductorApproach retains later-Section ownership: ${forbidden}.`
+    );
+  }
 }
 
 if (

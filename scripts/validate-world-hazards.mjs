@@ -128,6 +128,27 @@ if (supports.length !== 8) {
   );
 }
 
+const conductorApproachHazards = hazards.filter(
+  entity =>
+    entity.__worldX >= 39200 &&
+    entity.__worldX < 44672
+);
+
+const conductorApproachSupports = supports.filter(
+  entity =>
+    entity.__worldX >= 39200 &&
+    entity.__worldX < 44672
+);
+
+if (
+  conductorApproachHazards.length !== 0 ||
+  conductorApproachSupports.length !== 0
+) {
+  fail(
+    "ConductorApproach must remain hazard-free and support-free."
+  );
+}
+
 const ids = [];
 
 for (const entity of [

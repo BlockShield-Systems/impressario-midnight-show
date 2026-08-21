@@ -59,9 +59,9 @@ const sections =
       entity.__identifier === "Section"
   );
 
-if (collisions.length !== 335) {
+if (collisions.length !== 323) {
   throw new Error(
-    `Expected 335 collisions, got ${collisions.length}.`
+    `Expected 323 collisions, got ${collisions.length}.`
   );
 }
 
@@ -316,6 +316,93 @@ for (const [x, y, width, height] of
   }
 }
 
+const conductorApproachCollisions =
+  collisions.filter(
+    entity =>
+      entity.__worldX >= 39200 &&
+      entity.__worldX < 44672
+  );
+
+const expectedConductorApproachCollisions = [
+  [39200, 480, 400, 32],
+  [39600, 512, 400, 32],
+  [40000, 528, 416, 32],
+  [40416, 496, 432, 32],
+  [40848, 464, 432, 32],
+  [41280, 496, 416, 32],
+  [41696, 528, 448, 32],
+  [42144, 496, 448, 32],
+  [42592, 464, 432, 32],
+  [43024, 496, 432, 32],
+  [43456, 528, 448, 32],
+  [43904, 496, 384, 32],
+  [44288, 480, 384, 32],
+  [39504, 368, 160, 16],
+  [39808, 320, 176, 16],
+  [40144, 384, 160, 16],
+  [40464, 336, 176, 16],
+  [40784, 288, 192, 16],
+  [41136, 352, 176, 16],
+  [41472, 304, 192, 16],
+  [41824, 368, 176, 16],
+  [42144, 320, 192, 16],
+  [42496, 272, 192, 16],
+  [42848, 336, 176, 16],
+  [43168, 288, 192, 16],
+  [43520, 352, 176, 16],
+  [43840, 304, 192, 16],
+  [44192, 352, 160, 16],
+  [44384, 288, 160, 16],
+  [44512, 400, 160, 16],
+  [39200, 688, 5472, 32]
+];
+
+if (
+  conductorApproachCollisions.length !==
+  expectedConductorApproachCollisions.length
+) {
+  throw new Error(
+    "Expected 31 authored ConductorApproach collisions, " +
+    `got ${conductorApproachCollisions.length}.`
+  );
+}
+
+for (const [x, y, width, height] of
+  expectedConductorApproachCollisions) {
+  if (
+    !conductorApproachCollisions.some(
+      entity =>
+        entity.__worldX === x &&
+        entity.__worldY === y &&
+        entity.width === width &&
+        entity.height === height
+    )
+  ) {
+    throw new Error(
+      `ConductorApproach collision ${x},${y},${width},${height} is missing.`
+    );
+  }
+}
+
+for (const [label, x, y, width, height] of [
+  ["MirrorCore exit", 39090, 480, 110, 32],
+  ["MirrorConductor entry", 44672, 480, 112, 16]
+]) {
+  if (
+    !collisions.some(
+      entity =>
+        entity.__worldX === x &&
+        entity.__worldY === y &&
+        entity.width === width &&
+        entity.height === height
+    )
+  ) {
+    throw new Error(
+      `${label} collision ${x},${y},${width},${height} is missing.`
+    );
+  }
+}
+
 if (sections.length !== 11) {
   throw new Error(
     `Expected 11 sections, got ${sections.length}.`
@@ -488,6 +575,6 @@ for (const file of sourceFiles) {
 
 console.log(
   "World runtime valid: 49824x720, " +
-  "335 collisions, 11 LDtk-driven visual sections, " +
+  "323 collisions, 11 LDtk-driven visual sections, " +
   "dynamic combat camera bounds."
 );

@@ -16,6 +16,7 @@ import { RoyalBoxEncounterSystem } from "./world/RoyalBoxEncounterSystem";
 import { RoyalBoxVisuals } from "./world/RoyalBoxVisuals";
 import { MirrorCoreSystem } from "./world/MirrorCoreSystem";
 import { MirrorCoreVisuals } from "./world/MirrorCoreVisuals";
+import { ConductorApproachVisuals } from "./world/ConductorApproachVisuals";
 import { AudioDirector } from "./audio/AudioDirector";
 import { MusicDirector } from "./audio/MusicDirector";
 import { AudioRuntimeBridge } from "./audio/AudioRuntimeBridge";
@@ -927,6 +928,7 @@ class GameScene extends Phaser.Scene {
     new CardSanctumVisuals(this);
     new RoyalBoxVisuals(this);
     new MirrorCoreVisuals(this);
+    new ConductorApproachVisuals(this);
 
     const solids = this.createLevel();
 

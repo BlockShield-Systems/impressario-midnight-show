@@ -139,6 +139,19 @@ if (spawns.length !== 26) {
   );
 }
 
+const conductorApproachSpawns =
+  spawns.filter(
+    entity =>
+      entity.__worldX >= 39200 &&
+      entity.__worldX < 44672
+  );
+
+if (conductorApproachSpawns.length !== 0) {
+  throw new Error(
+    "ConductorApproach must remain an enemy-free traversal."
+  );
+}
+
 const ids = new Set();
 const counts = new Map();
 
