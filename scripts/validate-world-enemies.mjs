@@ -15,8 +15,8 @@ const project = JSON.parse(
 );
 
 const expected = {
-  Stagehand: 3,
-  CardThrower: 2,
+  Stagehand: 7,
+  CardThrower: 4,
   ShadowAcrobat: 2,
   LightWraith: 2,
   CardSentry: 3,
@@ -131,9 +131,9 @@ const spawns =
       "EnemySpawn"
   );
 
-if (spawns.length !== 20) {
+if (spawns.length !== 26) {
   throw new Error(
-    `Expected 20 enemy spawns, got ${
+    `Expected 26 enemy spawns, got ${
       spawns.length
     }.`
   );
@@ -212,6 +212,38 @@ for (const entity of spawns) {
   }
 
   if (
+    id.startsWith("MainStage") &&
+    (
+      x < 10464 ||
+      x >= 13744 ||
+      left < 10464 ||
+      right > 13744
+    )
+  ) {
+    throw new Error(
+      `${id} is outside the MainStage interval.`
+    );
+  }
+
+  if (
+    id.startsWith("Sanctum") &&
+    (x < 27984 || x >= 31664)
+  ) {
+    throw new Error(
+      `${id} is outside the CardSanctum interval.`
+    );
+  }
+
+  if (
+    id.startsWith("RoyalEcho") &&
+    (x < 31664 || x >= 35344)
+  ) {
+    throw new Error(
+      `${id} is outside the RoyalBox interval.`
+    );
+  }
+
+  if (
     group === "RoyalEcho" &&
     !["duelist", "caster"].includes(kind)
   ) {
@@ -237,6 +269,23 @@ for (const entity of spawns) {
     group,
     (counts.get(group) ?? 0) + 1
   );
+}
+
+const mainStageIds = [
+  "MainStageStagehandA",
+  "MainStageStagehandB",
+  "MainStageCardThrowerA",
+  "MainStageStagehandC",
+  "MainStageCardThrowerB",
+  "MainStageStagehandD"
+];
+
+for (const id of mainStageIds) {
+  if (!ids.has(id)) {
+    throw new Error(
+      `MainStage enemy ${id} is missing.`
+    );
+  }
 }
 
 for (
@@ -294,5 +343,5 @@ if (
 
 console.log(
   "LDtk enemy runtime valid: " +
-  "20 spawns, 7 consumers."
+  "26 spawns, 7 consumers."
 );

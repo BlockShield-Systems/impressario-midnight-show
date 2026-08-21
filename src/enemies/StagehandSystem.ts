@@ -20,6 +20,7 @@ type StagehandState =
   | "defeated";
 
 interface StagehandSpawn {
+  readonly id: string;
   readonly x: number;
   readonly y: number;
   readonly patrolLeft: number;
@@ -29,6 +30,7 @@ interface StagehandSpawn {
 const SPAWNS: readonly StagehandSpawn[] =
   getWorldEnemySpawns("Stagehand").map(
     spawn => ({
+      id: spawn.id,
       x: spawn.x,
       y: spawn.y,
       patrolLeft: spawn.patrolLeft,
@@ -448,9 +450,25 @@ export class StagehandSystem {
     scene: Phaser.Scene,
     player: PlayerController,
     playerHealth: PlayerHealthSystem,
-    combatSystem: CombatSystem
+    combatSystem: CombatSystem,
+    spawnIds?: readonly string[]
   ) {
-    this.enemies = SPAWNS.map(
+    const selectedSpawns = spawnIds
+      ? SPAWNS.filter(spawn =>
+          spawnIds.includes(spawn.id)
+        )
+      : SPAWNS;
+
+    if (
+      spawnIds &&
+      selectedSpawns.length !== spawnIds.length
+    ) {
+      throw new Error(
+        "Stagehand spawn selection is incomplete."
+      );
+    }
+
+    this.enemies = selectedSpawns.map(
       spawn =>
         new MaskedStagehand(
           scene,

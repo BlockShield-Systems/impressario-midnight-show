@@ -36,6 +36,8 @@ import { EnvironmentTileRenderer } from "./world/EnvironmentTileRenderer";
 import { MovementRehearsalVisuals } from "./world/MovementRehearsalVisuals";
 import { CombatRehearsalVisuals } from "./world/CombatRehearsalVisuals";
 import { CombatRehearsalHazardSystem } from "./world/CombatRehearsalHazardSystem";
+import { MainStageVisuals } from "./world/MainStageVisuals";
+import { MainStageEncounterSystem } from "./world/MainStageEncounterSystem";
 
 /* -------------------------------------------------------------------------- */
 /* Configuration                                                              */
@@ -848,6 +850,7 @@ class GameScene extends Phaser.Scene {
   private stagehandSystem!: StagehandSystem;
   private cardThrowerSystem!: CardThrowerSystem;
   private combatHazardSystem!: CombatRehearsalHazardSystem;
+  private mainStageEncounterSystem!: MainStageEncounterSystem;
   private shadowAcrobatSystem!: ShadowAcrobatSystem;
   private galleryHazardSystem!: GalleryHazardSystem;
   private lightWraithSystem!: LightWraithSystem;
@@ -953,6 +956,7 @@ class GameScene extends Phaser.Scene {
     );
     new MovementRehearsalVisuals(this);
     new CombatRehearsalVisuals(this);
+    new MainStageVisuals(this);
 
     const solids = this.createLevel();
 
@@ -1007,7 +1011,12 @@ class GameScene extends Phaser.Scene {
       this,
       this.player,
       this.playerHealth,
-      this.combatSystem
+      this.combatSystem,
+      [
+        "CombatStagehandA",
+        "CombatStagehandB",
+        "CombatStagehandC"
+      ]
     );
 
     this.cardThrowerSystem =
@@ -1015,7 +1024,11 @@ class GameScene extends Phaser.Scene {
         this,
         this.player,
         this.playerHealth,
-        this.combatSystem
+        this.combatSystem,
+        [
+          "CombatCardThrowerA",
+          "CombatCardThrowerB"
+        ]
       );
 
     this.combatHazardSystem =
@@ -1023,6 +1036,20 @@ class GameScene extends Phaser.Scene {
         this,
         this.player,
         this.playerHealth
+      );
+
+    this.mainStageEncounterSystem =
+      new MainStageEncounterSystem(
+        this,
+        this.player,
+        this.playerHealth,
+        this.combatSystem,
+        solid => {
+          this.collisionWorld.addSolid(solid);
+        },
+        solid => {
+          this.collisionWorld.removeSolid(solid);
+        }
       );
 
     this.shadowAcrobatSystem =
@@ -1246,6 +1273,7 @@ class GameScene extends Phaser.Scene {
     this.stagehandSystem.update(frameDelta);
     this.cardThrowerSystem.update(frameDelta);
     this.combatHazardSystem.update();
+    this.mainStageEncounterSystem.update(frameDelta);
     this.shadowAcrobatSystem.update(frameDelta);
     this.galleryHazardSystem.update(frameDelta);
     this.lightWraithSystem.update(frameDelta);
@@ -1478,32 +1506,6 @@ class GameScene extends Phaser.Scene {
       }
     );
 
-    this.add.text(
-      3070,
-      74,
-      "ACT III — THE MAIN STAGE",
-      {
-        fontFamily: "monospace",
-        fontSize: "13px",
-        color: "#f0c95e",
-        backgroundColor: "#170a11dd",
-        padding: {
-          x: 8,
-          y: 6
-        }
-      }
-    );
-
-    this.add.text(
-      3070,
-      104,
-      "Defeat the Masked Stagehands",
-      {
-        fontFamily: "monospace",
-        fontSize: "9px",
-        color: "#ead8b4"
-      }
-    );
   }
 
 
@@ -3956,6 +3958,7 @@ class GameScene extends Phaser.Scene {
   private resetEncounterAfterDeath(): void {
     this.shadowAcrobatSystem?.resetEncounter();
     this.combatHazardSystem?.reset();
+    this.mainStageEncounterSystem?.resetAfterDeath();
     this.galleryHazardSystem?.reset();
     this.resetSpotlightVaultAfterDeath();
     this.resetCardSanctumAfterDeath();

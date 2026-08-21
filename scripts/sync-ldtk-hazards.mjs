@@ -130,6 +130,8 @@ const supports =
 
 const expected = {
   "CombatRehearsal:Spike": 3,
+  "MainStage:Pendulum": 2,
+  "MainStage:Spike": 2,
   "Gallery:Pendulum": 2,
   "Gallery:Spike": 2,
   "CardSanctum:Blade": 4,
@@ -140,9 +142,9 @@ const expected = {
   "MirrorCore:Spike": 4
 };
 
-if (hazards.length !== 32) {
+if (hazards.length !== 36) {
   throw new Error(
-    `Expected 32 hazards, got ${hazards.length}.`
+    `Expected 36 hazards, got ${hazards.length}.`
   );
 }
 
@@ -247,6 +249,7 @@ const lines = [
   "",
   "export type WorldHazardGroup =",
   '  | "CombatRehearsal"',
+  '  | "MainStage"',
   '  | "Gallery"',
   '  | "CardSanctum"',
   '  | "RoyalBox"',
@@ -358,7 +361,7 @@ if (checkOnly) {
 
   console.log(
     "LDtk hazard runtime synchronized: " +
-    "32 hazards, 8 supports."
+    "36 hazards, 8 supports."
   );
 
   process.exit(0);
@@ -372,5 +375,5 @@ fs.writeFileSync(
 
 console.log(
   "Generated src/world/WorldHazards.ts: " +
-  "32 hazards, 8 supports."
+  "36 hazards, 8 supports."
 );

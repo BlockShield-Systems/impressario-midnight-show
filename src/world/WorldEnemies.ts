@@ -79,64 +79,64 @@ export const WORLD_ENEMY_SPAWNS = [
     phase: 3.141592653589793
   },
   {
-    id: "SanctumCardSentryB",
-    group: "CardSentry",
+    id: "MainStageStagehandA",
+    group: "Stagehand",
     kind: "",
-    x: 10970,
-    y: 240,
-    patrolLeft: 10970,
-    patrolRight: 10970,
-    phase: 3.141592653589793
-  },
-  {
-    id: "SanctumCardSentryC",
-    group: "CardSentry",
-    kind: "",
-    x: 11520,
-    y: 440,
-    patrolLeft: 11520,
-    patrolRight: 11520,
-    phase: 1.5707963267948966
-  },
-  {
-    id: "RoyalEchoDuelistA",
-    group: "RoyalEcho",
-    kind: "duelist",
-    x: 12110,
-    y: 294,
-    patrolLeft: 12035,
-    patrolRight: 12210,
+    x: 10880,
+    y: 296,
+    patrolLeft: 10768,
+    patrolRight: 11152,
     phase: 0
   },
   {
-    id: "RoyalEchoCasterA",
-    group: "RoyalEcho",
-    kind: "caster",
-    x: 12555,
-    y: 382,
-    patrolLeft: 12390,
-    patrolRight: 12710,
-    phase: 1.5707963267948966
+    id: "MainStageStagehandB",
+    group: "Stagehand",
+    kind: "",
+    x: 11472,
+    y: 296,
+    patrolLeft: 11376,
+    patrolRight: 11760,
+    phase: 0
   },
   {
-    id: "RoyalEchoDuelistB",
-    group: "RoyalEcho",
-    kind: "duelist",
-    x: 13120,
-    y: 294,
-    patrolLeft: 13020,
-    patrolRight: 13320,
+    id: "MainStageCardThrowerA",
+    group: "CardThrower",
+    kind: "",
+    x: 11888,
+    y: 296,
+    patrolLeft: 11776,
+    patrolRight: 12080,
+    phase: 0
+  },
+  {
+    id: "MainStageStagehandC",
+    group: "Stagehand",
+    kind: "",
+    x: 12368,
+    y: 296,
+    patrolLeft: 12256,
+    patrolRight: 12640,
+    phase: 0
+  },
+  {
+    id: "MainStageCardThrowerB",
+    group: "CardThrower",
+    kind: "",
+    x: 12784,
+    y: 296,
+    patrolLeft: 12672,
+    patrolRight: 13024,
     phase: 3.141592653589793
   },
   {
-    id: "RoyalEchoCasterB",
-    group: "RoyalEcho",
-    kind: "caster",
-    x: 13820,
-    y: 255,
-    patrolLeft: 13680,
-    patrolRight: 14020,
-    phase: 4.71238898038469
+    id: "MainStageStagehandD",
+    group: "Stagehand",
+    kind: "",
+    x: 13216,
+    y: 296,
+    patrolLeft: 13088,
+    patrolRight: 13440,
+    phase: 0
   },
   {
     id: "GalleryShadowAcrobatA",
@@ -227,6 +227,66 @@ export const WORLD_ENEMY_SPAWNS = [
     patrolLeft: 28624,
     patrolRight: 28624,
     phase: 0
+  },
+  {
+    id: "SanctumCardSentryB",
+    group: "CardSentry",
+    kind: "",
+    x: 29970,
+    y: 240,
+    patrolLeft: 29970,
+    patrolRight: 29970,
+    phase: 3.141592653589793
+  },
+  {
+    id: "SanctumCardSentryC",
+    group: "CardSentry",
+    kind: "",
+    x: 30520,
+    y: 440,
+    patrolLeft: 30520,
+    patrolRight: 30520,
+    phase: 1.5707963267948966
+  },
+  {
+    id: "RoyalEchoDuelistA",
+    group: "RoyalEcho",
+    kind: "duelist",
+    x: 31790,
+    y: 294,
+    patrolLeft: 31715,
+    patrolRight: 31890,
+    phase: 0
+  },
+  {
+    id: "RoyalEchoCasterA",
+    group: "RoyalEcho",
+    kind: "caster",
+    x: 32235,
+    y: 382,
+    patrolLeft: 32070,
+    patrolRight: 32390,
+    phase: 1.5707963267948966
+  },
+  {
+    id: "RoyalEchoDuelistB",
+    group: "RoyalEcho",
+    kind: "duelist",
+    x: 32800,
+    y: 294,
+    patrolLeft: 32700,
+    patrolRight: 33000,
+    phase: 3.141592653589793
+  },
+  {
+    id: "RoyalEchoCasterB",
+    group: "RoyalEcho",
+    kind: "caster",
+    x: 33500,
+    y: 255,
+    patrolLeft: 33360,
+    patrolRight: 33700,
+    phase: 4.71238898038469
   },
 ] as const satisfies readonly WorldEnemySpawn[];
 

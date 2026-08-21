@@ -50,20 +50,88 @@ const gates =
       "GameplayGate"
   );
 
+const fieldValue = (
+  entity,
+  identifier
+) => entity.fieldInstances.find(
+  field => field.__identifier === identifier
+)?.__value;
+
+const assertEntity = (
+  entities,
+  identifier,
+  x,
+  y,
+  width,
+  height
+) => {
+  const entity = entities.find(
+    candidate =>
+      fieldValue(candidate, "Identifier") === identifier
+  );
+
+  if (
+    !entity ||
+    entity.__worldX !== x ||
+    entity.__worldY !== y ||
+    entity.width !== width ||
+    entity.height !== height
+  ) {
+    throw new Error(
+      `${identifier} does not match its authored LDtk bounds.`
+    );
+  }
+};
+
 if (
-  checkpoints.length !== 13 ||
-  gates.length !== 10
+  checkpoints.length !== 14 ||
+  gates.length !== 13
 ) {
   throw new Error(
-    "Expected 13 checkpoints and 10 gates; " +
+    "Expected 14 checkpoints and 13 gates; " +
     `got ${checkpoints.length} and ${
       gates.length
     }.`
   );
 }
 
+assertEntity(
+  checkpoints,
+  "MainStage",
+  10528,
+  296,
+  16,
+  16
+);
+assertEntity(
+  checkpoints,
+  "MainStageClear",
+  13552,
+  296,
+  16,
+  16
+);
+assertEntity(
+  checkpoints,
+  "RoyalBox",
+  31744,
+  296,
+  16,
+  16
+);
+assertEntity(gates, "MainStageLeft", 10704, 0, 18, 326);
+assertEntity(gates, "MainStageWave", 12096, 0, 18, 326);
+assertEntity(gates, "MainStageExit", 13472, 0, 18, 326);
+assertEntity(gates, "CardSanctumExit", 31584, 0, 18, 520);
+assertEntity(gates, "RoyalBoxExit", 35264, 0, 18, 520);
+
 const main =
   read("src/main.ts");
+
+const mainStage =
+  read(
+    "src/world/MainStageEncounterSystem.ts"
+  );
 
 const health =
   read(
@@ -122,6 +190,18 @@ for (const required of [
 }
 
 for (const required of [
+  'createGate("MainStageLeft")',
+  'createGate("MainStageWave")',
+  'createGate("MainStageExit")'
+]) {
+  if (!mainStage.includes(required)) {
+    throw new Error(
+      `MainStageEncounterSystem.ts is missing ${required}.`
+    );
+  }
+}
+
+for (const required of [
   'createWorldGate("MirrorRelay")',
   'createWorldGate("MirrorBoss")',
   'createWorldGate("MirrorExit")'
@@ -148,6 +228,6 @@ if (
 
 console.log(
   "World gameplay runtime valid: " +
-  "13 LDtk checkpoints, 10 LDtk gates, " +
+  "14 LDtk checkpoints, 13 LDtk gates, " +
   "typed checkpoint API."
 );

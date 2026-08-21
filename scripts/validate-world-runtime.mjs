@@ -59,9 +59,9 @@ const sections =
       entity.__identifier === "Section"
   );
 
-if (collisions.length !== 471) {
+if (collisions.length !== 457) {
   throw new Error(
-    `Expected 471 collisions, got ${collisions.length}.`
+    `Expected 457 collisions, got ${collisions.length}.`
   );
 }
 
@@ -69,6 +69,44 @@ if (sections.length !== 11) {
   throw new Error(
     `Expected 11 sections, got ${sections.length}.`
   );
+}
+
+const expectedSectionBounds = [
+  ["MovementRehearsal", 0, 5376],
+  ["CombatRehearsal", 5376, 5088],
+  ["MainStage", 10464, 3280],
+  ["GrandGallery", 13744, 5712],
+  ["GalleryGauntlet", 19456, 4096],
+  ["SpotlightVault", 23552, 4432],
+  ["CardSanctum", 27984, 3680],
+  ["RoyalBox", 31664, 3680],
+  ["MirrorCore", 35344, 3856],
+  ["ConductorApproach", 39200, 5472],
+  ["MirrorConductor", 44672, 5152]
+];
+
+for (const [identifier, x, width] of expectedSectionBounds) {
+  const section = sections.find(
+    candidate => {
+      const fields = new Map(
+        candidate.fieldInstances.map(
+          field => [field.__identifier, field.__value]
+        )
+      );
+
+      return fields.get("Identifier") === identifier;
+    }
+  );
+
+  if (
+    !section ||
+    section.__worldX !== x ||
+    section.width !== width
+  ) {
+    throw new Error(
+      `${identifier}: expected bounds ${x}..${x + width}.`
+    );
+  }
 }
 
 for (const section of sections) {
@@ -199,6 +237,6 @@ for (const file of sourceFiles) {
 
 console.log(
   "World runtime valid: 49824x720, " +
-  "471 collisions, 11 LDtk-driven visual sections, " +
+  "457 collisions, 11 LDtk-driven visual sections, " +
   "dynamic combat camera bounds."
 );

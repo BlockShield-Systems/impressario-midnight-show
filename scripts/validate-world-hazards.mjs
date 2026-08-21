@@ -116,9 +116,9 @@ const supports = entities.filter(
     entity.__identifier === "SupportPickup"
 );
 
-if (hazards.length !== 32) {
+if (hazards.length !== 36) {
   fail(
-    `Expected 32 hazards, got ${hazards.length}.`
+    `Expected 36 hazards, got ${hazards.length}.`
   );
 }
 
@@ -170,6 +170,68 @@ if (new Set(ids).size !== ids.length) {
   fail("Hazard/support identifiers are not unique.");
 }
 
+const mainStageHazards = new Map(
+  hazards
+    .filter(entity =>
+      fieldMap(entity).get("Group") === "MainStage"
+    )
+    .map(entity => [
+      fieldMap(entity).get("Identifier"),
+      entity
+    ])
+);
+
+for (const [id, x, y, width] of [
+  ["MainStageRiggingA", 11616, 48, 16],
+  ["MainStageFootlightsA", 12144, 326, 80],
+  ["MainStageRiggingB", 12736, 42, 16],
+  ["MainStageFootlightsB", 13040, 326, 88]
+]) {
+  const entity = mainStageHazards.get(id);
+
+  if (
+    !entity ||
+    entity.__worldX !== x ||
+    entity.__worldY !== y ||
+    entity.width !== width
+  ) {
+    fail(
+      `${id} does not match its authored LDtk bounds.`
+    );
+  }
+}
+
+for (const entity of [
+  ...hazards,
+  ...supports
+]) {
+  const fields = fieldMap(entity);
+  const id = fields.get("Identifier");
+  const group = fields.get("Group");
+  const x = entity.__worldX;
+
+  if (
+    group === "MainStage" &&
+    (x < 10464 || x >= 13744)
+  ) {
+    fail(`${id} is outside the MainStage interval.`);
+  }
+
+  if (
+    group === "CardSanctum" &&
+    (x < 27984 || x >= 31664)
+  ) {
+    fail(`${id} is outside the CardSanctum interval.`);
+  }
+
+  if (
+    group === "RoyalBox" &&
+    (x < 31664 || x >= 35344)
+  ) {
+    fail(`${id} is outside the RoyalBox interval.`);
+  }
+}
+
 assertCounts(
   countBy(
     hazards,
@@ -177,8 +239,8 @@ assertCounts(
       fieldMap(entity).get("Kind")
   ),
   {
-    Spike: 18,
-    Pendulum: 2,
+    Spike: 20,
+    Pendulum: 4,
     Blade: 8,
     Laser: 4
   },
@@ -193,6 +255,7 @@ assertCounts(
   ),
   {
     CombatRehearsal: 3,
+    MainStage: 4,
     Gallery: 4,
     CardSanctum: 8,
     RoyalBox: 13,
@@ -220,6 +283,15 @@ const consumers = [
     [
       "getWorldHazards",
       '"CombatRehearsal"',
+      '"Spike"'
+    ]
+  ],
+  [
+    "src/world/MainStageHazardSystem.ts",
+    [
+      "getWorldHazards",
+      '"MainStage"',
+      '"Pendulum"',
       '"Spike"'
     ]
   ],
@@ -350,7 +422,7 @@ for (const name of [
 
 console.log(
   "LDtk hazard runtime valid: " +
-  "32 hazards, 8 supports, " +
-  "5 hazard consumers, " +
+  "36 hazards, 8 supports, " +
+  "6 hazard consumers, " +
   "2 support consumers."
 );

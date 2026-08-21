@@ -20,14 +20,14 @@ type CardThrowerState =
   | "defeated";
 
 interface CardThrowerSpawn {
+  readonly id: string;
   readonly x: number;
   readonly y: number;
   readonly left: number;
   readonly right: number;
 }
 
-const PROJECTILE_LEFT = 6688;
-const PROJECTILE_RIGHT = 9664;
+const PROJECTILE_MARGIN = 256;
 
 interface CardProjectile {
   x: number;
@@ -42,6 +42,7 @@ interface CardProjectile {
 const SPAWNS: readonly CardThrowerSpawn[] =
   getWorldEnemySpawns("CardThrower").map(
     spawn => ({
+      id: spawn.id,
       x: spawn.x,
       y: spawn.y,
       left: spawn.patrolLeft,
@@ -426,17 +427,43 @@ export class CardThrowerSystem {
   private readonly projectiles: CardProjectile[] = [];
 
   private readonly projectileGraphics: Phaser.GameObjects.Graphics;
+  private readonly projectileLeft: number;
+  private readonly projectileRight: number;
 
   public constructor(
     scene: Phaser.Scene,
     private readonly player: PlayerController,
     private readonly playerHealth: PlayerHealthSystem,
-    combatSystem: CombatSystem
+    combatSystem: CombatSystem,
+    spawnIds?: readonly string[]
   ) {
+    const selectedSpawns = spawnIds
+      ? SPAWNS.filter(spawn =>
+          spawnIds.includes(spawn.id)
+        )
+      : SPAWNS;
+
+    if (
+      spawnIds &&
+      selectedSpawns.length !== spawnIds.length
+    ) {
+      throw new Error(
+        "Card Thrower spawn selection is incomplete."
+      );
+    }
+
+    this.projectileLeft = Math.min(
+      ...selectedSpawns.map(spawn => spawn.left)
+    ) - PROJECTILE_MARGIN;
+
+    this.projectileRight = Math.max(
+      ...selectedSpawns.map(spawn => spawn.right)
+    ) + PROJECTILE_MARGIN;
+
     this.projectileGraphics = scene.add.graphics();
     this.projectileGraphics.setDepth(18);
 
-    this.throwers = SPAWNS.map(
+    this.throwers = selectedSpawns.map(
       spawn =>
         new CardThrower(
           scene,
@@ -553,8 +580,8 @@ export class CardThrowerSystem {
 
       if (
         projectile.lifetime <= 0 ||
-        projectile.x < PROJECTILE_LEFT ||
-        projectile.x > PROJECTILE_RIGHT ||
+        projectile.x < this.projectileLeft ||
+        projectile.x > this.projectileRight ||
         projectile.y < 20 ||
         projectile.y > 340
       ) {
