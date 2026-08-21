@@ -240,6 +240,20 @@ for (const entity of spawns) {
   }
 
   if (
+    group === "LightWraith" &&
+    (
+      x < 23552 ||
+      x >= 27984 ||
+      left < 23552 ||
+      right > 27984
+    )
+  ) {
+    throw new Error(
+      `${id} is outside the SpotlightVault interval.`
+    );
+  }
+
+  if (
     id.startsWith("Sanctum") &&
     (x < 27984 || x >= 31664)
   ) {
@@ -306,6 +320,45 @@ for (const id of [
   if (!ids.has(id)) {
     throw new Error(
       `GalleryGauntlet enemy ${id} is missing.`
+    );
+  }
+}
+
+for (
+  const [id, x, y, left, right, phase] of [
+    [
+      "VaultLightWraithA",
+      24448,
+      280,
+      24128,
+      24912,
+      0
+    ],
+    [
+      "VaultLightWraithB",
+      25312,
+      256,
+      24944,
+      25792,
+      Math.PI
+    ]
+  ]
+) {
+  const entity = spawns.find(
+    candidate =>
+      fieldValue(candidate, "Identifier") === id
+  );
+
+  if (
+    !entity ||
+    entity.px?.[0] !== x ||
+    entity.px?.[1] !== y ||
+    fieldValue(entity, "PatrolLeft") !== left ||
+    fieldValue(entity, "PatrolRight") !== right ||
+    fieldValue(entity, "Phase") !== phase
+  ) {
+    throw new Error(
+      `SpotlightVault enemy ${id} does not match its authored LDtk values.`
     );
   }
 }

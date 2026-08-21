@@ -162,20 +162,20 @@ export const WORLD_ENEMY_SPAWNS = [
     id: "VaultLightWraithA",
     group: "LightWraith",
     kind: "",
-    x: 24240,
-    y: 270,
-    patrolLeft: 24096,
-    patrolRight: 24448,
+    x: 24448,
+    y: 280,
+    patrolLeft: 24128,
+    patrolRight: 24912,
     phase: 0
   },
   {
     id: "VaultLightWraithB",
     group: "LightWraith",
     kind: "",
-    x: 25120,
-    y: 270,
-    patrolLeft: 24960,
-    patrolRight: 25312,
+    x: 25312,
+    y: 256,
+    patrolLeft: 24944,
+    patrolRight: 25792,
     phase: 3.141592653589793
   },
   {

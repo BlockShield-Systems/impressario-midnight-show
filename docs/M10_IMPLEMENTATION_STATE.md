@@ -244,26 +244,70 @@
 - Two objective-gated Shadow Acrobat duels, four LDtk progression gates, midpoint checkpoint, synchronized hazards, fixed-world visuals, and death/reset flow completed
 - Canonical validation and production build passed; browser traversal remains pending on a browser-capable host
 
+### SpotlightVault
+
+- Section commit: `feat(levels): author Spotlight Vault encounter`
+- Interval: `23552..27984`
+- Gameplay additions:
+  - Twenty-one deliberate collision rectangles replace thirty-six inherited compact-world fragments
+  - GalleryGauntlet arrival remains aligned at `y=352`; the release route returns to the CardSanctum entry at `y=480`
+  - Safe entry checkpoint moved to `23600,322` with trigger `23568`
+  - One broad gated Light Wraith arena spans `24000..25856` with five optional elevated casting platforms
+  - Both existing LDtk gates now cover the complete `0..688` playable height
+  - Light Wraith patrols widened inside the arena and retain opposing authored phases
+  - Full-width lower fall boundary preserves existing fall-out handling
+  - Spotlight unlock precedes encounter closure; death restores Wraiths, gates, and Show while preserving the unlock
+- Visual additions:
+  - Fixed-world vault walls, spotlight sigil, archive silhouettes, route telegraphs, and five progression landmarks
+  - Compact-world SpotlightVault presentation and completion signage removed from `src/main.ts`
+  - CardSanctum transition signage moved into the fixed SpotlightVault interval
+- SpotlightVault counts:
+  - Collision rectangles: 21
+  - Checkpoints: 1
+  - Gameplay gates: 2
+  - Enemy spawns: 2 Light Wraiths
+  - Hazards: 0
+  - Support pickups: 0
+- World totals after completion:
+  - Collision rectangles: 400
+  - Checkpoints: 14
+  - Gameplay gates: 17
+  - Enemy spawns: 26
+  - Hazards: 36
+  - Support pickups: 8
+- Runtime modules added:
+  - `src/world/SpotlightVaultEncounterSystem.ts`
+  - `src/world/SpotlightVaultVisuals.ts`
+- Existing runtime modules updated:
+  - `src/main.ts`
+  - Generated `src/world/WorldEnemies.ts`, `WorldGameplay.ts`, and `WorldLayout.ts`
+- Validation coverage added:
+  - Exact SpotlightVault collision count and principal transition, arena, release, and fall-boundary geometry
+  - Exact SpotlightVault checkpoint and full-height gate bounds
+  - Exact Light Wraith positions, patrol bounds, phases, and Section containment
+  - Dedicated encounter-module ownership of both LDtk gates
+- Successful validation:
+  - Structural LDtk review: unchanged `49824×720` dimensions, 11 fixed Sections, and 512 unique entity IIDs
+  - `npm run levels:validate`
+  - `npm run world:validate`
+  - `npm run typecheck`
+  - `npm run build`
+  - `npm run audio:runtime:validate`
+  - `npm run assets:audio:validate`
+  - `npm run assets:player:validate`
+  - `npm run assets:enemies:validate`
+  - `npm run assets:boss:validate`
+- Runtime tests actually performed:
+  - No browser traversal was completed for SpotlightVault
+- Unresolved risks:
+  - Full keyboard traversal, Spotlight range instruction, Show recovery, encounter clear, death/reset, and both adjacent transitions require a browser-capable host
+  - CardSanctum and later Sections retain M9 geometry pending sequential M10 authoring
+
 ## Current Section
 
 - Current Section: SpotlightVault `23552..27984`
-- Status: inspected; interval plan recorded before mutation
-- Authored interval plan:
-  - `23552..24000`: safe GalleryGauntlet arrival, aligned entry checkpoint, Spotlight unlock, and low-risk casting tutorial
-  - `24000..25856`: gated Light Wraith vault encounter with a broad lower route and optional elevated sightlines
-  - `25856..26624`: cleared release corridor that confirms Spotlight mastery without introducing new combat
-  - `26624..27984`: ascending vault archive aligned to the CardSanctum entry surface
-- Planned runtime progression:
-  - Spotlight unlock and checkpoint activation occur before encounter closure
-  - Both Light Wraiths remain inside one readable LDtk-gated arena
-  - Objective text explains Spotlight range and Show recovery without requiring physical attacks
-  - Death resets both Wraiths, gates, and Show state while preserving the unlocked Spotlight ability
-  - Clearing both Wraiths opens the complete release route to CardSanctum
-- Planned LDtk ownership:
-  - Replace thirty-six inherited compact-world collision fragments with deliberate fixed-world route geometry
-  - Align the SpotlightVault checkpoint, Light Wraith patrols, and both existing gameplay gates to authored surfaces
-  - Preserve fixed Section boundaries and synchronize generated TypeScript only through canonical scripts
+- Status: authored and validated locally; commit and remote reconciliation pending
 
 ## Exact Next Action
 
-Author the recorded SpotlightVault geometry, checkpoint, Light Wraith arena, progression gates, fixed-world presentation, and death/reset flow; then synchronize and validate all LDtk-owned runtime modules.
+Commit and push the validated SpotlightVault implementation, update the open pull request, verify local/remote parity, then inspect CardSanctum before mutation.

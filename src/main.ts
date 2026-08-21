@@ -9,8 +9,8 @@ import { PlayerView } from "./player/PlayerView";
 import { EnemyView } from "./enemies/EnemyView";
 import { BossView } from "./boss/BossView";
 import { GalleryGauntletEncounterSystem } from "./world/GalleryGauntletEncounterSystem";
+import { SpotlightVaultEncounterSystem } from "./world/SpotlightVaultEncounterSystem";
 import { MagicSystem } from "./magic/MagicSystem";
-import { LightWraithSystem } from "./enemies/LightWraithSystem";
 import { CardSentrySystem } from "./enemies/CardSentrySystem";
 import { CardSanctumHazardSystem } from "./world/CardSanctumHazardSystem";
 import { RoyalEchoSystem } from "./enemies/RoyalEchoSystem";
@@ -39,6 +39,7 @@ import { MainStageVisuals } from "./world/MainStageVisuals";
 import { MainStageEncounterSystem } from "./world/MainStageEncounterSystem";
 import { GrandGalleryVisuals } from "./world/GrandGalleryVisuals";
 import { GalleryGauntletVisuals } from "./world/GalleryGauntletVisuals";
+import { SpotlightVaultVisuals } from "./world/SpotlightVaultVisuals";
 
 /* -------------------------------------------------------------------------- */
 /* Configuration                                                              */
@@ -854,7 +855,8 @@ class GameScene extends Phaser.Scene {
   private mainStageEncounterSystem!: MainStageEncounterSystem;
   private galleryGauntletEncounterSystem!:
     GalleryGauntletEncounterSystem;
-  private lightWraithSystem!: LightWraithSystem;
+  private spotlightVaultEncounterSystem!:
+    SpotlightVaultEncounterSystem;
   private magicSystem!: MagicSystem;
   private cardSentrySystem!: CardSentrySystem;
   private cardSanctumHazardSystem!: CardSanctumHazardSystem;
@@ -891,19 +893,6 @@ class GameScene extends Phaser.Scene {
   private grandGalleryEntered = false;
   private grandGalleryCheckpointActivated = false;
   private grandGalleryTitle!: Phaser.GameObjects.Text;
-
-  private spotlightVaultEntered = false;
-  private spotlightVaultActive = false;
-  private spotlightVaultCleared = false;
-
-  private readonly vaultLeftGate =
-    createWorldGate("SpotlightVaultLeft");
-
-  private readonly vaultRightGate =
-    createWorldGate("SpotlightVaultRight");
-
-  private vaultGateGraphics!: Phaser.GameObjects.Graphics;
-  private vaultObjectiveText!: Phaser.GameObjects.Text;
 
   private cardSanctumEntered = false;
   private cardSanctumActive = false;
@@ -955,11 +944,11 @@ class GameScene extends Phaser.Scene {
     new MainStageVisuals(this);
     new GrandGalleryVisuals(this);
     new GalleryGauntletVisuals(this);
+    new SpotlightVaultVisuals(this);
 
     const solids = this.createLevel();
 
     this.createGrandGallery();
-    this.createSpotlightVault();
     this.createCardSanctum();
     this.createRoyalBox();
 
@@ -1063,14 +1052,6 @@ class GameScene extends Phaser.Scene {
         }
       );
 
-    this.lightWraithSystem =
-      new LightWraithSystem(
-        this,
-        this.player,
-        this.playerHealth,
-        this.combatSystem
-      );
-
     this.magicSystem =
       new MagicSystem(
         this,
@@ -1080,12 +1061,27 @@ class GameScene extends Phaser.Scene {
           centerY: number,
           radius: number
         ) =>
-          this.lightWraithSystem
+          this.spotlightVaultEncounterSystem
             .applySpotlight(
               centerX,
               centerY,
               radius
             )
+      );
+
+    this.spotlightVaultEncounterSystem =
+      new SpotlightVaultEncounterSystem(
+        this,
+        this.player,
+        this.playerHealth,
+        this.combatSystem,
+        this.magicSystem,
+        solid => {
+          this.collisionWorld.addSolid(solid);
+        },
+        solid => {
+          this.collisionWorld.removeSolid(solid);
+        }
       );
 
     this.cardSentrySystem =
@@ -1271,7 +1267,7 @@ class GameScene extends Phaser.Scene {
     this.combatHazardSystem.update();
     this.mainStageEncounterSystem.update(frameDelta);
     this.galleryGauntletEncounterSystem.update(frameDelta);
-    this.lightWraithSystem.update(frameDelta);
+    this.spotlightVaultEncounterSystem.update(frameDelta);
     this.magicSystem.update(frameDelta);
     this.cardSentrySystem.update(frameDelta);
     this.cardSanctumHazardSystem.update(frameDelta);
@@ -1282,7 +1278,6 @@ class GameScene extends Phaser.Scene {
 
     this.updateEncounter();
     this.updateGrandGallery();
-    this.updateSpotlightVault();
     this.updateCardSanctum();
     this.updateRoyalBox();
 
@@ -2491,444 +2486,6 @@ class GameScene extends Phaser.Scene {
     );
   }
 
-  private createSpotlightVault(): void {
-    const startX = 8180;
-
-    const background = this.add.graphics();
-
-    background
-      .setDepth(-4)
-      .setScrollFactor(1);
-
-    background.fillStyle(
-      0x06131b,
-      1
-    );
-
-    background.fillRect(
-      startX,
-      0,
-      WORLD_WIDTH - startX,
-      360
-    );
-
-    for (
-      let x = 8220;
-      x < WORLD_WIDTH;
-      x += 220
-    ) {
-      background.fillStyle(
-        0x102c38,
-        0.92
-      );
-
-      background.fillRoundedRect(
-        x,
-        28,
-        150,
-        270,
-        26
-      );
-
-      background.lineStyle(
-        4,
-        0xc3973e,
-        0.9
-      );
-
-      background.strokeRoundedRect(
-        x,
-        28,
-        150,
-        270,
-        26
-      );
-
-      background.lineStyle(
-        2,
-        0x6de0e9,
-        0.48
-      );
-
-      background.strokeCircle(
-        x + 75,
-        142,
-        42
-      );
-
-      background.strokeCircle(
-        x + 75,
-        142,
-        25
-      );
-
-      for (
-        let ray = 0;
-        ray < 8;
-        ray += 1
-      ) {
-        const angle =
-          ray / 8 *
-          Math.PI * 2;
-
-        background.lineBetween(
-          x + 75 +
-            Math.cos(angle) * 29,
-          142 +
-            Math.sin(angle) * 29,
-          x + 75 +
-            Math.cos(angle) * 49,
-          142 +
-            Math.sin(angle) * 49
-        );
-      }
-    }
-
-    background.fillStyle(
-      0xd0a344,
-      1
-    );
-
-    background.fillRect(
-      startX,
-      24,
-      WORLD_WIDTH - startX,
-      5
-    );
-
-    background.fillRect(
-      startX,
-      315,
-      WORLD_WIDTH - startX,
-      4
-    );
-
-    background.fillStyle(
-      0x71e2eb,
-      1
-    );
-
-    background.fillRect(
-      startX,
-      326,
-      WORLD_WIDTH - startX,
-      3
-    );
-
-    // Spotlight Sigil.
-    background.fillStyle(
-      0xe8c65f,
-      0.18
-    );
-
-    background.fillCircle(
-      8345,
-      222,
-      62
-    );
-
-    background.lineStyle(
-      4,
-      0xf1ce68,
-      1
-    );
-
-    background.strokeCircle(
-      8345,
-      222,
-      42
-    );
-
-    background.lineStyle(
-      2,
-      0x78e7ef,
-      0.95
-    );
-
-    background.strokeCircle(
-      8345,
-      222,
-      25
-    );
-
-    this.add.text(
-      8240,
-      82,
-      "ACT V — THE SPOTLIGHT VAULT",
-      {
-        fontFamily: "monospace",
-        fontSize: "13px",
-        color: "#9bf3f8",
-        backgroundColor: "#06131be8",
-        padding: {
-          x: 10,
-          y: 7
-        }
-      }
-    ).setDepth(35);
-
-    this.add.text(
-      8260,
-      116,
-      [
-        "The staff remembers the light.",
-        "",
-        "Press [K] to cast Spotlight."
-      ].join("\n"),
-      {
-        fontFamily: "monospace",
-        fontSize: "9px",
-        color: "#f1d575",
-        backgroundColor: "#06131bdd",
-        padding: {
-          x: 8,
-          y: 6
-        }
-      }
-    ).setDepth(35);
-
-    this.vaultGateGraphics =
-      this.add.graphics();
-
-    this.vaultGateGraphics.setDepth(24);
-
-    this.vaultObjectiveText = this.add.text(
-      GAME_WIDTH * 0.5,
-      44,
-      "",
-      {
-        fontFamily: "monospace",
-        fontSize: "10px",
-        color: "#c8f9ff",
-        backgroundColor: "#06131be8",
-        padding: {
-          x: 9,
-          y: 6
-        }
-      }
-    );
-
-    this.vaultObjectiveText
-      .setOrigin(0.5, 0)
-      .setScrollFactor(0)
-      .setDepth(1160)
-      .setVisible(false);
-  }
-
-  private updateSpotlightVault(): void {
-    if (this.player.x < 23552) {
-      return;
-    }
-
-    if (
-      !this.spotlightVaultEntered &&
-      this.player.x >= getWorldCheckpoint("SpotlightVault").triggerX
-    ) {
-      this.spotlightVaultEntered = true;
-
-      this.playerHealth.setCheckpoint(
-        getWorldCheckpoint(
-          "SpotlightVault"
-        )
-      );
-
-      this.magicSystem.unlock();
-
-      this.cameras.main.flash(
-        280,
-        118,
-        230,
-        239,
-        false
-      );
-    }
-
-    if (
-      !this.spotlightVaultActive &&
-      !this.spotlightVaultCleared &&
-      this.player.x >= 8460
-    ) {
-      this.startSpotlightVault();
-    }
-
-    if (!this.spotlightVaultActive) {
-      return;
-    }
-
-    const remaining =
-      this.lightWraithSystem.remaining;
-
-    this.vaultObjectiveText.setText(
-      [
-        `SPOTLIGHT TRAINING — WRAITHS ${2 - remaining}/2`,
-        "Physical attacks are weak. Press [K] within range."
-      ].join("\n")
-    );
-
-    if (remaining === 0) {
-      this.completeSpotlightVault();
-    }
-  }
-
-  private startSpotlightVault(): void {
-    this.spotlightVaultActive = true;
-
-    this.collisionWorld.addSolid(
-      this.vaultLeftGate
-    );
-
-    this.collisionWorld.addSolid(
-      this.vaultRightGate
-    );
-
-    this.lightWraithSystem
-      .setEnabled(true);
-
-    this.vaultObjectiveText
-      .setVisible(true);
-
-    this.redrawVaultGates();
-  }
-
-  private completeSpotlightVault(): void {
-    this.spotlightVaultActive = false;
-    this.spotlightVaultCleared = true;
-
-    this.collisionWorld.removeSolid(
-      this.vaultLeftGate
-    );
-
-    this.collisionWorld.removeSolid(
-      this.vaultRightGate
-    );
-
-    this.vaultGateGraphics.clear();
-
-    this.vaultObjectiveText.setText(
-      "SPOTLIGHT MASTERED — THE VAULT IS OPEN"
-    );
-
-    this.cameras.main.flash(
-      300,
-      242,
-      210,
-      104,
-      false
-    );
-
-    this.time.delayedCall(
-      2400,
-      () => {
-        this.vaultObjectiveText
-          .setVisible(false);
-      }
-    );
-
-    this.add.text(
-      9360,
-      176,
-      "TO THE CARD SANCTUM →",
-      {
-        fontFamily: "monospace",
-        fontSize: "10px",
-        color: "#f4d776",
-        backgroundColor: "#06131bdd",
-        padding: {
-          x: 8,
-          y: 6
-        }
-      }
-    ).setDepth(35);
-  }
-
-  private resetSpotlightVaultAfterDeath(): void {
-    if (
-      !this.lightWraithSystem ||
-      !this.magicSystem ||
-      this.spotlightVaultCleared
-    ) {
-      return;
-    }
-
-    this.spotlightVaultActive = false;
-
-    this.collisionWorld?.removeSolid(
-      this.vaultLeftGate
-    );
-
-    this.collisionWorld?.removeSolid(
-      this.vaultRightGate
-    );
-
-    this.lightWraithSystem
-      .resetEncounter();
-
-    this.magicSystem
-      .resetEncounter();
-
-    this.vaultGateGraphics?.clear();
-
-    this.vaultObjectiveText
-      ?.setVisible(false)
-      .setText("");
-  }
-
-  private redrawVaultGates(): void {
-    const g = this.vaultGateGraphics;
-    g.clear();
-
-    for (
-      const gate of [
-        this.vaultLeftGate,
-        this.vaultRightGate
-      ]
-    ) {
-      g.fillStyle(
-        0x071720,
-        0.96
-      );
-
-      g.fillRect(
-        gate.x,
-        gate.y,
-        gate.width,
-        gate.height
-      );
-
-      g.lineStyle(
-        3,
-        0x72e2eb,
-        1
-      );
-
-      for (
-        let y = 8;
-        y < gate.height;
-        y += 24
-      ) {
-        g.lineBetween(
-          gate.x + 2,
-          y,
-          gate.right - 2,
-          y + 14
-        );
-      }
-
-      g.lineStyle(
-        2,
-        0xe7c45d,
-        1
-      );
-
-      g.strokeRect(
-        gate.x,
-        gate.y,
-        gate.width,
-        gate.height
-      );
-    }
-  }
-
   private createGrandGallery(): void {
     this.grandGalleryTitle = this.add.text(
       GAME_WIDTH * 0.5,
@@ -3111,7 +2668,7 @@ class GameScene extends Phaser.Scene {
     this.combatHazardSystem?.reset();
     this.mainStageEncounterSystem?.resetAfterDeath();
     this.galleryGauntletEncounterSystem?.resetAfterDeath();
-    this.resetSpotlightVaultAfterDeath();
+    this.spotlightVaultEncounterSystem?.resetAfterDeath();
     this.resetCardSanctumAfterDeath();
     this.resetRoyalBoxAfterDeath();
     this.mirrorCoreSystem?.resetAfterDeath();

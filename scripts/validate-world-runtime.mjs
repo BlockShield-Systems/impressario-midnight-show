@@ -59,9 +59,9 @@ const sections =
       entity.__identifier === "Section"
   );
 
-if (collisions.length !== 415) {
+if (collisions.length !== 400) {
   throw new Error(
-    `Expected 415 collisions, got ${collisions.length}.`
+    `Expected 400 collisions, got ${collisions.length}.`
   );
 }
 
@@ -135,6 +135,43 @@ for (const [x, y, width, height] of [
   ) {
     throw new Error(
       `GalleryGauntlet collision ${x},${y},${width},${height} is missing.`
+    );
+  }
+}
+
+const spotlightVaultCollisions =
+  collisions.filter(
+    entity =>
+      entity.__worldX >= 23552 &&
+      entity.__worldX < 27984
+  );
+
+if (spotlightVaultCollisions.length !== 21) {
+  throw new Error(
+    "Expected 21 authored SpotlightVault collisions, " +
+    `got ${spotlightVaultCollisions.length}.`
+  );
+}
+
+for (const [x, y, width, height] of [
+  [23552, 352, 192, 32],
+  [24000, 448, 1856, 32],
+  [25856, 448, 768, 32],
+  [26624, 416, 448, 32],
+  [27776, 480, 208, 32],
+  [23552, 688, 4432, 32]
+]) {
+  if (
+    !spotlightVaultCollisions.some(
+      entity =>
+        entity.__worldX === x &&
+        entity.__worldY === y &&
+        entity.width === width &&
+        entity.height === height
+    )
+  ) {
+    throw new Error(
+      `SpotlightVault collision ${x},${y},${width},${height} is missing.`
     );
   }
 }
@@ -311,6 +348,6 @@ for (const file of sourceFiles) {
 
 console.log(
   "World runtime valid: 49824x720, " +
-  "415 collisions, 11 LDtk-driven visual sections, " +
+  "400 collisions, 11 LDtk-driven visual sections, " +
   "dynamic combat camera bounds."
 );
