@@ -116,9 +116,9 @@ if (checkpoints.length !== 14) {
   );
 }
 
-if (gates.length !== 13) {
+if (gates.length !== 17) {
   throw new Error(
-    `Expected 13 gameplay gates, got ${
+    `Expected 17 gameplay gates, got ${
       gates.length
     }.`
   );

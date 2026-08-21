@@ -24,6 +24,10 @@ export type WorldGateId =
   | "MainStageLeft"
   | "MainStageWave"
   | "MainStageExit"
+  | "GalleryGauntletLeft"
+  | "GalleryGauntletMid"
+  | "GalleryGauntletSecondLeft"
+  | "GalleryGauntletExit"
   | "SpotlightVaultLeft"
   | "SpotlightVaultRight"
   | "CardSanctumExit"
@@ -56,7 +60,7 @@ export const WORLD_CHECKPOINTS: readonly WorldCheckpoint[] = [
   { id: "MainStageClear", displayName: "Main Stage Curtain Call", triggerX: 13520, x: 13552, y: 296 },
   { id: "GrandGallery", displayName: "The Grand Gallery", triggerX: 13792, x: 13824, y: 296 },
   { id: "GalleryGauntlet", displayName: "Gallery Gauntlet", triggerX: 19472, x: 19488, y: 450 },
-  { id: "GauntletMidpoint", displayName: "Gauntlet Midpoint", triggerX: 20560, x: 20576, y: 498 },
+  { id: "GauntletMidpoint", displayName: "Gauntlet Midpoint", triggerX: 20496, x: 20512, y: 450 },
   { id: "SpotlightVault", displayName: "The Spotlight Vault", triggerX: 23568, x: 23584, y: 498 },
   { id: "CardSanctum", displayName: "The Card Sanctum", triggerX: 28000, x: 28016, y: 450 },
   { id: "RoyalBox", displayName: "The Fractured Royal Box", triggerX: 31712, x: 31744, y: 296 },
@@ -72,6 +76,10 @@ export const WORLD_GATES: readonly WorldGate[] = [
   { id: "MainStageLeft", x: 10704, y: 0, width: 18, height: 326 },
   { id: "MainStageWave", x: 12096, y: 0, width: 18, height: 326 },
   { id: "MainStageExit", x: 13472, y: 0, width: 18, height: 326 },
+  { id: "GalleryGauntletLeft", x: 19904, y: 0, width: 18, height: 688 },
+  { id: "GalleryGauntletMid", x: 20416, y: 0, width: 18, height: 688 },
+  { id: "GalleryGauntletSecondLeft", x: 21088, y: 0, width: 18, height: 688 },
+  { id: "GalleryGauntletExit", x: 22480, y: 0, width: 18, height: 688 },
   { id: "SpotlightVaultLeft", x: 23936, y: 0, width: 18, height: 326 },
   { id: "SpotlightVaultRight", x: 25856, y: 0, width: 18, height: 326 },
   { id: "CardSanctumExit", x: 31584, y: 0, width: 18, height: 520 },

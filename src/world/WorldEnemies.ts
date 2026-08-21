@@ -142,20 +142,20 @@ export const WORLD_ENEMY_SPAWNS = [
     id: "GalleryShadowAcrobatA",
     group: "ShadowAcrobat",
     kind: "",
-    x: 20128,
+    x: 20032,
     y: 480,
-    patrolLeft: 20096,
-    patrolRight: 20256,
+    patrolLeft: 19936,
+    patrolRight: 20384,
     phase: 0
   },
   {
     id: "GalleryShadowAcrobatB",
     group: "ShadowAcrobat",
     kind: "",
-    x: 20768,
+    x: 21632,
     y: 480,
-    patrolLeft: 20736,
-    patrolRight: 20912,
+    patrolLeft: 21120,
+    patrolRight: 22464,
     phase: 0
   },
   {

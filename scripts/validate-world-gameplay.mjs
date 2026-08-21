@@ -85,10 +85,10 @@ const assertEntity = (
 
 if (
   checkpoints.length !== 14 ||
-  gates.length !== 13
+  gates.length !== 17
 ) {
   throw new Error(
-    "Expected 14 checkpoints and 13 gates; " +
+    "Expected 14 checkpoints and 17 gates; " +
     `got ${checkpoints.length} and ${
       gates.length
     }.`
@@ -129,6 +129,14 @@ assertEntity(
 );
 assertEntity(
   checkpoints,
+  "GauntletMidpoint",
+  20512,
+  450,
+  16,
+  16
+);
+assertEntity(
+  checkpoints,
   "RoyalBox",
   31744,
   296,
@@ -162,6 +170,10 @@ assertEntity(
 assertEntity(gates, "MainStageLeft", 10704, 0, 18, 326);
 assertEntity(gates, "MainStageWave", 12096, 0, 18, 326);
 assertEntity(gates, "MainStageExit", 13472, 0, 18, 326);
+assertEntity(gates, "GalleryGauntletLeft", 19904, 0, 18, 688);
+assertEntity(gates, "GalleryGauntletMid", 20416, 0, 18, 688);
+assertEntity(gates, "GalleryGauntletSecondLeft", 21088, 0, 18, 688);
+assertEntity(gates, "GalleryGauntletExit", 22480, 0, 18, 688);
 assertEntity(gates, "CardSanctumExit", 31584, 0, 18, 520);
 assertEntity(gates, "RoyalBoxExit", 35264, 0, 18, 520);
 assertEntity(gates, "MirrorRelay", 36192, 0, 18, 520);
@@ -271,6 +283,6 @@ if (
 
 console.log(
   "World gameplay runtime valid: " +
-  "14 LDtk checkpoints, 13 LDtk gates, " +
+  "14 LDtk checkpoints, 17 LDtk gates, " +
   "typed checkpoint API."
 );

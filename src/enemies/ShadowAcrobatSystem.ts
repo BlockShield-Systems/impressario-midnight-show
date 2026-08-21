@@ -20,6 +20,7 @@ type ShadowState =
   | "defeated";
 
 interface ShadowSpawn {
+  readonly id: string;
   readonly x: number;
   readonly groundY: number;
   readonly patrolLeft: number;
@@ -29,6 +30,7 @@ interface ShadowSpawn {
 const SPAWNS: readonly ShadowSpawn[] =
   getWorldEnemySpawns("ShadowAcrobat").map(
     spawn => ({
+      id: spawn.id,
       x: spawn.x,
       groundY: spawn.y,
       patrolLeft: spawn.patrolLeft,
@@ -497,9 +499,16 @@ export class ShadowAcrobatSystem {
     scene: Phaser.Scene,
     player: PlayerController,
     playerHealth: PlayerHealthSystem,
-    combatSystem: CombatSystem
+    combatSystem: CombatSystem,
+    spawnIds?: readonly string[]
   ) {
-    this.enemies = SPAWNS.map(
+    const selectedSpawns = spawnIds
+      ? SPAWNS.filter(spawn =>
+          spawnIds.includes(spawn.id)
+        )
+      : SPAWNS;
+
+    this.enemies = selectedSpawns.map(
       spawn =>
         new ShadowAcrobat(
           scene,

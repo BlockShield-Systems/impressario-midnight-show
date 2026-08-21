@@ -8,8 +8,7 @@ import { PlayerHealthSystem } from "./player/PlayerHealthSystem";
 import { PlayerView } from "./player/PlayerView";
 import { EnemyView } from "./enemies/EnemyView";
 import { BossView } from "./boss/BossView";
-import { ShadowAcrobatSystem } from "./enemies/ShadowAcrobatSystem";
-import { GalleryHazardSystem } from "./world/GalleryHazardSystem";
+import { GalleryGauntletEncounterSystem } from "./world/GalleryGauntletEncounterSystem";
 import { MagicSystem } from "./magic/MagicSystem";
 import { LightWraithSystem } from "./enemies/LightWraithSystem";
 import { CardSentrySystem } from "./enemies/CardSentrySystem";
@@ -39,6 +38,7 @@ import { CombatRehearsalHazardSystem } from "./world/CombatRehearsalHazardSystem
 import { MainStageVisuals } from "./world/MainStageVisuals";
 import { MainStageEncounterSystem } from "./world/MainStageEncounterSystem";
 import { GrandGalleryVisuals } from "./world/GrandGalleryVisuals";
+import { GalleryGauntletVisuals } from "./world/GalleryGauntletVisuals";
 
 /* -------------------------------------------------------------------------- */
 /* Configuration                                                              */
@@ -852,8 +852,8 @@ class GameScene extends Phaser.Scene {
   private cardThrowerSystem!: CardThrowerSystem;
   private combatHazardSystem!: CombatRehearsalHazardSystem;
   private mainStageEncounterSystem!: MainStageEncounterSystem;
-  private shadowAcrobatSystem!: ShadowAcrobatSystem;
-  private galleryHazardSystem!: GalleryHazardSystem;
+  private galleryGauntletEncounterSystem!:
+    GalleryGauntletEncounterSystem;
   private lightWraithSystem!: LightWraithSystem;
   private magicSystem!: MagicSystem;
   private cardSentrySystem!: CardSentrySystem;
@@ -891,11 +891,6 @@ class GameScene extends Phaser.Scene {
   private grandGalleryEntered = false;
   private grandGalleryCheckpointActivated = false;
   private grandGalleryTitle!: Phaser.GameObjects.Text;
-
-  private galleryGauntletEntered = false;
-  private galleryMidpointActivated = false;
-  private galleryGauntletEnabled = false;
-  private galleryObjectiveText!: Phaser.GameObjects.Text;
 
   private spotlightVaultEntered = false;
   private spotlightVaultActive = false;
@@ -959,11 +954,11 @@ class GameScene extends Phaser.Scene {
     new CombatRehearsalVisuals(this);
     new MainStageVisuals(this);
     new GrandGalleryVisuals(this);
+    new GalleryGauntletVisuals(this);
 
     const solids = this.createLevel();
 
     this.createGrandGallery();
-    this.createGalleryGauntlet();
     this.createSpotlightVault();
     this.createCardSanctum();
     this.createRoyalBox();
@@ -1054,19 +1049,18 @@ class GameScene extends Phaser.Scene {
         }
       );
 
-    this.shadowAcrobatSystem =
-      new ShadowAcrobatSystem(
+    this.galleryGauntletEncounterSystem =
+      new GalleryGauntletEncounterSystem(
         this,
         this.player,
         this.playerHealth,
-        this.combatSystem
-      );
-
-    this.galleryHazardSystem =
-      new GalleryHazardSystem(
-        this,
-        this.player,
-        this.playerHealth
+        this.combatSystem,
+        solid => {
+          this.collisionWorld.addSolid(solid);
+        },
+        solid => {
+          this.collisionWorld.removeSolid(solid);
+        }
       );
 
     this.lightWraithSystem =
@@ -1276,8 +1270,7 @@ class GameScene extends Phaser.Scene {
     this.cardThrowerSystem.update(frameDelta);
     this.combatHazardSystem.update();
     this.mainStageEncounterSystem.update(frameDelta);
-    this.shadowAcrobatSystem.update(frameDelta);
-    this.galleryHazardSystem.update(frameDelta);
+    this.galleryGauntletEncounterSystem.update(frameDelta);
     this.lightWraithSystem.update(frameDelta);
     this.magicSystem.update(frameDelta);
     this.cardSentrySystem.update(frameDelta);
@@ -1289,7 +1282,6 @@ class GameScene extends Phaser.Scene {
 
     this.updateEncounter();
     this.updateGrandGallery();
-    this.updateGalleryGauntlet();
     this.updateSpotlightVault();
     this.updateCardSanctum();
     this.updateRoyalBox();
@@ -2937,276 +2929,6 @@ class GameScene extends Phaser.Scene {
     }
   }
 
-  private createGalleryGauntlet(): void {
-    const g = this.add.graphics();
-
-    // Environment artwork must remain behind the collision geometry.
-    // Level solids are rendered at depth 0, hazards at depth 25.
-    g.setDepth(-3);
-    g.setScrollFactor(1);
-
-    // The gallery descends into a colder, fractured backstage void.
-    g.fillStyle(
-      0x050914,
-      1
-    );
-
-    g.fillRect(
-      6380,
-      360,
-      WORLD_WIDTH - 6380,
-      WORLD_HEIGHT - 360
-    );
-
-    g.fillStyle(
-      0x0d1730,
-      0.94
-    );
-
-    g.fillRect(
-      6380,
-      300,
-      WORLD_WIDTH - 6380,
-      60
-    );
-
-    // Deep vertical architectural lines.
-    for (
-      let x = 6420;
-      x < WORLD_WIDTH;
-      x += 150
-    ) {
-      g.lineStyle(
-        2,
-        0x3b6b86,
-        0.25
-      );
-
-      g.lineBetween(
-        x,
-        300,
-        x,
-        WORLD_HEIGHT
-      );
-    }
-
-    // Void silhouettes.
-    for (
-      let x = 6470;
-      x < WORLD_WIDTH;
-      x += 290
-    ) {
-      g.fillStyle(
-        0x02040a,
-        0.62
-      );
-
-      g.fillTriangle(
-        x,
-        WORLD_HEIGHT,
-        x + 80,
-        350,
-        x + 160,
-        WORLD_HEIGHT
-      );
-    }
-
-    // Cyan route markers.
-    const routePoints = [
-      [6420, 304],
-      [6625, 260],
-      [6750, 404],
-      [7100, 356],
-      [7410, 188],
-      [7520, 300],
-      [7870, 246],
-      [8040, 300]
-    ] as const;
-
-    for (const point of routePoints) {
-      const [x, y] = point;
-
-      g.fillStyle(
-        0x73e3eb,
-        0.75
-      );
-
-      g.fillCircle(
-        x,
-        y,
-        3
-      );
-
-      g.lineStyle(
-        1,
-        0xd6ad49,
-        0.65
-      );
-
-      g.strokeCircle(
-        x,
-        y,
-        7
-      );
-    }
-
-    this.add.text(
-      6410,
-      250,
-      [
-        "THE GALLERY GAUNTLET",
-        "Mind the void. Watch the rhythm."
-      ].join("\n"),
-      {
-        fontFamily: "monospace",
-        fontSize: "10px",
-        color: "#8beaf1",
-        backgroundColor: "#050914e8",
-        padding: {
-          x: 8,
-          y: 7
-        }
-      }
-    ).setDepth(30);
-
-    this.add.text(
-      7050,
-      448,
-      "ASCEND BEFORE THE SHADOW STRIKES",
-      {
-        fontFamily: "monospace",
-        fontSize: "9px",
-        color: "#d8b456",
-        backgroundColor: "#050914dd",
-        padding: {
-          x: 7,
-          y: 5
-        }
-      }
-    ).setDepth(30);
-
-    this.add.text(
-      8000,
-      286,
-      "THE SPOTLIGHT VAULT →",
-      {
-        fontFamily: "monospace",
-        fontSize: "10px",
-        color: "#f3d36b",
-        backgroundColor: "#050914dd",
-        padding: {
-          x: 8,
-          y: 6
-        }
-      }
-    ).setDepth(30);
-
-    this.galleryObjectiveText = this.add.text(
-      GAME_WIDTH * 0.5,
-      12,
-      "",
-      {
-        fontFamily: "monospace",
-        fontSize: "10px",
-        color: "#a9f4fa",
-        backgroundColor: "#050914e8",
-        padding: {
-          x: 9,
-          y: 6
-        }
-      }
-    );
-
-    this.galleryObjectiveText
-      .setOrigin(0.5, 0)
-      .setScrollFactor(0)
-      .setDepth(1150)
-      .setVisible(false);
-  }
-
-  private updateGalleryGauntlet(): void {
-    if (this.player.x < 19456) {
-      return;
-    }
-
-    if (
-      !this.galleryGauntletEntered &&
-      this.player.x >= getWorldCheckpoint("GalleryGauntlet").triggerX
-    ) {
-      this.galleryGauntletEntered = true;
-
-      this.playerHealth.setCheckpoint(
-        getWorldCheckpoint(
-          "GalleryGauntlet"
-        )
-      );
-    }
-
-    if (
-      !this.galleryGauntletEnabled &&
-      this.player.x >= 6400 &&
-      this.player.x < 7995
-    ) {
-      this.galleryGauntletEnabled = true;
-
-      this.shadowAcrobatSystem
-        .setEnabled(true);
-
-      this.galleryHazardSystem
-        .setEnabled(true);
-
-      this.galleryObjectiveText
-        .setVisible(true);
-    }
-
-    if (
-      this.galleryGauntletEnabled
-    ) {
-      const shadows =
-        this.shadowAcrobatSystem.remaining;
-
-      this.galleryObjectiveText.setText(
-        `GALLERY GAUNTLET — SHADOWS ${2 - shadows}/2`
-      );
-    }
-
-    if (
-      !this.galleryMidpointActivated &&
-      this.player.x >= getWorldCheckpoint("GauntletMidpoint").triggerX
-    ) {
-      this.galleryMidpointActivated = true;
-
-      this.playerHealth.setCheckpoint(
-        getWorldCheckpoint(
-          "GauntletMidpoint"
-        )
-      );
-    }
-
-    if (
-      this.player.x >= 7995 &&
-      this.galleryGauntletEnabled
-    ) {
-      this.galleryGauntletEnabled = false;
-
-      this.galleryHazardSystem
-        .setEnabled(false);
-
-      this.galleryObjectiveText
-        .setText(
-          "GAUNTLET CLEARED — THE SPOTLIGHT VAULT AWAITS"
-        );
-
-      this.time.delayedCall(
-        2200,
-        () => {
-          this.galleryObjectiveText
-            .setVisible(false);
-        }
-      );
-    }
-  }
-
   private createGrandGallery(): void {
     this.grandGalleryTitle = this.add.text(
       GAME_WIDTH * 0.5,
@@ -3386,20 +3108,13 @@ class GameScene extends Phaser.Scene {
   }
 
   private resetEncounterAfterDeath(): void {
-    this.shadowAcrobatSystem?.resetEncounter();
     this.combatHazardSystem?.reset();
     this.mainStageEncounterSystem?.resetAfterDeath();
-    this.galleryHazardSystem?.reset();
+    this.galleryGauntletEncounterSystem?.resetAfterDeath();
     this.resetSpotlightVaultAfterDeath();
     this.resetCardSanctumAfterDeath();
     this.resetRoyalBoxAfterDeath();
     this.mirrorCoreSystem?.resetAfterDeath();
-
-    this.galleryGauntletEnabled = false;
-
-    this.galleryObjectiveText
-      ?.setVisible(false)
-      .setText("");
 
     if (this.encounterCleared) {
       return;
