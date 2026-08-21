@@ -631,11 +631,52 @@
   - Full keyboard traversal, relay targeting, moving-mirror routing, beam timing, gauntlet completion, checkpoint respawn, support recovery, death/reset, and both adjacent transitions require browser validation
   - ConductorApproach and MirrorConductor retain inherited geometry pending sequential M10 authoring
 
+## ConductorApproach Pre-Mutation Plan
+
+- Fixed interval: `39200..44672`
+- Adjacent transition constraints:
+  - Preserve the authored MirrorCore exit surface at `39090,480,110,32`
+  - Begin ConductorApproach on a safe `y=480` entry surface at the fixed `39200` boundary
+  - End ConductorApproach on a `y=480` surface aligned with the inherited MirrorConductor entry at `44672,480,112,16`
+  - Do not mutate MirrorConductor geometry, activate boss behavior, or author finale ownership before the fixed `44672` boundary
+- Inherited inventory:
+  - 43 collision rectangles, including 9 disconnected ceiling fragments and 34 repeating lower entry or stepping fragments
+  - 0 checkpoints
+  - 0 gameplay gates
+  - 0 enemy spawns
+  - 0 hazards
+  - 0 support pickups
+- Authored interval plan:
+  - `39200..40000`: safe MirrorCore arrival, level entry promenade, and low-risk recovery route
+  - `40000..41280`: ascending overture with alternating floor elevations and optional upper movement phrases
+  - `41280..42592`: central orchestral corridor combining repeated double-jump and air-dash route choices over a continuous lower recovery route
+  - `42592..43904`: final movement crescendo with denser upper-platform rhythm and readable lower landings
+  - `43904..44672`: quiet boss antechamber, level `y=480` alignment, and unmistakable MirrorConductor threshold framing
+- Planned collision structure:
+  - Replace all 43 inherited fragments with 31 deliberate fixed-world rectangles: 13 contiguous principal floor segments, 17 optional upper-route platforms, and one full-width lower safety boundary
+  - Preserve a continuous, hazard-free lower route so the pre-boss approach provides decompression rather than an untelegraphed combat or damage check
+  - Keep every optional upper platform reachable with the existing jump, double-jump, dash, air-dash, wall-slide, and wall-jump systems
+  - Keep all geometry inside `39200..44672` and preserve both adjacent transition surfaces unchanged
+- Planned semantic behavior:
+  - Preserve the intentionally empty ConductorApproach semantic inventory; no checkpoint, gate, enemy, hazard, or support entity is required for this traversal-only Section
+  - Continue MirrorCore music and machine ambience through the approach; the existing MirrorConductor score and boss-intro voice remain aligned to `44672`
+  - Do not add boss HUD, boss mechanics, finale, credits, or `leaderboard.finishRun()` ownership to ConductorApproach
+- Planned runtime architecture:
+  - Add `ConductorApproachVisuals.ts` for fixed-world orchestral architecture, floor and platform telegraphs, movement landmarks, crescendo presentation, antechamber quieting, and MirrorConductor threshold signage
+  - Integrate only deterministic fixed-world visuals in `src/main.ts`; no dynamic encounter system is required for the hazard-free semantic inventory
+  - Reuse the existing environment renderer, movement controller, production assets, MirrorCore audio zone, and later MirrorConductor audio boundary
+- Planned validation coverage:
+  - Exact ConductorApproach collision count and all 31 authored rectangles
+  - Exact empty checkpoint, gate, enemy, hazard, and support inventory within `39200..44672`
+  - Exact preservation of the MirrorCore exit and MirrorConductor entry surfaces
+  - Construction of `ConductorApproachVisuals` in `src/main.ts`
+  - Absence of boss activation, boss HUD, finale, credits, and leaderboard completion from ConductorApproach ownership
+
 ## Current Section
 
 - Current Section: ConductorApproach `39200..44672`
-- Status: MirrorCore implementation and canonical validation complete; commit, push, and PR update pending
+- Status: MirrorCore commit `68df06d` is pushed with clean local/remote parity; ConductorApproach pre-mutation inspection and planning complete
 
 ## Exact Next Action
 
-Commit and push the completed MirrorCore implementation, update pull request #1, verify clean local/remote parity, then author ConductorApproach from authoritative LDtk data.
+Author the planned ConductorApproach collision geometry in authoritative LDtk, synchronize generated modules, add fixed-world visuals, strengthen exact validators, and run canonical validation.
