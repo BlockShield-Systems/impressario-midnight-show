@@ -3,6 +3,8 @@ export const AUDIO_EVENTS = {
     "audio:enemy-tag-changed",
   bossTagChanged:
     "audio:boss-tag-changed",
+  bossAction:
+    "audio:boss-action",
   combatHit:
     "audio:combat-hit",
   checkpoint:

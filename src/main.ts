@@ -17,6 +17,8 @@ import { RoyalBoxVisuals } from "./world/RoyalBoxVisuals";
 import { MirrorCoreSystem } from "./world/MirrorCoreSystem";
 import { MirrorCoreVisuals } from "./world/MirrorCoreVisuals";
 import { ConductorApproachVisuals } from "./world/ConductorApproachVisuals";
+import { MirrorConductorSystem } from "./world/MirrorConductorSystem";
+import { MirrorConductorVisuals } from "./world/MirrorConductorVisuals";
 import { AudioDirector } from "./audio/AudioDirector";
 import { MusicDirector } from "./audio/MusicDirector";
 import { AudioRuntimeBridge } from "./audio/AudioRuntimeBridge";
@@ -864,6 +866,7 @@ class GameScene extends Phaser.Scene {
   private royalBoxEncounterSystem!:
     RoyalBoxEncounterSystem;
   private mirrorCoreSystem!: MirrorCoreSystem;
+  private mirrorConductorSystem!: MirrorConductorSystem;
   private playerHealth!: PlayerHealthSystem;
   private audioDirector!: AudioDirector;
   private musicDirector!: MusicDirector;
@@ -929,6 +932,7 @@ class GameScene extends Phaser.Scene {
     new RoyalBoxVisuals(this);
     new MirrorCoreVisuals(this);
     new ConductorApproachVisuals(this);
+    new MirrorConductorVisuals(this);
 
     const solids = this.createLevel();
 
@@ -1114,6 +1118,25 @@ class GameScene extends Phaser.Scene {
         }
       );
 
+    this.mirrorConductorSystem =
+      new MirrorConductorSystem(
+        this,
+        this.player,
+        this.playerHealth,
+        this.combatSystem,
+        this.magicSystem,
+        solid => {
+          this.collisionWorld.addSolid(
+            solid
+          );
+        },
+        solid => {
+          this.collisionWorld.removeSolid(
+            solid
+          );
+        }
+      );
+
     this.audioDirector =
       new AudioDirector(this);
 
@@ -1244,6 +1267,7 @@ class GameScene extends Phaser.Scene {
     this.cardSanctumEncounterSystem.update(frameDelta);
     this.royalBoxEncounterSystem.update(frameDelta);
     this.mirrorCoreSystem.update(frameDelta);
+    this.mirrorConductorSystem.update(frameDelta);
 
     this.updateEncounter();
     this.updateGrandGallery();
@@ -1656,6 +1680,7 @@ class GameScene extends Phaser.Scene {
     this.cardSanctumEncounterSystem?.resetAfterDeath();
     this.royalBoxEncounterSystem?.resetAfterDeath();
     this.mirrorCoreSystem?.resetAfterDeath();
+    this.mirrorConductorSystem?.resetAfterDeath();
 
     if (this.encounterCleared) {
       return;

@@ -148,6 +148,17 @@ const ZONES: readonly Zone[] = [
   }
 ];
 
+const BOSS_ACTION_AUDIO:
+Readonly<Record<string, AudioAssetId>> = {
+  intro: "boss_intro_sting",
+  "shield-block": "boss_shield_block",
+  "shield-break": "boss_shield_break",
+  "projectile-volley": "boss_projectile_volley",
+  "floor-warning": "boss_floor_warning",
+  "finale-firework": "finale_firework_02",
+  "curtain-close": "finale_curtain_close"
+};
+
 const ENEMY_TAG_AUDIO:
 Readonly<Record<string, AudioAssetId>> = {
   stagehand_alert:
@@ -236,6 +247,18 @@ export class AudioRuntimeBridge {
     scene.events.on(
       AUDIO_EVENTS.bossTagChanged,
       this.onBossTag,
+      this
+    );
+
+    scene.events.on(
+      AUDIO_EVENTS.bossAction,
+      this.onBossAction,
+      this
+    );
+
+    scene.events.on(
+      AUDIO_EVENTS.finaleStarted,
+      this.onFinaleStarted,
       this
     );
 
@@ -708,6 +731,46 @@ export class AudioRuntimeBridge {
     }
   };
 
+  private readonly onBossAction = (
+    action: string,
+    x: number
+  ): void => {
+    const id = BOSS_ACTION_AUDIO[action];
+
+    if (!id) {
+      return;
+    }
+
+    this.audio.play(id, {
+      gain:
+        action === "curtain-close"
+          ? 1
+          : 0.82,
+      positionX: x,
+      cooldownMs:
+        action === "projectile-volley"
+          ? 320
+          : action === "finale-firework"
+            ? 260
+            : 180,
+      maxInstances: 2
+    });
+  };
+
+  private readonly onFinaleStarted = (
+    x: number
+  ): void => {
+    this.audio.play(
+      "finale_firework_01",
+      {
+        gain: 1,
+        positionX: x,
+        cooldownMs: 1200,
+        maxInstances: 1
+      }
+    );
+  };
+
   private readonly onCombatHit = (
     heavy: boolean,
     x: number
@@ -779,6 +842,18 @@ export class AudioRuntimeBridge {
     this.scene.events.off(
       AUDIO_EVENTS.bossTagChanged,
       this.onBossTag,
+      this
+    );
+
+    this.scene.events.off(
+      AUDIO_EVENTS.bossAction,
+      this.onBossAction,
+      this
+    );
+
+    this.scene.events.off(
+      AUDIO_EVENTS.finaleStarted,
+      this.onFinaleStarted,
       this
     );
 

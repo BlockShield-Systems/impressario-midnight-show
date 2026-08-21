@@ -15,7 +15,8 @@ export type WorldCheckpointId =
   | "RoyalBox"
   | "MirrorCore"
   | "MirrorRelays"
-  | "CoreChamber";
+  | "CoreChamber"
+  | "MirrorConductor";
 
 export type WorldGateId =
   | "CombatTutorialExit"
@@ -34,7 +35,9 @@ export type WorldGateId =
   | "RoyalBoxExit"
   | "MirrorRelay"
   | "MirrorBoss"
-  | "MirrorExit";
+  | "MirrorExit"
+  | "MirrorConductorEntrance"
+  | "MirrorConductorResolution";
 
 export interface WorldCheckpoint {
   readonly id: WorldCheckpointId;
@@ -67,6 +70,7 @@ export const WORLD_CHECKPOINTS: readonly WorldCheckpoint[] = [
   { id: "MirrorCore", displayName: "The Mirror Core", triggerX: 35392, x: 35424, y: 450 },
   { id: "MirrorRelays", displayName: "Mirror Relays", triggerX: 36112, x: 36128, y: 450 },
   { id: "CoreChamber", displayName: "Core Chamber", triggerX: 37376, x: 37424, y: 450 },
+  { id: "MirrorConductor", displayName: "Mirror Conductor Antechamber", triggerX: 44704, x: 44752, y: 450 },
 ] as const;
 
 export const WORLD_GATES: readonly WorldGate[] = [
@@ -87,6 +91,8 @@ export const WORLD_GATES: readonly WorldGate[] = [
   { id: "MirrorRelay", x: 36192, y: 0, width: 18, height: 688 },
   { id: "MirrorBoss", x: 37344, y: 0, width: 18, height: 688 },
   { id: "MirrorExit", x: 39072, y: 0, width: 18, height: 688 },
+  { id: "MirrorConductorEntrance", x: 45120, y: 0, width: 18, height: 688 },
+  { id: "MirrorConductorResolution", x: 49344, y: 0, width: 18, height: 688 },
 ] as const;
 
 export function getWorldCheckpoint(
