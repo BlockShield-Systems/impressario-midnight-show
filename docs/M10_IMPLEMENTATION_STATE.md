@@ -236,28 +236,34 @@
   - Full keyboard traversal, optional upper-route coverage, checkpoint respawn, fall recovery, and both adjacent transitions require a browser-capable host
   - GalleryGauntlet and later Sections retain M9 geometry pending sequential M10 authoring
 
+### GalleryGauntlet
+
+- Successful Section commit: `bc9e9538844ad00e2694c72e6a55b8b98b523854`
+- Interval: `19456..23552`
+- Twenty-four authored collision rectangles replaced forty inherited compact-world fragments
+- Two objective-gated Shadow Acrobat duels, four LDtk progression gates, midpoint checkpoint, synchronized hazards, fixed-world visuals, and death/reset flow completed
+- Canonical validation and production build passed; browser traversal remains pending on a browser-capable host
+
 ## Current Section
 
-- Current Section: GalleryGauntlet `19456..23552`
-- Status: authored and validated locally; commit and remote reconciliation pending
+- Current Section: SpotlightVault `23552..27984`
+- Status: inspected; interval plan recorded before mutation
 - Authored interval plan:
-  - `19456..19904`: safe GrandGallery landing, entry checkpoint, and pendulum timing introduction
-  - `19904..20448`: first Shadow Acrobat duel on a stable lower route with optional height advantage
-  - `20448..21120`: midpoint refuge followed by a spike-and-pendulum rhythm crossing
-  - `21120..22464`: second Shadow Acrobat duel in a gated fractured salon with readable upper routes
-  - `22464..23552`: cleared traversal and controlled ascent to the SpotlightVault transition surface
+  - `23552..24000`: safe GalleryGauntlet arrival, aligned entry checkpoint, Spotlight unlock, and low-risk casting tutorial
+  - `24000..25856`: gated Light Wraith vault encounter with a broad lower route and optional elevated sightlines
+  - `25856..26624`: cleared release corridor that confirms Spotlight mastery without introducing new combat
+  - `26624..27984`: ascending vault archive aligned to the CardSanctum entry surface
 - Planned runtime progression:
-  - Entry checkpoint activates before hazards or combat
-  - The first Shadow Acrobat blocks midpoint progression until defeated
-  - The midpoint checkpoint becomes valid only after the first duel clears
-  - The second Shadow Acrobat blocks the exit until defeated
-  - Gallery hazards remain active during traversal and reset consistently after death
-  - Cleared state opens the SpotlightVault transition and disables encounter hazards
+  - Spotlight unlock and checkpoint activation occur before encounter closure
+  - Both Light Wraiths remain inside one readable LDtk-gated arena
+  - Objective text explains Spotlight range and Show recovery without requiring physical attacks
+  - Death resets both Wraiths, gates, and Show state while preserving the unlocked Spotlight ability
+  - Clearing both Wraiths opens the complete release route to CardSanctum
 - Planned LDtk ownership:
-  - Replace forty inherited compact-world collision fragments with deliberate fixed-world route geometry
-  - Author GalleryGauntlet progression gates in LDtk and synchronize generated TypeScript through canonical scripts
-  - Preserve both Section boundaries and align checkpoints, enemy ground planes, hazards, and transitions to authored surfaces
+  - Replace thirty-six inherited compact-world collision fragments with deliberate fixed-world route geometry
+  - Align the SpotlightVault checkpoint, Light Wraith patrols, and both existing gameplay gates to authored surfaces
+  - Preserve fixed Section boundaries and synchronize generated TypeScript only through canonical scripts
 
 ## Exact Next Action
 
-Author the recorded GalleryGauntlet geometry, checkpoints, progression gates, Shadow Acrobat encounters, hazards, fixed-world presentation, and death/reset flow; then synchronize and validate all LDtk-owned runtime modules.
+Author the recorded SpotlightVault geometry, checkpoint, Light Wraith arena, progression gates, fixed-world presentation, and death/reset flow; then synchronize and validate all LDtk-owned runtime modules.
