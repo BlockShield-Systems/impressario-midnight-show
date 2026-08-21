@@ -79,6 +79,41 @@ test("player identity copy and same-origin production payload remain compatible"
   assert.match(migration, /player_name TEXT NOT NULL/);
 });
 
+test("environment rendering removes repeated full-world textures", async () => {
+  const environment = await source(
+    "src/world/EnvironmentTileRenderer.ts"
+  );
+  const main = await source("src/main.ts");
+
+  assert.equal(
+    (environment.match(/\.add\.tileSprite\(/g) ?? []).length,
+    0,
+    "the repeated environment raster must not return"
+  );
+  assert.doesNotMatch(environment, /spritesheet|TEXTURE_URL|TEXTURE_KEY/);
+  assert.doesNotMatch(environment, /createParallaxLayer|createMaterialLayers/);
+  assert.doesNotMatch(environment, /createCollisionVisualsForSection/);
+  assert.doesNotMatch(environment, /WORLD_WIDTH|WORLD_HEIGHT|WORLD_SOLIDS/);
+  assert.doesNotMatch(main, /EnvironmentTileRenderer\.preload/);
+
+  assert.equal(
+    (main.match(/new EnvironmentTileRenderer\(/g) ?? []).length,
+    1,
+    "the environment renderer must initialize once"
+  );
+  assert.equal(
+    (main.match(/new MovementRehearsalVisuals\(/g) ?? []).length,
+    1,
+    "MovementRehearsal visuals must initialize once"
+  );
+  assert.equal(
+    (main.match(/new Phaser\.Game\(config\)/g) ?? []).length,
+    1,
+    "the application must create one Phaser game"
+  );
+  assert.match(main, /type: Phaser\.WEBGL/);
+});
+
 test("opening tutorial has one readable control presentation outside the player route", async () => {
   assert.ok(
     MOVEMENT_ENVIRONMENT_FOREGROUND_DEPTH <

@@ -594,10 +594,8 @@ for (const forbidden of [
 }
 
 for (const required of [
-  "section.textureFrame",
   "section.lightColor",
-  "section.lightSpacing",
-  "WORLD_WIDTH"
+  "section.lightSpacing"
 ]) {
   if (!renderer.includes(required)) {
     throw new Error(
@@ -627,6 +625,6 @@ for (const file of sourceFiles) {
 
 console.log(
   "World runtime valid: 49824x720, " +
-  "296 collisions, 11 LDtk-driven visual sections, " +
+  "296 collisions, 11 LDtk-driven lighting sections, " +
   "exact MirrorConductor geometry and world end."
 );

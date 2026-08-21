@@ -915,9 +915,6 @@ class GameScene extends Phaser.Scene {
     EnemyView.preload(this);
     BossView.preload(this);
     AudioDirector.preload(this);
-    EnvironmentTileRenderer.preload(
-      this
-    );
   }
 
   public create(): void {

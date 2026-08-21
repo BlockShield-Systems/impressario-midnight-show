@@ -11,6 +11,20 @@ const LOCAL_MESSAGE =
 const SCREENSHOT_DIRECTORY =
   "/home/user/webapp/node_modules/.cache/ui-runtime";
 
+const RENDERING_SCREENSHOT_DIRECTORY =
+  "/home/user/webapp/node_modules/.cache/rendering-regression";
+
+interface RuntimeMetrics {
+  readonly activeIntervals: number;
+  readonly activeTimeouts: number;
+  readonly canvasCount: number;
+  readonly canvasHeight: number;
+  readonly canvasWidth: number;
+  readonly devicePixelRatio: number;
+  readonly listenerBalance: number;
+  readonly renderer: "CANVAS" | "WEBGL";
+}
+
 interface CanvasSample {
   readonly pixels: number[];
   readonly nonBlank: boolean;
@@ -128,6 +142,45 @@ async function sampleCanvas(
   );
 }
 
+async function runtimeMetrics(
+  page: Page
+): Promise<RuntimeMetrics> {
+  return page.evaluate(() => {
+    const canvas = document.querySelector(
+      "canvas"
+    );
+    const state = (
+      window as Window & {
+        __renderingRegressionMetrics?: {
+          activeIntervals: Set<number>;
+          activeTimeouts: Set<number>;
+          listenerAdds: number;
+          listenerRemoves: number;
+        };
+      }
+    ).__renderingRegressionMetrics;
+    const gl =
+      canvas?.getContext("webgl2") ??
+      canvas?.getContext("webgl");
+
+    return {
+      activeIntervals:
+        state?.activeIntervals.size ?? -1,
+      activeTimeouts:
+        state?.activeTimeouts.size ?? -1,
+      canvasCount:
+        document.querySelectorAll("canvas").length,
+      canvasHeight: canvas?.height ?? 0,
+      canvasWidth: canvas?.width ?? 0,
+      devicePixelRatio: window.devicePixelRatio,
+      listenerBalance:
+        (state?.listenerAdds ?? 0) -
+        (state?.listenerRemoves ?? 0),
+      renderer: gl ? "WEBGL" : "CANVAS"
+    };
+  });
+}
+
 function changedPixelRatio(
   first: readonly number[],
   second: readonly number[]
@@ -178,6 +231,84 @@ test(
     const failedRequiredResources: string[] = [];
     const leaderboardRequests: string[] = [];
     const submissionRequests: string[] = [];
+
+    await page.addInitScript(() => {
+      const metrics = {
+        activeIntervals: new Set<number>(),
+        activeTimeouts: new Set<number>(),
+        listenerAdds: 0,
+        listenerRemoves: 0
+      };
+
+      Object.defineProperty(
+        window,
+        "__renderingRegressionMetrics",
+        { value: metrics }
+      );
+
+      const originalAdd =
+        EventTarget.prototype.addEventListener;
+      const originalRemove =
+        EventTarget.prototype.removeEventListener;
+
+      EventTarget.prototype.addEventListener =
+        function (...args) {
+          metrics.listenerAdds += 1;
+          return originalAdd.apply(this, args);
+        };
+      EventTarget.prototype.removeEventListener =
+        function (...args) {
+          metrics.listenerRemoves += 1;
+          return originalRemove.apply(this, args);
+        };
+
+      const originalSetTimeout =
+        window.setTimeout.bind(window);
+      const originalClearTimeout =
+        window.clearTimeout.bind(window);
+      const originalSetInterval =
+        window.setInterval.bind(window);
+      const originalClearInterval =
+        window.clearInterval.bind(window);
+
+      window.setTimeout = ((callback, delay, ...args) => {
+        let id = 0;
+        const wrapped = (...callbackArgs: unknown[]) => {
+          metrics.activeTimeouts.delete(id);
+          if (typeof callback === "function") {
+            callback(...callbackArgs);
+          }
+        };
+        id = originalSetTimeout(
+          wrapped,
+          delay,
+          ...args
+        );
+        metrics.activeTimeouts.add(id);
+        return id;
+      }) as typeof window.setTimeout;
+      window.clearTimeout = (id => {
+        metrics.activeTimeouts.delete(
+          Number(id)
+        );
+        originalClearTimeout(id);
+      }) as typeof window.clearTimeout;
+      window.setInterval = ((callback, delay, ...args) => {
+        const id = originalSetInterval(
+          callback,
+          delay,
+          ...args
+        );
+        metrics.activeIntervals.add(id);
+        return id;
+      }) as typeof window.setInterval;
+      window.clearInterval = (id => {
+        metrics.activeIntervals.delete(
+          Number(id)
+        );
+        originalClearInterval(id);
+      }) as typeof window.clearInterval;
+    });
 
     page.on("pageerror", error => {
       pageErrors.push(error.message);
@@ -317,6 +448,22 @@ test(
     await page.screenshot({
       path: `${SCREENSHOT_DIRECTORY}/impressario-ui-movement-start-v2.png`
     });
+    await page.screenshot({
+      path: `${RENDERING_SCREENSHOT_DIRECTORY}/movement-start-grid-fixed.png`
+    });
+
+    const openingRuntime =
+      await runtimeMetrics(page);
+
+    expect(openingRuntime).toMatchObject({
+      activeIntervals: 0,
+      activeTimeouts: 0,
+      canvasCount: 1,
+      canvasHeight: 360,
+      canvasWidth: 640,
+      devicePixelRatio: 1,
+      renderer: "WEBGL"
+    });
 
     await page.evaluate(() => {
       if (
@@ -353,6 +500,20 @@ test(
     await page.screenshot({
       path: `${SCREENSHOT_DIRECTORY}/impressario-ui-movement-right-v2.png`
     });
+    await page.screenshot({
+      path: `${RENDERING_SCREENSHOT_DIRECTORY}/movement-after-input-grid-fixed.png`
+    });
+
+    const progressedRuntime =
+      await runtimeMetrics(page);
+
+    expect(progressedRuntime).toEqual(
+      openingRuntime
+    );
+    console.log(
+      "RENDERING_RUNTIME_METRICS=" +
+        JSON.stringify(progressedRuntime)
+    );
 
     expect(leaderboardRequests).toEqual([]);
     expect(submissionRequests).toEqual([]);
