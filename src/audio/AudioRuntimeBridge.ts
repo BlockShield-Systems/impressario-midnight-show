@@ -49,6 +49,10 @@ import {
   WORLD_SECTIONS
 } from "../world/WorldLayout";
 
+import {
+  getWorldSectionIndex
+} from "../world/SectionOwnership";
+
 interface SectionAudioAssignment {
   readonly section: AudioSectionId;
   readonly music: AudioAssetId;
@@ -190,6 +194,10 @@ export class AudioRuntimeBridge {
 
   private sectionIndex = -1;
   private sectionLoadGeneration = 0;
+  private sectionEnterCount = 0;
+  private sectionExitCount = 0;
+  private sectionTransitionCount = 0;
+  private previousSectionId: string | null = null;
   private movementVoiceCuePlayed = false;
 
   private readonly playedVoice =
@@ -254,6 +262,27 @@ export class AudioRuntimeBridge {
     );
 
     this.updateSection(true);
+  }
+
+  public getSectionDebugSnapshot() {
+    return {
+      previousSectionId:
+        this.previousSectionId,
+      currentSectionId:
+        this.sectionIndex >= 0
+          ? WORLD_SECTIONS[
+              this.sectionIndex
+            ]?.id ?? null
+          : null,
+      sectionEnterCount:
+        this.sectionEnterCount,
+      sectionExitCount:
+        this.sectionExitCount,
+      sectionTransitionCount:
+        this.sectionTransitionCount,
+      playedVoiceCount:
+        this.playedVoice.size
+    };
   }
 
   public update(
@@ -484,14 +513,14 @@ export class AudioRuntimeBridge {
     immediate: boolean,
     force = false
   ): void {
-    const nextIndex = Math.max(
-      0,
-      WORLD_SECTIONS.findIndex(
-        section =>
-          this.player.x >= section.startX &&
-          this.player.x < section.endX
-      )
-    );
+    const nextIndex =
+      getWorldSectionIndex(
+        this.player.x
+      );
+
+    if (nextIndex < 0) {
+      return;
+    }
 
     if (
       !force &&
@@ -502,6 +531,21 @@ export class AudioRuntimeBridge {
 
     const previous =
       this.sectionIndex;
+    const genuineSectionChange =
+      nextIndex !== previous;
+
+    if (genuineSectionChange) {
+      this.previousSectionId =
+        previous >= 0
+          ? WORLD_SECTIONS[previous]?.id ?? null
+          : null;
+      this.sectionEnterCount += 1;
+
+      if (previous >= 0) {
+        this.sectionExitCount += 1;
+        this.sectionTransitionCount += 1;
+      }
+    }
 
     this.sectionIndex = nextIndex;
 

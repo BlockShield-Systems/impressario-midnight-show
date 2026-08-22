@@ -551,6 +551,10 @@ export class AudioDirector {
       id,
       sound,
       setGain: gain => {
+        if (cleaned) {
+          return;
+        }
+
         managed.gain =
           Phaser.Math.Clamp(
             gain,
@@ -563,6 +567,10 @@ export class AudioDirector {
         );
       },
       stop: () => {
+        if (cleaned) {
+          return;
+        }
+
         sound.stop();
         cleanup("stop");
       }

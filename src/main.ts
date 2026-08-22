@@ -37,9 +37,19 @@ import {
 } from "./world/MovementRouteBounds";
 import {
   WORLD_HEIGHT,
+  WORLD_SECTIONS,
   WORLD_SOLIDS,
   WORLD_WIDTH
 } from "./world/WorldLayout";
+import {
+  getWorldSection
+} from "./world/SectionOwnership";
+import {
+  WORLD_ENEMY_SPAWNS
+} from "./world/WorldEnemies";
+import {
+  WORLD_HAZARDS
+} from "./world/WorldHazards";
 import {
   getWorldCheckpoint,
   getWorldGate,
@@ -344,9 +354,20 @@ interface CollisionContacts {
 }
 
 class CollisionWorld {
+  private collisionChecks = 0;
+
   public constructor(
     private readonly solids: Phaser.Geom.Rectangle[]
   ) {}
+
+  public getDebugSnapshot() {
+    return {
+      collisionChecks:
+        this.collisionChecks,
+      solidCount:
+        this.solids.length
+    };
+  }
 
   public addSolid(
     solid: Phaser.Geom.Rectangle
@@ -454,6 +475,8 @@ class CollisionWorld {
     body: KinematicBody,
     solid: Phaser.Geom.Rectangle
   ): boolean {
+    this.collisionChecks += 1;
+
     return (
       body.x < solid.right &&
       body.x + body.width > solid.left &&
@@ -924,6 +947,8 @@ class GameScene extends Phaser.Scene {
   private fixedStepInitialized = false;
   private movementCameraRestricted = false;
   private timingObserver: PerformanceObserver | null = null;
+  private qaBoundaryTraversalActive = false;
+  private readonly qaRuntimeErrors: string[] = [];
   private readonly timingMetrics = {
     startedAt: 0,
     frames: 0,
@@ -1013,6 +1038,14 @@ class GameScene extends Phaser.Scene {
     if (QA_RUNTIME_INSPECTION) {
       this.timingMetrics.startedAt =
         performance.now();
+      window.addEventListener(
+        "error",
+        this.recordQaWindowError
+      );
+      window.addEventListener(
+        "unhandledrejection",
+        this.recordQaRejection
+      );
       this.timingMetrics.playerStartX =
         this.player.x;
 
@@ -1234,6 +1267,20 @@ class GameScene extends Phaser.Scene {
                 "getDebugSnapshot"
               ]
             >;
+          __IMPRESSARIO_BOUNDARY_QA__?: {
+            readonly boundaries:
+              readonly number[];
+            setPlayerLocation(
+              x: number,
+              y: number
+            ): void;
+            snapshot():
+              ReturnType<
+                GameScene[
+                  "getBoundaryDebugSnapshot"
+                ]
+              >;
+          };
         };
 
       debugWindow
@@ -1247,11 +1294,60 @@ class GameScene extends Phaser.Scene {
               this.getTimingDebugSnapshot()
           });
 
+      debugWindow
+        .__IMPRESSARIO_BOUNDARY_QA__ = {
+          boundaries:
+            WORLD_SECTIONS
+              .slice(0, -1)
+              .map(section => section.endX),
+          setPlayerLocation: (
+            x: number,
+            y: number
+          ): void => {
+            if (
+              !Number.isFinite(x) ||
+              !Number.isFinite(y)
+            ) {
+              throw new Error(
+                "QA player location must be finite"
+              );
+            }
+
+            this.qaBoundaryTraversalActive = true;
+            this.player.x = clamp(
+              x,
+              0,
+              WORLD_WIDTH -
+                this.player.width
+            );
+            this.player.y = clamp(
+              y,
+              0,
+              WORLD_HEIGHT -
+                this.player.height
+            );
+            this.player.velocityX = 0;
+            this.player.velocityY = 0;
+          },
+          snapshot: () =>
+            this.getBoundaryDebugSnapshot()
+        };
+
       this.events.once(
         Phaser.Scenes.Events.SHUTDOWN,
         () => {
           delete debugWindow
             .__IMPRESSARIO_AUDIO_DEBUG__;
+          delete debugWindow
+            .__IMPRESSARIO_BOUNDARY_QA__;
+          window.removeEventListener(
+            "error",
+            this.recordQaWindowError
+          );
+          window.removeEventListener(
+            "unhandledrejection",
+            this.recordQaRejection
+          );
           this.timingObserver?.disconnect();
           this.timingObserver = null;
         }
@@ -1350,59 +1446,67 @@ class GameScene extends Phaser.Scene {
     const frameDelta =
       fixedFrame.acceptedSeconds;
 
-    this.playerHealth.update(frameDelta);
-
-    if (this.playerHealth.controlsLocked) {
-      this.accumulator = 0;
-    } else {
-      let consumeInputEdges = true;
-
-      for (
-        let step = 0;
-        step < fixedFrame.steps;
-        step += 1
-      ) {
-        this.player.fixedUpdate(
-          FIXED_TIMESTEP_SECONDS,
-          this.playerInput.snapshot(
-            consumeInputEdges
-          )
-        );
-
-        consumeInputEdges = false;
-      }
-
+    if (this.qaBoundaryTraversalActive) {
       this.accumulator =
         fixedFrame.accumulatorSeconds;
+    } else {
+      this.playerHealth.update(frameDelta);
+
+      if (this.playerHealth.controlsLocked) {
+        this.accumulator = 0;
+      } else {
+        let consumeInputEdges = true;
+
+        for (
+          let step = 0;
+          step < fixedFrame.steps;
+          step += 1
+        ) {
+          this.player.fixedUpdate(
+            FIXED_TIMESTEP_SECONDS,
+            this.playerInput.snapshot(
+              consumeInputEdges
+            )
+          );
+
+          consumeInputEdges = false;
+        }
+
+        this.accumulator =
+          fixedFrame.accumulatorSeconds;
+      }
     }
 
     this.updateCameraBounds();
 
-    if (
-      isBelowMovementRoute(
-        this.player.centerX,
-        this.player.y
-      )
-    ) {
-      this.playerHealth.fallOut();
+    if (!this.qaBoundaryTraversalActive) {
+      if (
+        isBelowMovementRoute(
+          this.player.centerX,
+          this.player.y
+        )
+      ) {
+        this.playerHealth.fallOut();
+      }
+
+      this.combatSystem.update(frameDelta);
+      this.stagehandSystem.update(frameDelta);
+      this.cardThrowerSystem.update(frameDelta);
+      this.combatHazardSystem.update();
+      this.mainStageEncounterSystem.update(frameDelta);
+      this.galleryGauntletEncounterSystem.update(frameDelta);
+      this.spotlightVaultEncounterSystem.update(frameDelta);
+      this.magicSystem.update(frameDelta);
+      this.cardSanctumEncounterSystem.update(frameDelta);
+      this.royalBoxEncounterSystem.update(frameDelta);
+      this.mirrorCoreSystem.update(frameDelta);
+      this.mirrorConductorSystem.update(frameDelta);
+
+      this.updateEncounter();
+      this.updateGrandGallery();
     }
 
-    this.combatSystem.update(frameDelta);
     this.playerView.update(frameDelta);
-    this.stagehandSystem.update(frameDelta);
-    this.cardThrowerSystem.update(frameDelta);
-    this.combatHazardSystem.update();
-    this.mainStageEncounterSystem.update(frameDelta);
-    this.galleryGauntletEncounterSystem.update(frameDelta);
-    this.spotlightVaultEncounterSystem.update(frameDelta);
-    this.magicSystem.update(frameDelta);
-    this.cardSanctumEncounterSystem.update(frameDelta);
-    this.royalBoxEncounterSystem.update(frameDelta);
-    this.mirrorCoreSystem.update(frameDelta);
-    this.mirrorConductorSystem.update(frameDelta);
-
-    this.updateEncounter();
-    this.updateGrandGallery();
 
     this.audioBridge.update(frameDelta);
     this.audioDirector.update(frameDelta);
@@ -1453,6 +1557,106 @@ class GameScene extends Phaser.Scene {
       this.accumulator = 0;
       this.fixedStepInitialized = false;
     };
+
+  private readonly recordQaWindowError = (
+    event: ErrorEvent
+  ): void => {
+    this.qaRuntimeErrors.push(
+      event.error instanceof Error
+        ? event.error.message
+        : event.message
+    );
+  };
+
+  private readonly recordQaRejection = (
+    event: PromiseRejectionEvent
+  ): void => {
+    this.qaRuntimeErrors.push(
+      event.reason instanceof Error
+        ? event.reason.message
+        : String(event.reason)
+    );
+  };
+
+  private getBoundaryDebugSnapshot() {
+    const clock = this.time as
+      Phaser.Time.Clock & {
+        readonly _active:
+          readonly Phaser.Time.TimerEvent[];
+        readonly _pendingInsertion:
+          readonly Phaser.Time.TimerEvent[];
+        readonly _pendingRemoval:
+          readonly Phaser.Time.TimerEvent[];
+      };
+    const tweenManager =
+      this.tweens as
+        Phaser.Tweens.TweenManager & {
+          readonly tweens:
+            readonly Phaser.Tweens.Tween[];
+        };
+    const section =
+      getWorldSection(this.player.x);
+    const sceneEventNames =
+      this.events.eventNames();
+    const activeListeners =
+      sceneEventNames.reduce(
+        (total, eventName) =>
+          total +
+          this.events.listenerCount(
+            eventName
+          ),
+        0
+      );
+
+    return {
+      player: {
+        x: this.player.x,
+        y: this.player.y,
+        velocityX:
+          this.player.velocityX,
+        velocityY:
+          this.player.velocityY,
+        controllable:
+          !this.playerHealth.controlsLocked
+      },
+      ...this.audioBridge
+        .getSectionDebugSnapshot(),
+      cameraSectionId:
+        section?.id ?? null,
+      movementCameraRestricted:
+        this.movementCameraRestricted,
+      activeListeners,
+      activeTimers:
+        clock._active.length +
+        clock._pendingInsertion.length -
+        clock._pendingRemoval.length,
+      activeTweens:
+        tweenManager.tweens.length,
+      sceneObjects:
+        this.children.list.length,
+      enemies:
+        WORLD_ENEMY_SPAWNS.length,
+      hazards:
+        WORLD_HAZARDS.length,
+      ...this.collisionWorld
+        .getDebugSnapshot(),
+      checkpoint:
+        this.playerHealth
+          .getDebugSnapshot(),
+      soundtrack:
+        this.musicDirector
+          .getDebugSnapshot(),
+      audio:
+        this.audioDirector
+          .getDebugSnapshot(),
+      timing:
+        this.getTimingDebugSnapshot(),
+      accumulator:
+        this.accumulator,
+      runtimeErrors:
+        [...this.qaRuntimeErrors]
+    };
+  }
 
   private getTimingDebugSnapshot() {
     const metrics = this.timingMetrics;

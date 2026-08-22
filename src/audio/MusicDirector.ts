@@ -28,10 +28,24 @@ export class MusicDirector {
   private readonly soundtrackRequests =
     new Map<AudioAssetId, number>();
 
+  private soundtrackTransitionCount = 0;
+
+  private readonly activeFades =
+    new Map<
+      ManagedAudioHandle,
+      Phaser.Tweens.Tween
+    >();
+
   public constructor(
     private readonly scene: Phaser.Scene,
     private readonly audio: AudioDirector
-  ) {}
+  ) {
+    scene.events.once(
+      Phaser.Scenes.Events.SHUTDOWN,
+      this.destroy,
+      this
+    );
+  }
 
   public setMusic(
     id: AudioAssetId,
@@ -47,6 +61,7 @@ export class MusicDirector {
     }
 
     this.musicId = id;
+    this.soundtrackTransitionCount += 1;
 
     this.crossfade(
       "music",
@@ -77,6 +92,8 @@ export class MusicDirector {
     readonly currentAmbience: AudioAssetId | null;
     readonly currentBossThemePart: 1 | 2 | 3 | null;
     readonly soundtrackRequests: Readonly<Record<string, number>>;
+    readonly soundtrackTransitionCount: number;
+    readonly activeCrossfades: number;
   } {
     const phaseMatch =
       this.musicId?.match(
@@ -95,7 +112,11 @@ export class MusicDirector {
       soundtrackRequests:
         Object.fromEntries(
           this.soundtrackRequests
-        )
+        ),
+      soundtrackTransitionCount:
+        this.soundtrackTransitionCount,
+      activeCrossfades:
+        this.activeFades.size
     };
   }
 
@@ -123,6 +144,8 @@ export class MusicDirector {
         ? this.music
         : this.ambience;
 
+    this.stopFadingHandles(id);
+
     const next =
       this.audio.play(id, {
         gain: 0,
@@ -132,6 +155,11 @@ export class MusicDirector {
     if (!next) {
       return;
     }
+
+    next.sound.once(
+      Phaser.Sound.Events.DESTROY,
+      () => this.cancelFade(next)
+    );
 
     if (kind === "music") {
       this.music = next;
@@ -144,18 +172,25 @@ export class MusicDirector {
     } else {
       const fade = { gain: 0 };
 
-      this.scene.tweens.add({
-        targets: fade,
-        gain: 1,
-        duration,
-        ease: "Sine.InOut",
-        onUpdate: () => {
-          next.setGain(fade.gain);
-        },
-        onComplete: () => {
-          next.setGain(1);
-        }
-      });
+      const tween =
+        this.scene.tweens.add({
+          targets: fade,
+          gain: 1,
+          duration,
+          ease: "Sine.InOut",
+          onUpdate: () => {
+            next.setGain(fade.gain);
+          },
+          onComplete: () => {
+            this.activeFades.delete(next);
+            next.setGain(1);
+          },
+          onStop: () => {
+            this.activeFades.delete(next);
+          }
+        });
+
+      this.activeFades.set(next, tween);
     }
 
     if (previous) {
@@ -172,19 +207,64 @@ export class MusicDirector {
       return;
     }
 
-    const fade = { gain: 1 };
+    this.cancelFade(handle);
 
-    this.scene.tweens.add({
-      targets: fade,
-      gain: 0,
-      duration,
-      ease: "Sine.InOut",
-      onUpdate: () => {
-        handle.setGain(fade.gain);
-      },
-      onComplete: () => {
-        handle.stop();
-      }
-    });
+    const fade = { gain: 1 };
+    const tween =
+      this.scene.tweens.add({
+        targets: fade,
+        gain: 0,
+        duration,
+        ease: "Sine.InOut",
+        onUpdate: () => {
+          handle.setGain(fade.gain);
+        },
+        onComplete: () => {
+          this.activeFades.delete(handle);
+          handle.stop();
+        },
+        onStop: () => {
+          this.activeFades.delete(handle);
+        }
+      });
+
+    this.activeFades.set(handle, tween);
   }
+
+  private stopFadingHandles(
+    id: AudioAssetId
+  ): void {
+    for (const handle of [
+      ...this.activeFades.keys()
+    ]) {
+      if (handle.id !== id) {
+        continue;
+      }
+
+      this.cancelFade(handle);
+      handle.stop();
+    }
+  }
+
+  private cancelFade(
+    handle: ManagedAudioHandle
+  ): void {
+    const tween =
+      this.activeFades.get(handle);
+
+    if (!tween) {
+      return;
+    }
+
+    this.activeFades.delete(handle);
+    tween.stop();
+  }
+
+  private readonly destroy = (): void => {
+    for (const handle of [
+      ...this.activeFades.keys()
+    ]) {
+      this.cancelFade(handle);
+    }
+  };
 }
