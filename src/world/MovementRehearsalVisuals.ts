@@ -1,9 +1,12 @@
 import Phaser from "phaser";
 
 import {
-  WORLD_SOLIDS
+  WORLD_ONE_WAY_PLATFORMS,
+  WORLD_SOLIDS,
+  WORLD_WALL_JUMP_SURFACES
 } from "./WorldLayout";
 import {
+  MOVEMENT_DECORATIVE_COLUMNS,
   MOVEMENT_ENVIRONMENT_FOREGROUND_DEPTH,
   MOVEMENT_TUTORIAL_MARKER_DEPTH,
   MOVEMENT_TUTORIAL_SIGNAGE_DEPTH,
@@ -16,11 +19,24 @@ const SECTION_START = 0;
 const SECTION_END = 5376;
 const STAGE_FLOOR_Y = 326;
 
+const inMovementRehearsal = (
+  rectangle: {
+    readonly x: number;
+    readonly width: number;
+  }
+): boolean =>
+  rectangle.x < SECTION_END &&
+  rectangle.x + rectangle.width > SECTION_START;
+
 const REHEARSAL_SOLIDS =
-  WORLD_SOLIDS.filter(
-    solid =>
-      solid.x < SECTION_END &&
-      solid.x + solid.width > SECTION_START
+  WORLD_SOLIDS.filter(inMovementRehearsal);
+const REHEARSAL_ONE_WAY_PLATFORMS =
+  WORLD_ONE_WAY_PLATFORMS.filter(
+    inMovementRehearsal
+  );
+const REHEARSAL_WALL_JUMP_SURFACES =
+  WORLD_WALL_JUMP_SURFACES.filter(
+    inMovementRehearsal
   );
 
 export class MovementRehearsalVisuals {
@@ -425,59 +441,52 @@ export class MovementRehearsalVisuals {
       .setDepth(-8)
       .setScrollFactor(1);
 
-    for (
-      let x = 0;
-      x < SECTION_END;
-      x += 640
-    ) {
+    // Decorative columns deliberately recede: broad shadow shapes,
+    // low-contrast inset seams, and no bright top/side collision edge.
+    for (const column of
+      MOVEMENT_DECORATIVE_COLUMNS) {
+      const x = column.x;
+
       architecture.fillStyle(
-        0x160a13,
-        1
+        0x0b0710,
+        0.72
       );
 
-      architecture.fillRect(
+      architecture.fillRoundedRect(
         x,
-        0,
-        22,
-        STAGE_FLOOR_Y
+        column.y,
+        column.width,
+        column.height,
+        14
       );
 
       architecture.lineStyle(
-        3,
-        0xa97932,
-        0.85
+        2,
+        0x50304f,
+        0.34
       );
 
-      architecture.lineBetween(
+      architecture.strokeRoundedRect(
         x + 5,
-        0,
-        x + 5,
-        STAGE_FLOOR_Y
-      );
-
-      architecture.lineBetween(
-        x + 17,
-        0,
-        x + 17,
-        STAGE_FLOOR_Y
+        column.y + 6,
+        column.width - 10,
+        column.height - 12,
+        11
       );
 
       for (
-        let y = 44;
-        y < STAGE_FLOOR_Y;
-        y += 46
+        let y = 58;
+        y < STAGE_FLOOR_Y - 30;
+        y += 48
       ) {
-        architecture.lineStyle(
-          1,
-          0xe7bd5a,
-          0.42
+        architecture.fillStyle(
+          0x6a4568,
+          0.2
         );
-
-        architecture.lineBetween(
-          x + 5,
+        architecture.fillCircle(
+          x + column.width * 0.5,
           y,
-          x + 17,
-          y + 14
+          1.5
         );
       }
     }
@@ -637,6 +646,107 @@ export class MovementRehearsalVisuals {
         }
       }
     }
+
+    // One-way surfaces are lightweight cyan rails with an open underside.
+    // Their authored metadata, not this color, controls collision behavior.
+    for (const platform of
+      REHEARSAL_ONE_WAY_PLATFORMS) {
+      foreground.fillStyle(
+        0x102a33,
+        0.96
+      );
+      foreground.fillRoundedRect(
+        platform.x,
+        platform.y,
+        platform.width,
+        platform.height,
+        5
+      );
+      foreground.fillStyle(
+        0x74e8ef,
+        1
+      );
+      foreground.fillRect(
+        platform.x,
+        platform.y,
+        platform.width,
+        3
+      );
+      foreground.lineStyle(
+        1,
+        0x8cf1f5,
+        0.78
+      );
+      for (
+        let x = platform.x + 12;
+        x < platform.x + platform.width - 5;
+        x += 22
+      ) {
+        foreground.lineBetween(
+          x - 5,
+          platform.y + 9,
+          x,
+          platform.y + 5
+        );
+        foreground.lineBetween(
+          x,
+          platform.y + 5,
+          x + 5,
+          platform.y + 9
+        );
+      }
+    }
+
+    // Wall-jump surfaces are solid gold-edged progression rails with
+    // repeated grip bars, distinct from both scenery and combat gates.
+    for (const wall of
+      REHEARSAL_WALL_JUMP_SURFACES) {
+      foreground.fillStyle(
+        0x291722,
+        1
+      );
+      foreground.fillRoundedRect(
+        wall.x,
+        wall.y,
+        wall.width,
+        wall.height,
+        4
+      );
+      foreground.lineStyle(
+        3,
+        0xe5b94f,
+        0.96
+      );
+      foreground.lineBetween(
+        wall.x + 2,
+        wall.y,
+        wall.x + 2,
+        wall.y + wall.height
+      );
+      foreground.lineBetween(
+        wall.x + wall.width - 2,
+        wall.y,
+        wall.x + wall.width - 2,
+        wall.y + wall.height
+      );
+      for (
+        let y = wall.y + 14;
+        y < wall.y + wall.height - 5;
+        y += 22
+      ) {
+        foreground.lineStyle(
+          2,
+          0x78e4eb,
+          0.82
+        );
+        foreground.lineBetween(
+          wall.x + 6,
+          y,
+          wall.x + wall.width - 6,
+          y
+        );
+      }
+    }
   }
 
   private createMovementLanguage(
@@ -688,29 +798,60 @@ export class MovementRehearsalVisuals {
         0.82
       );
 
-      const markerTop =
-        sign.y + sign.height + 3;
-
-      marker.lineBetween(
-        sign.x,
-        markerTop,
-        sign.x,
-        markerTop + 10
-      );
+      const markerX = sign.markerX;
+      const markerY = sign.markerY;
 
       marker.fillStyle(
         0xf0c65c,
         0.95
       );
 
-      marker.fillTriangle(
-        sign.x,
-        markerTop + 16,
-        sign.x - 5,
-        markerTop + 9,
-        sign.x + 5,
-        markerTop + 9
-      );
+      if (sign.direction === "up") {
+        marker.lineBetween(
+          markerX,
+          markerY + 16,
+          markerX,
+          markerY
+        );
+        marker.fillTriangle(
+          markerX,
+          markerY - 7,
+          markerX - 5,
+          markerY + 1,
+          markerX + 5,
+          markerY + 1
+        );
+      } else if (sign.direction === "down") {
+        marker.lineBetween(
+          markerX,
+          markerY,
+          markerX,
+          markerY + 16
+        );
+        marker.fillTriangle(
+          markerX,
+          markerY + 23,
+          markerX - 5,
+          markerY + 15,
+          markerX + 5,
+          markerY + 15
+        );
+      } else {
+        marker.lineBetween(
+          markerX,
+          markerY,
+          markerX + 18,
+          markerY
+        );
+        marker.fillTriangle(
+          markerX + 25,
+          markerY,
+          markerX + 17,
+          markerY - 5,
+          markerX + 17,
+          markerY + 5
+        );
+      }
     }
 
     scene.add.text(

@@ -75,24 +75,32 @@ const readField = (
   return field.__value;
 };
 
-const collisions = layer.entityInstances
-  .filter(
-    entity =>
-      entity.__identifier === "CollisionRect"
-  )
-  .map(entity => ({
-    x: Number(entity.px?.[0]),
-    y: Number(entity.px?.[1]),
-    width: Number(entity.width),
-    height: Number(entity.height)
-  }))
-  .sort(
-    (left, right) =>
-      left.x - right.x ||
-      left.y - right.y ||
-      left.width - right.width ||
-      left.height - right.height
-  );
+const readRectangles = identifier =>
+  layer.entityInstances
+    .filter(
+      entity =>
+        entity.__identifier === identifier
+    )
+    .map(entity => ({
+      x: Number(entity.px?.[0]),
+      y: Number(entity.px?.[1]),
+      width: Number(entity.width),
+      height: Number(entity.height)
+    }))
+    .sort(
+      (left, right) =>
+        left.x - right.x ||
+        left.y - right.y ||
+        left.width - right.width ||
+        left.height - right.height
+    );
+
+const collisions =
+  readRectangles("CollisionRect");
+const oneWayPlatforms =
+  readRectangles("OneWayPlatform");
+const wallJumpSurfaces =
+  readRectangles("WallJumpSurface");
 
 if (collisions.length < 80) {
   throw new Error(
@@ -100,9 +108,25 @@ if (collisions.length < 80) {
   );
 }
 
+if (oneWayPlatforms.length < 1) {
+  throw new Error(
+    "Expected authored one-way platforms."
+  );
+}
+
+if (wallJumpSurfaces.length < 1) {
+  throw new Error(
+    "Expected authored wall-jump surfaces."
+  );
+}
+
 const collisionKeys = new Set();
 
-for (const collision of collisions) {
+for (const collision of [
+  ...collisions,
+  ...oneWayPlatforms,
+  ...wallJumpSurfaces
+]) {
   const values = [
     collision.x,
     collision.y,
@@ -284,6 +308,10 @@ lines.push(
   "  readonly height: number;",
   "}",
   "",
+  "export interface WorldOneWayPlatform extends WorldSolid {}",
+  "",
+  "export interface WorldWallJumpSurface extends WorldSolid {}",
+  "",
   "export interface WorldSection {",
   "  readonly id: string;",
   "  readonly startX: number;",
@@ -303,6 +331,40 @@ for (const collision of collisions) {
       `y: ${collision.y}, ` +
       `width: ${collision.width}, ` +
       `height: ${collision.height} ` +
+      "},"
+  );
+}
+
+lines.push(
+  "] as const;",
+  "",
+  "export const WORLD_ONE_WAY_PLATFORMS: readonly WorldOneWayPlatform[] = ["
+);
+
+for (const platform of oneWayPlatforms) {
+  lines.push(
+    "  { " +
+      `x: ${platform.x}, ` +
+      `y: ${platform.y}, ` +
+      `width: ${platform.width}, ` +
+      `height: ${platform.height} ` +
+      "},"
+  );
+}
+
+lines.push(
+  "] as const;",
+  "",
+  "export const WORLD_WALL_JUMP_SURFACES: readonly WorldWallJumpSurface[] = ["
+);
+
+for (const surface of wallJumpSurfaces) {
+  lines.push(
+    "  { " +
+      `x: ${surface.x}, ` +
+      `y: ${surface.y}, ` +
+      `width: ${surface.width}, ` +
+      `height: ${surface.height} ` +
       "},"
   );
 }
@@ -356,7 +418,11 @@ if (checkOnly) {
   console.log(
     `LDtk runtime valid: ${
       collisions.length
-    } collisions, ${
+    } solids, ${
+      oneWayPlatforms.length
+    } one-way platforms, ${
+      wallJumpSurfaces.length
+    } wall-jump surfaces, ${
       sections.length
     } sections, ${level.pxWid}x${level.pxHei}; ` +
     "visual metadata valid."
@@ -372,7 +438,9 @@ if (checkOnly) {
     `Generated ${path.relative(
       root,
       outputPath
-    )}: ${collisions.length} collisions, ` +
+    )}: ${collisions.length} solids, ` +
+    `${oneWayPlatforms.length} one-way platforms, ` +
+    `${wallJumpSurfaces.length} wall-jump surfaces, ` +
     `${sections.length} visual sections.`
   );
 }

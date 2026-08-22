@@ -1,6 +1,6 @@
 import {
   WORLD_SECTIONS
-} from "./WorldLayout";
+} from "./WorldLayout.ts";
 
 const MOVEMENT_REHEARSAL =
   WORLD_SECTIONS.find(

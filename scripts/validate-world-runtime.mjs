@@ -53,20 +53,46 @@ const collisions =
       entity.__identifier === "CollisionRect"
   );
 
+const oneWayPlatforms =
+  layer.entityInstances.filter(
+    entity =>
+      entity.__identifier === "OneWayPlatform"
+  );
+
+const wallJumpSurfaces =
+  layer.entityInstances.filter(
+    entity =>
+      entity.__identifier === "WallJumpSurface"
+  );
+
 const sections =
   layer.entityInstances.filter(
     entity =>
       entity.__identifier === "Section"
   );
 
-if (collisions.length !== 287) {
+if (collisions.length !== 269) {
   throw new Error(
-    `Expected 287 collisions, got ${collisions.length}.`
+    `Expected 269 standard solids, got ${collisions.length}.`
   );
 }
 
-const movementRehearsalCollisions =
-  collisions.filter(
+if (oneWayPlatforms.length !== 7) {
+  throw new Error(
+    `Expected 7 one-way platforms, got ${oneWayPlatforms.length}.`
+  );
+}
+
+if (wallJumpSurfaces.length !== 8) {
+  throw new Error(
+    `Expected 8 wall-jump surfaces, got ${wallJumpSurfaces.length}.`
+  );
+}
+
+const movementRehearsalCollisions = [
+  ...collisions,
+  ...wallJumpSurfaces
+].filter(
     entity =>
       entity.__worldX >= 0 &&
       entity.__worldX < 5376
@@ -99,6 +125,67 @@ for (const [x, y, width, height] of [
       `MovementRehearsal platform ${x},${y},${width},${height} is missing.`
     );
   }
+}
+
+for (const [x, y, width, height] of [
+  [720, 270, 144, 14],
+  [944, 238, 144, 14],
+  [1136, 214, 144, 14],
+  [2960, 182, 160, 14],
+  [3200, 190, 320, 14],
+  [3680, 182, 160, 14],
+  [4256, 246, 128, 14]
+]) {
+  if (
+    !oneWayPlatforms.some(
+      entity =>
+        entity.__worldX === x &&
+        entity.__worldY === y &&
+        entity.width === width &&
+        entity.height === height
+    )
+  ) {
+    throw new Error(
+      `One-way platform ${x},${y},${width},${height} is missing.`
+    );
+  }
+}
+
+for (const [x, y, width, height] of [
+  [1344, 160, 24, 126],
+  [1488, 112, 24, 238],
+  [1656, 192, 24, 162],
+  [1792, 128, 24, 290],
+  [2016, 230, 24, 160],
+  [2160, 150, 24, 240],
+  [4160, 176, 24, 150],
+  [4384, 112, 24, 214]
+]) {
+  if (
+    !wallJumpSurfaces.some(
+      entity =>
+        entity.__worldX === x &&
+        entity.__worldY === y &&
+        entity.width === width &&
+        entity.height === height
+    )
+  ) {
+    throw new Error(
+      `Wall-jump surface ${x},${y},${width},${height} is missing.`
+    );
+  }
+}
+
+if (
+  oneWayPlatforms.some(
+    entity =>
+      entity.__worldX < 0 ||
+      entity.__worldX >= 5376
+  )
+) {
+  throw new Error(
+    "Stage 1 one-way platforms must remain in MovementRehearsal."
+  );
 }
 
 if (
@@ -673,6 +760,6 @@ for (const file of sourceFiles) {
 
 console.log(
   "World runtime valid: 49824x720, " +
-  "287 collisions, 11 LDtk-driven lighting sections, " +
-  "exact MirrorConductor geometry and world end."
+  "269 solids, 7 one-way platforms, 8 wall-jump surfaces, " +
+  "11 LDtk-driven lighting sections, exact MirrorConductor geometry and world end."
 );

@@ -30,6 +30,43 @@ interface CanvasSample {
   readonly nonBlank: boolean;
 }
 
+interface MovementQaSnapshot {
+  readonly player: {
+    readonly x: number;
+    readonly y: number;
+    readonly velocityX: number;
+    readonly velocityY: number;
+    readonly controllable: boolean;
+  };
+  readonly currentSectionId: string | null;
+  readonly cameraSectionId: string | null;
+  readonly movementCameraRestricted: boolean;
+  readonly checkpoint: {
+    readonly checkpointName: string;
+  };
+  readonly soundtrack: {
+    readonly currentSoundtrack: string | null;
+    readonly activeCrossfades: number;
+  };
+  readonly audio: {
+    readonly loadingOwners: number;
+    readonly lastLoadError: string | null;
+  };
+  readonly runtimeErrors: readonly string[];
+}
+
+interface MovementQaHarness {
+  setPlayerLocation(x: number, y: number): void;
+  resumePlayerControl(): void;
+  snapshot(): MovementQaSnapshot;
+}
+
+declare global {
+  interface Window {
+    __IMPRESSARIO_BOUNDARY_QA__?: MovementQaHarness;
+  }
+}
+
 async function sampleCanvas(
   page: Page,
   canvas: Locator
@@ -221,6 +258,63 @@ test.use({
     height: 720
   }
 });
+
+async function beginMovementShow(
+  page: Page
+): Promise<Locator> {
+  await page.goto("/");
+  const overlay = page.locator(
+    ".leaderboard-overlay"
+  );
+  await overlay.locator("input").first().fill(
+    "Movement QA"
+  );
+  await overlay.getByRole("button", {
+    name: /BEGIN THE SHOW/i
+  }).click();
+
+  const canvas = page.locator("canvas");
+  await expect(canvas).toBeVisible({
+    timeout: 20_000
+  });
+  await expect.poll(() => page.evaluate(() =>
+    typeof window.__IMPRESSARIO_BOUNDARY_QA__
+  )).toBe("object");
+  await canvas.click();
+  return canvas;
+}
+
+async function placePlayer(
+  page: Page,
+  x: number,
+  y: number,
+  resume = true
+): Promise<void> {
+  await page.evaluate(([nextX, nextY]) => {
+    window.__IMPRESSARIO_BOUNDARY_QA__
+      ?.setPlayerLocation(nextX, nextY);
+  }, [x, y]);
+  await page.waitForTimeout(120);
+
+  if (resume) {
+    await page.evaluate(() => {
+      window.__IMPRESSARIO_BOUNDARY_QA__
+        ?.resumePlayerControl();
+    });
+    await page.waitForTimeout(80);
+  }
+}
+
+async function movementSnapshot(
+  page: Page
+): Promise<MovementQaSnapshot> {
+  const snapshot = await page.evaluate(() =>
+    window.__IMPRESSARIO_BOUNDARY_QA__
+      ?.snapshot()
+  );
+  expect(snapshot).toBeDefined();
+  return snapshot!;
+}
 
 test(
   "local start stays request-free and opening tutorial remains spatially separated",
@@ -520,5 +614,56 @@ test(
     expect(pageErrors).toEqual([]);
     expect(consoleErrors).toEqual([]);
     expect(failedRequiredResources).toEqual([]);
+  }
+);
+
+test(
+  "MovementRehearsal lessons render without runtime or resource errors",
+  async ({ page }) => {
+    const pageErrors: string[] = [];
+    const consoleErrors: string[] = [];
+
+    page.on("pageerror", error => {
+      pageErrors.push(error.message);
+    });
+    page.on("console", message => {
+      if (message.type() === "error") {
+        consoleErrors.push(message.text());
+      }
+    });
+
+    await beginMovementShow(page);
+
+    const screenshotPositions = [
+      ["jump", 684, 296],
+      ["double-jump", 924, 280],
+      ["drop-through", 1160, 184],
+      ["wall-jump", 1936, 340],
+      ["dash", 2944, 296],
+      ["finale", 4304, 216]
+    ] as const;
+
+    for (const [lesson, x, y] of screenshotPositions) {
+      await placePlayer(page, x, y, false);
+      await expect.poll(async () =>
+        (await movementSnapshot(page)).cameraSectionId
+      ).toBe("MovementRehearsal");
+      await page.screenshot({
+        path:
+          `${RENDERING_SCREENSHOT_DIRECTORY}/movement-${lesson}-stage-1.png`,
+        fullPage: true
+      });
+    }
+
+    const snapshot = await movementSnapshot(page);
+    expect(snapshot.currentSectionId).toBe("MovementRehearsal");
+    expect(snapshot.cameraSectionId).toBe("MovementRehearsal");
+    expect(snapshot.movementCameraRestricted).toBe(true);
+    expect(snapshot.checkpoint.checkpointName).toBe("Movement Rehearsal");
+    expect(snapshot.audio.loadingOwners).toBe(0);
+    expect(snapshot.audio.lastLoadError).toBeNull();
+    expect(snapshot.runtimeErrors).toEqual([]);
+    expect(pageErrors, pageErrors.join("\n")).toEqual([]);
+    expect(consoleErrors, consoleErrors.join("\n")).toEqual([]);
   }
 );

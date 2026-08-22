@@ -11,7 +11,7 @@
   "iid": "49475ace-8d6d-5ace-b9c1-bdfa1f69afc7",
   "jsonVersion": "1.5.3",
   "appBuildId": 50300,
-  "nextUid": 38,
+  "nextUid": 40,
   "identifierStyle": "Capitalize",
   "toc": [],
   "worldLayout": "Free",
@@ -1007,6 +1007,70 @@
             "tilesetUid": null
           }
         ]
+      },
+      {
+        "allowOutOfBounds": true,
+        "doc": "Player-only one-way surface: pass upward, land from above, Down + Jump drops through one surface.",
+        "exportToToc": false,
+        "fillOpacity": 0.32,
+        "hollow": false,
+        "keepAspectRatio": false,
+        "limitBehavior": "DiscardOldOnes",
+        "limitScope": "PerLevel",
+        "lineOpacity": 1,
+        "maxCount": 0,
+        "nineSliceBorders": [],
+        "pivotX": 0,
+        "pivotY": 0,
+        "renderMode": "Rectangle",
+        "resizableX": true,
+        "resizableY": true,
+        "showName": false,
+        "tags": [
+          "Collision",
+          "OneWay"
+        ],
+        "tileRect": null,
+        "tileRenderMode": "Cover",
+        "tilesetId": null,
+        "identifier": "OneWayPlatform",
+        "uid": 38,
+        "color": "#65E4ED",
+        "width": 16,
+        "height": 16,
+        "fieldDefs": []
+      },
+      {
+        "allowOutOfBounds": true,
+        "doc": "Fully solid progression wall authored for readable wall-slide and wall-jump contact.",
+        "exportToToc": false,
+        "fillOpacity": 0.38,
+        "hollow": false,
+        "keepAspectRatio": false,
+        "limitBehavior": "DiscardOldOnes",
+        "limitScope": "PerLevel",
+        "lineOpacity": 1,
+        "maxCount": 0,
+        "nineSliceBorders": [],
+        "pivotX": 0,
+        "pivotY": 0,
+        "renderMode": "Rectangle",
+        "resizableX": true,
+        "resizableY": true,
+        "showName": false,
+        "tags": [
+          "Collision",
+          "WallJump"
+        ],
+        "tileRect": null,
+        "tileRenderMode": "Cover",
+        "tilesetId": null,
+        "identifier": "WallJumpSurface",
+        "uid": 39,
+        "color": "#E6B754",
+        "width": 16,
+        "height": 16,
+        "fieldDefs": []
       }
     ],
     "tilesets": [
@@ -1259,87 +1323,63 @@
               "width": 80
             },
             {
-              "__identifier": "CollisionRect",
+              "__identifier": "OneWayPlatform",
               "__grid": [
                 45,
-                15
+                16
               ],
               "__pivot": [
                 0,
                 0
               ],
               "__tags": [
-                "Collision"
+                "Collision",
+                "OneWay"
               ],
               "__tile": null,
               "__worldX": 720,
-              "__worldY": 246,
-              "defUid": 2,
+              "__worldY": 270,
+              "defUid": 38,
               "fieldInstances": [],
-              "height": 16,
-              "iid": "e4eb1f0b-5496-5559-9916-274536220ee1",
+              "height": 14,
+              "iid": "d7a7ccc8-9e53-5f8a-8264-eb02888c95f7",
               "px": [
                 720,
-                246
+                270
               ],
-              "width": 96
+              "width": 144
             },
             {
-              "__identifier": "CollisionRect",
+              "__identifier": "OneWayPlatform",
               "__grid": [
-                55,
-                12
+                59,
+                14
               ],
               "__pivot": [
                 0,
                 0
               ],
               "__tags": [
-                "Collision"
+                "Collision",
+                "OneWay"
               ],
               "__tile": null,
-              "__worldX": 880,
-              "__worldY": 206,
-              "defUid": 2,
+              "__worldX": 944,
+              "__worldY": 238,
+              "defUid": 38,
               "fieldInstances": [],
-              "height": 16,
-              "iid": "5fe12489-f070-5b1e-8a87-0abb7f6b0c23",
+              "height": 14,
+              "iid": "7a99e544-bd10-5ac2-8825-299013a00d6a",
               "px": [
-                880,
-                206
+                944,
+                238
               ],
-              "width": 96
+              "width": 144
             },
             {
-              "__identifier": "CollisionRect",
+              "__identifier": "OneWayPlatform",
               "__grid": [
-                65,
-                10
-              ],
-              "__pivot": [
-                0,
-                0
-              ],
-              "__tags": [
-                "Collision"
-              ],
-              "__tile": null,
-              "__worldX": 1040,
-              "__worldY": 166,
-              "defUid": 2,
-              "fieldInstances": [],
-              "height": 16,
-              "iid": "b5623b86-016b-5af2-82ad-ad9e53cb7b9a",
-              "px": [
-                1040,
-                166
-              ],
-              "width": 112
-            },
-            {
-              "__identifier": "CollisionRect",
-              "__grid": [
-                76,
+                71,
                 13
               ],
               "__pivot": [
@@ -1347,20 +1387,47 @@
                 0
               ],
               "__tags": [
+                "Collision",
+                "OneWay"
+              ],
+              "__tile": null,
+              "__worldX": 1136,
+              "__worldY": 214,
+              "defUid": 38,
+              "fieldInstances": [],
+              "height": 14,
+              "iid": "1f0d1002-9a58-523f-9c95-ebdb0bef9c6d",
+              "px": [
+                1136,
+                214
+              ],
+              "width": 144
+            },
+            {
+              "__identifier": "CollisionRect",
+              "__grid": [
+                80,
+                0
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
                 "Collision"
               ],
               "__tile": null,
-              "__worldX": 1216,
-              "__worldY": 222,
+              "__worldX": 1280,
+              "__worldY": 0,
               "defUid": 2,
               "fieldInstances": [],
-              "height": 16,
-              "iid": "106cfd00-557b-500d-998c-f3e5a55d61a8",
+              "height": 214,
+              "iid": "ccfa31dc-5976-5fa5-9ef5-3489c69d60d8",
               "px": [
-                1216,
-                222
+                1280,
+                0
               ],
-              "width": 128
+              "width": 24
             },
             {
               "__identifier": "CollisionRect",
@@ -1389,7 +1456,7 @@
               "width": 144
             },
             {
-              "__identifier": "CollisionRect",
+              "__identifier": "WallJumpSurface",
               "__grid": [
                 84,
                 10
@@ -1399,15 +1466,16 @@
                 0
               ],
               "__tags": [
-                "Collision"
+                "Collision",
+                "WallJump"
               ],
               "__tile": null,
               "__worldX": 1344,
               "__worldY": 160,
-              "defUid": 2,
+              "defUid": 39,
               "fieldInstances": [],
               "height": 126,
-              "iid": "99a1079a-c16b-5c4a-93a8-c5c20e9c2305",
+              "iid": "0eaeb58b-7e2b-59fc-9d43-01d4c52d1e82",
               "px": [
                 1344,
                 160
@@ -1415,7 +1483,7 @@
               "width": 24
             },
             {
-              "__identifier": "CollisionRect",
+              "__identifier": "WallJumpSurface",
               "__grid": [
                 93,
                 7
@@ -1425,15 +1493,16 @@
                 0
               ],
               "__tags": [
-                "Collision"
+                "Collision",
+                "WallJump"
               ],
               "__tile": null,
               "__worldX": 1488,
               "__worldY": 112,
-              "defUid": 2,
+              "defUid": 39,
               "fieldInstances": [],
               "height": 238,
-              "iid": "f7eb3335-6f53-500e-80d3-0e4f1d835bb8",
+              "iid": "311c5d67-0075-5a8e-a93a-ac5162a84632",
               "px": [
                 1488,
                 112
@@ -1467,7 +1536,7 @@
               "width": 144
             },
             {
-              "__identifier": "CollisionRect",
+              "__identifier": "WallJumpSurface",
               "__grid": [
                 103,
                 12
@@ -1477,15 +1546,16 @@
                 0
               ],
               "__tags": [
-                "Collision"
+                "Collision",
+                "WallJump"
               ],
               "__tile": null,
               "__worldX": 1656,
               "__worldY": 192,
-              "defUid": 2,
+              "defUid": 39,
               "fieldInstances": [],
               "height": 162,
-              "iid": "933db70e-09ce-5ab6-8837-eb82b06b7711",
+              "iid": "dc15eed3-b5b6-5f84-b941-eea10ec2184b",
               "px": [
                 1656,
                 192
@@ -1493,7 +1563,7 @@
               "width": 24
             },
             {
-              "__identifier": "CollisionRect",
+              "__identifier": "WallJumpSurface",
               "__grid": [
                 112,
                 8
@@ -1503,15 +1573,16 @@
                 0
               ],
               "__tags": [
-                "Collision"
+                "Collision",
+                "WallJump"
               ],
               "__tile": null,
               "__worldX": 1792,
               "__worldY": 128,
-              "defUid": 2,
+              "defUid": 39,
               "fieldInstances": [],
               "height": 290,
-              "iid": "e6a6e8db-0629-51be-97f4-bfa3ba4436a6",
+              "iid": "0070291d-8fc7-59e9-9b83-cc8d4a01bd37",
               "px": [
                 1792,
                 128
@@ -1571,7 +1642,7 @@
               "width": 176
             },
             {
-              "__identifier": "CollisionRect",
+              "__identifier": "WallJumpSurface",
               "__grid": [
                 126,
                 14
@@ -1581,15 +1652,16 @@
                 0
               ],
               "__tags": [
-                "Collision"
+                "Collision",
+                "WallJump"
               ],
               "__tile": null,
               "__worldX": 2016,
               "__worldY": 230,
-              "defUid": 2,
+              "defUid": 39,
               "fieldInstances": [],
               "height": 160,
-              "iid": "a6682bd3-b46b-5da8-bc58-df5d69068f71",
+              "iid": "4ebeb882-d315-54e0-8ef8-bfbd10c05e2b",
               "px": [
                 2016,
                 230
@@ -1597,7 +1669,7 @@
               "width": 24
             },
             {
-              "__identifier": "CollisionRect",
+              "__identifier": "WallJumpSurface",
               "__grid": [
                 135,
                 9
@@ -1607,15 +1679,16 @@
                 0
               ],
               "__tags": [
-                "Collision"
+                "Collision",
+                "WallJump"
               ],
               "__tile": null,
               "__worldX": 2160,
               "__worldY": 150,
-              "defUid": 2,
+              "defUid": 39,
               "fieldInstances": [],
               "height": 240,
-              "iid": "d05347e8-df09-58c3-bf90-600e69dff8db",
+              "iid": "0e573d97-3829-5c00-8b74-49c449968ee2",
               "px": [
                 2160,
                 150
@@ -1771,17 +1844,17 @@
               "defUid": 2,
               "fieldInstances": [],
               "height": 34,
-              "iid": "6ae87579-17ea-5bfb-b6d3-1916998b62d8",
+              "iid": "d2373caf-070f-59ea-9d28-c64d1f34bacc",
               "px": [
                 2928,
                 326
               ],
-              "width": 320
+              "width": 192
             },
             {
               "__identifier": "CollisionRect",
               "__grid": [
-                203,
+                208,
                 20
               ],
               "__pivot": [
@@ -1792,22 +1865,22 @@
                 "Collision"
               ],
               "__tile": null,
-              "__worldX": 3248,
+              "__worldX": 3200,
               "__worldY": 326,
               "defUid": 2,
               "fieldInstances": [],
               "height": 34,
-              "iid": "567e65aa-2059-5e80-85f9-a0671bffe4be",
+              "iid": "4f0f07a6-63e9-5c1b-a38b-b4e1143c0c84",
               "px": [
-                3248,
+                3200,
                 326
               ],
-              "width": 320
+              "width": 368
             },
             {
               "__identifier": "CollisionRect",
               "__grid": [
-                223,
+                230,
                 20
               ],
               "__pivot": [
@@ -1818,17 +1891,17 @@
                 "Collision"
               ],
               "__tile": null,
-              "__worldX": 3568,
+              "__worldX": 3680,
               "__worldY": 326,
               "defUid": 2,
               "fieldInstances": [],
               "height": 34,
-              "iid": "b898e3df-da6a-5a46-a245-dfeb38bc3630",
+              "iid": "5d000611-c901-5a33-b39d-38fbb42de5bb",
               "px": [
-                3568,
+                3680,
                 326
               ],
-              "width": 320
+              "width": 208
             },
             {
               "__identifier": "CollisionRect",
@@ -1883,9 +1956,9 @@
               "width": 112
             },
             {
-              "__identifier": "CollisionRect",
+              "__identifier": "OneWayPlatform",
               "__grid": [
-                187,
+                185,
                 11
               ],
               "__pivot": [
@@ -1893,124 +1966,75 @@
                 0
               ],
               "__tags": [
-                "Collision"
+                "Collision",
+                "OneWay"
               ],
               "__tile": null,
-              "__worldX": 2992,
+              "__worldX": 2960,
               "__worldY": 182,
-              "defUid": 2,
+              "defUid": 38,
               "fieldInstances": [],
-              "height": 16,
-              "iid": "df4e3433-2978-51e9-bdeb-cf6843eb8c13",
+              "height": 14,
+              "iid": "fd3139b6-ddd3-55f0-aef6-c2d8c969b42b",
               "px": [
-                2992,
+                2960,
                 182
               ],
-              "width": 128
+              "width": 160
             },
             {
-              "__identifier": "CollisionRect",
+              "__identifier": "OneWayPlatform",
               "__grid": [
-                201,
-                8
+                208,
+                11
               ],
               "__pivot": [
                 0,
                 0
               ],
               "__tags": [
-                "Collision"
+                "Collision",
+                "OneWay"
               ],
               "__tile": null,
-              "__worldX": 3216,
-              "__worldY": 142,
-              "defUid": 2,
+              "__worldX": 3200,
+              "__worldY": 190,
+              "defUid": 38,
               "fieldInstances": [],
-              "height": 16,
-              "iid": "df3c451c-7181-5529-9450-109c63f8f597",
+              "height": 14,
+              "iid": "c28cb20a-e391-542d-b098-1140b447e4c6",
               "px": [
-                3216,
-                142
+                3200,
+                190
               ],
-              "width": 112
+              "width": 320
             },
             {
-              "__identifier": "CollisionRect",
+              "__identifier": "OneWayPlatform",
               "__grid": [
-                214,
-                12
+                230,
+                11
               ],
               "__pivot": [
                 0,
                 0
               ],
               "__tags": [
-                "Collision"
+                "Collision",
+                "OneWay"
               ],
               "__tile": null,
-              "__worldX": 3424,
-              "__worldY": 198,
-              "defUid": 2,
+              "__worldX": 3680,
+              "__worldY": 182,
+              "defUid": 38,
               "fieldInstances": [],
-              "height": 16,
-              "iid": "7193e383-9b86-57e9-8c4f-ca88f6ff1d51",
+              "height": 14,
+              "iid": "f377af37-3945-51ec-801a-99cefceb2506",
               "px": [
-                3424,
-                198
+                3680,
+                182
               ],
-              "width": 128
-            },
-            {
-              "__identifier": "CollisionRect",
-              "__grid": [
-                228,
-                9
-              ],
-              "__pivot": [
-                0,
-                0
-              ],
-              "__tags": [
-                "Collision"
-              ],
-              "__tile": null,
-              "__worldX": 3648,
-              "__worldY": 158,
-              "defUid": 2,
-              "fieldInstances": [],
-              "height": 16,
-              "iid": "9cbeba5f-bbac-5909-8618-918b9ed42bef",
-              "px": [
-                3648,
-                158
-              ],
-              "width": 112
-            },
-            {
-              "__identifier": "CollisionRect",
-              "__grid": [
-                239,
-                13
-              ],
-              "__pivot": [
-                0,
-                0
-              ],
-              "__tags": [
-                "Collision"
-              ],
-              "__tile": null,
-              "__worldX": 3824,
-              "__worldY": 222,
-              "defUid": 2,
-              "fieldInstances": [],
-              "height": 16,
-              "iid": "7668d4a4-5a7a-58e0-9bb8-12ed2e1f5ea9",
-              "px": [
-                3824,
-                222
-              ],
-              "width": 128
+              "width": 160
             },
             {
               "__identifier": "CollisionRect",
@@ -2039,28 +2063,29 @@
               "width": 176
             },
             {
-              "__identifier": "CollisionRect",
+              "__identifier": "OneWayPlatform",
               "__grid": [
                 266,
-                17
+                15
               ],
               "__pivot": [
                 0,
                 0
               ],
               "__tags": [
-                "Collision"
+                "Collision",
+                "OneWay"
               ],
               "__tile": null,
               "__worldX": 4256,
-              "__worldY": 278,
-              "defUid": 2,
+              "__worldY": 246,
+              "defUid": 38,
               "fieldInstances": [],
-              "height": 20,
-              "iid": "36722bc1-93c8-54ba-9d48-53d3d7434652",
+              "height": 14,
+              "iid": "4eeafa2a-f5d6-54ed-8b8e-987877025800",
               "px": [
                 4256,
-                278
+                246
               ],
               "width": 128
             },
@@ -2093,8 +2118,8 @@
             {
               "__identifier": "CollisionRect",
               "__grid": [
-                290,
-                10
+                298,
+                12
               ],
               "__pivot": [
                 0,
@@ -2104,43 +2129,17 @@
                 "Collision"
               ],
               "__tile": null,
-              "__worldX": 4640,
-              "__worldY": 166,
+              "__worldX": 4776,
+              "__worldY": 198,
               "defUid": 2,
               "fieldInstances": [],
               "height": 20,
-              "iid": "11131f8f-7f35-55c5-b2d9-fd19e468f7cf",
+              "iid": "8b59c0e7-8256-52e5-a3b4-1b7544ce6b58",
               "px": [
-                4640,
-                166
+                4776,
+                198
               ],
-              "width": 112
-            },
-            {
-              "__identifier": "CollisionRect",
-              "__grid": [
-                302,
-                13
-              ],
-              "__pivot": [
-                0,
-                0
-              ],
-              "__tags": [
-                "Collision"
-              ],
-              "__tile": null,
-              "__worldX": 4832,
-              "__worldY": 222,
-              "defUid": 2,
-              "fieldInstances": [],
-              "height": 20,
-              "iid": "91514c8a-f36a-5b87-8851-0511a8289fee",
-              "px": [
-                4832,
-                222
-              ],
-              "width": 112
+              "width": 168
             },
             {
               "__identifier": "CollisionRect",
@@ -2195,7 +2194,7 @@
               "width": 176
             },
             {
-              "__identifier": "CollisionRect",
+              "__identifier": "WallJumpSurface",
               "__grid": [
                 260,
                 11
@@ -2205,15 +2204,16 @@
                 0
               ],
               "__tags": [
-                "Collision"
+                "Collision",
+                "WallJump"
               ],
               "__tile": null,
               "__worldX": 4160,
               "__worldY": 176,
-              "defUid": 2,
+              "defUid": 39,
               "fieldInstances": [],
               "height": 150,
-              "iid": "f0672575-5aae-57dc-9d8e-16a274b1635f",
+              "iid": "4caef671-2b25-5c73-817d-a3b20cdd35f5",
               "px": [
                 4160,
                 176
@@ -2221,7 +2221,7 @@
               "width": 24
             },
             {
-              "__identifier": "CollisionRect",
+              "__identifier": "WallJumpSurface",
               "__grid": [
                 274,
                 7
@@ -2231,70 +2231,19 @@
                 0
               ],
               "__tags": [
-                "Collision"
+                "Collision",
+                "WallJump"
               ],
               "__tile": null,
               "__worldX": 4384,
               "__worldY": 112,
-              "defUid": 2,
+              "defUid": 39,
               "fieldInstances": [],
               "height": 214,
-              "iid": "c1bd5cd0-ca78-5b29-a484-c0852c63f248",
+              "iid": "e91f158f-c1d0-562d-922b-cbcc29856e69",
               "px": [
                 4384,
                 112
-              ],
-              "width": 24
-            },
-            {
-              "__identifier": "CollisionRect",
-              "__grid": [
-                298,
-                7
-              ],
-              "__pivot": [
-                0,
-                0
-              ],
-              "__tags": [
-                "Collision"
-              ],
-              "__tile": null,
-              "__worldX": 4768,
-              "__worldY": 112,
-              "defUid": 2,
-              "fieldInstances": [],
-              "height": 214,
-              "iid": "680f175c-521b-5745-9c9a-77deef69fa4e",
-              "px": [
-                4768,
-                112
-              ],
-              "width": 24
-            },
-            {
-              "__identifier": "CollisionRect",
-              "__grid": [
-                322,
-                11
-              ],
-              "__pivot": [
-                0,
-                0
-              ],
-              "__tags": [
-                "Collision"
-              ],
-              "__tile": null,
-              "__worldX": 5152,
-              "__worldY": 176,
-              "defUid": 2,
-              "fieldInstances": [],
-              "height": 150,
-              "iid": "908a8abd-643a-5e41-8d57-d7233b33cb37",
-              "px": [
-                5152,
-                176
               ],
               "width": 24
             },
@@ -16226,6 +16175,58 @@
                 0
               ],
               "width": 18
+            },
+            {
+              "__identifier": "CollisionRect",
+              "__grid": [
+                54,
+                16
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Collision"
+              ],
+              "__tile": null,
+              "__worldX": 864,
+              "__worldY": 270,
+              "defUid": 2,
+              "fieldInstances": [],
+              "height": 56,
+              "iid": "38f7fd4a-a79f-59af-8453-59362ab1ebc2",
+              "px": [
+                864,
+                270
+              ],
+              "width": 24
+            },
+            {
+              "__identifier": "CollisionRect",
+              "__grid": [
+                68,
+                14
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Collision"
+              ],
+              "__tile": null,
+              "__worldX": 1088,
+              "__worldY": 238,
+              "defUid": 2,
+              "fieldInstances": [],
+              "height": 72,
+              "iid": "4543357d-7731-5b80-a9d6-4f87ab7b5689",
+              "px": [
+                1088,
+                238
+              ],
+              "width": 24
             }
           ],
           "gridTiles": [],

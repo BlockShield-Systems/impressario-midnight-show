@@ -294,6 +294,11 @@ const health =
     "src/player/PlayerHealthSystem.ts"
   );
 
+const respawnState =
+  read(
+    "src/player/PlayerRespawnState.ts"
+  );
+
 const mirror =
   read(
     "src/world/MirrorCoreSystem.ts"
@@ -582,11 +587,17 @@ if (
     "checkpoint: WorldCheckpoint"
   ) ||
   !health.includes(
-    'getWorldCheckpoint(\n      "InitialSpawn"'
+    "new PlayerRespawnState(player)"
+  ) ||
+  !respawnState.includes(
+    'getWorldCheckpoint(\n    "InitialSpawn"'
+  ) ||
+  !respawnState.includes(
+    "checkpoint: WorldCheckpoint"
   )
 ) {
   throw new Error(
-    "PlayerHealthSystem does not use generated checkpoints."
+    "Shared player respawn state does not use generated checkpoints."
   );
 }
 

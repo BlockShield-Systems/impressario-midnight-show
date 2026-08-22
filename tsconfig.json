@@ -12,7 +12,7 @@
     "types": [
       "vite/client"
     ],
-    "allowImportingTsExtensions": false,
+    "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "moduleDetection": "force",
     "verbatimModuleSyntax": true,

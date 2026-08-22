@@ -1,7 +1,7 @@
 import {
   WORLD_SECTIONS,
   type WorldSection
-} from "./WorldLayout";
+} from "./WorldLayout.ts";
 
 export function getWorldSectionIndex(
   playerX: number

@@ -5,7 +5,20 @@ import { CombatSystem } from "./combat/CombatSystem";
 import { StagehandSystem } from "./enemies/StagehandSystem";
 import { CardThrowerSystem } from "./enemies/CardThrowerSystem";
 import { PlayerHealthSystem } from "./player/PlayerHealthSystem";
+import { MOVEMENT } from "./player/MovementConfig";
+import {
+  MovementInputEdges,
+  type MovementInputSnapshot
+} from "./player/MovementInputEdges";
+import { PlayerController } from "./player/PlayerController";
+export {
+  PlayerController,
+  type MovementState
+} from "./player/PlayerController";
 import { PlayerView } from "./player/PlayerView";
+import {
+  KinematicCollisionWorld
+} from "./player/KinematicCollisionWorld";
 import { EnemyView } from "./enemies/EnemyView";
 import { BossView } from "./boss/BossView";
 import { GalleryGauntletEncounterSystem } from "./world/GalleryGauntletEncounterSystem";
@@ -37,8 +50,10 @@ import {
 } from "./world/MovementRouteBounds";
 import {
   WORLD_HEIGHT,
+  WORLD_ONE_WAY_PLATFORMS,
   WORLD_SECTIONS,
   WORLD_SOLIDS,
+  WORLD_WALL_JUMP_SURFACES,
   WORLD_WIDTH
 } from "./world/WorldLayout";
 import {
@@ -86,55 +101,9 @@ const QA_RUNTIME_INSPECTION =
 let preparedAudioContext:
   AudioContext | undefined;
 
-const MOVEMENT = {
-  bodyWidth: 18,
-  bodyHeight: 30,
-
-  maxRunSpeed: 190,
-  groundAcceleration: 1850,
-  airAcceleration: 1120,
-  groundDeceleration: 2300,
-  airDeceleration: 520,
-
-  gravity: 1600,
-  fastFallGravityMultiplier: 1.65,
-  maxFallSpeed: 430,
-  fastFallMaxSpeed: 590,
-
-  jumpSpeed: 455,
-  doubleJumpSpeed: 420,
-
-  wallJumpSpeedX: 245,
-  wallJumpSpeedY: 430,
-  wallSlideSpeed: 88,
-  wallJumpControlLockTime: 0.09,
-
-  jumpCutGravityMultiplier: 2.25,
-  coyoteTime: 0.11,
-  jumpBufferTime: 0.12,
-
-  dashSpeed: 430,
-  dashDuration: 0.13,
-  dashCooldown: 0.18,
-
-  gamepadDeadzone: 0.22
-} as const;
-
 /* -------------------------------------------------------------------------- */
 /* Utility                                                                    */
 /* -------------------------------------------------------------------------- */
-
-function moveTowards(
-  current: number,
-  target: number,
-  maxDelta: number
-): number {
-  if (Math.abs(target - current) <= maxDelta) {
-    return target;
-  }
-
-  return current + Math.sign(target - current) * maxDelta;
-}
 
 function clamp(
   value: number,
@@ -161,19 +130,9 @@ function createWorldGate(
 /* Input                                                                      */
 /* -------------------------------------------------------------------------- */
 
-interface InputSnapshot {
-  readonly moveX: number;
-  readonly downHeld: boolean;
-  readonly jumpHeld: boolean;
-  readonly jumpPressed: boolean;
-  readonly dashPressed: boolean;
-}
-
 class PlayerInput {
   private readonly heldKeys = new Set<string>();
-
-  private jumpQueued = false;
-  private dashQueued = false;
+  private readonly edges = new MovementInputEdges();
 
   private previousGamepadJump = false;
   private previousGamepadDash = false;
@@ -226,11 +185,11 @@ class PlayerInput {
       Boolean(gamepad.buttons[7]?.pressed);
 
     if (jumpHeld && !this.previousGamepadJump) {
-      this.jumpQueued = true;
+      this.edges.queueJump();
     }
 
     if (dashHeld && !this.previousGamepadDash) {
-      this.dashQueued = true;
+      this.edges.queueDash();
     }
 
     this.gamepadJump = jumpHeld;
@@ -238,7 +197,9 @@ class PlayerInput {
     this.previousGamepadDash = dashHeld;
   }
 
-  public snapshot(consumeEdges: boolean): InputSnapshot {
+  public snapshot(
+    consumeEdges: boolean
+  ): MovementInputSnapshot {
     const keyboardMove =
       (this.isHeld("KeyD") || this.isHeld("ArrowRight") ? 1 : 0) -
       (this.isHeld("KeyA") || this.isHeld("ArrowLeft") ? 1 : 0);
@@ -248,7 +209,11 @@ class PlayerInput {
         ? this.gamepadMoveX
         : keyboardMove;
 
-    const snapshot: InputSnapshot = {
+    const edges = this.edges.snapshot(
+      consumeEdges
+    );
+
+    return {
       moveX,
 
       downHeld:
@@ -258,21 +223,11 @@ class PlayerInput {
 
       jumpHeld:
         this.isHeld("Space") ||
+        this.isHeld("KeyW") ||
         this.gamepadJump,
 
-      jumpPressed:
-        consumeEdges && this.jumpQueued,
-
-      dashPressed:
-        consumeEdges && this.dashQueued
+      ...edges
     };
-
-    if (consumeEdges) {
-      this.jumpQueued = false;
-      this.dashQueued = false;
-    }
-
-    return snapshot;
   }
 
   private readonly handleKeyDown = (
@@ -283,15 +238,19 @@ class PlayerInput {
     }
 
     if (!event.repeat) {
-      if (event.code === "Space") {
-        this.jumpQueued = true;
+      if (
+        event.code === "Space" ||
+        event.code === "KeyW"
+      ) {
+        this.edges.queueJump();
       }
 
       if (
         event.code === "ShiftLeft" ||
-        event.code === "ShiftRight"
+        event.code === "ShiftRight" ||
+        event.code === "KeyK"
       ) {
-        this.dashQueued = true;
+        this.edges.queueDash();
       }
     }
 
@@ -308,10 +267,18 @@ class PlayerInput {
     this.heldKeys.delete(event.code);
   };
 
-  private readonly handleBlur = (): void => {
+  public reset(): void {
     this.heldKeys.clear();
+    this.edges.clear();
     this.previousGamepadJump = false;
     this.previousGamepadDash = false;
+    this.gamepadMoveX = 0;
+    this.gamepadDown = false;
+    this.gamepadJump = false;
+  }
+
+  private readonly handleBlur = (): void => {
+    this.reset();
   };
 
   private isHeld(code: string): boolean {
@@ -336,557 +303,8 @@ class PlayerInput {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Collision                                                                  */
-/* -------------------------------------------------------------------------- */
-
-interface KinematicBody {
-  x: number;
-  y: number;
-  readonly width: number;
-  readonly height: number;
-}
-
-interface CollisionContacts {
-  grounded: boolean;
-  ceiling: boolean;
-  wallLeft: boolean;
-  wallRight: boolean;
-}
-
-class CollisionWorld {
-  private collisionChecks = 0;
-
-  public constructor(
-    private readonly solids: Phaser.Geom.Rectangle[]
-  ) {}
-
-  public getDebugSnapshot() {
-    return {
-      collisionChecks:
-        this.collisionChecks,
-      solidCount:
-        this.solids.length
-    };
-  }
-
-  public addSolid(
-    solid: Phaser.Geom.Rectangle
-  ): void {
-    if (!this.solids.includes(solid)) {
-      this.solids.push(solid);
-    }
-  }
-
-  public removeSolid(
-    solid: Phaser.Geom.Rectangle
-  ): void {
-    const index = this.solids.indexOf(solid);
-
-    if (index >= 0) {
-      this.solids.splice(index, 1);
-    }
-  }
-
-  public move(
-    body: KinematicBody,
-    deltaX: number,
-    deltaY: number
-  ): CollisionContacts {
-    const contacts: CollisionContacts = {
-      grounded: false,
-      ceiling: false,
-      wallLeft: false,
-      wallRight: false
-    };
-
-    this.moveHorizontal(body, deltaX, contacts);
-    this.moveVertical(body, deltaY, contacts);
-
-    return contacts;
-  }
-
-  private moveHorizontal(
-    body: KinematicBody,
-    deltaX: number,
-    contacts: CollisionContacts
-  ): void {
-    if (deltaX === 0) {
-      return;
-    }
-
-    const previousX = body.x;
-    body.x += deltaX;
-
-    for (const solid of this.solids) {
-      if (!this.overlaps(body, solid)) {
-        continue;
-      }
-
-      if (
-        deltaX > 0 &&
-        previousX + body.width <= solid.left + 0.01
-      ) {
-        body.x = solid.left - body.width;
-        contacts.wallRight = true;
-      } else if (
-        deltaX < 0 &&
-        previousX >= solid.right - 0.01
-      ) {
-        body.x = solid.right;
-        contacts.wallLeft = true;
-      }
-    }
-  }
-
-  private moveVertical(
-    body: KinematicBody,
-    deltaY: number,
-    contacts: CollisionContacts
-  ): void {
-    if (deltaY === 0) {
-      return;
-    }
-
-    const previousY = body.y;
-    body.y += deltaY;
-
-    for (const solid of this.solids) {
-      if (!this.overlaps(body, solid)) {
-        continue;
-      }
-
-      if (
-        deltaY > 0 &&
-        previousY + body.height <= solid.top + 0.01
-      ) {
-        body.y = solid.top - body.height;
-        contacts.grounded = true;
-      } else if (
-        deltaY < 0 &&
-        previousY >= solid.bottom - 0.01
-      ) {
-        body.y = solid.bottom;
-        contacts.ceiling = true;
-      }
-    }
-  }
-
-  private overlaps(
-    body: KinematicBody,
-    solid: Phaser.Geom.Rectangle
-  ): boolean {
-    this.collisionChecks += 1;
-
-    return (
-      body.x < solid.right &&
-      body.x + body.width > solid.left &&
-      body.y < solid.bottom &&
-      body.y + body.height > solid.top
-    );
-  }
-}
-
-/* -------------------------------------------------------------------------- */
 /* Character controller                                                       */
 /* -------------------------------------------------------------------------- */
-
-export type MovementState =
-  | "idle"
-  | "run"
-  | "rise"
-  | "fall"
-  | "wall-slide"
-  | "dash";
-
-export class PlayerController implements KinematicBody {
-  public x: number;
-  public y: number;
-
-  public readonly width = MOVEMENT.bodyWidth;
-  public readonly height = MOVEMENT.bodyHeight;
-
-  public velocityX = 0;
-  public velocityY = 0;
-
-  public facing: -1 | 1 = 1;
-
-  private contacts: CollisionContacts = {
-    grounded: false,
-    ceiling: false,
-    wallLeft: false,
-    wallRight: false
-  };
-
-  private coyoteTimer = 0;
-  private jumpBufferTimer = 0;
-
-  private dashTimer = 0;
-  private dashCooldownTimer = 0;
-  private dashDirection: -1 | 1 = 1;
-
-  private wallControlLockTimer = 0;
-
-  private jumpsUsed = 0;
-  private airDashAvailable = true;
-
-  public constructor(
-    private readonly world: CollisionWorld,
-    startX: number,
-    startY: number
-  ) {
-    this.x = startX;
-    this.y = startY;
-  }
-
-  public fixedUpdate(
-    deltaSeconds: number,
-    input: InputSnapshot
-  ): void {
-    this.tickTimers(deltaSeconds);
-
-    if (input.jumpPressed) {
-      this.jumpBufferTimer = MOVEMENT.jumpBufferTime;
-    }
-
-    if (this.contacts.grounded) {
-      this.coyoteTimer = MOVEMENT.coyoteTime;
-      this.jumpsUsed = 0;
-      this.airDashAvailable = true;
-    }
-
-    if (Math.abs(input.moveX) > 0.01) {
-      this.facing = input.moveX < 0 ? -1 : 1;
-    }
-
-    if (input.dashPressed) {
-      this.tryStartDash(input);
-    }
-
-    if (this.dashTimer > 0) {
-      this.updateDash(deltaSeconds);
-      return;
-    }
-
-    this.tryConsumeBufferedJump(input);
-    this.updateHorizontalMovement(deltaSeconds, input);
-    this.updateGravity(deltaSeconds, input);
-    this.applyMovement(deltaSeconds);
-  }
-
-  public get centerX(): number {
-    return this.x + this.width * 0.5;
-  }
-
-  public get centerY(): number {
-    return this.y + this.height * 0.5;
-  }
-
-  public get isGrounded(): boolean {
-    return this.contacts.grounded;
-  }
-
-  public get isWallJumping(): boolean {
-    return this.wallControlLockTimer > 0;
-  }
-
-  public get state(): MovementState {
-    if (this.dashTimer > 0) {
-      return "dash";
-    }
-
-    if (
-      !this.contacts.grounded &&
-      this.velocityY > 0 &&
-      (this.contacts.wallLeft || this.contacts.wallRight)
-    ) {
-      return "wall-slide";
-    }
-
-    if (this.contacts.grounded) {
-      return Math.abs(this.velocityX) > 12
-        ? "run"
-        : "idle";
-    }
-
-    return this.velocityY < 0 ? "rise" : "fall";
-  }
-
-  public getDebugLines(): string[] {
-    return [
-      `STATE  ${this.state.toUpperCase()}`,
-      `POS    ${this.x.toFixed(1)}, ${this.y.toFixed(1)}`,
-      `VEL    ${this.velocityX.toFixed(1)}, ${this.velocityY.toFixed(1)}`,
-      `GROUND ${this.contacts.grounded ? "YES" : "NO"}`,
-      `WALL   L:${this.contacts.wallLeft ? 1 : 0} R:${this.contacts.wallRight ? 1 : 0}`,
-      `JUMPS  ${this.jumpsUsed}/2`,
-      `DASH   ${this.airDashAvailable ? "READY" : "USED"}`,
-      `COYOTE ${this.coyoteTimer.toFixed(3)}`,
-      `BUFFER ${this.jumpBufferTimer.toFixed(3)}`
-    ];
-  }
-
-  private tickTimers(deltaSeconds: number): void {
-    this.coyoteTimer = Math.max(
-      0,
-      this.coyoteTimer - deltaSeconds
-    );
-
-    this.jumpBufferTimer = Math.max(
-      0,
-      this.jumpBufferTimer - deltaSeconds
-    );
-
-    this.dashTimer = Math.max(
-      0,
-      this.dashTimer - deltaSeconds
-    );
-
-    this.dashCooldownTimer = Math.max(
-      0,
-      this.dashCooldownTimer - deltaSeconds
-    );
-
-    this.wallControlLockTimer = Math.max(
-      0,
-      this.wallControlLockTimer - deltaSeconds
-    );
-  }
-
-  private tryStartDash(input: InputSnapshot): void {
-    if (this.dashCooldownTimer > 0) {
-      return;
-    }
-
-    if (
-      !this.contacts.grounded &&
-      !this.airDashAvailable
-    ) {
-      return;
-    }
-
-    const requestedDirection =
-      Math.abs(input.moveX) > 0.15
-        ? input.moveX
-        : this.facing;
-
-    this.dashDirection =
-      requestedDirection < 0 ? -1 : 1;
-
-    this.facing = this.dashDirection;
-
-    this.dashTimer = MOVEMENT.dashDuration;
-
-    this.dashCooldownTimer =
-      MOVEMENT.dashDuration +
-      MOVEMENT.dashCooldown;
-
-    this.velocityX =
-      this.dashDirection * MOVEMENT.dashSpeed;
-
-    this.velocityY = 0;
-
-    if (!this.contacts.grounded) {
-      this.airDashAvailable = false;
-    }
-  }
-
-  private updateDash(deltaSeconds: number): void {
-    this.velocityX =
-      this.dashDirection * MOVEMENT.dashSpeed;
-
-    this.velocityY = 0;
-
-    this.applyMovement(deltaSeconds);
-
-    if (
-      this.contacts.wallLeft ||
-      this.contacts.wallRight
-    ) {
-      this.dashTimer = 0;
-      this.velocityX = 0;
-    }
-  }
-
-  private tryConsumeBufferedJump(
-    input: InputSnapshot
-  ): void {
-    if (this.jumpBufferTimer <= 0) {
-      return;
-    }
-
-    const wallDirection = this.getWallDirection(input);
-
-    if (
-      !this.contacts.grounded &&
-      wallDirection !== 0
-    ) {
-      this.performWallJump(wallDirection);
-      return;
-    }
-
-    if (
-      this.contacts.grounded ||
-      this.coyoteTimer > 0
-    ) {
-      this.velocityY = -MOVEMENT.jumpSpeed;
-      this.jumpsUsed = 1;
-
-      this.contacts.grounded = false;
-      this.coyoteTimer = 0;
-      this.jumpBufferTimer = 0;
-      return;
-    }
-
-    if (this.jumpsUsed < 2) {
-      this.velocityY = -MOVEMENT.doubleJumpSpeed;
-      this.jumpsUsed = 2;
-      this.jumpBufferTimer = 0;
-    }
-  }
-
-  private getWallDirection(
-    input: InputSnapshot
-  ): -1 | 0 | 1 {
-    if (
-      this.contacts.wallLeft &&
-      (input.moveX < -0.1 || this.velocityX <= 0)
-    ) {
-      return -1;
-    }
-
-    if (
-      this.contacts.wallRight &&
-      (input.moveX > 0.1 || this.velocityX >= 0)
-    ) {
-      return 1;
-    }
-
-    return 0;
-  }
-
-  private performWallJump(
-    wallDirection: -1 | 1
-  ): void {
-    this.velocityX =
-      -wallDirection * MOVEMENT.wallJumpSpeedX;
-
-    this.velocityY = -MOVEMENT.wallJumpSpeedY;
-
-    this.facing = wallDirection === -1 ? 1 : -1;
-
-    this.jumpsUsed = 1;
-    this.airDashAvailable = true;
-    this.jumpBufferTimer = 0;
-
-    this.wallControlLockTimer =
-      MOVEMENT.wallJumpControlLockTime;
-  }
-
-  private updateHorizontalMovement(
-    deltaSeconds: number,
-    input: InputSnapshot
-  ): void {
-    if (this.wallControlLockTimer > 0) {
-      return;
-    }
-
-    if (Math.abs(input.moveX) > 0.01) {
-      const targetVelocity =
-        input.moveX * MOVEMENT.maxRunSpeed;
-
-      const acceleration = this.contacts.grounded
-        ? MOVEMENT.groundAcceleration
-        : MOVEMENT.airAcceleration;
-
-      this.velocityX = moveTowards(
-        this.velocityX,
-        targetVelocity,
-        acceleration * deltaSeconds
-      );
-
-      return;
-    }
-
-    const deceleration = this.contacts.grounded
-      ? MOVEMENT.groundDeceleration
-      : MOVEMENT.airDeceleration;
-
-    this.velocityX = moveTowards(
-      this.velocityX,
-      0,
-      deceleration * deltaSeconds
-    );
-  }
-
-  private updateGravity(
-    deltaSeconds: number,
-    input: InputSnapshot
-  ): void {
-    let gravityMultiplier = 1;
-
-    if (this.velocityY < 0 && !input.jumpHeld) {
-      gravityMultiplier *=
-        MOVEMENT.jumpCutGravityMultiplier;
-    }
-
-    if (input.downHeld && this.velocityY > 0) {
-      gravityMultiplier *=
-        MOVEMENT.fastFallGravityMultiplier;
-    }
-
-    this.velocityY +=
-      MOVEMENT.gravity *
-      gravityMultiplier *
-      deltaSeconds;
-
-    if (
-      !this.contacts.grounded &&
-      (this.contacts.wallLeft ||
-        this.contacts.wallRight) &&
-      this.velocityY > MOVEMENT.wallSlideSpeed
-    ) {
-      this.velocityY = MOVEMENT.wallSlideSpeed;
-    }
-
-    const terminalVelocity = input.downHeld
-      ? MOVEMENT.fastFallMaxSpeed
-      : MOVEMENT.maxFallSpeed;
-
-    this.velocityY = Math.min(
-      this.velocityY,
-      terminalVelocity
-    );
-  }
-
-  private applyMovement(deltaSeconds: number): void {
-    this.contacts = this.world.move(
-      this,
-      this.velocityX * deltaSeconds,
-      this.velocityY * deltaSeconds
-    );
-
-    if (
-      this.contacts.wallLeft ||
-      this.contacts.wallRight
-    ) {
-      this.velocityX = 0;
-    }
-
-    if (
-      this.contacts.grounded &&
-      this.velocityY > 0
-    ) {
-      this.velocityY = 0;
-    }
-
-    if (
-      this.contacts.ceiling &&
-      this.velocityY < 0
-    ) {
-      this.velocityY = 0;
-    }
-  }
-}
 
 /* -------------------------------------------------------------------------- */
 /* Scene                                                                      */
@@ -918,7 +336,7 @@ class GameScene extends Phaser.Scene {
   private audioBridge!: AudioRuntimeBridge;
   private audioDebugHud!: AudioDebugHud;
 
-  private collisionWorld!: CollisionWorld;
+  private collisionWorld!: KinematicCollisionWorld;
 
   private readonly tutorialExitGate =
     createWorldGate("CombatTutorialExit");
@@ -997,12 +415,18 @@ class GameScene extends Phaser.Scene {
     new ConductorApproachVisuals(this);
     new MirrorConductorVisuals(this);
 
-    const solids = this.createLevel();
+    const {
+      solids,
+      oneWayPlatforms
+    } = this.createLevel();
 
     this.createGrandGallery();
 
     this.collisionWorld =
-      new CollisionWorld(solids);
+      new KinematicCollisionWorld(
+        solids,
+        oneWayPlatforms
+      );
 
     this.collisionWorld.addSolid(
       this.tutorialExitGate
@@ -1077,6 +501,8 @@ class GameScene extends Phaser.Scene {
         this,
         this.player,
         () => {
+          this.player.resetTransientState();
+          this.playerInput.reset();
           this.resetEncounterAfterDeath();
         }
       );
@@ -1274,6 +700,7 @@ class GameScene extends Phaser.Scene {
               x: number,
               y: number
             ): void;
+            resumePlayerControl(): void;
             snapshot():
               ReturnType<
                 GameScene[
@@ -1314,6 +741,8 @@ class GameScene extends Phaser.Scene {
             }
 
             this.qaBoundaryTraversalActive = true;
+            this.player.resetTransientState();
+            this.playerInput.reset();
             this.player.x = clamp(
               x,
               0,
@@ -1328,6 +757,13 @@ class GameScene extends Phaser.Scene {
             );
             this.player.velocityX = 0;
             this.player.velocityY = 0;
+          },
+          resumePlayerControl: (): void => {
+            this.player.resetTransientState();
+            this.playerInput.reset();
+            this.accumulator = 0;
+            this.fixedStepInitialized = false;
+            this.qaBoundaryTraversalActive = false;
           },
           snapshot: () =>
             this.getBoundaryDebugSnapshot()
@@ -1822,17 +1258,23 @@ class GameScene extends Phaser.Scene {
     }
   }
 
-  private createLevel(): Phaser.Geom.Rectangle[] {
-    const solids =
-      WORLD_SOLIDS.map(
-        solid =>
-          new Phaser.Geom.Rectangle(
-            solid.x,
-            solid.y,
-            solid.width,
-            solid.height
-          )
-      );
+  private createLevel(): {
+    readonly solids: Phaser.Geom.Rectangle[];
+    readonly oneWayPlatforms:
+      Phaser.Geom.Rectangle[];
+  } {
+    const solids = [
+      ...WORLD_SOLIDS,
+      ...WORLD_WALL_JUMP_SURFACES
+    ].map(
+      solid =>
+        new Phaser.Geom.Rectangle(
+          solid.x,
+          solid.y,
+          solid.width,
+          solid.height
+        )
+    );
 
     const graphics = this.add.graphics();
     graphics.setDepth(0);
@@ -1868,7 +1310,21 @@ class GameScene extends Phaser.Scene {
       );
     }
 
-    return solids;
+    const oneWayPlatforms =
+      WORLD_ONE_WAY_PLATFORMS.map(
+        platform =>
+          new Phaser.Geom.Rectangle(
+            platform.x,
+            platform.y,
+            platform.width,
+            platform.height
+          )
+      );
+
+    return {
+      solids,
+      oneWayPlatforms
+    };
   }
 
   private createLabels(): void {

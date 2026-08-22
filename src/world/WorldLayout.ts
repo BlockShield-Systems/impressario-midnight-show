@@ -11,6 +11,10 @@ export interface WorldSolid {
   readonly height: number;
 }
 
+export interface WorldOneWayPlatform extends WorldSolid {}
+
+export interface WorldWallJumpSurface extends WorldSolid {}
+
 export interface WorldSection {
   readonly id: string;
   readonly startX: number;
@@ -26,47 +30,29 @@ export const WORLD_SOLIDS: readonly WorldSolid[] = [
   { x: 384, y: 224, width: 96, height: 16 },
   { x: 544, y: 184, width: 80, height: 16 },
   { x: 656, y: 326, width: 208, height: 24 },
-  { x: 720, y: 246, width: 96, height: 16 },
-  { x: 880, y: 206, width: 96, height: 16 },
+  { x: 864, y: 270, width: 24, height: 56 },
   { x: 928, y: 310, width: 176, height: 24 },
-  { x: 1040, y: 166, width: 112, height: 16 },
+  { x: 1088, y: 238, width: 24, height: 72 },
   { x: 1168, y: 286, width: 176, height: 24 },
-  { x: 1216, y: 222, width: 128, height: 16 },
-  { x: 1344, y: 160, width: 24, height: 126 },
+  { x: 1280, y: 0, width: 24, height: 214 },
   { x: 1344, y: 286, width: 144, height: 24 },
-  { x: 1488, y: 112, width: 24, height: 238 },
   { x: 1512, y: 334, width: 144, height: 20 },
-  { x: 1656, y: 192, width: 24, height: 162 },
   { x: 1680, y: 402, width: 136, height: 20 },
-  { x: 1792, y: 128, width: 24, height: 290 },
   { x: 1840, y: 370, width: 176, height: 20 },
-  { x: 2016, y: 230, width: 24, height: 160 },
   { x: 2040, y: 230, width: 80, height: 16 },
-  { x: 2160, y: 150, width: 24, height: 240 },
   { x: 2184, y: 150, width: 112, height: 16 },
   { x: 2352, y: 214, width: 112, height: 16 },
   { x: 2528, y: 278, width: 160, height: 24 },
   { x: 2688, y: 310, width: 176, height: 24 },
   { x: 2784, y: 222, width: 112, height: 16 },
-  { x: 2928, y: 326, width: 320, height: 34 },
-  { x: 2992, y: 182, width: 128, height: 16 },
-  { x: 3216, y: 142, width: 112, height: 16 },
-  { x: 3248, y: 326, width: 320, height: 34 },
-  { x: 3424, y: 198, width: 128, height: 16 },
-  { x: 3568, y: 326, width: 320, height: 34 },
-  { x: 3648, y: 158, width: 112, height: 16 },
-  { x: 3824, y: 222, width: 128, height: 16 },
+  { x: 2928, y: 326, width: 192, height: 34 },
+  { x: 3200, y: 326, width: 368, height: 34 },
+  { x: 3680, y: 326, width: 208, height: 34 },
   { x: 3888, y: 326, width: 144, height: 34 },
   { x: 4032, y: 326, width: 176, height: 34 },
-  { x: 4160, y: 176, width: 24, height: 150 },
-  { x: 4256, y: 278, width: 128, height: 20 },
-  { x: 4384, y: 112, width: 24, height: 214 },
   { x: 4448, y: 222, width: 112, height: 20 },
-  { x: 4640, y: 166, width: 112, height: 20 },
-  { x: 4768, y: 112, width: 24, height: 214 },
-  { x: 4832, y: 222, width: 112, height: 20 },
+  { x: 4776, y: 198, width: 168, height: 20 },
   { x: 5024, y: 278, width: 128, height: 20 },
-  { x: 5152, y: 176, width: 24, height: 150 },
   { x: 5200, y: 326, width: 176, height: 34 },
   { x: 5376, y: 326, width: 416, height: 34 },
   { x: 5376, y: 640, width: 1536, height: 32 },
@@ -308,6 +294,27 @@ export const WORLD_SOLIDS: readonly WorldSolid[] = [
   { x: 48416, y: 352, width: 256, height: 16 },
   { x: 48992, y: 400, width: 256, height: 16 },
   { x: 49344, y: 480, width: 480, height: 32 },
+] as const;
+
+export const WORLD_ONE_WAY_PLATFORMS: readonly WorldOneWayPlatform[] = [
+  { x: 720, y: 270, width: 144, height: 14 },
+  { x: 944, y: 238, width: 144, height: 14 },
+  { x: 1136, y: 214, width: 144, height: 14 },
+  { x: 2960, y: 182, width: 160, height: 14 },
+  { x: 3200, y: 190, width: 320, height: 14 },
+  { x: 3680, y: 182, width: 160, height: 14 },
+  { x: 4256, y: 246, width: 128, height: 14 },
+] as const;
+
+export const WORLD_WALL_JUMP_SURFACES: readonly WorldWallJumpSurface[] = [
+  { x: 1344, y: 160, width: 24, height: 126 },
+  { x: 1488, y: 112, width: 24, height: 238 },
+  { x: 1656, y: 192, width: 24, height: 162 },
+  { x: 1792, y: 128, width: 24, height: 290 },
+  { x: 2016, y: 230, width: 24, height: 160 },
+  { x: 2160, y: 150, width: 24, height: 240 },
+  { x: 4160, y: 176, width: 24, height: 150 },
+  { x: 4384, y: 112, width: 24, height: 214 },
 ] as const;
 
 export const WORLD_SECTIONS: readonly WorldSection[] = [

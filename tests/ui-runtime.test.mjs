@@ -16,12 +16,16 @@ import {
   OPENING_CONTROL_PANEL,
   OPENING_TUTORIAL_SUBTITLE,
   OPENING_TUTORIAL_TITLE,
-  rectanglesOverlap
+  rectanglesOverlap,
+  tutorialMarkerBounds,
+  tutorialSignBounds
 } from "../src/world/MovementTutorial.ts";
 import {
   WORLD_HEIGHT,
+  WORLD_ONE_WAY_PLATFORMS,
   WORLD_SECTIONS,
-  WORLD_SOLIDS
+  WORLD_SOLIDS,
+  WORLD_WALL_JUMP_SURFACES
 } from "../src/world/WorldLayout.ts";
 import {
   WORLD_CHECKPOINTS,
@@ -278,7 +282,14 @@ test("opening tutorial has one readable control presentation outside the player 
 
   assert.deepEqual(
     MOVEMENT_TUTORIAL_SIGNS.map(({ title }) => title),
-    ["JUMP", "DOUBLE", "WALL", "DASH", "FINALE"]
+    [
+      "JUMP",
+      "DOUBLE JUMP",
+      "DROP THROUGH",
+      "WALL JUMP",
+      "AIR DASH",
+      "FINALE"
+    ]
   );
 
   for (const required of [
@@ -367,14 +378,15 @@ test("opening tutorial has one readable control presentation outside the player 
 
   const tutorialRectangles = [
     ...openingElements,
-    ...MOVEMENT_TUTORIAL_SIGNS.map(sign => [
-      `${sign.title} sign`,
-      {
-        x: sign.x - sign.width / 2,
-        y: sign.y,
-        width: sign.width,
-        height: sign.height
-      }
+    ...MOVEMENT_TUTORIAL_SIGNS.flatMap(sign => [
+      [
+        `${sign.title} sign`,
+        tutorialSignBounds(sign)
+      ],
+      [
+        `${sign.title} marker`,
+        tutorialMarkerBounds(sign)
+      ]
     ]),
     ...MOVEMENT_SECTION_LABELS.map(label => [
       `${label.text} label`,
@@ -383,7 +395,11 @@ test("opening tutorial has one readable control presentation outside the player 
   ];
 
   for (const [name, rectangle] of tutorialRectangles) {
-    for (const solid of WORLD_SOLIDS) {
+    for (const solid of [
+      ...WORLD_SOLIDS,
+      ...WORLD_ONE_WAY_PLATFORMS,
+      ...WORLD_WALL_JUMP_SURFACES
+    ]) {
       assert.equal(
         rectanglesOverlap(rectangle, solid),
         false,

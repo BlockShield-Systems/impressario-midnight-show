@@ -1,10 +1,10 @@
 import Phaser from "phaser";
-import {
-  getWorldCheckpoint,
-  type WorldCheckpoint
+import type {
+  WorldCheckpoint
 } from "../world/WorldGameplay";
 import { leaderboard } from "../leaderboard/LeaderboardClient";
-import type { PlayerController } from "../main";
+import type { PlayerController } from "./PlayerController";
+import { PlayerRespawnState } from "./PlayerRespawnState";
 
 export class PlayerHealthSystem {
   public readonly maximumHealth = 5;
@@ -12,24 +12,13 @@ export class PlayerHealthSystem {
   private health = this.maximumHealth;
   private invulnerabilityTimer = 0;
   private hurtTimer = 0;
-  private respawnTimer = 0;
-
-  private readonly initialCheckpoint =
-    getWorldCheckpoint(
-      "InitialSpawn"
-    );
-
-  private checkpointX =
-    this.initialCheckpoint.x;
-
-  private checkpointY =
-    this.initialCheckpoint.y;
-
-  private checkpointName =
-    this.initialCheckpoint.displayName;
 
   private readonly scene: Phaser.Scene;
   private readonly player: PlayerController;
+  private readonly onRespawn:
+    (() => void) | undefined;
+  private readonly respawnState:
+    PlayerRespawnState;
 
   private readonly hudGraphics: Phaser.GameObjects.Graphics;
   private readonly statusText: Phaser.GameObjects.Text;
@@ -37,11 +26,14 @@ export class PlayerHealthSystem {
   public constructor(
     scene: Phaser.Scene,
     player: PlayerController,
-    private readonly onRespawn:
+    onRespawn:
       (() => void) | undefined = undefined
   ) {
     this.scene = scene;
     this.player = player;
+    this.onRespawn = onRespawn;
+    this.respawnState =
+      new PlayerRespawnState(player);
 
     this.hudGraphics = scene.add.graphics();
     this.hudGraphics
@@ -69,7 +61,7 @@ export class PlayerHealthSystem {
   }
 
   public get controlsLocked(): boolean {
-    return this.respawnTimer > 0;
+    return this.respawnState.controlsLocked;
   }
 
   public get currentHealth(): number {
@@ -81,13 +73,16 @@ export class PlayerHealthSystem {
   }
 
   public getDebugSnapshot() {
+    const checkpoint =
+      this.respawnState.currentCheckpoint;
+
     return {
       checkpointName:
-        this.checkpointName,
+        checkpoint.displayName,
       checkpointX:
-        this.checkpointX,
+        checkpoint.x,
       checkpointY:
-        this.checkpointY,
+        checkpoint.y,
       controlsLocked:
         this.controlsLocked,
       currentHealth:
@@ -106,19 +101,9 @@ export class PlayerHealthSystem {
       this.hurtTimer - deltaSeconds
     );
 
-    if (this.respawnTimer <= 0) {
-      return;
-    }
-
-    this.respawnTimer = Math.max(
-      0,
-      this.respawnTimer - deltaSeconds
-    );
-
-    this.player.velocityX = 0;
-    this.player.velocityY = 0;
-
-    if (this.respawnTimer === 0) {
+    if (
+      this.respawnState.update(deltaSeconds)
+    ) {
       this.respawn();
     }
   }
@@ -129,13 +114,9 @@ export class PlayerHealthSystem {
     const name =
       checkpoint.displayName;
 
-    this.checkpointX =
-      checkpoint.x;
-
-    this.checkpointY =
-      checkpoint.y;
-
-    this.checkpointName = name;
+    this.respawnState.setCheckpoint(
+      checkpoint
+    );
 
     leaderboard.recordCheckpoint(name);
 
@@ -146,7 +127,7 @@ export class PlayerHealthSystem {
     this.scene.time.delayedCall(
       1400,
       () => {
-        if (this.respawnTimer <= 0) {
+        if (!this.controlsLocked) {
           this.statusText.setText("");
         }
       }
@@ -164,7 +145,7 @@ export class PlayerHealthSystem {
   public heal(amount: number): boolean {
     if (
       amount <= 0 ||
-      this.respawnTimer > 0 ||
+      this.controlsLocked ||
       this.health >= this.maximumHealth
     ) {
       return false;
@@ -189,7 +170,7 @@ export class PlayerHealthSystem {
   }
 
   public fallOut(): void {
-    if (this.respawnTimer > 0) {
+    if (this.controlsLocked) {
       return;
     }
 
@@ -210,7 +191,7 @@ export class PlayerHealthSystem {
     if (
       amount <= 0 ||
       this.invulnerabilityTimer > 0 ||
-      this.respawnTimer > 0
+      this.controlsLocked
     ) {
       return false;
     }
@@ -257,15 +238,16 @@ export class PlayerHealthSystem {
   }
 
   private beginRespawn(): void {
+    if (!this.respawnState.beginRespawn()) {
+      return;
+    }
+
     leaderboard.recordDeath();
 
-    this.respawnTimer = 0.75;
-
-    this.player.velocityX = 0;
-    this.player.velocityY = 0;
-
     this.statusText.setText(
-      `CURTAIN FALL — Returning to ${this.checkpointName}`
+      "CURTAIN FALL — Returning to " +
+        this.respawnState.currentCheckpoint
+          .displayName
     );
 
     this.scene.cameras.main.fadeOut(
@@ -277,12 +259,6 @@ export class PlayerHealthSystem {
   }
 
   private respawn(): void {
-    this.player.x = this.checkpointX;
-    this.player.y = this.checkpointY;
-
-    this.player.velocityX = 0;
-    this.player.velocityY = 0;
-
     this.health = this.maximumHealth;
     this.invulnerabilityTimer = 1;
     this.hurtTimer = 0;
