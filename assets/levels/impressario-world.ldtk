@@ -1007,6 +1007,100 @@
             "tilesetUid": null
           }
         ]
+      },
+      {
+        "allowOutOfBounds": true,
+        "doc": null,
+        "exportToToc": false,
+        "fillOpacity": 0.45,
+        "hollow": false,
+        "keepAspectRatio": false,
+        "limitBehavior": "DiscardOldOnes",
+        "limitScope": "PerLevel",
+        "lineOpacity": 1,
+        "maxCount": 0,
+        "nineSliceBorders": [],
+        "pivotX": 0,
+        "pivotY": 0,
+        "renderMode": "Rectangle",
+        "resizableX": false,
+        "resizableY": false,
+        "showName": false,
+        "tags": [
+          "Gameplay"
+        ],
+        "tileRect": null,
+        "tileRenderMode": "Cover",
+        "tilesetId": null,
+        "identifier": "GrandCardPickup",
+        "uid": 38,
+        "color": "#F6D675",
+        "width": 16,
+        "height": 16,
+        "fieldDefs": [
+          {
+            "__type": "String",
+            "identifier": "Identifier",
+            "uid": 39,
+            "type": "F_String",
+            "isArray": false,
+            "canBeNull": false,
+            "arrayMinLength": null,
+            "arrayMaxLength": null,
+            "editorDisplayMode": "NameAndValue",
+            "editorDisplayPos": "Above",
+            "editorLinkStyle": "ZigZag",
+            "editorShowInWorld": true,
+            "editorAlwaysShow": true,
+            "editorCutLongValues": false,
+            "editorTextSuffix": null,
+            "editorTextPrefix": null,
+            "useForSmartColor": true,
+            "min": null,
+            "max": null,
+            "regex": null,
+            "acceptFileTypes": null,
+            "defaultOverride": null,
+            "textLanguageMode": null,
+            "symmetricalRef": false,
+            "autoChainRef": true,
+            "allowOutOfLevelRef": true,
+            "allowedRefs": "Any",
+            "allowedRefTags": [],
+            "tilesetUid": null
+          },
+          {
+            "__type": "String",
+            "identifier": "Group",
+            "uid": 40,
+            "type": "F_String",
+            "isArray": false,
+            "canBeNull": false,
+            "arrayMinLength": null,
+            "arrayMaxLength": null,
+            "editorDisplayMode": "NameAndValue",
+            "editorDisplayPos": "Above",
+            "editorLinkStyle": "ZigZag",
+            "editorShowInWorld": true,
+            "editorAlwaysShow": true,
+            "editorCutLongValues": false,
+            "editorTextSuffix": null,
+            "editorTextPrefix": null,
+            "useForSmartColor": true,
+            "min": null,
+            "max": null,
+            "regex": null,
+            "acceptFileTypes": null,
+            "defaultOverride": null,
+            "textLanguageMode": null,
+            "symmetricalRef": false,
+            "autoChainRef": true,
+            "allowOutOfLevelRef": true,
+            "allowedRefs": "Any",
+            "allowedRefTags": [],
+            "tilesetUid": null
+          }
+        ]
       }
     ],
     "tilesets": [
@@ -16226,6 +16320,211 @@
                 0
               ],
               "width": 18
+            },
+            {
+              "__identifier": "GrandCardPickup",
+              "__grid": [
+                1997,
+                24
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay"
+              ],
+              "__tile": null,
+              "__worldX": 31952,
+              "__worldY": 384,
+              "defUid": 38,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "RoyalCardA",
+                  "defUid": 39,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "RoyalBox",
+                  "defUid": 40,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "c3703e75-5f87-4d2c-89f5-e4a160e96758",
+              "px": [
+                31952,
+                384
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "GrandCardPickup",
+              "__grid": [
+                2186,
+                24
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay"
+              ],
+              "__tile": null,
+              "__worldX": 34976,
+              "__worldY": 384,
+              "defUid": 38,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "RoyalCardB",
+                  "defUid": 39,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "RoyalBox",
+                  "defUid": 40,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "1efc8786-b7ae-4ca3-8ec2-00b22284975e",
+              "px": [
+                34976,
+                384
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "GrandCardPickup",
+              "__grid": [
+                2219,
+                24
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay"
+              ],
+              "__tile": null,
+              "__worldX": 35504,
+              "__worldY": 384,
+              "defUid": 38,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "CoreCardA",
+                  "defUid": 39,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "MirrorCore",
+                  "defUid": 40,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "c43630c6-130f-4462-839f-c9a6cd5a4446",
+              "px": [
+                35504,
+                384
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "GrandCardPickup",
+              "__grid": [
+                2253,
+                17
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay"
+              ],
+              "__tile": null,
+              "__worldX": 36048,
+              "__worldY": 272,
+              "defUid": 38,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "CoreCardB",
+                  "defUid": 39,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "MirrorCore",
+                  "defUid": 40,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "f85a3d43-65b4-4e5a-9bfa-bb23a9610a76",
+              "px": [
+                36048,
+                272
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "GrandCardPickup",
+              "__grid": [
+                2774,
+                18
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay"
+              ],
+              "__tile": null,
+              "__worldX": 44384,
+              "__worldY": 288,
+              "defUid": 38,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "ApproachCardA",
+                  "defUid": 39,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "ConductorApproach",
+                  "defUid": 40,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "85b57888-1b02-49e8-8a48-b0ab539f2dec",
+              "px": [
+                44384,
+                288
+              ],
+              "width": 16
             }
           ],
           "gridTiles": [],

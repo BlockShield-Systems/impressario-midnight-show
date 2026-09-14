@@ -25,3 +25,11 @@ export function getWorldSection(
     ? null
     : WORLD_SECTIONS[index] ?? null;
 }
+
+export function getWorldSectionById(
+  id: string
+): WorldSection | null {
+  return WORLD_SECTIONS.find(
+    section => section.id === id
+  ) ?? null;
+}

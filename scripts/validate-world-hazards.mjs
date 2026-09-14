@@ -83,7 +83,8 @@ const definitions =
 
 for (const identifier of [
   "HazardAnchor",
-  "SupportPickup"
+  "SupportPickup",
+  "GrandCardPickup"
 ]) {
   const matches = definitions.filter(
     definition =>
@@ -116,6 +117,11 @@ const supports = entities.filter(
     entity.__identifier === "SupportPickup"
 );
 
+const cardPickups = entities.filter(
+  entity =>
+    entity.__identifier === "GrandCardPickup"
+);
+
 if (hazards.length !== 36) {
   fail(
     `Expected 36 hazards, got ${hazards.length}.`
@@ -125,6 +131,12 @@ if (hazards.length !== 36) {
 if (supports.length !== 8) {
   fail(
     `Expected 8 supports, got ${supports.length}.`
+  );
+}
+
+if (cardPickups.length !== 5) {
+  fail(
+    `Expected 5 Grand Card pickups, got ${cardPickups.length}.`
   );
 }
 
@@ -145,7 +157,7 @@ if (
   conductorApproachSupports.length !== 0
 ) {
   fail(
-    "ConductorApproach must remain hazard-free and support-free."
+    "ConductorApproach must remain hazard-free and health-support-free."
   );
 }
 
@@ -161,13 +173,20 @@ const mirrorConductorSupports = supports.filter(
     entity.__worldX < 49824
 );
 
+const mirrorConductorCardPickups = cardPickups.filter(
+  entity =>
+    entity.__worldX >= 44672 &&
+    entity.__worldX < 49824
+);
+
 if (
   mirrorConductorHazards.length !== 0 ||
-  mirrorConductorSupports.length !== 0
+  mirrorConductorSupports.length !== 0 ||
+  mirrorConductorCardPickups.length !== 0
 ) {
   fail(
-    "MirrorConductor must have zero LDtk hazards and supports; " +
-    "its hazards are dedicated dynamic boss mechanics."
+    "MirrorConductor must have zero LDtk hazards, supports, and card pickups; " +
+    "its inventory and hazards are dedicated dynamic boss mechanics."
   );
 }
 
@@ -175,7 +194,8 @@ const ids = [];
 
 for (const entity of [
   ...hazards,
-  ...supports
+  ...supports,
+  ...cardPickups
 ]) {
   const fields = fieldMap(entity);
   const id = fields.get("Identifier");
@@ -447,6 +467,36 @@ for (const [id, x, y] of [
   }
 }
 
+const authoredCardPickups = new Map(
+  cardPickups.map(entity => [
+    fieldMap(entity).get("Identifier"),
+    entity
+  ])
+);
+
+for (const [id, group, x, y] of [
+  ["RoyalCardA", "RoyalBox", 31952, 384],
+  ["RoyalCardB", "RoyalBox", 34976, 384],
+  ["CoreCardA", "MirrorCore", 35504, 384],
+  ["CoreCardB", "MirrorCore", 36048, 272],
+  ["ApproachCardA", "ConductorApproach", 44384, 288]
+]) {
+  const entity = authoredCardPickups.get(id);
+  const fields = entity ? fieldMap(entity) : null;
+
+  if (
+    !entity ||
+    !fields ||
+    fields.get("Group") !== group ||
+    entity.__worldX !== x ||
+    entity.__worldY !== y
+  ) {
+    fail(
+      `${id} does not match its authored LDtk values.`
+    );
+  }
+}
+
 const mirrorCoreHazards = new Map(
   hazards
     .filter(entity =>
@@ -518,7 +568,8 @@ for (const [id, x, y] of [
 
 for (const entity of [
   ...hazards,
-  ...supports
+  ...supports,
+  ...cardPickups
 ]) {
   const fields = fieldMap(entity);
   const id = fields.get("Identifier");
@@ -558,6 +609,13 @@ for (const entity of [
     (x < 35344 || x >= 39200)
   ) {
     fail(`${id} is outside the MirrorCore interval.`);
+  }
+
+  if (
+    group === "ConductorApproach" &&
+    (x < 39200 || x >= 44672)
+  ) {
+    fail(`${id} is outside the ConductorApproach interval.`);
   }
 }
 
@@ -604,6 +662,20 @@ assertCounts(
     MirrorCore: 4
   },
   "support group"
+);
+
+assertCounts(
+  countBy(
+    cardPickups,
+    entity =>
+      fieldMap(entity).get("Group")
+  ),
+  {
+    RoyalBox: 2,
+    MirrorCore: 2,
+    ConductorApproach: 1
+  },
+  "Grand Card pickup group"
 );
 
 const consumers = [
@@ -655,7 +727,8 @@ const consumers = [
   [
     "src/world/RoyalBoxSupportSystem.ts",
     [
-      'getWorldSupportPickups("RoyalBox")'
+      'getWorldSupportPickups("RoyalBox")',
+      "getWorldGrandCardPickups"
     ]
   ],
   [
@@ -744,7 +817,13 @@ for (const token of [
   "if (phase === 3)",
   "dangerousLeft ? 45160 : 47232",
   "2072",
-  '"floor-warning"'
+  '"floor-warning"',
+  'id: "ConductorCardLeft"',
+  'id: "ConductorCardRight"',
+  "private spawnCardPickups()",
+  "private clearCardPickups()",
+  "private updateCardPickups()",
+  "this.clearCardPickups()"
 ]) {
   if (!mirrorConductorSource.includes(token)) {
     fail(
@@ -809,8 +888,10 @@ const runtime = read(
 for (const token of [
   "WORLD_HAZARDS",
   "WORLD_SUPPORT_PICKUPS",
+  "WORLD_GRAND_CARD_PICKUPS",
   "getWorldHazards",
-  "getWorldSupportPickups"
+  "getWorldSupportPickups",
+  "getWorldGrandCardPickups"
 ]) {
   if (!runtime.includes(token)) {
     fail(
@@ -841,7 +922,7 @@ for (const name of [
 
 console.log(
   "LDtk hazard runtime valid: " +
-  "36 hazards, 8 supports, " +
+  "36 hazards, 8 supports, 5 Grand Card pickups, " +
   "zero MirrorConductor static inventory, " +
   "bounded dedicated dynamic boss hazards."
 );

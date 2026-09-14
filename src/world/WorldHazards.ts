@@ -9,6 +9,11 @@ export type WorldHazardGroup =
   | "RoyalBox"
   | "MirrorCore";
 
+export type WorldGrandCardPickupGroup =
+  | "RoyalBox"
+  | "MirrorCore"
+  | "ConductorApproach";
+
 export type WorldHazardKind =
   | "Pendulum"
   | "Spike"
@@ -32,6 +37,13 @@ export interface WorldHazard {
 export interface WorldSupportPickup {
   readonly id: string;
   readonly group: WorldHazardGroup;
+  readonly x: number;
+  readonly y: number;
+}
+
+export interface WorldGrandCardPickup {
+  readonly id: string;
+  readonly group: WorldGrandCardPickupGroup;
   readonly x: number;
   readonly y: number;
 }
@@ -558,6 +570,39 @@ export const WORLD_SUPPORT_PICKUPS = [
   },
 ] as const satisfies readonly WorldSupportPickup[];
 
+export const WORLD_GRAND_CARD_PICKUPS = [
+  {
+    id: "RoyalCardA",
+    group: "RoyalBox",
+    x: 31952,
+    y: 384
+  },
+  {
+    id: "RoyalCardB",
+    group: "RoyalBox",
+    x: 34976,
+    y: 384
+  },
+  {
+    id: "CoreCardA",
+    group: "MirrorCore",
+    x: 35504,
+    y: 384
+  },
+  {
+    id: "CoreCardB",
+    group: "MirrorCore",
+    x: 36048,
+    y: 272
+  },
+  {
+    id: "ApproachCardA",
+    group: "ConductorApproach",
+    x: 44384,
+    y: 288
+  },
+] as const satisfies readonly WorldGrandCardPickup[];
+
 export function getWorldHazards(
   group: WorldHazardGroup,
   kind: WorldHazardKind
@@ -575,4 +620,14 @@ export function getWorldSupportPickups(
   return WORLD_SUPPORT_PICKUPS.filter(
     value => value.group === group
   );
+}
+
+export function getWorldGrandCardPickups(
+  group?: WorldGrandCardPickupGroup
+): readonly WorldGrandCardPickup[] {
+  return group === undefined
+    ? WORLD_GRAND_CARD_PICKUPS
+    : WORLD_GRAND_CARD_PICKUPS.filter(
+        value => value.group === group
+      );
 }

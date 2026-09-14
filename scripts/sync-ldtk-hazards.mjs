@@ -128,6 +128,30 @@ const supports =
         a.id.localeCompare(b.id)
     );
 
+const cardPickups =
+  layer.entityInstances
+    .filter(
+      entity =>
+        entity.__identifier ===
+        "GrandCardPickup"
+    )
+    .map(entity => ({
+      id: String(
+        fieldValue(entity, "Identifier")
+      ),
+      group: String(
+        fieldValue(entity, "Group")
+      ),
+      x: Number(entity.px?.[0]),
+      y: Number(entity.px?.[1])
+    }))
+    .sort(
+      (a, b) =>
+        a.x - b.x ||
+        a.y - b.y ||
+        a.id.localeCompare(b.id)
+    );
+
 const expected = {
   "CombatRehearsal:Spike": 3,
   "MainStage:Pendulum": 2,
@@ -154,11 +178,18 @@ if (supports.length !== 8) {
   );
 }
 
+if (cardPickups.length !== 5) {
+  throw new Error(
+    `Expected 5 Grand Card pickups, got ${cardPickups.length}.`
+  );
+}
+
 const ids = new Set();
 
 for (const item of [
   ...hazards,
-  ...supports
+  ...supports,
+  ...cardPickups
 ]) {
   if (!item.id || ids.has(item.id)) {
     throw new Error(
@@ -255,6 +286,11 @@ const lines = [
   '  | "RoyalBox"',
   '  | "MirrorCore";',
   "",
+  "export type WorldGrandCardPickupGroup =",
+  '  | "RoyalBox"',
+  '  | "MirrorCore"',
+  '  | "ConductorApproach";',
+  "",
   "export type WorldHazardKind =",
   '  | "Pendulum"',
   '  | "Spike"',
@@ -278,6 +314,13 @@ const lines = [
   "export interface WorldSupportPickup {",
   "  readonly id: string;",
   "  readonly group: WorldHazardGroup;",
+  "  readonly x: number;",
+  "  readonly y: number;",
+  "}",
+  "",
+  "export interface WorldGrandCardPickup {",
+  "  readonly id: string;",
+  "  readonly group: WorldGrandCardPickupGroup;",
   "  readonly x: number;",
   "  readonly y: number;",
   "}",
@@ -323,6 +366,23 @@ for (const value of supports) {
 lines.push(
   "] as const satisfies readonly WorldSupportPickup[];",
   "",
+  "export const WORLD_GRAND_CARD_PICKUPS = ["
+);
+
+for (const value of cardPickups) {
+  lines.push(
+    "  {",
+    `    id: ${JSON.stringify(value.id)},`,
+    `    group: ${JSON.stringify(value.group)},`,
+    `    x: ${value.x},`,
+    `    y: ${value.y}`,
+    "  },"
+  );
+}
+
+lines.push(
+  "] as const satisfies readonly WorldGrandCardPickup[];",
+  "",
   "export function getWorldHazards(",
   "  group: WorldHazardGroup,",
   "  kind: WorldHazardKind",
@@ -340,6 +400,16 @@ lines.push(
   "  return WORLD_SUPPORT_PICKUPS.filter(",
   "    value => value.group === group",
   "  );",
+  "}",
+  "",
+  "export function getWorldGrandCardPickups(",
+  "  group?: WorldGrandCardPickupGroup",
+  "): readonly WorldGrandCardPickup[] {",
+  "  return group === undefined",
+  "    ? WORLD_GRAND_CARD_PICKUPS",
+  "    : WORLD_GRAND_CARD_PICKUPS.filter(",
+  "        value => value.group === group",
+  "      );",
   "}",
   ""
 );
@@ -361,7 +431,7 @@ if (checkOnly) {
 
   console.log(
     "LDtk hazard runtime synchronized: " +
-    "36 hazards, 8 supports."
+    "36 hazards, 8 supports, 5 Grand Card pickups."
   );
 
   process.exit(0);
@@ -375,5 +445,5 @@ fs.writeFileSync(
 
 console.log(
   "Generated src/world/WorldHazards.ts: " +
-  "36 hazards, 8 supports."
+  "36 hazards, 8 supports, 5 Grand Card pickups."
 );

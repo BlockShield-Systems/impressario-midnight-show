@@ -1092,6 +1092,19 @@ export class MirrorCoreSystem {
     this.redraw();
   }
 
+  public getDebugSnapshot() {
+    const relaysActivated = this.relays.filter(
+      relay => relay.isActivated
+    ).length;
+
+    return {
+      relaysActivated,
+      relayGateOpen:
+        this.relaysCheckpointReached,
+      objective: this.objectiveText.text
+    };
+  }
+
   public resetAfterDeath(): void {
     this.elapsed = 0;
     this.hazardCooldown = 0;
