@@ -3,6 +3,7 @@ import {
   test,
   type Page
 } from "@playwright/test";
+import { openStartScreen } from "./menu-navigation";
 
 interface ActiveAudioHandle {
   readonly logicalKey: string;
@@ -133,6 +134,7 @@ async function beginShow(
     )
   ).toBe(0);
 
+  await openStartScreen(page);
   const overlay =
     page.locator(".leaderboard-overlay");
   await expect(overlay).toBeVisible();
@@ -145,7 +147,7 @@ async function beginShow(
   );
   await expect(beginButton).toBeEnabled();
 
-  /* This must be the only WebAudio-unlock gesture. */
+  /* Only normal menu/start gestures may unlock WebAudio; no test-side resume. */
   await beginButton.click();
   await expect(page.locator("canvas"))
     .toBeVisible({ timeout: 20_000 });
@@ -238,6 +240,7 @@ async function beginRankedRaceRun(
   });
 
   await page.goto("http://0.0.0.0:4173/");
+  await openStartScreen(page);
   const overlay = page.locator(
     ".leaderboard-overlay"
   );
