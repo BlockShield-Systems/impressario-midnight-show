@@ -8,11 +8,21 @@ import {
 const LOCAL_MESSAGE =
   "Leaderboard is not available in local development.";
 
-const SCREENSHOT_DIRECTORY =
-  "/home/user/webapp/node_modules/.cache/ui-runtime";
+import { mkdirSync } from "node:fs";
+import { resolve } from "node:path";
 
-const RENDERING_SCREENSHOT_DIRECTORY =
-  "/home/user/webapp/node_modules/.cache/rendering-regression";
+const SCREENSHOT_DIRECTORY = resolve(
+  process.cwd(),
+  "node_modules/.cache/ui-runtime"
+);
+
+const RENDERING_SCREENSHOT_DIRECTORY = resolve(
+  process.cwd(),
+  "node_modules/.cache/rendering-regression"
+);
+
+mkdirSync(SCREENSHOT_DIRECTORY, { recursive: true });
+mkdirSync(RENDERING_SCREENSHOT_DIRECTORY, { recursive: true });
 
 interface RuntimeMetrics {
   readonly activeIntervals: number;

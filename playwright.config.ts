@@ -44,11 +44,15 @@ export default defineConfig({
     ? undefined
     : {
         command:
-          "npm run dev -- --host 127.0.0.1 --port 4173",
+          "npx vite build --outDir dist-qa && npx vite preview --outDir dist-qa --host 127.0.0.1 --port 4173",
         url: baseURL,
         reuseExistingServer: false,
         timeout: 120_000,
         stdout: "pipe",
-        stderr: "pipe"
+        stderr: "pipe",
+        env: {
+          ...process.env,
+          VITE_QA_RUNTIME_INSPECTION: "1"
+        } as Record<string, string>
       }
 });
