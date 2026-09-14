@@ -181,12 +181,12 @@ test("fullscreen denial is reported without corrupting preferences or rejecting 
   const errors: string[] = [];
   page.on("pageerror", error => errors.push(error.message));
   await page.addInitScript(() => {
-    document.documentElement.requestFullscreen = () => Promise.reject(new Error("Denied"));
+    Element.prototype.requestFullscreen = () => Promise.reject(new Error("Denied"));
   });
   await page.goto("/");
   await openSettings(page);
   await menu(page).getByRole("button", { name: "Display mode: Windowed", exact: true }).click();
-  await expect(menu(page).getByRole("status")).toHaveText("Display mode could not be changed. Try again.");
+  await expect(menu(page).locator("p.main-menu-status")).toHaveText("Display mode could not be changed. Try again.");
   expect(await page.evaluate(() => document.fullscreenElement)).toBeNull();
   expect(await page.evaluate(key => localStorage.getItem(key), DISPLAY_KEY)).toBeNull();
   expect(errors).toEqual([]);
