@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { leaderboard } from "./leaderboard/LeaderboardClient";
+import { MainMenuScene } from "./menu/MainMenuScene";
 import "./style.css";
 import { CombatSystem } from "./combat/CombatSystem";
 import { StagehandSystem } from "./enemies/StagehandSystem";
@@ -2349,32 +2349,30 @@ const config: Phaser.Types.Core.GameConfig = {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
     width: GAME_WIDTH,
-    height: GAME_HEIGHT
+    height: GAME_HEIGHT,
+    fullscreenTarget: document.documentElement
+  },
+
+  dom: {
+    createContainer: true
   },
 
   scene: [
+    MainMenuScene,
     GameScene
   ]
 };
 
-void leaderboard.boot(() => {
-  const audioContext =
-    typeof AudioContext === "undefined"
-      ? undefined
-      : new AudioContext();
+preparedAudioContext =
+  typeof AudioContext === "undefined"
+    ? undefined
+    : new AudioContext();
 
-  preparedAudioContext = audioContext;
-
-  if (audioContext) {
-    void audioContext.resume();
-  }
-
-  new Phaser.Game({
-    ...config,
-    audio: audioContext
-      ? {
-          context: audioContext
-        }
-      : undefined
-  });
+new Phaser.Game({
+  ...config,
+  audio: preparedAudioContext
+    ? {
+        context: preparedAudioContext
+      }
+    : undefined
 });

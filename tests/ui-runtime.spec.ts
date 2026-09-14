@@ -4,6 +4,7 @@ import {
   type Locator,
   type Page
 } from "@playwright/test";
+import { openStartScreen } from "./menu-navigation";
 
 const LOCAL_MESSAGE =
   "Leaderboard is not available in local development.";
@@ -361,6 +362,7 @@ test(
     });
 
     await page.goto("/");
+    await openStartScreen(page);
 
     const overlay = page.locator(
       ".leaderboard-overlay"
@@ -426,6 +428,12 @@ test(
     });
 
     await beginButton.click();
+    await expect(page.getByRole("region", { name: "Main menu" })).toHaveCount(0);
+    // A visible/nonblank canvas is now also valid in the menu. Wait for actual
+    // gameplay before sampling frames or measuring runtime listener balance.
+    await expect.poll(() => page.evaluate(() =>
+      typeof window.__IMPRESSARIO_AUDIO_DEBUG__
+    )).toBe("function");
 
     const canvas = page.locator("canvas");
     await expect(canvas).toBeVisible({

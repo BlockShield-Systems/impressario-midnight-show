@@ -1,0 +1,96 @@
+.main-menu-panel {
+  width: 420px;
+  height: 220px;
+  color: #f7e4ad;
+  font: 13px "Courier New", monospace;
+  text-align: center;
+}
+
+.main-menu-panel [hidden] {
+  display: none;
+}
+
+.main-menu-panel button {
+  padding: 9px 16px;
+  border: 1px solid #e4b950;
+  border-radius: 4px;
+  color: #fff0bd;
+  background: linear-gradient(180deg, #563126, #2a1721);
+  font: bold 14px "Courier New", monospace;
+  cursor: pointer;
+}
+
+.main-menu-panel button:hover {
+  background: #543047;
+}
+
+.main-menu-panel button:focus-visible,
+.main-menu-panel input:focus-visible {
+  outline: 2px solid #78e7eb;
+  outline-offset: 3px;
+}
+
+.main-menu-panel button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.main-menu-home {
+  padding-top: 32px;
+}
+
+.main-menu-home button {
+  display: block;
+  width: 260px;
+  margin: 0 auto 16px;
+}
+
+.main-menu-hint {
+  margin: 18px 0 0;
+  color: #d9d0c1;
+  font-size: 11px;
+}
+
+.main-menu-options h2 {
+  margin: 0 0 10px;
+  color: #78e7eb;
+  font-size: 16px;
+}
+
+.main-menu-display {
+  min-width: 260px;
+  margin-bottom: 10px;
+}
+
+.main-menu-volume {
+  display: grid;
+  grid-template-columns: 110px 185px 100px;
+  gap: 10px;
+  align-items: center;
+  margin: 10px 0;
+  text-align: left;
+}
+
+.main-menu-volume input {
+  width: 185px;
+  margin: 0;
+  accent-color: #e4b950;
+  cursor: pointer;
+}
+
+.main-menu-volume output {
+  font-size: 11px;
+}
+
+.main-menu-back {
+  min-width: 120px;
+  margin-top: 4px;
+}
+
+.main-menu-status {
+  min-height: 26px;
+  margin: 9px 0 0;
+  color: #d9d0c1;
+  font-size: 11px;
+  line-height: 1.3;
+}

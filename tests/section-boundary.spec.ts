@@ -3,6 +3,7 @@ import {
   test,
   type Page
 } from "@playwright/test";
+import { openStartScreen } from "./menu-navigation";
 
 const SECTIONS = [
   ["MovementRehearsal", 0, 5376, "music_01_opening_rehearsal"],
@@ -85,6 +86,7 @@ declare global {
 
 async function beginShow(page: Page): Promise<void> {
   await page.goto("/");
+  await openStartScreen(page);
   const overlay = page.locator(".leaderboard-overlay");
   await overlay.locator("input").first().fill("Boundary QA");
   await overlay.getByRole("button", {
