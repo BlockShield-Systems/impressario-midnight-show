@@ -23,6 +23,8 @@ interface BoundarySnapshot {
   readonly player: {
     readonly x: number;
     readonly y: number;
+    readonly velocityX: number;
+    readonly velocityY: number;
     readonly controllable: boolean;
   };
   readonly previousSectionId: string | null;
@@ -40,6 +42,15 @@ interface BoundarySnapshot {
   readonly hazards: number;
   readonly collisionChecks: number;
   readonly solidCount: number;
+  readonly mirrorCore: {
+    readonly relaysActivated: number;
+    readonly relayGateOpen: boolean;
+    readonly objective: string;
+  };
+  readonly magic: {
+    readonly grandCardCharges: number;
+    readonly maximumGrandCardCharges: number;
+  };
   readonly checkpoint: {
     readonly checkpointName: string;
     readonly checkpointX: number;
@@ -75,6 +86,11 @@ interface BoundarySnapshot {
 interface BoundaryHarness {
   readonly boundaries: readonly number[];
   setPlayerLocation(x: number, y: number): void;
+  setPlayerMotion(
+    velocityX: number,
+    velocityY: number
+  ): void;
+  resumeGameplay(): void;
   snapshot(): BoundarySnapshot;
 }
 
@@ -136,6 +152,83 @@ async function snapshot(
   expect(result).toBeDefined();
   return result!;
 }
+
+test("MirrorRelay gate blocks the top bypass and stays synchronized with relay progress", async ({ page }) => {
+  await beginShow(page);
+
+  const placePlayer = async (
+    x: number,
+    y: number
+  ): Promise<void> => {
+    await page.evaluate(([nextX, nextY]) => {
+      const harness =
+        window.__IMPRESSARIO_BOUNDARY_QA__;
+      harness?.setPlayerLocation(nextX, nextY);
+      harness?.resumeGameplay();
+    }, [x, y]);
+    await page.waitForTimeout(120);
+  };
+
+  await placePlayer(23600, 322);
+  await placePlayer(31920, 354);
+
+  await expect.poll(() => page.evaluate(() =>
+    window.__IMPRESSARIO_BOUNDARY_QA__
+      ?.snapshot().magic.grandCardCharges
+  )).toBe(3);
+
+  await placePlayer(35680, 252);
+  await page.keyboard.press("l");
+
+  await expect.poll(() => page.evaluate(() =>
+    window.__IMPRESSARIO_BOUNDARY_QA__
+      ?.snapshot().mirrorCore.relaysActivated
+  )).toBe(1);
+
+  await page.evaluate(() => {
+    const harness =
+      window.__IMPRESSARIO_BOUNDARY_QA__;
+    harness?.setPlayerLocation(36170, 0);
+    harness?.setPlayerMotion(190, -430);
+    harness?.resumeGameplay();
+  });
+  await page.keyboard.down("ArrowRight");
+  await page.waitForTimeout(700);
+  await page.keyboard.up("ArrowRight");
+
+  const blocked = await snapshot(page);
+  expect(blocked.player.y).toBeGreaterThanOrEqual(0);
+  expect(blocked.player.x).toBeLessThanOrEqual(36174.01);
+  expect(blocked.mirrorCore.relaysActivated).toBe(1);
+  expect(blocked.mirrorCore.relayGateOpen).toBe(false);
+  expect(blocked.mirrorCore.objective).toContain(
+    "MIRROR RELAYS 1/2"
+  );
+
+  await placePlayer(36040, 224);
+  await page.keyboard.press("l");
+
+  await expect.poll(() => page.evaluate(() =>
+    window.__IMPRESSARIO_BOUNDARY_QA__
+      ?.snapshot().mirrorCore.relaysActivated
+  )).toBe(2);
+
+  const completed = await snapshot(page);
+  expect(completed.mirrorCore.relayGateOpen).toBe(true);
+  expect(completed.mirrorCore.objective).not.toContain(
+    "MIRROR RELAYS 1/2"
+  );
+
+  await placePlayer(36170, 450);
+  await page.keyboard.down("ArrowRight");
+  await page.waitForTimeout(450);
+  await page.keyboard.up("ArrowRight");
+
+  const progressed = await snapshot(page);
+  expect(progressed.player.x).toBeGreaterThan(36192);
+  expect(progressed.mirrorCore.relaysActivated).toBe(2);
+  expect(progressed.mirrorCore.relayGateOpen).toBe(true);
+});
 
 test("all ten boundaries support repeated forward and backward traversal without freezes or growth", async ({ page }) => {
   test.setTimeout(900_000);

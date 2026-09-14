@@ -1,6 +1,12 @@
 import Phaser from "phaser";
 
 import type { PlayerController } from "../main";
+import { AUDIO_EVENTS } from "../audio/AudioEvents";
+import {
+  GRAND_CARD_MAX_CHARGES,
+  GrandCardChargeState,
+  type GrandCardSpendResult
+} from "./GrandCardState";
 
 interface SpotlightResult {
   readonly targetsHit: number;
@@ -13,6 +19,8 @@ export class MagicSystem {
   private show = this.maximumShow;
   private unlocked = false;
   private grandCardUnlocked = false;
+  private readonly grandCardCharges =
+    new GrandCardChargeState();
 
   private cooldownTimer = 0;
   private effectTimer = 0;
@@ -31,7 +39,7 @@ export class MagicSystem {
     Phaser.GameObjects.Text;
 
   public constructor(
-    scene: Phaser.Scene,
+    private readonly scene: Phaser.Scene,
     private readonly player: PlayerController,
     private readonly applySpotlight: (
       centerX: number,
@@ -81,6 +89,14 @@ export class MagicSystem {
     return this.castCount;
   }
 
+  public get grandCardChargeCount(): number {
+    return this.grandCardCharges.currentCharges;
+  }
+
+  public get maximumGrandCardCharges(): number {
+    return GRAND_CARD_MAX_CHARGES;
+  }
+
   public unlock(): void {
     if (this.unlocked) {
       return;
@@ -99,35 +115,86 @@ export class MagicSystem {
     }
 
     this.grandCardUnlocked = true;
+    this.grandCardCharges.unlock();
     this.redrawHud();
   }
 
-  public trySpendShow(
+  public trySpendGrandCard(
     cost: number,
     cooldown: number
-  ): boolean {
+  ): GrandCardSpendResult {
     if (
       !this.unlocked ||
-      !this.grandCardUnlocked ||
+      !this.grandCardUnlocked
+    ) {
+      return "locked";
+    }
+
+    if (
+      this.grandCardCharges.currentCharges <= 0
+    ) {
+      this.scene.events.emit(
+        AUDIO_EVENTS.grandCardDepleted,
+        this.player.centerX
+      );
+      this.redrawHud();
+      return "depleted";
+    }
+
+    if (
       cost <= 0 ||
       cooldown <= 0 ||
       this.cooldownTimer > 0 ||
       this.show < cost
     ) {
-      return false;
+      return "locked";
+    }
+
+    const result =
+      this.grandCardCharges.spend();
+
+    if (result !== "spent") {
+      return result;
     }
 
     this.show -= cost;
     this.cooldownTimer = cooldown;
+    this.scene.events.emit(
+      AUDIO_EVENTS.grandCardCast,
+      this.player.centerX
+    );
     this.redrawHud();
 
+    return "spent";
+  }
+
+  public collectGrandCardPickup(
+    id: string,
+    x: number
+  ): boolean {
+    if (!this.grandCardCharges.collectPickup(id)) {
+      return false;
+    }
+
+    this.scene.events.emit(
+      AUDIO_EVENTS.grandCardPickup,
+      x
+    );
+    this.redrawHud();
     return true;
+  }
+
+  public isGrandCardPickupAvailable(
+    id: string
+  ): boolean {
+    return this.grandCardCharges.isPickupAvailable(id);
   }
 
   public resetEncounter(): void {
     this.show = this.maximumShow;
     this.cooldownTimer = 0;
     this.effectTimer = 0;
+    this.grandCardCharges.resetEncounter();
 
     this.worldGraphics.clear();
     this.redrawHud();
@@ -142,6 +209,8 @@ export class MagicSystem {
       0,
       this.cooldownTimer - deltaSeconds
     );
+
+    this.grandCardCharges.update(deltaSeconds);
 
     this.effectTimer = Math.max(
       0,
@@ -255,10 +324,22 @@ export class MagicSystem {
       3
     );
 
+    const cardStatus =
+      this.grandCardCharges.currentCharges > 0
+        ? `CARD ${this.grandCardCharges.currentCharges}/${GRAND_CARD_MAX_CHARGES}`
+        : "CARD EMPTY";
+
     this.spellText.setText(
       this.grandCardUnlocked
-        ? `[K] LIGHT  [L] CARD  SHOW ${Math.floor(this.show)}`
+        ? `[K] LIGHT  [L] ${cardStatus}  SHOW ${Math.floor(this.show)}`
         : `[K] SPOTLIGHT  SHOW ${Math.floor(this.show)}`
+    );
+
+    this.spellText.setColor(
+      this.grandCardUnlocked &&
+      this.grandCardCharges.currentCharges === 0
+        ? "#ff7895"
+        : "#bff8ff"
     );
   }
 

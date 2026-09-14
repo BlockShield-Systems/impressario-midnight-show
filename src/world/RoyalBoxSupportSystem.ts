@@ -1,5 +1,17 @@
 import Phaser from "phaser";
-import { getWorldSupportPickups } from "./WorldHazards";
+import {
+  getWorldGrandCardPickups,
+  getWorldSupportPickups
+} from "./WorldHazards";
+import {
+  getWorldSection
+} from "./SectionOwnership";
+import {
+  advanceGrandCardProjectile,
+  createGrandCardProjectileState,
+  grandCardProjectileBounds,
+  type GrandCardProjectileState
+} from "../magic/GrandCardState";
 
 import type {
   CombatSystem,
@@ -13,12 +25,8 @@ import type {
   PlayerHealthSystem
 } from "../player/PlayerHealthSystem";
 
-interface GrandCardProjectile {
-  x: number;
-  y: number;
-  velocityX: number;
-  velocityY: number;
-  lifetime: number;
+interface GrandCardProjectile
+extends GrandCardProjectileState {
   rotation: number;
   target: CombatTarget | null;
 }
@@ -27,6 +35,12 @@ interface EncoreRose {
   readonly x: number;
   readonly y: number;
   consumed: boolean;
+}
+
+interface GrandCardPickup {
+  readonly id: string;
+  readonly x: number;
+  readonly y: number;
 }
 
 const GRAND_CARD_COST = 18;
@@ -38,12 +52,15 @@ const GRAND_CARD_COOLDOWN = 0.3;
 
 const ROYAL_BOX_START_X = 31664;
 const ROYAL_BOX_END_X = 35344;
-const PROJECTILE_MARGIN = 640;
 const LOOK_DOWN_DELAY = 0.18;
 const LOOK_DOWN_OFFSET = 105;
 
 const ROSE_POSITIONS =
   getWorldSupportPickups("RoyalBox");
+
+const GRAND_CARD_PICKUPS:
+readonly GrandCardPickup[] =
+  getWorldGrandCardPickups();
 
 export class RoyalBoxSupportSystem {
   private unlocked = false;
@@ -157,6 +174,7 @@ export class RoyalBoxSupportSystem {
 
     this.updateProjectiles(deltaSeconds);
     this.updateRoses();
+    this.updateGrandCardPickups();
     this.redraw();
   }
 
@@ -209,10 +227,10 @@ export class RoyalBoxSupportSystem {
 
   private tryCastGrandCard(): void {
     if (
-      !this.magicSystem.trySpendShow(
+      this.magicSystem.trySpendGrandCard(
         GRAND_CARD_COST,
         GRAND_CARD_COOLDOWN
-      )
+      ) !== "spent"
     ) {
       return;
     }
@@ -252,13 +270,14 @@ export class RoyalBoxSupportSystem {
     direction.normalize();
 
     this.projectiles.push({
-      x: startX,
-      y: startY,
-      velocityX:
+      ...createGrandCardProjectileState(
+        startX,
+        startY,
         direction.x * GRAND_CARD_SPEED,
-      velocityY:
         direction.y * GRAND_CARD_SPEED,
-      lifetime: GRAND_CARD_LIFETIME,
+        GRAND_CARD_LIFETIME,
+        getWorldSection(startX)
+      ),
       rotation: Math.atan2(
         direction.y,
         direction.x
@@ -276,8 +295,6 @@ export class RoyalBoxSupportSystem {
     deltaSeconds: number
   ): void {
     for (const projectile of this.projectiles) {
-      projectile.lifetime -= deltaSeconds;
-
       if (
         projectile.target &&
         projectile.target.active
@@ -323,35 +340,29 @@ export class RoyalBoxSupportSystem {
         projectile.target = null;
       }
 
-      projectile.x +=
-        projectile.velocityX *
-        deltaSeconds;
-
-      projectile.y +=
-        projectile.velocityY *
-        deltaSeconds;
-
-      projectile.rotation +=
-        8.5 * deltaSeconds;
-
       if (
-        projectile.x <
-          ROYAL_BOX_START_X - PROJECTILE_MARGIN ||
-        projectile.x >
-          ROYAL_BOX_END_X + PROJECTILE_MARGIN ||
-        projectile.y < -40 ||
-        projectile.y > 760
+        !advanceGrandCardProjectile(
+          projectile,
+          deltaSeconds,
+          getWorldSection(projectile.x)
+        )
       ) {
         projectile.lifetime = 0;
         continue;
       }
 
+      projectile.rotation +=
+        8.5 * deltaSeconds;
+
+      const authoredBounds =
+        grandCardProjectileBounds(projectile);
+
       const bounds =
         new Phaser.Geom.Rectangle(
-          projectile.x - 8,
-          projectile.y - 5,
-          16,
-          10
+          authoredBounds.x,
+          authoredBounds.y,
+          authoredBounds.width,
+          authoredBounds.height
         );
 
       const target =
@@ -412,6 +423,49 @@ export class RoyalBoxSupportSystem {
       ) {
         rose.consumed = true;
 
+        this.scene.cameras.main.shake(
+          55,
+          0.0015
+        );
+      }
+    }
+  }
+
+  private updateGrandCardPickups(): void {
+    const playerBounds =
+      new Phaser.Geom.Rectangle(
+        this.player.x,
+        this.player.y,
+        this.player.width,
+        this.player.height
+      );
+
+    for (const pickup of GRAND_CARD_PICKUPS) {
+      if (
+        !this.magicSystem
+          .isGrandCardPickupAvailable(
+            pickup.id
+          ) ||
+        !Phaser.Geom.Intersects
+          .RectangleToRectangle(
+            playerBounds,
+            new Phaser.Geom.Rectangle(
+              pickup.x - 10,
+              pickup.y - 18,
+              20,
+              24
+            )
+          )
+      ) {
+        continue;
+      }
+
+      if (
+        this.magicSystem.collectGrandCardPickup(
+          pickup.id,
+          pickup.x
+        )
+      ) {
         this.scene.cameras.main.shake(
           55,
           0.0015
@@ -580,6 +634,44 @@ export class RoyalBoxSupportSystem {
         y,
         4
       );
+    }
+
+    for (const pickup of GRAND_CARD_PICKUPS) {
+      if (
+        !this.magicSystem
+          .isGrandCardPickupAvailable(
+            pickup.id
+          )
+      ) {
+        continue;
+      }
+
+      const bob = Math.sin(
+        this.elapsed * 3.8 +
+        pickup.x * 0.01
+      ) * 3;
+      const y = pickup.y - 9 + bob;
+
+      g.fillStyle(0x75edf2, 0.18);
+      g.fillCircle(pickup.x, y, 17);
+      g.fillStyle(0xf6e4b5, 1);
+      g.fillRoundedRect(
+        pickup.x - 8,
+        y - 5,
+        16,
+        10,
+        2
+      );
+      g.lineStyle(2, 0xe85fbd, 1);
+      g.strokeRoundedRect(
+        pickup.x - 8,
+        y - 5,
+        16,
+        10,
+        2
+      );
+      g.fillStyle(0xd5376c, 1);
+      g.fillCircle(pickup.x, y, 2);
     }
 
     for (const projectile of this.projectiles) {

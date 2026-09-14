@@ -111,7 +111,11 @@ export const SECTION_AUDIO_IDS = {
 
     "echo_duelist_telegraph",
     "echo_duelist_dash",
-    "echo_caster_cast"
+    "echo_caster_cast",
+    "grand_card_cast",
+    "grand_card_flight",
+    "grand_card_hit",
+    "world_rose_pickup"
   ],
   MirrorCore: [
     "music_09_mirror_core",
@@ -121,7 +125,10 @@ export const SECTION_AUDIO_IDS = {
     "core_mime_record",
     "core_mime_mimic",
     "world_mirror_move_loop",
-    "world_rose_pickup"
+    "world_rose_pickup",
+    "grand_card_cast",
+    "grand_card_flight",
+    "grand_card_hit"
   ],
   ConductorApproach: [
     /*
@@ -130,7 +137,11 @@ export const SECTION_AUDIO_IDS = {
      * composition through this contiguous approach section.
      */
     "music_09_mirror_core",
-    "amb_mirror_core_machine"
+    "amb_mirror_core_machine",
+    "grand_card_cast",
+    "grand_card_flight",
+    "grand_card_hit",
+    "world_rose_pickup"
   ],
   MirrorConductor: [
     "music_10_conductor_phase_1",
@@ -153,6 +164,10 @@ export const SECTION_AUDIO_IDS = {
     "boss_phase_2",
     "boss_phase_3",
     "boss_defeat",
+    "grand_card_cast",
+    "grand_card_flight",
+    "grand_card_hit",
+    "world_rose_pickup",
 
     "finale_firework_01",
     "finale_firework_02",

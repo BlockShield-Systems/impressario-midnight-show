@@ -21,6 +21,19 @@ const ARENA_LEFT = 45120;
 const ARENA_RIGHT = 49344;
 const ARENA_CENTER_X = 47232;
 
+const RUNTIME_CARD_PICKUP_POSITIONS = [
+  {
+    id: "ConductorCardLeft",
+    x: 45920,
+    y: 520
+  },
+  {
+    id: "ConductorCardRight",
+    x: 48544,
+    y: 520
+  }
+] as const;
+
 type BossCounter = {
   readonly x: number;
   readonly y: number;
@@ -40,6 +53,13 @@ interface BossProjectile {
   lifetime: number;
   radius: number;
   color: number;
+  active: boolean;
+}
+
+interface RuntimeGrandCardPickup {
+  readonly id: string;
+  readonly x: number;
+  readonly y: number;
   active: boolean;
 }
 
@@ -695,6 +715,7 @@ export class MirrorConductorSystem {
   private floorWarningSide: "left" | "right" | null = null;
   private hazardCooldown = 0;
   private previousSpotlightCasts = 0;
+  private wasInsideSection = false;
 
   private readonly entranceGate = createWorldGate(
     "MirrorConductorEntrance"
@@ -706,6 +727,14 @@ export class MirrorConductorSystem {
 
   private readonly projectiles: BossProjectile[] = [];
   private readonly finaleParticles: FinaleParticle[] = [];
+  private readonly cardPickups:
+    RuntimeGrandCardPickup[] =
+      RUNTIME_CARD_PICKUP_POSITIONS.map(
+        pickup => ({
+          ...pickup,
+          active: false
+        })
+      );
   private readonly graphics: Phaser.GameObjects.Graphics;
   private readonly hud: Phaser.GameObjects.Text;
   private readonly bossHudGraphics: Phaser.GameObjects.Graphics;
@@ -896,6 +925,15 @@ export class MirrorConductorSystem {
       this.player.x < MIRROR_CONDUCTOR_END_X;
 
     if (
+      this.wasInsideSection &&
+      !insideSection
+    ) {
+      this.clearCardPickups();
+    }
+
+    this.wasInsideSection = insideSection;
+
+    if (
       insideSection &&
       this.player.y > 675 &&
       !this.finaleActive
@@ -931,6 +969,7 @@ export class MirrorConductorSystem {
       this.updateBoss(deltaSeconds);
       this.updateProjectiles(deltaSeconds);
       this.updateHazards();
+      this.updateCardPickups();
     }
 
     if (this.finaleActive) {
@@ -950,6 +989,7 @@ export class MirrorConductorSystem {
     this.floorWarningSide = null;
     this.projectiles.length = 0;
     this.bossStarted = false;
+    this.clearCardPickups();
 
     this.conductor.reset();
     this.removeSolid(this.entranceGate);
@@ -1018,6 +1058,7 @@ export class MirrorConductorSystem {
     );
 
     this.conductor.setEnabled(true);
+    this.spawnCardPickups();
     this.hud.setVisible(true);
     this.emitBossAction("intro");
 
@@ -1256,6 +1297,67 @@ export class MirrorConductorSystem {
     }
   }
 
+  private spawnCardPickups(): void {
+    for (const pickup of this.cardPickups) {
+      pickup.active =
+        this.magicSystem
+          .isGrandCardPickupAvailable(
+            pickup.id
+          );
+    }
+  }
+
+  private clearCardPickups(): void {
+    for (const pickup of this.cardPickups) {
+      pickup.active = false;
+    }
+  }
+
+  private updateCardPickups(): void {
+    const bounds = playerBounds(this.player);
+
+    for (const pickup of this.cardPickups) {
+      if (
+        !pickup.active &&
+        this.magicSystem
+          .isGrandCardPickupAvailable(
+            pickup.id
+          )
+      ) {
+        pickup.active = true;
+      }
+
+      if (
+        !pickup.active ||
+        !Phaser.Geom.Intersects
+          .RectangleToRectangle(
+            bounds,
+            new Phaser.Geom.Rectangle(
+              pickup.x - 10,
+              pickup.y - 18,
+              20,
+              24
+            )
+          )
+      ) {
+        continue;
+      }
+
+      if (
+        this.magicSystem.collectGrandCardPickup(
+          pickup.id,
+          pickup.x
+        )
+      ) {
+        pickup.active = false;
+        this.scene.cameras.main.shake(
+          55,
+          0.0015
+        );
+      }
+    }
+  }
+
   private completeBoss(): void {
     if (
       this.bossDefeated ||
@@ -1267,6 +1369,7 @@ export class MirrorConductorSystem {
     this.bossDefeated = true;
     this.bossStarted = false;
     this.projectiles.length = 0;
+    this.clearCardPickups();
 
     this.removeSolid(this.resolutionGate);
     this.removeSolid(this.entranceGate);
@@ -1597,6 +1700,40 @@ export class MirrorConductorSystem {
           gate.width,
           gate.height
         );
+    }
+
+    for (const pickup of this.cardPickups) {
+      if (!pickup.active || !this.bossStarted) {
+        continue;
+      }
+
+      const y = pickup.y - 9 +
+        Math.sin(
+          this.elapsed * 3.8 +
+          pickup.x * 0.01
+        ) * 3;
+
+      graphics
+        .fillStyle(0x75edf2, 0.18)
+        .fillCircle(pickup.x, y, 17)
+        .fillStyle(0xf6e4b5, 1)
+        .fillRoundedRect(
+          pickup.x - 8,
+          y - 5,
+          16,
+          10,
+          2
+        )
+        .lineStyle(2, 0xe85fbd, 1)
+        .strokeRoundedRect(
+          pickup.x - 8,
+          y - 5,
+          16,
+          10,
+          2
+        )
+        .fillStyle(0xd5376c, 1)
+        .fillCircle(pickup.x, y, 2);
     }
 
     for (const projectile of this.projectiles) {

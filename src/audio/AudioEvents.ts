@@ -15,6 +15,12 @@ export const AUDIO_EVENTS = {
     "audio:gate-close",
   objectiveComplete:
     "audio:objective-complete",
+  grandCardCast:
+    "audio:grand-card-cast",
+  grandCardPickup:
+    "audio:grand-card-pickup",
+  grandCardDepleted:
+    "audio:grand-card-depleted",
   finaleStarted:
     "audio:finale-started"
 } as const;

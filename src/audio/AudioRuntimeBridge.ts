@@ -255,6 +255,24 @@ export class AudioRuntimeBridge {
       this
     );
 
+    scene.events.on(
+      AUDIO_EVENTS.grandCardCast,
+      this.onGrandCardCast,
+      this
+    );
+
+    scene.events.on(
+      AUDIO_EVENTS.grandCardPickup,
+      this.onGrandCardPickup,
+      this
+    );
+
+    scene.events.on(
+      AUDIO_EVENTS.grandCardDepleted,
+      this.onGrandCardDepleted,
+      this
+    );
+
     scene.events.once(
       Phaser.Scenes.Events.SHUTDOWN,
       this.destroy,
@@ -799,6 +817,39 @@ export class AudioRuntimeBridge {
     });
   };
 
+  private readonly onGrandCardCast = (
+    x: number
+  ): void => {
+    this.audio.play("grand_card_cast", {
+      gain: 0.82,
+      positionX: x,
+      cooldownMs: 180,
+      maxInstances: 2
+    });
+  };
+
+  private readonly onGrandCardPickup = (
+    x: number
+  ): void => {
+    this.audio.play("world_rose_pickup", {
+      gain: 0.72,
+      positionX: x,
+      cooldownMs: 100,
+      maxInstances: 2
+    });
+  };
+
+  private readonly onGrandCardDepleted = (
+    x: number
+  ): void => {
+    this.audio.play("ui_error", {
+      gain: 0.68,
+      positionX: x,
+      cooldownMs: 300,
+      maxInstances: 1
+    });
+  };
+
   private readonly onFinaleStarted = (
     x: number
   ): void => {
@@ -902,6 +953,24 @@ export class AudioRuntimeBridge {
     this.scene.events.off(
       AUDIO_EVENTS.combatHit,
       this.onCombatHit,
+      this
+    );
+
+    this.scene.events.off(
+      AUDIO_EVENTS.grandCardCast,
+      this.onGrandCardCast,
+      this
+    );
+
+    this.scene.events.off(
+      AUDIO_EVENTS.grandCardPickup,
+      this.onGrandCardPickup,
+      this
+    );
+
+    this.scene.events.off(
+      AUDIO_EVENTS.grandCardDepleted,
+      this.onGrandCardDepleted,
       this
     );
   }

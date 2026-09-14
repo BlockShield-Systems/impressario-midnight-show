@@ -6,6 +6,9 @@ import { StagehandSystem } from "./enemies/StagehandSystem";
 import { CardThrowerSystem } from "./enemies/CardThrowerSystem";
 import { PlayerHealthSystem } from "./player/PlayerHealthSystem";
 import { PlayerView } from "./player/PlayerView";
+import {
+  resolvePlayerTopBoundary
+} from "./player/PlayerPlayfieldBounds";
 import { EnemyView } from "./enemies/EnemyView";
 import { BossView } from "./boss/BossView";
 import { GalleryGauntletEncounterSystem } from "./world/GalleryGauntletEncounterSystem";
@@ -865,6 +868,10 @@ export class PlayerController implements KinematicBody {
       this.velocityY * deltaSeconds
     );
 
+    if (resolvePlayerTopBoundary(this)) {
+      this.contacts.ceiling = true;
+    }
+
     if (
       this.contacts.wallLeft ||
       this.contacts.wallRight
@@ -1274,6 +1281,11 @@ class GameScene extends Phaser.Scene {
               x: number,
               y: number
             ): void;
+            setPlayerMotion(
+              velocityX: number,
+              velocityY: number
+            ): void;
+            resumeGameplay(): void;
             snapshot():
               ReturnType<
                 GameScene[
@@ -1328,6 +1340,25 @@ class GameScene extends Phaser.Scene {
             );
             this.player.velocityX = 0;
             this.player.velocityY = 0;
+          },
+          setPlayerMotion: (
+            velocityX: number,
+            velocityY: number
+          ): void => {
+            if (
+              !Number.isFinite(velocityX) ||
+              !Number.isFinite(velocityY)
+            ) {
+              throw new Error(
+                "QA player motion must be finite"
+              );
+            }
+
+            this.player.velocityX = velocityX;
+            this.player.velocityY = velocityY;
+          },
+          resumeGameplay: (): void => {
+            this.qaBoundaryTraversalActive = false;
           },
           snapshot: () =>
             this.getBoundaryDebugSnapshot()
@@ -1643,6 +1674,17 @@ class GameScene extends Phaser.Scene {
       checkpoint:
         this.playerHealth
           .getDebugSnapshot(),
+      mirrorCore:
+        this.mirrorCoreSystem
+          .getDebugSnapshot(),
+      magic: {
+        grandCardCharges:
+          this.magicSystem
+            .grandCardChargeCount,
+        maximumGrandCardCharges:
+          this.magicSystem
+            .maximumGrandCardCharges
+      },
       soundtrack:
         this.musicDirector
           .getDebugSnapshot(),
