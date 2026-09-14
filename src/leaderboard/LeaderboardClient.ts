@@ -1,3 +1,7 @@
+import {
+  isLocalDevelopmentHostname
+} from "./LocalEnvironment";
+
 export interface LeaderboardEntry {
   readonly rank: number;
   readonly playerName: string;
@@ -82,6 +86,24 @@ declare global {
 const API_BASE = "/api";
 const PLAYER_STORAGE_KEY =
   "impressario.player-name";
+
+export const LOCAL_LEADERBOARD_MESSAGE =
+  "Leaderboard is not available in local development.";
+
+function normalizePlayerName(
+  input: string
+): string | null {
+  const normalized = input
+    .normalize("NFKC")
+    .trim()
+    .replace(/\s+/g, " ");
+
+  return normalized.length >= 3 &&
+    normalized.length <= 20 &&
+    /^[\p{L}\p{N}_ -]+$/u.test(normalized)
+    ? normalized
+    : null;
+}
 
 function formatTime(milliseconds: number): string {
   const totalSeconds =
@@ -171,12 +193,20 @@ class LeaderboardClient {
   private eventQueue:
     Promise<void> = Promise.resolve();
 
+  private sessionInitialization:
+    Promise<void> = Promise.resolve();
+
+  private readonly pendingEvents:
+    RunEvent[] = [];
+
   private localHits = 0;
   private localDeaths = 0;
   private localStartedAt = 0;
 
   private onlineRun = false;
+  private rankedRunPending = false;
   private finishing = false;
+  private gameStarted = false;
 
   private startGame:
     (() => void) | undefined;
@@ -223,12 +253,21 @@ class LeaderboardClient {
     let result:
       FinishResponse | undefined;
 
+    await this.sessionInitialization;
+
     if (
       this.onlineRun &&
       this.session
     ) {
       try {
+        this.flushPendingEvents();
         await this.eventQueue;
+
+        if (!this.onlineRun) {
+          throw new Error(
+            "Run event delivery failed before completion"
+          );
+        }
 
         const response = await fetch(
           `${API_BASE}/runs/${encodeURIComponent(
@@ -268,15 +307,31 @@ class LeaderboardClient {
   private queueEvent(
     event: RunEvent
   ): void {
-    if (
-      !this.onlineRun ||
-      !this.session ||
-      this.finishing
-    ) {
+    if (this.finishing) {
       return;
     }
 
+    if (
+      this.onlineRun &&
+      this.session
+    ) {
+      this.enqueueOnlineEvent(event);
+      return;
+    }
+
+    if (this.rankedRunPending) {
+      this.pendingEvents.push(event);
+    }
+  }
+
+  private enqueueOnlineEvent(
+    event: RunEvent
+  ): void {
     const session = this.session;
+
+    if (!session) {
+      return;
+    }
 
     this.eventQueue =
       this.eventQueue.then(
@@ -324,6 +379,23 @@ class LeaderboardClient {
       });
   }
 
+  private flushPendingEvents(): void {
+    if (
+      !this.onlineRun ||
+      !this.session
+    ) {
+      this.pendingEvents.length = 0;
+      return;
+    }
+
+    const events =
+      this.pendingEvents.splice(0);
+
+    for (const event of events) {
+      this.enqueueOnlineEvent(event);
+    }
+  }
+
   private async showStartScreen():
     Promise<void> {
     const overlay =
@@ -356,14 +428,14 @@ class LeaderboardClient {
       createElement(
         "p",
         "leaderboard-intro",
-        "Enter your stage name and begin a ranked performance."
+        "Enter your player name and begin the show."
       );
 
     const label =
       createElement(
         "label",
         "leaderboard-label",
-        "STAGE NAME"
+        "PLAYER NAME"
       );
 
     const input =
@@ -377,7 +449,7 @@ class LeaderboardClient {
     input.maxLength = 20;
     input.autocomplete = "username";
     input.spellcheck = false;
-    input.placeholder = "Your stage name";
+    input.placeholder = "Your player name";
     input.value =
       localStorage.getItem(
         PLAYER_STORAGE_KEY
@@ -390,6 +462,11 @@ class LeaderboardClient {
         "div",
         "leaderboard-status",
         "Connecting to the ranking service..."
+      );
+
+    const localDevelopment =
+      isLocalDevelopmentHostname(
+        window.location.hostname
       );
 
     const turnstileHost =
@@ -448,8 +525,35 @@ class LeaderboardClient {
     let turnstileRequired = false;
     let widgetId:
       string | undefined;
+    let configurationPending =
+      !localDevelopment;
+    let verificationUnavailable = false;
 
-    try {
+    const updateBeginState = (): void => {
+      const validName =
+        normalizePlayerName(input.value) !== null;
+
+      const verificationPending =
+        turnstileRequired &&
+        !turnstileToken &&
+        !verificationUnavailable;
+
+      beginButton.disabled =
+        !validName ||
+        configurationPending ||
+        verificationPending;
+    };
+
+    input.addEventListener(
+      "input",
+      updateBeginState
+    );
+
+    if (localDevelopment) {
+      status.textContent =
+        "Local development — this run will be unranked.";
+      updateBeginState();
+    } else try {
       const response = await fetch(
         `${API_BASE}/config`
       );
@@ -461,6 +565,8 @@ class LeaderboardClient {
 
       turnstileRequired =
         config.turnstileSiteKey.length > 0;
+
+      configurationPending = false;
 
       if (turnstileRequired) {
         status.textContent =
@@ -483,104 +589,91 @@ class LeaderboardClient {
               theme: "dark",
               callback: token => {
                 turnstileToken = token;
-                beginButton.disabled = false;
+                verificationUnavailable = false;
+                updateBeginState();
                 status.textContent =
                   "Online ranking ready.";
               },
               "expired-callback": () => {
                 turnstileToken = "";
-                beginButton.disabled = true;
+                verificationUnavailable = false;
+                updateBeginState();
                 status.textContent =
                   "Verification expired.";
               },
               "error-callback": () => {
                 turnstileToken = "";
-                beginButton.disabled = false;
+                verificationUnavailable = true;
+                updateBeginState();
                 status.textContent =
                   "Verification unavailable. The run may start unranked.";
               }
             }
           );
       } else {
-        beginButton.disabled = false;
         status.textContent =
-          "Leaderboard development mode ready.";
+          "Online ranking ready.";
       }
+
+      updateBeginState();
     } catch {
-      beginButton.disabled = false;
+      configurationPending = false;
+      verificationUnavailable = true;
+      updateBeginState();
       status.textContent =
         "Leaderboard unavailable — the game will start unranked.";
     }
 
-    const begin = async (): Promise<void> => {
-      const playerName =
-        input.value
-          .normalize("NFKC")
-          .trim()
-          .replace(/\s+/g, " ");
+    const startRankedRun = async (
+      playerName: string
+    ): Promise<void> => {
+      const shouldStart =
+        !localDevelopment &&
+        config !== undefined &&
+        (
+          !turnstileRequired ||
+          turnstileToken.length > 0
+        );
 
-      if (
-        playerName.length < 3 ||
-        playerName.length > 20 ||
-        !/^[\p{L}\p{N}_ -]+$/u.test(
-          playerName
-        )
-      ) {
-        status.textContent =
-          "Use 3–20 letters, numbers, spaces, _ or -.";
-        input.focus();
+      if (!shouldStart) {
         return;
       }
 
-      beginButton.disabled = true;
-      leaderboardButton.disabled = true;
-
-      localStorage.setItem(
-        PLAYER_STORAGE_KEY,
-        playerName
-      );
-
-      this.localStartedAt =
-        Date.now();
+      this.rankedRunPending = true;
 
       try {
-        if (
-          config &&
-          (
-            !turnstileRequired ||
-            turnstileToken
-          )
-        ) {
-          const response = await fetch(
-            `${API_BASE}/runs`,
-            {
-              method: "POST",
-              headers: {
-                "content-type":
-                  "application/json"
-              },
-              body: JSON.stringify({
-                playerName,
-                turnstileToken
-              })
-            }
+        const response = await fetch(
+          `${API_BASE}/runs`,
+          {
+            method: "POST",
+            headers: {
+              "content-type":
+                "application/json"
+            },
+            body: JSON.stringify({
+              playerName,
+              turnstileToken
+            })
+          }
+        );
+
+        const started =
+          await readJson<StartResponse>(
+            response
           );
 
-          const started =
-            await readJson<StartResponse>(
-              response
-            );
+        this.session = {
+          runId: started.runId,
+          token: started.token,
+          sequence: 0
+        };
 
-          this.session = {
-            runId: started.runId,
-            token: started.token,
-            sequence: 0
-          };
-
-          this.onlineRun = true;
-        }
+        this.onlineRun = true;
+        this.flushPendingEvents();
       } catch (error) {
         this.onlineRun = false;
+        this.session = undefined;
+        this.pendingEvents.length = 0;
 
         console.error(
           "Ranked run unavailable:",
@@ -595,16 +688,53 @@ class LeaderboardClient {
             widgetId
           );
         }
+      } finally {
+        this.rankedRunPending = false;
+      }
+    };
+
+    const begin = (): void => {
+      const playerName =
+        normalizePlayerName(input.value);
+
+      if (!playerName) {
+        status.textContent =
+          "Use 3–20 letters, numbers, spaces, _ or -.";
+        input.focus();
+        return;
       }
 
+      if (this.gameStarted) {
+        return;
+      }
+
+      this.gameStarted = true;
+      beginButton.disabled = true;
+      leaderboardButton.disabled = true;
+
+      localStorage.setItem(
+        PLAYER_STORAGE_KEY,
+        playerName
+      );
+
+      this.localStartedAt =
+        Date.now();
+
       overlay.remove();
+
+      // Construct and unlock Phaser's actual AudioContext while
+      // this click still owns transient user activation. Ranked-run
+      // network work starts only after the game is already booting.
       this.startGame?.();
+      this.sessionInitialization =
+        startRankedRun(playerName);
+      void this.sessionInitialization;
     };
 
     beginButton.addEventListener(
       "click",
       () => {
-        void begin();
+        begin();
       }
     );
 
@@ -615,7 +745,7 @@ class LeaderboardClient {
           event.key === "Enter" &&
           !beginButton.disabled
         ) {
-          void begin();
+          begin();
         }
       }
     );
@@ -623,6 +753,13 @@ class LeaderboardClient {
     leaderboardButton.addEventListener(
       "click",
       () => {
+        if (localDevelopment) {
+          this.showLocalLeaderboardMessage(
+            overlay
+          );
+          return;
+        }
+
         void this.showLeaderboard(
           overlay
         );
@@ -632,10 +769,60 @@ class LeaderboardClient {
     input.focus();
   }
 
+  private showLocalLeaderboardMessage(
+    overlay: HTMLElement
+  ): void {
+    const panel =
+      overlay.querySelector<HTMLElement>(
+        ".leaderboard-panel"
+      );
+
+    if (!panel) {
+      return;
+    }
+
+    let status =
+      panel.querySelector<HTMLElement>(
+        ".leaderboard-status"
+      );
+
+    if (!status) {
+      status = createElement(
+        "div",
+        "leaderboard-status"
+      );
+
+      const actions =
+        panel.querySelector(
+          ".leaderboard-actions"
+        );
+
+      panel.insertBefore(
+        status,
+        actions
+      );
+    }
+
+    status.textContent =
+      LOCAL_LEADERBOARD_MESSAGE;
+  }
+
   private async showLeaderboard(
     returnOverlay?: HTMLElement,
     initialPage = 1
   ): Promise<void> {
+    if (
+      returnOverlay &&
+      isLocalDevelopmentHostname(
+        window.location.hostname
+      )
+    ) {
+      this.showLocalLeaderboardMessage(
+        returnOverlay
+      );
+      return;
+    }
+
     returnOverlay?.remove();
 
     const overlay =

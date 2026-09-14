@@ -35,16 +35,11 @@ export const BOOTSTRAP_AUDIO_IDS = [
   "ui_leaderboard_fail"
 ] as const satisfies readonly AudioAssetId[];
 
-export const ZONE_AUDIO_IDS = [
-  [
+export const SECTION_AUDIO_IDS = {
+  MovementRehearsal: [
     ...BOOTSTRAP_AUDIO_IDS
   ],
-  [
-    "music_01_opening_rehearsal",
-    "amb_theatre_room",
-    "vo_movement_rehearsal"
-  ],
-  [
+  CombatRehearsal: [
     "music_02_combat_rehearsal",
     "amb_theatre_room",
     "vo_combat_rehearsal",
@@ -57,7 +52,7 @@ export const ZONE_AUDIO_IDS = [
     "spotlight_hit",
     "enemy_defeat"
   ],
-  [
+  MainStage: [
     "music_03_backstage_ambush",
     "amb_theatre_room",
     "vo_backstage_ambush",
@@ -71,12 +66,12 @@ export const ZONE_AUDIO_IDS = [
     "world_gate_close",
     "world_objective_complete"
   ],
-  [
+  GrandGallery: [
     "music_04_grand_gallery",
     "amb_gallery_whispers",
     "vo_grand_gallery"
   ],
-  [
+  GalleryGauntlet: [
     "music_05_gallery_gauntlet",
     "amb_gallery_whispers",
 
@@ -87,7 +82,7 @@ export const ZONE_AUDIO_IDS = [
     "world_hazard_telegraph",
     "world_hazard_active"
   ],
-  [
+  SpotlightVault: [
     "music_06_spotlight_vault",
     "amb_spotlight_electric",
     "vo_spotlight_vault",
@@ -97,7 +92,7 @@ export const ZONE_AUDIO_IDS = [
     "spotlight_cast",
     "spotlight_hit"
   ],
-  [
+  CardSanctum: [
     "music_07_card_sanctum",
     "amb_spotlight_electric",
     "vo_card_sanctum",
@@ -109,7 +104,7 @@ export const ZONE_AUDIO_IDS = [
     "grand_card_hit",
     "world_relay_activate"
   ],
-  [
+  RoyalBox: [
     "music_08_royal_box",
     "amb_gallery_whispers",
     "vo_royal_box",
@@ -118,7 +113,7 @@ export const ZONE_AUDIO_IDS = [
     "echo_duelist_dash",
     "echo_caster_cast"
   ],
-  [
+  MirrorCore: [
     "music_09_mirror_core",
     "amb_mirror_core_machine",
     "vo_mirror_core",
@@ -128,7 +123,16 @@ export const ZONE_AUDIO_IDS = [
     "world_mirror_move_loop",
     "world_rose_pickup"
   ],
-  [
+  ConductorApproach: [
+    /*
+     * The canonical authored catalog has no separate approach file.
+     * Historical runtime mapping deliberately carries the Mirror Core
+     * composition through this contiguous approach section.
+     */
+    "music_09_mirror_core",
+    "amb_mirror_core_machine"
+  ],
+  MirrorConductor: [
     "music_10_conductor_phase_1",
     "music_11_conductor_phase_2",
     "music_12_conductor_phase_3",
@@ -154,7 +158,11 @@ export const ZONE_AUDIO_IDS = [
     "finale_firework_02",
     "finale_curtain_close"
   ]
-] as const satisfies
-  readonly (
-    readonly AudioAssetId[]
-  )[];
+} as const satisfies
+  Readonly<Record<string, readonly AudioAssetId[]>>;
+
+export type AudioSectionId =
+  keyof typeof SECTION_AUDIO_IDS;
+
+export const ZONE_AUDIO_IDS =
+  Object.values(SECTION_AUDIO_IDS);

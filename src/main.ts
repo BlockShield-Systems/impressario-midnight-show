@@ -8,31 +8,69 @@ import { PlayerHealthSystem } from "./player/PlayerHealthSystem";
 import { PlayerView } from "./player/PlayerView";
 import { EnemyView } from "./enemies/EnemyView";
 import { BossView } from "./boss/BossView";
-import { ShadowAcrobatSystem } from "./enemies/ShadowAcrobatSystem";
-import { GalleryHazardSystem } from "./world/GalleryHazardSystem";
+import { GalleryGauntletEncounterSystem } from "./world/GalleryGauntletEncounterSystem";
+import { SpotlightVaultEncounterSystem } from "./world/SpotlightVaultEncounterSystem";
 import { MagicSystem } from "./magic/MagicSystem";
-import { LightWraithSystem } from "./enemies/LightWraithSystem";
-import { CardSentrySystem } from "./enemies/CardSentrySystem";
-import { CardSanctumHazardSystem } from "./world/CardSanctumHazardSystem";
-import { RoyalEchoSystem } from "./enemies/RoyalEchoSystem";
-import { RoyalBoxHazardSystem } from "./world/RoyalBoxHazardSystem";
-import { RoyalBoxSupportSystem } from "./world/RoyalBoxSupportSystem";
+import { CardSanctumEncounterSystem } from "./world/CardSanctumEncounterSystem";
+import { RoyalBoxEncounterSystem } from "./world/RoyalBoxEncounterSystem";
+import { RoyalBoxVisuals } from "./world/RoyalBoxVisuals";
 import { MirrorCoreSystem } from "./world/MirrorCoreSystem";
+import { MirrorCoreVisuals } from "./world/MirrorCoreVisuals";
+import { ConductorApproachVisuals } from "./world/ConductorApproachVisuals";
+import { MirrorConductorSystem } from "./world/MirrorConductorSystem";
+import { MirrorConductorVisuals } from "./world/MirrorConductorVisuals";
 import { AudioDirector } from "./audio/AudioDirector";
 import { MusicDirector } from "./audio/MusicDirector";
 import { AudioRuntimeBridge } from "./audio/AudioRuntimeBridge";
 import { AudioDebugHud } from "./audio/AudioDebugHud";
 import {
+  runQaAudioCatalogHarness
+} from "./audio/AudioQaCatalogHarness";
+import {
+  advanceFixedStepFrame,
+  FIXED_TIMESTEP_SECONDS
+} from "./runtime/FixedStepTiming";
+import {
+  MOVEMENT_ROUTE_CAMERA_HEIGHT,
+  isBelowMovementRoute,
+  isInMovementRehearsal
+} from "./world/MovementRouteBounds";
+import {
   WORLD_HEIGHT,
+  WORLD_SECTIONS,
   WORLD_SOLIDS,
   WORLD_WIDTH
 } from "./world/WorldLayout";
+import {
+  getWorldSection
+} from "./world/SectionOwnership";
+import {
+  WORLD_ENEMY_SPAWNS
+} from "./world/WorldEnemies";
+import {
+  WORLD_HAZARDS
+} from "./world/WorldHazards";
 import {
   getWorldCheckpoint,
   getWorldGate,
   type WorldGateId
 } from "./world/WorldGameplay";
 import { EnvironmentTileRenderer } from "./world/EnvironmentTileRenderer";
+import { MovementRehearsalVisuals } from "./world/MovementRehearsalVisuals";
+import {
+  MOVEMENT_SECTION_LABELS,
+  MOVEMENT_TUTORIAL_SIGNAGE_DEPTH,
+  OPENING_CONTROL_INSTRUCTIONS,
+  OPENING_CONTROL_PANEL
+} from "./world/MovementTutorial";
+import { CombatRehearsalVisuals } from "./world/CombatRehearsalVisuals";
+import { CombatRehearsalHazardSystem } from "./world/CombatRehearsalHazardSystem";
+import { MainStageVisuals } from "./world/MainStageVisuals";
+import { MainStageEncounterSystem } from "./world/MainStageEncounterSystem";
+import { GrandGalleryVisuals } from "./world/GrandGalleryVisuals";
+import { GalleryGauntletVisuals } from "./world/GalleryGauntletVisuals";
+import { SpotlightVaultVisuals } from "./world/SpotlightVaultVisuals";
+import { CardSanctumVisuals } from "./world/CardSanctumVisuals";
 
 /* -------------------------------------------------------------------------- */
 /* Configuration                                                              */
@@ -41,8 +79,12 @@ import { EnvironmentTileRenderer } from "./world/EnvironmentTileRenderer";
 const GAME_WIDTH = 640;
 const GAME_HEIGHT = 360;
 
-const FIXED_TIMESTEP = 1 / 120;
-const MAX_FRAME_DELTA = 0.05;
+const QA_RUNTIME_INSPECTION =
+  import.meta.env.VITE_QA_RUNTIME_INSPECTION ===
+  "1";
+
+let preparedAudioContext:
+  AudioContext | undefined;
 
 const MOVEMENT = {
   bodyWidth: 18,
@@ -312,9 +354,20 @@ interface CollisionContacts {
 }
 
 class CollisionWorld {
+  private collisionChecks = 0;
+
   public constructor(
     private readonly solids: Phaser.Geom.Rectangle[]
   ) {}
+
+  public getDebugSnapshot() {
+    return {
+      collisionChecks:
+        this.collisionChecks,
+      solidCount:
+        this.solids.length
+    };
+  }
 
   public addSolid(
     solid: Phaser.Geom.Rectangle
@@ -422,6 +475,8 @@ class CollisionWorld {
     body: KinematicBody,
     solid: Phaser.Geom.Rectangle
   ): boolean {
+    this.collisionChecks += 1;
+
     return (
       body.x < solid.right &&
       body.x + body.width > solid.left &&
@@ -844,16 +899,19 @@ class GameScene extends Phaser.Scene {
   private combatSystem!: CombatSystem;
   private stagehandSystem!: StagehandSystem;
   private cardThrowerSystem!: CardThrowerSystem;
-  private shadowAcrobatSystem!: ShadowAcrobatSystem;
-  private galleryHazardSystem!: GalleryHazardSystem;
-  private lightWraithSystem!: LightWraithSystem;
+  private combatHazardSystem!: CombatRehearsalHazardSystem;
+  private mainStageEncounterSystem!: MainStageEncounterSystem;
+  private galleryGauntletEncounterSystem!:
+    GalleryGauntletEncounterSystem;
+  private spotlightVaultEncounterSystem!:
+    SpotlightVaultEncounterSystem;
   private magicSystem!: MagicSystem;
-  private cardSentrySystem!: CardSentrySystem;
-  private cardSanctumHazardSystem!: CardSanctumHazardSystem;
-  private royalEchoSystem!: RoyalEchoSystem;
-  private royalBoxHazardSystem!: RoyalBoxHazardSystem;
-  private royalBoxSupportSystem!: RoyalBoxSupportSystem;
+  private cardSanctumEncounterSystem!:
+    CardSanctumEncounterSystem;
+  private royalBoxEncounterSystem!:
+    RoyalBoxEncounterSystem;
   private mirrorCoreSystem!: MirrorCoreSystem;
+  private mirrorConductorSystem!: MirrorConductorSystem;
   private playerHealth!: PlayerHealthSystem;
   private audioDirector!: AudioDirector;
   private musicDirector!: MusicDirector;
@@ -862,63 +920,51 @@ class GameScene extends Phaser.Scene {
 
   private collisionWorld!: CollisionWorld;
 
+  private readonly tutorialExitGate =
+    createWorldGate("CombatTutorialExit");
+
   private readonly arenaLeftGate =
-    createWorldGate("MainStageLeft");
+    createWorldGate("CombatArenaLeft");
 
   private readonly arenaRightGate =
-    createWorldGate("MainStageRight");
+    createWorldGate("CombatArenaRight");
 
   private arenaGateGraphics!: Phaser.GameObjects.Graphics;
   private encounterText!: Phaser.GameObjects.Text;
 
   private encounterActive = false;
   private encounterCleared = false;
+  private tutorialExitLocked = true;
   private checkpointActivated = false;
+  private masteryCheckpointActivated = false;
 
   private grandGalleryEntered = false;
   private grandGalleryCheckpointActivated = false;
   private grandGalleryTitle!: Phaser.GameObjects.Text;
 
-  private galleryGauntletEntered = false;
-  private galleryMidpointActivated = false;
-  private galleryGauntletEnabled = false;
-  private galleryObjectiveText!: Phaser.GameObjects.Text;
-
-  private spotlightVaultEntered = false;
-  private spotlightVaultActive = false;
-  private spotlightVaultCleared = false;
-
-  private readonly vaultLeftGate =
-    createWorldGate("SpotlightVaultLeft");
-
-  private readonly vaultRightGate =
-    createWorldGate("SpotlightVaultRight");
-
-  private vaultGateGraphics!: Phaser.GameObjects.Graphics;
-  private vaultObjectiveText!: Phaser.GameObjects.Text;
-
-  private cardSanctumEntered = false;
-  private cardSanctumActive = false;
-  private cardSanctumCleared = false;
-
-  private readonly sanctumExitGate =
-    createWorldGate("CardSanctumExit");
-
-  private sanctumGateGraphics!: Phaser.GameObjects.Graphics;
-  private sanctumObjectiveText!: Phaser.GameObjects.Text;
-
-  private royalBoxEntered = false;
-  private royalBoxActive = false;
-  private royalBoxCleared = false;
-
-  private readonly royalBoxExitGate =
-    createWorldGate("RoyalBoxExit");
-
-  private royalBoxGateGraphics!: Phaser.GameObjects.Graphics;
-  private royalBoxObjectiveText!: Phaser.GameObjects.Text;
-
   private debugText!: Phaser.GameObjects.Text;
   private accumulator = 0;
+  private fixedStepInitialized = false;
+  private movementCameraRestricted = false;
+  private timingObserver: PerformanceObserver | null = null;
+  private qaBoundaryTraversalActive = false;
+  private readonly qaRuntimeErrors: string[] = [];
+  private readonly timingMetrics = {
+    startedAt: 0,
+    frames: 0,
+    rawSeconds: 0,
+    acceptedSeconds: 0,
+    discardedSeconds: 0,
+    fixedSteps: 0,
+    maximumSteps: 0,
+    maximumAccumulatorBefore: 0,
+    maximumAccumulatorAfter: 0,
+    updateCostMilliseconds: 0,
+    maximumUpdateCostMilliseconds: 0,
+    longTaskCount: 0,
+    maximumLongTaskMilliseconds: 0,
+    playerStartX: 0
+  };
 
   public constructor() {
     super("game");
@@ -929,9 +975,6 @@ class GameScene extends Phaser.Scene {
     EnemyView.preload(this);
     BossView.preload(this);
     AudioDirector.preload(this);
-    EnvironmentTileRenderer.preload(
-      this
-    );
   }
 
   public create(): void {
@@ -942,19 +985,44 @@ class GameScene extends Phaser.Scene {
     new EnvironmentTileRenderer(
       this
     );
+    new MovementRehearsalVisuals(this);
+    new CombatRehearsalVisuals(this);
+    new MainStageVisuals(this);
+    new GrandGalleryVisuals(this);
+    new GalleryGauntletVisuals(this);
+    new SpotlightVaultVisuals(this);
+    new CardSanctumVisuals(this);
+    new RoyalBoxVisuals(this);
+    new MirrorCoreVisuals(this);
+    new ConductorApproachVisuals(this);
+    new MirrorConductorVisuals(this);
 
     const solids = this.createLevel();
 
     this.createGrandGallery();
-    this.createGalleryGauntlet();
-    this.createSpotlightVault();
-    this.createCardSanctum();
-    this.createRoyalBox();
 
     this.collisionWorld =
       new CollisionWorld(solids);
 
+    this.collisionWorld.addSolid(
+      this.tutorialExitGate
+    );
+
     this.playerInput = new PlayerInput();
+
+    document.addEventListener(
+      "visibilitychange",
+      this.handleVisibilityChange
+    );
+    this.events.once(
+      Phaser.Scenes.Events.SHUTDOWN,
+      () => {
+        document.removeEventListener(
+          "visibilitychange",
+          this.handleVisibilityChange
+        );
+      }
+    );
 
     const initialCheckpoint =
       getWorldCheckpoint(
@@ -966,6 +1034,43 @@ class GameScene extends Phaser.Scene {
       initialCheckpoint.x,
       initialCheckpoint.y
     );
+
+    if (QA_RUNTIME_INSPECTION) {
+      this.timingMetrics.startedAt =
+        performance.now();
+      window.addEventListener(
+        "error",
+        this.recordQaWindowError
+      );
+      window.addEventListener(
+        "unhandledrejection",
+        this.recordQaRejection
+      );
+      this.timingMetrics.playerStartX =
+        this.player.x;
+
+      if (typeof PerformanceObserver !== "undefined") {
+        this.timingObserver =
+          new PerformanceObserver(list => {
+            for (const entry of list.getEntries()) {
+              this.timingMetrics.longTaskCount += 1;
+              this.timingMetrics.maximumLongTaskMilliseconds =
+                Math.max(
+                  this.timingMetrics.maximumLongTaskMilliseconds,
+                  entry.duration
+                );
+            }
+          });
+
+        try {
+          this.timingObserver.observe({
+            entryTypes: ["longtask"]
+          });
+        } catch {
+          this.timingObserver = null;
+        }
+      }
+    }
 
     this.playerHealth =
       new PlayerHealthSystem(
@@ -992,7 +1097,12 @@ class GameScene extends Phaser.Scene {
       this,
       this.player,
       this.playerHealth,
-      this.combatSystem
+      this.combatSystem,
+      [
+        "CombatStagehandA",
+        "CombatStagehandB",
+        "CombatStagehandC"
+      ]
     );
 
     this.cardThrowerSystem =
@@ -1000,30 +1110,46 @@ class GameScene extends Phaser.Scene {
         this,
         this.player,
         this.playerHealth,
-        this.combatSystem
+        this.combatSystem,
+        [
+          "CombatCardThrowerA",
+          "CombatCardThrowerB"
+        ]
       );
 
-    this.shadowAcrobatSystem =
-      new ShadowAcrobatSystem(
-        this,
-        this.player,
-        this.playerHealth,
-        this.combatSystem
-      );
-
-    this.galleryHazardSystem =
-      new GalleryHazardSystem(
+    this.combatHazardSystem =
+      new CombatRehearsalHazardSystem(
         this,
         this.player,
         this.playerHealth
       );
 
-    this.lightWraithSystem =
-      new LightWraithSystem(
+    this.mainStageEncounterSystem =
+      new MainStageEncounterSystem(
         this,
         this.player,
         this.playerHealth,
-        this.combatSystem
+        this.combatSystem,
+        solid => {
+          this.collisionWorld.addSolid(solid);
+        },
+        solid => {
+          this.collisionWorld.removeSolid(solid);
+        }
+      );
+
+    this.galleryGauntletEncounterSystem =
+      new GalleryGauntletEncounterSystem(
+        this,
+        this.player,
+        this.playerHealth,
+        this.combatSystem,
+        solid => {
+          this.collisionWorld.addSolid(solid);
+        },
+        solid => {
+          this.collisionWorld.removeSolid(solid);
+        }
       );
 
     this.magicSystem =
@@ -1035,7 +1161,7 @@ class GameScene extends Phaser.Scene {
           centerY: number,
           radius: number
         ) =>
-          this.lightWraithSystem
+          this.spotlightVaultEncounterSystem
             .applySpotlight(
               centerX,
               centerY,
@@ -1043,43 +1169,48 @@ class GameScene extends Phaser.Scene {
             )
       );
 
-    this.cardSentrySystem =
-      new CardSentrySystem(
-        this,
-        this.player,
-        this.playerHealth,
-        this.combatSystem
-      );
-
-    this.cardSanctumHazardSystem =
-      new CardSanctumHazardSystem(
-        this,
-        this.player,
-        this.playerHealth
-      );
-
-    this.royalEchoSystem =
-      new RoyalEchoSystem(
-        this,
-        this.player,
-        this.playerHealth,
-        this.combatSystem
-      );
-
-    this.royalBoxHazardSystem =
-      new RoyalBoxHazardSystem(
-        this,
-        this.player,
-        this.playerHealth
-      );
-
-    this.royalBoxSupportSystem =
-      new RoyalBoxSupportSystem(
+    this.spotlightVaultEncounterSystem =
+      new SpotlightVaultEncounterSystem(
         this,
         this.player,
         this.playerHealth,
         this.combatSystem,
-        this.magicSystem
+        this.magicSystem,
+        solid => {
+          this.collisionWorld.addSolid(solid);
+        },
+        solid => {
+          this.collisionWorld.removeSolid(solid);
+        }
+      );
+
+    this.cardSanctumEncounterSystem =
+      new CardSanctumEncounterSystem(
+        this,
+        this.player,
+        this.playerHealth,
+        this.combatSystem,
+        solid => {
+          this.collisionWorld.addSolid(solid);
+        },
+        solid => {
+          this.collisionWorld.removeSolid(solid);
+        }
+      );
+
+    this.royalBoxEncounterSystem =
+      new RoyalBoxEncounterSystem(
+        this,
+        this.player,
+        this.playerHealth,
+        this.combatSystem,
+        this.magicSystem,
+        solid => {
+          this.collisionWorld.addSolid(solid);
+        },
+        solid => {
+          this.collisionWorld.removeSolid(solid);
+        }
       );
 
     this.mirrorCoreSystem =
@@ -1101,10 +1232,33 @@ class GameScene extends Phaser.Scene {
         }
       );
 
-    this.audioDirector =
-      new AudioDirector(this);
+    this.mirrorConductorSystem =
+      new MirrorConductorSystem(
+        this,
+        this.player,
+        this.playerHealth,
+        this.combatSystem,
+        this.magicSystem,
+        solid => {
+          this.collisionWorld.addSolid(
+            solid
+          );
+        },
+        solid => {
+          this.collisionWorld.removeSolid(
+            solid
+          );
+        }
+      );
 
-    if (import.meta.env.DEV) {
+    this.audioDirector =
+      new AudioDirector(
+        this,
+        preparedAudioContext,
+        QA_RUNTIME_INSPECTION
+      );
+
+    if (QA_RUNTIME_INSPECTION) {
       const debugWindow =
         window as Window & {
           __IMPRESSARIO_AUDIO_DEBUG__?:
@@ -1113,19 +1267,89 @@ class GameScene extends Phaser.Scene {
                 "getDebugSnapshot"
               ]
             >;
+          __IMPRESSARIO_BOUNDARY_QA__?: {
+            readonly boundaries:
+              readonly number[];
+            setPlayerLocation(
+              x: number,
+              y: number
+            ): void;
+            snapshot():
+              ReturnType<
+                GameScene[
+                  "getBoundaryDebugSnapshot"
+                ]
+              >;
+          };
         };
 
       debugWindow
         .__IMPRESSARIO_AUDIO_DEBUG__ =
-          () =>
-            this.audioDirector
-              .getDebugSnapshot();
+          () => ({
+            ...this.audioDirector
+              .getDebugSnapshot(),
+            ...this.musicDirector
+              .getDebugSnapshot(),
+            timing:
+              this.getTimingDebugSnapshot()
+          });
+
+      debugWindow
+        .__IMPRESSARIO_BOUNDARY_QA__ = {
+          boundaries:
+            WORLD_SECTIONS
+              .slice(0, -1)
+              .map(section => section.endX),
+          setPlayerLocation: (
+            x: number,
+            y: number
+          ): void => {
+            if (
+              !Number.isFinite(x) ||
+              !Number.isFinite(y)
+            ) {
+              throw new Error(
+                "QA player location must be finite"
+              );
+            }
+
+            this.qaBoundaryTraversalActive = true;
+            this.player.x = clamp(
+              x,
+              0,
+              WORLD_WIDTH -
+                this.player.width
+            );
+            this.player.y = clamp(
+              y,
+              0,
+              WORLD_HEIGHT -
+                this.player.height
+            );
+            this.player.velocityX = 0;
+            this.player.velocityY = 0;
+          },
+          snapshot: () =>
+            this.getBoundaryDebugSnapshot()
+        };
 
       this.events.once(
         Phaser.Scenes.Events.SHUTDOWN,
         () => {
           delete debugWindow
             .__IMPRESSARIO_AUDIO_DEBUG__;
+          delete debugWindow
+            .__IMPRESSARIO_BOUNDARY_QA__;
+          window.removeEventListener(
+            "error",
+            this.recordQaWindowError
+          );
+          window.removeEventListener(
+            "unhandledrejection",
+            this.recordQaRejection
+          );
+          this.timingObserver?.disconnect();
+          this.timingObserver = null;
         }
       );
     }
@@ -1153,6 +1377,13 @@ class GameScene extends Phaser.Scene {
         this.audioDirector
       );
 
+    if (QA_RUNTIME_INSPECTION) {
+      runQaAudioCatalogHarness(
+        this.audioDirector,
+        this.musicDirector
+      );
+    }
+
     this.createLabels();
     this.createEncounterPresentation();
     this.createDebugHud();
@@ -1176,6 +1407,8 @@ class GameScene extends Phaser.Scene {
       WORLD_HEIGHT
     );
 
+    this.updateCameraBounds(true);
+
     this.cameras.main.startFollow(
       this.playerView.container,
       true,
@@ -1188,64 +1421,316 @@ class GameScene extends Phaser.Scene {
 
   public update(
     _time: number,
-    deltaMilliseconds: number
+    _deltaMilliseconds: number
   ): void {
+    const updateStarted =
+      QA_RUNTIME_INSPECTION
+        ? performance.now()
+        : 0;
+    const accumulatorBefore =
+      this.accumulator;
+    const rawDeltaMilliseconds =
+      this.game.loop.rawDelta;
+
     this.playerInput.update();
 
-    const frameDelta = Math.min(
-      deltaMilliseconds / 1000,
-      MAX_FRAME_DELTA
-    );
+    const fixedFrame =
+      advanceFixedStepFrame(
+        rawDeltaMilliseconds,
+        this.accumulator,
+        !this.fixedStepInitialized
+      );
 
-    this.playerHealth.update(frameDelta);
+    this.fixedStepInitialized = true;
 
-    if (this.playerHealth.controlsLocked) {
-      this.accumulator = 0;
+    const frameDelta =
+      fixedFrame.acceptedSeconds;
+
+    if (this.qaBoundaryTraversalActive) {
+      this.accumulator =
+        fixedFrame.accumulatorSeconds;
     } else {
-      this.accumulator += frameDelta;
+      this.playerHealth.update(frameDelta);
 
-      let consumeInputEdges = true;
+      if (this.playerHealth.controlsLocked) {
+        this.accumulator = 0;
+      } else {
+        let consumeInputEdges = true;
 
-      while (this.accumulator >= FIXED_TIMESTEP) {
-        this.player.fixedUpdate(
-          FIXED_TIMESTEP,
-          this.playerInput.snapshot(
-            consumeInputEdges
-          )
-        );
+        for (
+          let step = 0;
+          step < fixedFrame.steps;
+          step += 1
+        ) {
+          this.player.fixedUpdate(
+            FIXED_TIMESTEP_SECONDS,
+            this.playerInput.snapshot(
+              consumeInputEdges
+            )
+          );
 
-        consumeInputEdges = false;
-        this.accumulator -= FIXED_TIMESTEP;
+          consumeInputEdges = false;
+        }
+
+        this.accumulator =
+          fixedFrame.accumulatorSeconds;
       }
     }
 
-    this.combatSystem.update(frameDelta);
-    this.playerView.update(frameDelta);
-    this.stagehandSystem.update(frameDelta);
-    this.cardThrowerSystem.update(frameDelta);
-    this.shadowAcrobatSystem.update(frameDelta);
-    this.galleryHazardSystem.update(frameDelta);
-    this.lightWraithSystem.update(frameDelta);
-    this.magicSystem.update(frameDelta);
-    this.cardSentrySystem.update(frameDelta);
-    this.cardSanctumHazardSystem.update(frameDelta);
-    this.royalEchoSystem.update(frameDelta);
-    this.royalBoxHazardSystem.update(frameDelta);
-    this.royalBoxSupportSystem.update(frameDelta);
-    this.mirrorCoreSystem.update(frameDelta);
+    this.updateCameraBounds();
 
-    this.updateEncounter();
-    this.updateGrandGallery();
-    this.updateGalleryGauntlet();
-    this.updateSpotlightVault();
-    this.updateCardSanctum();
-    this.updateRoyalBox();
+    if (!this.qaBoundaryTraversalActive) {
+      if (
+        isBelowMovementRoute(
+          this.player.centerX,
+          this.player.y
+        )
+      ) {
+        this.playerHealth.fallOut();
+      }
+
+      this.combatSystem.update(frameDelta);
+      this.stagehandSystem.update(frameDelta);
+      this.cardThrowerSystem.update(frameDelta);
+      this.combatHazardSystem.update();
+      this.mainStageEncounterSystem.update(frameDelta);
+      this.galleryGauntletEncounterSystem.update(frameDelta);
+      this.spotlightVaultEncounterSystem.update(frameDelta);
+      this.magicSystem.update(frameDelta);
+      this.cardSanctumEncounterSystem.update(frameDelta);
+      this.royalBoxEncounterSystem.update(frameDelta);
+      this.mirrorCoreSystem.update(frameDelta);
+      this.mirrorConductorSystem.update(frameDelta);
+
+      this.updateEncounter();
+      this.updateGrandGallery();
+    }
+
+    this.playerView.update(frameDelta);
 
     this.audioBridge.update(frameDelta);
     this.audioDirector.update(frameDelta);
     this.audioDebugHud.update(frameDelta);
 
     this.updateDebugHud();
+
+    if (QA_RUNTIME_INSPECTION) {
+      const updateCost =
+        performance.now() - updateStarted;
+      const metrics = this.timingMetrics;
+
+      metrics.frames += 1;
+      metrics.rawSeconds +=
+        Math.max(
+          0,
+          rawDeltaMilliseconds / 1000
+        );
+      metrics.acceptedSeconds +=
+        fixedFrame.acceptedSeconds;
+      metrics.discardedSeconds +=
+        fixedFrame.discardedSeconds;
+      metrics.fixedSteps += fixedFrame.steps;
+      metrics.maximumSteps = Math.max(
+        metrics.maximumSteps,
+        fixedFrame.steps
+      );
+      metrics.maximumAccumulatorBefore = Math.max(
+        metrics.maximumAccumulatorBefore,
+        accumulatorBefore
+      );
+      metrics.maximumAccumulatorAfter = Math.max(
+        metrics.maximumAccumulatorAfter,
+        this.accumulator
+      );
+      metrics.updateCostMilliseconds +=
+        updateCost;
+      metrics.maximumUpdateCostMilliseconds =
+        Math.max(
+          metrics.maximumUpdateCostMilliseconds,
+          updateCost
+        );
+    }
+  }
+
+  private readonly handleVisibilityChange =
+    (): void => {
+      this.accumulator = 0;
+      this.fixedStepInitialized = false;
+    };
+
+  private readonly recordQaWindowError = (
+    event: ErrorEvent
+  ): void => {
+    this.qaRuntimeErrors.push(
+      event.error instanceof Error
+        ? event.error.message
+        : event.message
+    );
+  };
+
+  private readonly recordQaRejection = (
+    event: PromiseRejectionEvent
+  ): void => {
+    this.qaRuntimeErrors.push(
+      event.reason instanceof Error
+        ? event.reason.message
+        : String(event.reason)
+    );
+  };
+
+  private getBoundaryDebugSnapshot() {
+    const clock = this.time as
+      Phaser.Time.Clock & {
+        readonly _active:
+          readonly Phaser.Time.TimerEvent[];
+        readonly _pendingInsertion:
+          readonly Phaser.Time.TimerEvent[];
+        readonly _pendingRemoval:
+          readonly Phaser.Time.TimerEvent[];
+      };
+    const tweenManager =
+      this.tweens as
+        Phaser.Tweens.TweenManager & {
+          readonly tweens:
+            readonly Phaser.Tweens.Tween[];
+        };
+    const section =
+      getWorldSection(this.player.x);
+    const sceneEventNames =
+      this.events.eventNames();
+    const activeListeners =
+      sceneEventNames.reduce(
+        (total, eventName) =>
+          total +
+          this.events.listenerCount(
+            eventName
+          ),
+        0
+      );
+
+    return {
+      player: {
+        x: this.player.x,
+        y: this.player.y,
+        velocityX:
+          this.player.velocityX,
+        velocityY:
+          this.player.velocityY,
+        controllable:
+          !this.playerHealth.controlsLocked
+      },
+      ...this.audioBridge
+        .getSectionDebugSnapshot(),
+      cameraSectionId:
+        section?.id ?? null,
+      movementCameraRestricted:
+        this.movementCameraRestricted,
+      activeListeners,
+      activeTimers:
+        clock._active.length +
+        clock._pendingInsertion.length -
+        clock._pendingRemoval.length,
+      activeTweens:
+        tweenManager.tweens.length,
+      sceneObjects:
+        this.children.list.length,
+      enemies:
+        WORLD_ENEMY_SPAWNS.length,
+      hazards:
+        WORLD_HAZARDS.length,
+      ...this.collisionWorld
+        .getDebugSnapshot(),
+      checkpoint:
+        this.playerHealth
+          .getDebugSnapshot(),
+      soundtrack:
+        this.musicDirector
+          .getDebugSnapshot(),
+      audio:
+        this.audioDirector
+          .getDebugSnapshot(),
+      timing:
+        this.getTimingDebugSnapshot(),
+      accumulator:
+        this.accumulator,
+      runtimeErrors:
+        [...this.qaRuntimeErrors]
+    };
+  }
+
+  private getTimingDebugSnapshot() {
+    const metrics = this.timingMetrics;
+    const wallSeconds =
+      metrics.startedAt > 0
+        ? Math.max(
+            0,
+            (performance.now() -
+              metrics.startedAt) /
+              1000
+          )
+        : 0;
+
+    return {
+      wallSeconds,
+      rawSeconds: metrics.rawSeconds,
+      acceptedSeconds:
+        metrics.acceptedSeconds,
+      discardedSeconds:
+        metrics.discardedSeconds,
+      fixedSteps: metrics.fixedSteps,
+      maximumSteps: metrics.maximumSteps,
+      maximumAccumulatorBefore:
+        metrics.maximumAccumulatorBefore,
+      maximumAccumulatorAfter:
+        metrics.maximumAccumulatorAfter,
+      averageUpdateCostMilliseconds:
+        metrics.frames > 0
+          ? metrics.updateCostMilliseconds /
+            metrics.frames
+          : 0,
+      maximumUpdateCostMilliseconds:
+        metrics.maximumUpdateCostMilliseconds,
+      longTaskCount: metrics.longTaskCount,
+      maximumLongTaskMilliseconds:
+        metrics.maximumLongTaskMilliseconds,
+      wallToGameRatio:
+        wallSeconds > 0
+          ? metrics.acceptedSeconds /
+            wallSeconds
+          : 0,
+      playerDisplacement:
+        this.player.x -
+        metrics.playerStartX
+    };
+  }
+
+  private updateCameraBounds(
+    force = false
+  ): void {
+    const restrictToMovementRoute =
+      isInMovementRehearsal(
+        this.player.centerX
+      );
+
+    if (
+      !force &&
+      restrictToMovementRoute ===
+        this.movementCameraRestricted
+    ) {
+      return;
+    }
+
+    this.movementCameraRestricted =
+      restrictToMovementRoute;
+
+    this.cameras.main.setBounds(
+      0,
+      0,
+      WORLD_WIDTH,
+      restrictToMovementRoute
+        ? MOVEMENT_ROUTE_CAMERA_HEIGHT
+        : WORLD_HEIGHT
+    );
   }
 
   private createBackdrop(): void {
@@ -1388,2355 +1873,66 @@ class GameScene extends Phaser.Scene {
 
   private createLabels(): void {
     this.add.text(
-      46,
-      245,
-      [
-        "MOVEMENT REHEARSAL",
-        "",
-        "A / D or arrows   Move",
-        "Space             Jump / Double Jump",
-        "Shift             Dash",
-        "J                 Cane Attack",
-        "S or down         Fast Fall",
-        "",
-        "Gamepad: Left Stick / A / RT or B"
-      ].join("\n"),
+      OPENING_CONTROL_PANEL.x,
+      OPENING_CONTROL_PANEL.y,
+      OPENING_CONTROL_INSTRUCTIONS.join(
+        "\n"
+      ),
       {
         fontFamily: "monospace",
-        fontSize: "10px",
+        fontSize: "9px",
         color: "#ead8b4",
-        lineSpacing: 3
-      }
-    );
-
-    this.add.text(
-      680,
-      88,
-      "WALL-JUMP\nSHAFT",
-      {
-        align: "center",
-        fontFamily: "monospace",
-        fontSize: "11px",
-        color: "#d6a94c"
-      }
-    );
-
-    this.add.text(
-      930,
-      249,
-      "AIR-DASH",
-      {
-        fontFamily: "monospace",
-        fontSize: "11px",
-        color: "#d6a94c"
-      }
-    );
-
-    this.add.text(
-      1485,
-      250,
-      "FAST-FALL TUNNEL",
-      {
-        fontFamily: "monospace",
-        fontSize: "11px",
-        color: "#d6a94c"
-      }
-    );
-
-    this.add.text(
-      2070,
-      132,
-      "TO COMBAT\nREHEARSAL →",
-      {
-        align: "center",
-        fontFamily: "monospace",
-        fontSize: "11px",
-        color: "#f0c95e"
-      }
-    );
-
-    this.add.text(
-      3070,
-      74,
-      "ACT III — THE MAIN STAGE",
-      {
-        fontFamily: "monospace",
-        fontSize: "13px",
-        color: "#f0c95e",
-        backgroundColor: "#170a11dd",
-        padding: {
-          x: 8,
-          y: 6
-        }
-      }
-    );
-
-    this.add.text(
-      3070,
-      104,
-      "Defeat the Masked Stagehands",
-      {
-        fontFamily: "monospace",
-        fontSize: "9px",
-        color: "#ead8b4"
-      }
-    );
-  }
-
-
-
-
-
-
-
-  private createRoyalBox(): void {
-    const startX = 11980;
-    const endX = 14400;
-
-    const background = this.add.graphics();
-
-    background
-      .setDepth(-1)
-      .setScrollFactor(1);
-
-    background.fillStyle(0x090713, 1);
-
-    background.fillRect(
-      startX,
-      0,
-      endX - startX,
-      WORLD_HEIGHT
-    );
-
-    for (
-      let x = 12000;
-      x < endX;
-      x += 260
-    ) {
-      background.fillStyle(
-        0x22102f,
-        0.96
-      );
-
-      background.fillRect(
-        x,
-        0,
-        150,
-        WORLD_HEIGHT
-      );
-
-      background.fillStyle(
-        0x091d2c,
-        0.96
-      );
-
-      background.fillRect(
-        x + 150,
-        0,
-        110,
-        WORLD_HEIGHT
-      );
-
-      background.lineStyle(
-        3,
-        0xe15bbd,
-        0.38
-      );
-
-      background.lineBetween(
-        x + 12,
-        0,
-        x + 12,
-        WORLD_HEIGHT
-      );
-
-      background.lineStyle(
-        2,
-        0x72e5ed,
-        0.34
-      );
-
-      background.lineBetween(
-        x + 145,
-        0,
-        x + 145,
-        WORLD_HEIGHT
-      );
-    }
-
-    // Broken mirror panels.
-    for (
-      let x = 12110;
-      x < endX;
-      x += 390
-    ) {
-      background.fillStyle(
-        0x10182b,
-        0.94
-      );
-
-      background.fillRoundedRect(
-        x,
-        42,
-        116,
-        205,
-        14
-      );
-
-      background.lineStyle(
-        4,
-        0xc7a34b,
-        0.9
-      );
-
-      background.strokeRoundedRect(
-        x,
-        42,
-        116,
-        205,
-        14
-      );
-
-      background.lineStyle(
-        2,
-        0x79e6ef,
-        0.62
-      );
-
-      background.lineBetween(
-        x + 58,
-        48,
-        x + 37,
-        128
-      );
-
-      background.lineBetween(
-        x + 37,
-        128,
-        x + 77,
-        170
-      );
-
-      background.lineBetween(
-        x + 77,
-        170,
-        x + 50,
-        241
-      );
-
-      background.lineStyle(
-        2,
-        0xe05ebd,
-        0.65
-      );
-
-      background.lineBetween(
-        x + 58,
-        48,
-        x + 91,
-        104
-      );
-
-      background.lineBetween(
-        x + 91,
-        104,
-        x + 77,
-        170
-      );
-
-      background.lineBetween(
-        x + 37,
-        128,
-        x + 10,
-        184
-      );
-    }
-
-    // Route lights make safe surfaces readable.
-    const routeLights = [
-      [12245, 270, 72],
-      [12365, 210, 72],
-      [12490, 155, 72],
-      [12625, 215, 74],
-      [12760, 260, 72],
-      [12968, 235, 92],
-      [13000, 326, 340],
-      [13380, 270, 74],
-      [13505, 210, 72],
-      [13635, 150, 72],
-      [13770, 205, 72],
-      [13820, 260, 72],
-      [14110, 270, 72],
-      [14150, 326, 250]
-    ] as const;
-
-    const foreground = this.add.graphics();
-
-    foreground
-      .setDepth(2)
-      .setScrollFactor(1);
-
-    for (const route of routeLights) {
-      const [x, y, width] = route;
-
-      foreground.fillStyle(
-        0x73e7ef,
-        0.95
-      );
-
-      foreground.fillRect(
-        x,
-        y,
-        width,
-        3
-      );
-
-      foreground.lineStyle(
-        1,
-        0xe461c0,
-        0.82
-      );
-
-      foreground.lineBetween(
-        x,
-        y + 4,
-        x + width,
-        y + 4
-      );
-    }
-
-    this.add.text(
-      12040,
-      76,
-      "ACT VII — THE FRACTURED ROYAL BOX",
-      {
-        fontFamily: "monospace",
-        fontSize: "13px",
-        color: "#f17bd0",
-        backgroundColor: "#080611e8",
+        backgroundColor: "#100711d9",
+        fixedWidth: OPENING_CONTROL_PANEL.width,
+        fixedHeight: OPENING_CONTROL_PANEL.height,
+        lineSpacing: 2,
         padding: {
           x: 10,
           y: 7
-        }
+        },
+        stroke: "#08040a",
+        strokeThickness: 1
       }
-    ).setDepth(36);
-
-    this.add.text(
-      12040,
-      112,
-      [
-        "Every reflection lies.",
-        "Read the lasers. Choose your route."
-      ].join("\n"),
-      {
-        fontFamily: "monospace",
-        fontSize: "9px",
-        color: "#8cebf2",
-        backgroundColor: "#080611dd",
-        padding: {
-          x: 8,
-          y: 6
-        }
-      }
-    ).setDepth(36);
-
-    this.add.text(
-      12215,
-      470,
-      "LOWER ROUTE — TRAPS / COVER",
-      {
-        fontFamily: "monospace",
-        fontSize: "9px",
-        color: "#edc75f",
-        backgroundColor: "#080611dd",
-        padding: {
-          x: 7,
-          y: 5
-        }
-      }
-    ).setDepth(36);
-
-    this.add.text(
-      12320,
-      126,
-      "UPPER ROUTE — DOUBLE-JUMP / AIR-DASH",
-      {
-        fontFamily: "monospace",
-        fontSize: "9px",
-        color: "#84e9f0",
-        backgroundColor: "#080611dd",
-        padding: {
-          x: 7,
-          y: 5
-        }
-      }
-    ).setDepth(36);
-
-    this.add.text(
-      12800,
-      548,
-      "WALL-JUMP ASCENT",
-      {
-        fontFamily: "monospace",
-        fontSize: "9px",
-        color: "#ef73cf",
-        backgroundColor: "#080611dd",
-        padding: {
-          x: 7,
-          y: 5
-        }
-      }
-    ).setDepth(36);
-
-    this.add.text(
-      13520,
-      112,
-      "MASTER SEQUENCE — JUMP → DASH → DOUBLE-JUMP",
-      {
-        fontFamily: "monospace",
-        fontSize: "9px",
-        color: "#efca62",
-        backgroundColor: "#080611dd",
-        padding: {
-          x: 7,
-          y: 5
-        }
-      }
-    ).setDepth(36);
-
-    this.royalBoxGateGraphics =
-      this.add.graphics();
-
-    this.royalBoxGateGraphics.setDepth(34);
-
-    this.royalBoxObjectiveText = this.add.text(
-      GAME_WIDTH * 0.5,
-      62,
-      "",
-      {
-        fontFamily: "monospace",
-        fontSize: "10px",
-        color: "#ffd9f7",
-        backgroundColor: "#080611e8",
-        padding: {
-          x: 9,
-          y: 6
-        }
-      }
-    );
-
-    this.royalBoxObjectiveText
-      .setOrigin(0.5, 0)
-      .setScrollFactor(0)
-      .setDepth(1180)
-      .setVisible(false);
-  }
-
-  private updateRoyalBox(): void {
-    if (
-      !this.royalBoxEntered &&
-      this.player.x >= getWorldCheckpoint("RoyalBox").triggerX
-    ) {
-      this.royalBoxEntered = true;
-
-      this.playerHealth.setCheckpoint(
-        getWorldCheckpoint(
-          "RoyalBox"
-        )
+    )
+      .setScrollFactor(1)
+      .setDepth(
+        MOVEMENT_TUTORIAL_SIGNAGE_DEPTH
       );
-
-      this.cameras.main.flash(
-        260,
-        220,
-        76,
-        187,
-        false
-      );
-    }
-
-    if (
-      !this.royalBoxActive &&
-      !this.royalBoxCleared &&
-      this.player.x >= 12080
-    ) {
-      this.startRoyalBox();
-    }
-
-    if (!this.royalBoxActive) {
-      return;
-    }
-
-    const remaining =
-      this.royalEchoSystem.remaining;
-
-    this.royalBoxObjectiveText.setText(
-      [
-        `ROYAL ECHOES ${4 - remaining}/4`,
-        "Duelists rush. Prism Casters control the air."
-      ].join("\n")
-    );
-
-    if (remaining === 0) {
-      this.completeRoyalBox();
-    }
-  }
-
-  private startRoyalBox(): void {
-    this.royalBoxActive = true;
-
-    this.collisionWorld.addSolid(
-      this.royalBoxExitGate
-    );
-
-    this.royalEchoSystem
-      .setEnabled(true);
-
-    this.royalBoxHazardSystem
-      .setEnabled(true);
-
-    this.royalBoxObjectiveText
-      .setVisible(true);
-
-    this.redrawRoyalBoxGate();
-  }
-
-  private completeRoyalBox(): void {
-    this.royalBoxActive = false;
-    this.royalBoxCleared = true;
-
-    this.collisionWorld.removeSolid(
-      this.royalBoxExitGate
-    );
-
-    this.royalEchoSystem
-      .setEnabled(false);
-
-    this.royalBoxHazardSystem
-      .setEnabled(false);
-
-    this.royalBoxGateGraphics.clear();
-
-    this.royalBoxObjectiveText.setText(
-      "ROYAL BOX CLEARED — THE MIRROR CORE OPENS"
-    );
-
-    this.cameras.main.flash(
-      320,
-      230,
-      92,
-      202,
-      false
-    );
-
-    this.time.delayedCall(
-      2800,
-      () => {
-        this.royalBoxObjectiveText
-          .setVisible(false);
-      }
-    );
-
-    this.add.text(
-      14145,
-      235,
-      "TO THE MIRROR CORE →",
-      {
-        fontFamily: "monospace",
-        fontSize: "10px",
-        color: "#8ceaf1",
-        backgroundColor: "#080611dd",
-        padding: {
-          x: 8,
-          y: 6
-        }
-      }
-    ).setDepth(36);
-  }
-
-  private resetRoyalBoxAfterDeath(): void {
-    if (
-      !this.royalEchoSystem ||
-      !this.royalBoxHazardSystem ||
-      this.royalBoxCleared
-    ) {
-      return;
-    }
-
-    this.royalBoxActive = false;
-
-    this.collisionWorld?.removeSolid(
-      this.royalBoxExitGate
-    );
-
-    this.royalEchoSystem
-      .resetEncounter();
-
-    this.royalBoxHazardSystem
-      .reset();
-
-    this.royalBoxSupportSystem
-      .resetAfterDeath();
-
-    this.royalBoxGateGraphics?.clear();
-
-    this.royalBoxObjectiveText
-      ?.setVisible(false)
-      .setText("");
-  }
-
-  private redrawRoyalBoxGate(): void {
-    const g = this.royalBoxGateGraphics;
-    g.clear();
-
-    const gate =
-      this.royalBoxExitGate;
-
-    g.fillStyle(0x100819, 0.97);
-
-    g.fillRect(
-      gate.x,
-      gate.y,
-      gate.width,
-      gate.height
-    );
-
-    g.lineStyle(
-      3,
-      0xe85fc5,
-      1
-    );
 
     for (
-      let y = 8;
-      y < gate.height;
-      y += 25
+      const label of
+      MOVEMENT_SECTION_LABELS
     ) {
-      g.lineBetween(
-        gate.x + 2,
-        y,
-        gate.right - 2,
-        y + 15
-      );
-    }
-
-    g.lineStyle(
-      2,
-      0x77e5ed,
-      1
-    );
-
-    g.strokeRect(
-      gate.x,
-      gate.y,
-      gate.width,
-      gate.height
-    );
-  }
-
-  private createCardSanctum(): void {
-    const startX = 9580;
-    const endX = 12000;
-
-    const background = this.add.graphics();
-
-    background
-      .setDepth(-2)
-      .setScrollFactor(1);
-
-    background.fillStyle(
-      0x170817,
-      1
-    );
-
-    background.fillRect(
-      startX,
-      0,
-      endX - startX,
-      WORLD_HEIGHT
-    );
-
-    for (
-      let x = 9600;
-      x < endX;
-      x += 240
-    ) {
-      background.fillStyle(
-        0x2a1029,
-        0.94
-      );
-
-      background.fillRect(
-        x,
-        0,
-        150,
-        WORLD_HEIGHT
-      );
-
-      background.fillStyle(
-        0x10182d,
-        0.88
-      );
-
-      background.fillRect(
-        x + 150,
-        0,
-        90,
-        WORLD_HEIGHT
-      );
-
-      background.lineStyle(
-        3,
-        0xb98c38,
-        0.55
-      );
-
-      background.lineBetween(
-        x + 10,
-        0,
-        x + 10,
-        WORLD_HEIGHT
-      );
-
-      background.lineBetween(
-        x + 140,
-        0,
-        x + 140,
-        WORLD_HEIGHT
-      );
-    }
-
-    // Giant card arches.
-    for (
-      let x = 9720;
-      x < endX;
-      x += 480
-    ) {
-      background.fillStyle(
-        0x0d0d1d,
-        0.95
-      );
-
-      background.fillRoundedRect(
-        x,
-        45,
-        130,
-        205,
-        16
-      );
-
-      background.lineStyle(
-        5,
-        0xd7aa45,
-        0.92
-      );
-
-      background.strokeRoundedRect(
-        x,
-        45,
-        130,
-        205,
-        16
-      );
-
-      background.lineStyle(
-        2,
-        0xd43b6c,
-        0.8
-      );
-
-      background.strokeRoundedRect(
-        x + 10,
-        55,
-        110,
-        185,
-        11
-      );
-
-      background.fillStyle(
-        0xd73a69,
-        0.7
-      );
-
-      background.fillCircle(
-        x + 65,
-        137,
-        18
-      );
-
-      background.fillTriangle(
-        x + 39,
-        142,
-        x + 91,
-        142,
-        x + 65,
-        180
-      );
-    }
-
-    this.add.text(
-      9630,
-      86,
-      "ACT VI — THE CARD SANCTUM",
-      {
-        fontFamily: "monospace",
-        fontSize: "13px",
-        color: "#f1ce69",
-        backgroundColor: "#130714e8",
-        padding: {
-          x: 10,
-          y: 7
+      this.add.text(
+        label.x,
+        label.y,
+        label.text,
+        {
+          align: label.align,
+          fontFamily: "monospace",
+          fontSize: "11px",
+          color: label.text.startsWith(
+            "TO COMBAT"
+          )
+            ? "#f0c95e"
+            : "#d6a94c"
         }
-      }
-    ).setDepth(35);
-
-    this.add.text(
-      9630,
-      123,
-      [
-        "UPPER ROUTE",
-        "Double-jump · Air-dash · Faster"
-      ].join("\n"),
-      {
-        fontFamily: "monospace",
-        fontSize: "9px",
-        color: "#82e8ef",
-        backgroundColor: "#130714dd",
-        padding: {
-          x: 7,
-          y: 6
-        }
-      }
-    ).setDepth(35);
-
-    this.add.text(
-      9700,
-      468,
-      [
-        "LOWER ROUTE",
-        "Longer · Traps · More cover"
-      ].join("\n"),
-      {
-        fontFamily: "monospace",
-        fontSize: "9px",
-        color: "#efbd64",
-        backgroundColor: "#130714dd",
-        padding: {
-          x: 7,
-          y: 6
-        }
-      }
-    ).setDepth(35);
-
-    this.add.text(
-      10395,
-      218,
-      "WALL-JUMP SHAFT",
-      {
-        fontFamily: "monospace",
-        fontSize: "9px",
-        color: "#89e9ef",
-        backgroundColor: "#130714dd",
-        padding: {
-          x: 7,
-          y: 5
-        }
-      }
-    ).setDepth(35);
-
-    this.add.text(
-      11215,
-      112,
-      [
-        "MASTER ROUTE",
-        "Jump → Dash → Double-jump"
-      ].join("\n"),
-      {
-        fontFamily: "monospace",
-        fontSize: "9px",
-        color: "#f0cf69",
-        backgroundColor: "#130714dd",
-        padding: {
-          x: 7,
-          y: 6
-        }
-      }
-    ).setDepth(35);
-
-    this.sanctumGateGraphics =
-      this.add.graphics();
-
-    this.sanctumGateGraphics.setDepth(27);
-
-    this.sanctumObjectiveText = this.add.text(
-      GAME_WIDTH * 0.5,
-      42,
-      "",
-      {
-        fontFamily: "monospace",
-        fontSize: "10px",
-        color: "#ffe29a",
-        backgroundColor: "#130714e8",
-        padding: {
-          x: 9,
-          y: 6
-        }
-      }
-    );
-
-    this.sanctumObjectiveText
-      .setOrigin(0.5, 0)
-      .setScrollFactor(0)
-      .setDepth(1170)
-      .setVisible(false);
-  }
-
-  private updateCardSanctum(): void {
-    if (
-      !this.cardSanctumEntered &&
-      this.player.x >= getWorldCheckpoint("CardSanctum").triggerX
-    ) {
-      this.cardSanctumEntered = true;
-
-      this.playerHealth.setCheckpoint(
-        getWorldCheckpoint(
-          "CardSanctum"
-        )
-      );
-    }
-
-    if (
-      !this.cardSanctumActive &&
-      !this.cardSanctumCleared &&
-      this.player.x >= 9680
-    ) {
-      this.startCardSanctum();
-    }
-
-    if (!this.cardSanctumActive) {
-      return;
-    }
-
-    const remaining =
-      this.cardSentrySystem.remaining;
-
-    this.sanctumObjectiveText.setText(
-      [
-        `CARD SANCTUM — SENTRIES ${3 - remaining}/3`,
-        "Choose your route. Reach and destroy every sentry."
-      ].join("\n")
-    );
-
-    if (remaining === 0) {
-      this.completeCardSanctum();
-    }
-  }
-
-  private startCardSanctum(): void {
-    this.cardSanctumActive = true;
-
-    this.collisionWorld.addSolid(
-      this.sanctumExitGate
-    );
-
-    this.cardSentrySystem
-      .setEnabled(true);
-
-    this.cardSanctumHazardSystem
-      .setEnabled(true);
-
-    this.sanctumObjectiveText
-      .setVisible(true);
-
-    this.redrawSanctumGate();
-  }
-
-  private completeCardSanctum(): void {
-    this.cardSanctumActive = false;
-    this.cardSanctumCleared = true;
-
-    this.collisionWorld.removeSolid(
-      this.sanctumExitGate
-    );
-
-    this.cardSanctumHazardSystem
-      .setEnabled(false);
-
-    this.sanctumGateGraphics.clear();
-
-    this.sanctumObjectiveText.setText(
-      "CARD SANCTUM CLEARED — THE ROYAL BOX AWAITS"
-    );
-
-    this.cameras.main.flash(
-      300,
-      224,
-      180,
-      76,
-      false
-    );
-
-    this.time.delayedCall(
-      2600,
-      () => {
-        this.sanctumObjectiveText
-          .setVisible(false);
-      }
-    );
-  }
-
-  private resetCardSanctumAfterDeath(): void {
-    if (
-      !this.cardSentrySystem ||
-      !this.cardSanctumHazardSystem ||
-      this.cardSanctumCleared
-    ) {
-      return;
-    }
-
-    this.cardSanctumActive = false;
-
-    this.collisionWorld?.removeSolid(
-      this.sanctumExitGate
-    );
-
-    this.cardSentrySystem
-      .resetEncounter();
-
-    this.cardSanctumHazardSystem
-      .reset();
-
-    this.sanctumGateGraphics?.clear();
-
-    this.sanctumObjectiveText
-      ?.setVisible(false)
-      .setText("");
-  }
-
-  private redrawSanctumGate(): void {
-    const g = this.sanctumGateGraphics;
-    g.clear();
-
-    const gate =
-      this.sanctumExitGate;
-
-    g.fillStyle(
-      0x1d0819,
-      0.97
-    );
-
-    g.fillRect(
-      gate.x,
-      gate.y,
-      gate.width,
-      gate.height
-    );
-
-    g.lineStyle(
-      3,
-      0xd83b6a,
-      1
-    );
-
-    for (
-      let y = 8;
-      y < gate.height;
-      y += 24
-    ) {
-      g.lineBetween(
-        gate.x + 2,
-        y,
-        gate.right - 2,
-        y + 14
-      );
-    }
-
-    g.lineStyle(
-      2,
-      0xe4ba55,
-      1
-    );
-
-    g.strokeRect(
-      gate.x,
-      gate.y,
-      gate.width,
-      gate.height
-    );
-  }
-
-  private createSpotlightVault(): void {
-    const startX = 8180;
-
-    const background = this.add.graphics();
-
-    background
-      .setDepth(-4)
-      .setScrollFactor(1);
-
-    background.fillStyle(
-      0x06131b,
-      1
-    );
-
-    background.fillRect(
-      startX,
-      0,
-      WORLD_WIDTH - startX,
-      360
-    );
-
-    for (
-      let x = 8220;
-      x < WORLD_WIDTH;
-      x += 220
-    ) {
-      background.fillStyle(
-        0x102c38,
-        0.92
-      );
-
-      background.fillRoundedRect(
-        x,
-        28,
-        150,
-        270,
-        26
-      );
-
-      background.lineStyle(
-        4,
-        0xc3973e,
-        0.9
-      );
-
-      background.strokeRoundedRect(
-        x,
-        28,
-        150,
-        270,
-        26
-      );
-
-      background.lineStyle(
-        2,
-        0x6de0e9,
-        0.48
-      );
-
-      background.strokeCircle(
-        x + 75,
-        142,
-        42
-      );
-
-      background.strokeCircle(
-        x + 75,
-        142,
-        25
-      );
-
-      for (
-        let ray = 0;
-        ray < 8;
-        ray += 1
-      ) {
-        const angle =
-          ray / 8 *
-          Math.PI * 2;
-
-        background.lineBetween(
-          x + 75 +
-            Math.cos(angle) * 29,
-          142 +
-            Math.sin(angle) * 29,
-          x + 75 +
-            Math.cos(angle) * 49,
-          142 +
-            Math.sin(angle) * 49
+      )
+        .setScrollFactor(1)
+        .setDepth(
+          MOVEMENT_TUTORIAL_SIGNAGE_DEPTH
         );
-      }
     }
 
-    background.fillStyle(
-      0xd0a344,
-      1
-    );
-
-    background.fillRect(
-      startX,
-      24,
-      WORLD_WIDTH - startX,
-      5
-    );
-
-    background.fillRect(
-      startX,
-      315,
-      WORLD_WIDTH - startX,
-      4
-    );
-
-    background.fillStyle(
-      0x71e2eb,
-      1
-    );
-
-    background.fillRect(
-      startX,
-      326,
-      WORLD_WIDTH - startX,
-      3
-    );
-
-    // Spotlight Sigil.
-    background.fillStyle(
-      0xe8c65f,
-      0.18
-    );
-
-    background.fillCircle(
-      8345,
-      222,
-      62
-    );
-
-    background.lineStyle(
-      4,
-      0xf1ce68,
-      1
-    );
-
-    background.strokeCircle(
-      8345,
-      222,
-      42
-    );
-
-    background.lineStyle(
-      2,
-      0x78e7ef,
-      0.95
-    );
-
-    background.strokeCircle(
-      8345,
-      222,
-      25
-    );
-
-    this.add.text(
-      8240,
-      82,
-      "ACT V — THE SPOTLIGHT VAULT",
-      {
-        fontFamily: "monospace",
-        fontSize: "13px",
-        color: "#9bf3f8",
-        backgroundColor: "#06131be8",
-        padding: {
-          x: 10,
-          y: 7
-        }
-      }
-    ).setDepth(35);
-
-    this.add.text(
-      8260,
-      116,
-      [
-        "The staff remembers the light.",
-        "",
-        "Press [K] to cast Spotlight."
-      ].join("\n"),
-      {
-        fontFamily: "monospace",
-        fontSize: "9px",
-        color: "#f1d575",
-        backgroundColor: "#06131bdd",
-        padding: {
-          x: 8,
-          y: 6
-        }
-      }
-    ).setDepth(35);
-
-    this.vaultGateGraphics =
-      this.add.graphics();
-
-    this.vaultGateGraphics.setDepth(24);
-
-    this.vaultObjectiveText = this.add.text(
-      GAME_WIDTH * 0.5,
-      44,
-      "",
-      {
-        fontFamily: "monospace",
-        fontSize: "10px",
-        color: "#c8f9ff",
-        backgroundColor: "#06131be8",
-        padding: {
-          x: 9,
-          y: 6
-        }
-      }
-    );
-
-    this.vaultObjectiveText
-      .setOrigin(0.5, 0)
-      .setScrollFactor(0)
-      .setDepth(1160)
-      .setVisible(false);
   }
 
-  private updateSpotlightVault(): void {
-    if (
-      !this.spotlightVaultEntered &&
-      this.player.x >= getWorldCheckpoint("SpotlightVault").triggerX
-    ) {
-      this.spotlightVaultEntered = true;
 
-      this.playerHealth.setCheckpoint(
-        getWorldCheckpoint(
-          "SpotlightVault"
-        )
-      );
 
-      this.magicSystem.unlock();
 
-      this.cameras.main.flash(
-        280,
-        118,
-        230,
-        239,
-        false
-      );
-    }
 
-    if (
-      !this.spotlightVaultActive &&
-      !this.spotlightVaultCleared &&
-      this.player.x >= 8460
-    ) {
-      this.startSpotlightVault();
-    }
 
-    if (!this.spotlightVaultActive) {
-      return;
-    }
-
-    const remaining =
-      this.lightWraithSystem.remaining;
-
-    this.vaultObjectiveText.setText(
-      [
-        `SPOTLIGHT TRAINING — WRAITHS ${2 - remaining}/2`,
-        "Physical attacks are weak. Press [K] within range."
-      ].join("\n")
-    );
-
-    if (remaining === 0) {
-      this.completeSpotlightVault();
-    }
-  }
-
-  private startSpotlightVault(): void {
-    this.spotlightVaultActive = true;
-
-    this.collisionWorld.addSolid(
-      this.vaultLeftGate
-    );
-
-    this.collisionWorld.addSolid(
-      this.vaultRightGate
-    );
-
-    this.lightWraithSystem
-      .setEnabled(true);
-
-    this.vaultObjectiveText
-      .setVisible(true);
-
-    this.redrawVaultGates();
-  }
-
-  private completeSpotlightVault(): void {
-    this.spotlightVaultActive = false;
-    this.spotlightVaultCleared = true;
-
-    this.collisionWorld.removeSolid(
-      this.vaultLeftGate
-    );
-
-    this.collisionWorld.removeSolid(
-      this.vaultRightGate
-    );
-
-    this.vaultGateGraphics.clear();
-
-    this.vaultObjectiveText.setText(
-      "SPOTLIGHT MASTERED — THE VAULT IS OPEN"
-    );
-
-    this.cameras.main.flash(
-      300,
-      242,
-      210,
-      104,
-      false
-    );
-
-    this.time.delayedCall(
-      2400,
-      () => {
-        this.vaultObjectiveText
-          .setVisible(false);
-      }
-    );
-
-    this.add.text(
-      9360,
-      176,
-      "TO THE CARD SANCTUM →",
-      {
-        fontFamily: "monospace",
-        fontSize: "10px",
-        color: "#f4d776",
-        backgroundColor: "#06131bdd",
-        padding: {
-          x: 8,
-          y: 6
-        }
-      }
-    ).setDepth(35);
-  }
-
-  private resetSpotlightVaultAfterDeath(): void {
-    if (
-      !this.lightWraithSystem ||
-      !this.magicSystem ||
-      this.spotlightVaultCleared
-    ) {
-      return;
-    }
-
-    this.spotlightVaultActive = false;
-
-    this.collisionWorld?.removeSolid(
-      this.vaultLeftGate
-    );
-
-    this.collisionWorld?.removeSolid(
-      this.vaultRightGate
-    );
-
-    this.lightWraithSystem
-      .resetEncounter();
-
-    this.magicSystem
-      .resetEncounter();
-
-    this.vaultGateGraphics?.clear();
-
-    this.vaultObjectiveText
-      ?.setVisible(false)
-      .setText("");
-  }
-
-  private redrawVaultGates(): void {
-    const g = this.vaultGateGraphics;
-    g.clear();
-
-    for (
-      const gate of [
-        this.vaultLeftGate,
-        this.vaultRightGate
-      ]
-    ) {
-      g.fillStyle(
-        0x071720,
-        0.96
-      );
-
-      g.fillRect(
-        gate.x,
-        gate.y,
-        gate.width,
-        gate.height
-      );
-
-      g.lineStyle(
-        3,
-        0x72e2eb,
-        1
-      );
-
-      for (
-        let y = 8;
-        y < gate.height;
-        y += 24
-      ) {
-        g.lineBetween(
-          gate.x + 2,
-          y,
-          gate.right - 2,
-          y + 14
-        );
-      }
-
-      g.lineStyle(
-        2,
-        0xe7c45d,
-        1
-      );
-
-      g.strokeRect(
-        gate.x,
-        gate.y,
-        gate.width,
-        gate.height
-      );
-    }
-  }
-
-  private createGalleryGauntlet(): void {
-    const g = this.add.graphics();
-
-    // Environment artwork must remain behind the collision geometry.
-    // Level solids are rendered at depth 0, hazards at depth 25.
-    g.setDepth(-3);
-    g.setScrollFactor(1);
-
-    // The gallery descends into a colder, fractured backstage void.
-    g.fillStyle(
-      0x050914,
-      1
-    );
-
-    g.fillRect(
-      6380,
-      360,
-      WORLD_WIDTH - 6380,
-      WORLD_HEIGHT - 360
-    );
-
-    g.fillStyle(
-      0x0d1730,
-      0.94
-    );
-
-    g.fillRect(
-      6380,
-      300,
-      WORLD_WIDTH - 6380,
-      60
-    );
-
-    // Deep vertical architectural lines.
-    for (
-      let x = 6420;
-      x < WORLD_WIDTH;
-      x += 150
-    ) {
-      g.lineStyle(
-        2,
-        0x3b6b86,
-        0.25
-      );
-
-      g.lineBetween(
-        x,
-        300,
-        x,
-        WORLD_HEIGHT
-      );
-    }
-
-    // Void silhouettes.
-    for (
-      let x = 6470;
-      x < WORLD_WIDTH;
-      x += 290
-    ) {
-      g.fillStyle(
-        0x02040a,
-        0.62
-      );
-
-      g.fillTriangle(
-        x,
-        WORLD_HEIGHT,
-        x + 80,
-        350,
-        x + 160,
-        WORLD_HEIGHT
-      );
-    }
-
-    // Cyan route markers.
-    const routePoints = [
-      [6420, 304],
-      [6625, 260],
-      [6750, 404],
-      [7100, 356],
-      [7410, 188],
-      [7520, 300],
-      [7870, 246],
-      [8040, 300]
-    ] as const;
-
-    for (const point of routePoints) {
-      const [x, y] = point;
-
-      g.fillStyle(
-        0x73e3eb,
-        0.75
-      );
-
-      g.fillCircle(
-        x,
-        y,
-        3
-      );
-
-      g.lineStyle(
-        1,
-        0xd6ad49,
-        0.65
-      );
-
-      g.strokeCircle(
-        x,
-        y,
-        7
-      );
-    }
-
-    this.add.text(
-      6410,
-      250,
-      [
-        "THE GALLERY GAUNTLET",
-        "Mind the void. Watch the rhythm."
-      ].join("\n"),
-      {
-        fontFamily: "monospace",
-        fontSize: "10px",
-        color: "#8beaf1",
-        backgroundColor: "#050914e8",
-        padding: {
-          x: 8,
-          y: 7
-        }
-      }
-    ).setDepth(30);
-
-    this.add.text(
-      7050,
-      448,
-      "ASCEND BEFORE THE SHADOW STRIKES",
-      {
-        fontFamily: "monospace",
-        fontSize: "9px",
-        color: "#d8b456",
-        backgroundColor: "#050914dd",
-        padding: {
-          x: 7,
-          y: 5
-        }
-      }
-    ).setDepth(30);
-
-    this.add.text(
-      8000,
-      286,
-      "THE SPOTLIGHT VAULT →",
-      {
-        fontFamily: "monospace",
-        fontSize: "10px",
-        color: "#f3d36b",
-        backgroundColor: "#050914dd",
-        padding: {
-          x: 8,
-          y: 6
-        }
-      }
-    ).setDepth(30);
-
-    this.galleryObjectiveText = this.add.text(
-      GAME_WIDTH * 0.5,
-      12,
-      "",
-      {
-        fontFamily: "monospace",
-        fontSize: "10px",
-        color: "#a9f4fa",
-        backgroundColor: "#050914e8",
-        padding: {
-          x: 9,
-          y: 6
-        }
-      }
-    );
-
-    this.galleryObjectiveText
-      .setOrigin(0.5, 0)
-      .setScrollFactor(0)
-      .setDepth(1150)
-      .setVisible(false);
-  }
-
-  private updateGalleryGauntlet(): void {
-    if (
-      !this.galleryGauntletEntered &&
-      this.player.x >= getWorldCheckpoint("GalleryGauntlet").triggerX
-    ) {
-      this.galleryGauntletEntered = true;
-
-      this.playerHealth.setCheckpoint(
-        getWorldCheckpoint(
-          "GalleryGauntlet"
-        )
-      );
-    }
-
-    if (
-      !this.galleryGauntletEnabled &&
-      this.player.x >= 6400 &&
-      this.player.x < 7995
-    ) {
-      this.galleryGauntletEnabled = true;
-
-      this.shadowAcrobatSystem
-        .setEnabled(true);
-
-      this.galleryHazardSystem
-        .setEnabled(true);
-
-      this.galleryObjectiveText
-        .setVisible(true);
-    }
-
-    if (
-      this.galleryGauntletEnabled
-    ) {
-      const shadows =
-        this.shadowAcrobatSystem.remaining;
-
-      this.galleryObjectiveText.setText(
-        `GALLERY GAUNTLET — SHADOWS ${2 - shadows}/2`
-      );
-    }
-
-    if (
-      !this.galleryMidpointActivated &&
-      this.player.x >= getWorldCheckpoint("GauntletMidpoint").triggerX
-    ) {
-      this.galleryMidpointActivated = true;
-
-      this.playerHealth.setCheckpoint(
-        getWorldCheckpoint(
-          "GauntletMidpoint"
-        )
-      );
-    }
-
-    if (
-      this.player.x >= 7995 &&
-      this.galleryGauntletEnabled
-    ) {
-      this.galleryGauntletEnabled = false;
-
-      this.galleryHazardSystem
-        .setEnabled(false);
-
-      this.galleryObjectiveText
-        .setText(
-          "GAUNTLET CLEARED — THE SPOTLIGHT VAULT AWAITS"
-        );
-
-      this.time.delayedCall(
-        2200,
-        () => {
-          this.galleryObjectiveText
-            .setVisible(false);
-        }
-      );
-    }
-  }
 
   private createGrandGallery(): void {
-    const galleryStart = 4760;
-
-    // The Grand Gallery ends where the Gallery Gauntlet begins.
-    // Do not use WORLD_WIDTH here: later milestones expand the world,
-    // but the Gallery artwork must not cover subsequent level sections.
-    const galleryEnd = 6400;
-
-    // Solid background layer: this deliberately covers the red theater
-    // backdrop and makes the biome transition immediately readable.
-    const background = this.add.graphics();
-
-    background.setDepth(-90);
-    background.setScrollFactor(1);
-
-    background.fillStyle(
-      0x07111f,
-      1
-    );
-
-    background.fillRect(
-      galleryStart,
-      0,
-      galleryEnd - galleryStart,
-      WORLD_HEIGHT
-    );
-
-    // Deep blue wall panels.
-    for (
-      let x = galleryStart;
-      x < galleryEnd;
-      x += 180
-    ) {
-      background.fillStyle(
-        0x101c35,
-        1
-      );
-
-      background.fillRect(
-        x,
-        0,
-        116,
-        326
-      );
-
-      background.fillStyle(
-        0x261943,
-        0.72
-      );
-
-      background.fillRect(
-        x + 116,
-        0,
-        64,
-        326
-      );
-
-      background.lineStyle(
-        2,
-        0x3d6d8c,
-        0.28
-      );
-
-      background.lineBetween(
-        x + 10,
-        0,
-        x + 10,
-        326
-      );
-
-      background.lineBetween(
-        x + 106,
-        0,
-        x + 106,
-        326
-      );
-    }
-
-    // Tall gallery windows.
-    for (
-      let x = 4900;
-      x < galleryEnd - 80;
-      x += 360
-    ) {
-      background.fillStyle(
-        0x030812,
-        1
-      );
-
-      background.fillRoundedRect(
-        x,
-        38,
-        92,
-        172,
-        42
-      );
-
-      background.lineStyle(
-        4,
-        0xb88938,
-        0.88
-      );
-
-      background.strokeRoundedRect(
-        x,
-        38,
-        92,
-        172,
-        42
-      );
-
-      background.lineStyle(
-        1,
-        0x64d6e8,
-        0.38
-      );
-
-      background.lineBetween(
-        x + 46,
-        42,
-        x + 46,
-        205
-      );
-
-      background.lineBetween(
-        x + 8,
-        122,
-        x + 84,
-        122
-      );
-
-      // Stars visible through the windows.
-      for (
-        let star = 0;
-        star < 6;
-        star += 1
-      ) {
-        const starX =
-          x + 17 +
-          ((star * 29) % 62);
-
-        const starY =
-          63 +
-          ((star * 43) % 118);
-
-        background.fillStyle(
-          star % 2 === 0
-            ? 0x7de5f2
-            : 0xf1c75b,
-          0.85
-        );
-
-        background.fillCircle(
-          starX,
-          starY,
-          star % 3 === 0 ? 2 : 1
-        );
-      }
-    }
-
-    // Ornate picture frames and card-suit emblems.
-    const framePositions = [
-      5075,
-      5435,
-      5795,
-      6155
-    ];
-
-    for (
-      let index = 0;
-      index < framePositions.length;
-      index += 1
-    ) {
-      const x = framePositions[index];
-
-      if (x === undefined) {
-        continue;
-      }
-
-      background.fillStyle(
-        0x191027,
-        1
-      );
-
-      background.fillRoundedRect(
-        x,
-        78,
-        72,
-        94,
-        7
-      );
-
-      background.lineStyle(
-        5,
-        0xa9782e,
-        1
-      );
-
-      background.strokeRoundedRect(
-        x,
-        78,
-        72,
-        94,
-        7
-      );
-
-      background.lineStyle(
-        1,
-        0xf0cd6b,
-        0.8
-      );
-
-      background.strokeRoundedRect(
-        x + 7,
-        85,
-        58,
-        80,
-        4
-      );
-
-      const centerX = x + 36;
-      const centerY = 125;
-
-      if (index % 2 === 0) {
-        background.fillStyle(
-          0x65d9eb,
-          0.78
-        );
-
-        background.fillTriangle(
-          centerX,
-          centerY - 18,
-          centerX - 15,
-          centerY,
-          centerX + 15,
-          centerY
-        );
-
-        background.fillTriangle(
-          centerX,
-          centerY + 18,
-          centerX - 15,
-          centerY,
-          centerX + 15,
-          centerY
-        );
-      } else {
-        background.fillStyle(
-          0xb82e68,
-          0.82
-        );
-
-        background.fillCircle(
-          centerX - 8,
-          centerY - 5,
-          10
-        );
-
-        background.fillCircle(
-          centerX + 8,
-          centerY - 5,
-          10
-        );
-
-        background.fillTriangle(
-          centerX - 17,
-          centerY,
-          centerX + 17,
-          centerY,
-          centerX,
-          centerY + 20
-        );
-      }
-    }
-
-    // Gold wall trim.
-    background.fillStyle(
-      0x9d7130,
-      1
-    );
-
-    background.fillRect(
-      galleryStart,
-      26,
-      galleryEnd - galleryStart,
-      4
-    );
-
-    background.fillRect(
-      galleryStart,
-      314,
-      galleryEnd - galleryStart,
-      5
-    );
-
-    background.fillStyle(
-      0xe0ba57,
-      0.6
-    );
-
-    background.fillRect(
-      galleryStart,
-      27,
-      galleryEnd - galleryStart,
-      1
-    );
-
-    // Transition arch between the theater and gallery.
-    const architecture = this.add.graphics();
-
-    architecture.setDepth(-5);
-    architecture.setScrollFactor(1);
-
-    architecture.fillStyle(
-      0x090916,
-      1
-    );
-
-    architecture.fillRect(
-      4750,
-      0,
-      38,
-      326
-    );
-
-    architecture.lineStyle(
-      5,
-      0xd0a33e,
-      1
-    );
-
-    architecture.lineBetween(
-      4762,
-      0,
-      4762,
-      326
-    );
-
-    architecture.lineBetween(
-      4778,
-      0,
-      4778,
-      326
-    );
-
-    for (
-      let y = 16;
-      y < 326;
-      y += 30
-    ) {
-      architecture.lineStyle(
-        2,
-        0x69d5e6,
-        0.72
-      );
-
-      architecture.lineBetween(
-        4763,
-        y,
-        4777,
-        y + 14
-      );
-    }
-
-    // Chandeliers.
-    for (
-      let x = 5000;
-      x < galleryEnd;
-      x += 420
-    ) {
-      architecture.lineStyle(
-        2,
-        0xb98734,
-        0.9
-      );
-
-      architecture.lineBetween(
-        x,
-        0,
-        x,
-        46
-      );
-
-      architecture.lineBetween(
-        x - 22,
-        54,
-        x + 22,
-        54
-      );
-
-      architecture.lineBetween(
-        x - 22,
-        54,
-        x - 30,
-        67
-      );
-
-      architecture.lineBetween(
-        x + 22,
-        54,
-        x + 30,
-        67
-      );
-
-      architecture.fillStyle(
-        0x7de4ef,
-        0.88
-      );
-
-      architecture.fillCircle(
-        x,
-        53,
-        5
-      );
-
-      architecture.fillCircle(
-        x - 30,
-        67,
-        4
-      );
-
-      architecture.fillCircle(
-        x + 30,
-        67,
-        4
-      );
-    }
-
-    // Repaint the gallery floor so it no longer uses the theater palette.
-    const foreground = this.add.graphics();
-
-    foreground.setDepth(2);
-    foreground.setScrollFactor(1);
-
-    foreground.fillStyle(
-      0x11182b,
-      1
-    );
-
-    foreground.fillRect(
-      galleryStart,
-      326,
-      galleryEnd - galleryStart,
-      34
-    );
-
-    foreground.fillStyle(
-      0x5bc6d8,
-      1
-    );
-
-    foreground.fillRect(
-      galleryStart,
-      326,
-      galleryEnd - galleryStart,
-      3
-    );
-
-    foreground.fillStyle(
-      0xb88a37,
-      0.9
-    );
-
-    foreground.fillRect(
-      galleryStart,
-      330,
-      galleryEnd - galleryStart,
-      2
-    );
-
-    // Gallery platform overlays.
-    const galleryPlatforms = [
-      [4870, 276, 125],
-      [5060, 232, 120],
-      [5250, 184, 110],
-      [5435, 244, 125],
-      [5640, 198, 110],
-      [5825, 266, 130],
-      [6035, 220, 120],
-      [6210, 170, 105]
-    ] as const;
-
-    for (const platform of galleryPlatforms) {
-      const [x, y, width] = platform;
-
-      foreground.fillStyle(
-        0x182741,
-        1
-      );
-
-      foreground.fillRoundedRect(
-        x,
-        y,
-        width,
-        14,
-        4
-      );
-
-      foreground.fillStyle(
-        0x65d8e8,
-        1
-      );
-
-      foreground.fillRect(
-        x,
-        y,
-        width,
-        3
-      );
-
-      foreground.lineStyle(
-        1,
-        0xc8963e,
-        0.9
-      );
-
-      foreground.strokeRoundedRect(
-        x,
-        y,
-        width,
-        14,
-        4
-      );
-    }
-
-    this.add.text(
-      4890,
-      92,
-      "ACT IV — THE GRAND GALLERY",
-      {
-        fontFamily: "monospace",
-        fontSize: "13px",
-        color: "#82e5ef",
-        backgroundColor: "#07101ddd",
-        padding: {
-          x: 9,
-          y: 7
-        }
-      }
-    ).setDepth(4);
-
-    this.add.text(
-      4890,
-      124,
-      "Beyond the stage, the casino dreams.",
-      {
-        fontFamily: "monospace",
-        fontSize: "9px",
-        color: "#e8d7ab"
-      }
-    ).setDepth(4);
-
-    this.add.text(
-      6130,
-      126,
-      [
-        "THE SPOTLIGHT SIGIL",
-        "",
-        "A forbidden light waits ahead..."
-      ].join("\n"),
-      {
-        align: "center",
-        fontFamily: "monospace",
-        fontSize: "9px",
-        color: "#f2cf69",
-        backgroundColor: "#080e1bdd",
-        padding: {
-          x: 8,
-          y: 7
-        }
-      }
-    ).setDepth(4);
-
     this.grandGalleryTitle = this.add.text(
       GAME_WIDTH * 0.5,
       52,
@@ -3766,9 +1962,13 @@ class GameScene extends Phaser.Scene {
   }
 
   private updateGrandGallery(): void {
+    if (this.player.x < 13744) {
+      return;
+    }
+
     if (
       !this.grandGalleryEntered &&
-      this.player.x >= 4800
+      this.player.x >= 13744
     ) {
       this.grandGalleryEntered = true;
 
@@ -3837,28 +2037,53 @@ class GameScene extends Phaser.Scene {
       .setScrollFactor(0)
       .setDepth(1050)
       .setVisible(false);
+
+    this.redrawArenaGates();
   }
 
   private updateEncounter(): void {
     if (
       !this.checkpointActivated &&
-      this.player.x >= getWorldCheckpoint("MainStage").triggerX
+      this.player.x >= getWorldCheckpoint("CombatEntry").triggerX
     ) {
       this.checkpointActivated = true;
 
       this.playerHealth.setCheckpoint(
         getWorldCheckpoint(
-          "MainStage"
+          "CombatEntry"
         )
       );
     }
 
     if (
+      this.tutorialExitLocked &&
+      this.combatSystem.completed
+    ) {
+      this.tutorialExitLocked = false;
+      this.collisionWorld.removeSolid(
+        this.tutorialExitGate
+      );
+      this.redrawArenaGates();
+    }
+
+    if (
       !this.encounterActive &&
       !this.encounterCleared &&
-      this.player.x >= 3070
+      this.combatSystem.completed &&
+      this.player.x >= 6728
     ) {
       this.startEncounter();
+    }
+
+    if (
+      this.encounterCleared &&
+      !this.masteryCheckpointActivated &&
+      this.player.x >= getWorldCheckpoint("CombatMastery").triggerX
+    ) {
+      this.masteryCheckpointActivated = true;
+      this.playerHealth.setCheckpoint(
+        getWorldCheckpoint("CombatMastery")
+      );
     }
 
     if (
@@ -3877,7 +2102,7 @@ class GameScene extends Phaser.Scene {
       this.cardThrowerSystem.total;
 
     this.encounterText.setText(
-      `ACT III — DEFEAT THE TROUPE   ${total - remaining}/${total}`
+      `COMBAT MASTERY — DEFEAT THE TROUPE   ${total - remaining}/${total}`
     );
 
     if (remaining === 0) {
@@ -3886,18 +2111,14 @@ class GameScene extends Phaser.Scene {
   }
 
   private resetEncounterAfterDeath(): void {
-    this.shadowAcrobatSystem?.resetEncounter();
-    this.galleryHazardSystem?.reset();
-    this.resetSpotlightVaultAfterDeath();
-    this.resetCardSanctumAfterDeath();
-    this.resetRoyalBoxAfterDeath();
+    this.combatHazardSystem?.reset();
+    this.mainStageEncounterSystem?.resetAfterDeath();
+    this.galleryGauntletEncounterSystem?.resetAfterDeath();
+    this.spotlightVaultEncounterSystem?.resetAfterDeath();
+    this.cardSanctumEncounterSystem?.resetAfterDeath();
+    this.royalBoxEncounterSystem?.resetAfterDeath();
     this.mirrorCoreSystem?.resetAfterDeath();
-
-    this.galleryGauntletEnabled = false;
-
-    this.galleryObjectiveText
-      ?.setVisible(false)
-      .setText("");
+    this.mirrorConductorSystem?.resetAfterDeath();
 
     if (this.encounterCleared) {
       return;
@@ -3940,9 +2161,11 @@ class GameScene extends Phaser.Scene {
     this.cardThrowerSystem
       .setEncounterActive(true);
 
+    this.combatHazardSystem.setEnabled(true);
+
     this.encounterText
       .setText(
-        "ACT III — DEFEAT THE TROUPE   0/5"
+        "COMBAT MASTERY — DEFEAT THE TROUPE   0/5"
       )
       .setVisible(true);
 
@@ -3975,9 +2198,10 @@ class GameScene extends Phaser.Scene {
     );
 
     this.arenaGateGraphics.clear();
+    this.combatHazardSystem.setEnabled(false);
 
     this.encounterText.setText(
-      "ACT III COMPLETE — THE EXIT IS OPEN"
+      "COMBAT REHEARSAL COMPLETE — THE EXIT IS OPEN"
     );
 
     this.cameras.main.flash(
@@ -3996,9 +2220,9 @@ class GameScene extends Phaser.Scene {
     );
 
     this.add.text(
-      4240,
+      10096,
       238,
-      "TO THE GRAND GALLERY →",
+      "TO THE MAIN STAGE →",
       {
         fontFamily: "monospace",
         fontSize: "10px",
@@ -4018,8 +2242,12 @@ class GameScene extends Phaser.Scene {
 
     for (
       const gate of [
-        this.arenaLeftGate,
-        this.arenaRightGate
+        ...(this.tutorialExitLocked
+          ? [this.tutorialExitGate]
+          : []),
+        ...(this.encounterActive
+          ? [this.arenaLeftGate, this.arenaRightGate]
+          : [])
       ]
     ) {
       g.fillStyle(
@@ -4130,5 +2358,23 @@ const config: Phaser.Types.Core.GameConfig = {
 };
 
 void leaderboard.boot(() => {
-  new Phaser.Game(config);
+  const audioContext =
+    typeof AudioContext === "undefined"
+      ? undefined
+      : new AudioContext();
+
+  preparedAudioContext = audioContext;
+
+  if (audioContext) {
+    void audioContext.resume();
+  }
+
+  new Phaser.Game({
+    ...config,
+    audio: audioContext
+      ? {
+          context: audioContext
+        }
+      : undefined
+  });
 });

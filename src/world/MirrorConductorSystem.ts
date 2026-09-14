@@ -1,0 +1,1895 @@
+import Phaser from "phaser";
+import { BossView } from "../boss/BossView";
+import { AUDIO_EVENTS } from "../audio/AudioEvents";
+import { leaderboard } from "../leaderboard/LeaderboardClient";
+import { WORLD_HEIGHT, WORLD_WIDTH } from "./WorldLayout";
+import { getWorldCheckpoint, getWorldGate, type WorldGateId } from "./WorldGameplay";
+import type { CombatSystem, CombatTarget } from "../combat/CombatSystem";
+import type { MagicSystem } from "../magic/MagicSystem";
+import type { PlayerHealthSystem } from "../player/PlayerHealthSystem";
+import type { PlayerController } from "../main";
+import {
+  applyMirrorConductorDamage,
+  getMirrorConductorPhase,
+  shouldShowMirrorConductorThresholdCue
+} from "./MirrorConductorPhase";
+
+export const MIRROR_CONDUCTOR_START_X = 44672;
+export const MIRROR_CONDUCTOR_END_X = 49824;
+export const MIRROR_CONDUCTOR_THRESHOLD_X = 45312;
+const ARENA_LEFT = 45120;
+const ARENA_RIGHT = 49344;
+const ARENA_CENTER_X = 47232;
+
+type BossCounter = {
+  readonly x: number;
+  readonly y: number;
+};
+
+type BossAction =
+  | "intro"
+  | "shield-block"
+  | "shield-break"
+  | "projectile-volley";
+
+interface BossProjectile {
+  x: number;
+  y: number;
+  velocityX: number;
+  velocityY: number;
+  lifetime: number;
+  radius: number;
+  color: number;
+  active: boolean;
+}
+
+interface FinaleParticle {
+  x: number;
+  y: number;
+  velocityX: number;
+  velocityY: number;
+  lifetime: number;
+  maximumLifetime: number;
+  color: number;
+  size: number;
+}
+
+function playerBounds(
+  player: PlayerController
+): Phaser.Geom.Rectangle {
+  return new Phaser.Geom.Rectangle(
+    player.x,
+    player.y,
+    player.width,
+    player.height
+  );
+}
+
+function circleIntersectsRectangle(
+  x: number,
+  y: number,
+  radius: number,
+  rectangle: Phaser.Geom.Rectangle
+): boolean {
+  const nearestX = Phaser.Math.Clamp(
+    x,
+    rectangle.left,
+    rectangle.right
+  );
+
+  const nearestY = Phaser.Math.Clamp(
+    y,
+    rectangle.top,
+    rectangle.bottom
+  );
+
+  const deltaX = x - nearestX;
+  const deltaY = y - nearestY;
+
+  return (
+    deltaX * deltaX +
+      deltaY * deltaY <=
+    radius * radius
+  );
+}
+
+function lineIntersectsRectangle(
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
+  rectangle: Phaser.Geom.Rectangle,
+  tolerance: number
+): boolean {
+  return Phaser.Geom.Intersects.LineToRectangle(
+    new Phaser.Geom.Line(x1, y1, x2, y2),
+    new Phaser.Geom.Rectangle(
+      rectangle.x - tolerance,
+      rectangle.y - tolerance,
+      rectangle.width + tolerance * 2,
+      rectangle.height + tolerance * 2
+    )
+  );
+}
+
+function createWorldGate(
+  id: WorldGateId
+): Phaser.Geom.Rectangle {
+  const gate = getWorldGate(id);
+
+  return new Phaser.Geom.Rectangle(
+    gate.x,
+    gate.y,
+    gate.width,
+    gate.height
+  );
+}
+
+class MirrorConductor
+implements CombatTarget {
+  public x = 47200;
+  public y = 300;
+
+  public readonly width = 42;
+  public readonly height = 64;
+
+  public active = false;
+
+  private health = 108;
+  private shielded = true;
+  private defeated = false;
+  private markedTimer = 0;
+  private flashTimer = 0;
+
+  private visualTimer = 0;
+  private visualMode:
+    | "idle"
+    | "entrance"
+    | "cast"
+    | "counter"
+    | "hurt"
+    | "transition12"
+    | "transition23" = "idle";
+
+  private previousPhase: 1 | 2 | 3 = 1;
+  private facing: -1 | 1 = -1;
+  private defeatSequenceStarted = false;
+
+  // Each score is approximately 90 seconds. These minimum windows
+  // prevent high damage from skipping an entire musical phase.
+  private phaseElapsed = 0;
+
+  private readonly view: BossView;
+
+  public constructor(
+    private readonly scene:
+      Phaser.Scene,
+    private readonly graphics:
+      Phaser.GameObjects.Graphics,
+    private readonly onCounter:
+      (counter: BossCounter) => void,
+    private readonly onAction:
+      (action: BossAction) => void,
+    private readonly onDefeated:
+      () => void
+  ) {
+    this.graphics.setDepth(47);
+
+    this.view = new BossView(
+      scene,
+      46
+    );
+
+    this.view.reset(
+      this.viewState(false)
+    );
+  }
+
+  public get currentHealth(): number {
+    return this.health;
+  }
+
+  public get phase(): 1 | 2 | 3 {
+    return getMirrorConductorPhase(
+      this.health
+    );
+  }
+
+  public get isShielded(): boolean {
+    return this.shielded;
+  }
+
+  public get isDefeated(): boolean {
+    return this.defeated;
+  }
+
+  public get bounds():
+  Phaser.Geom.Rectangle {
+    return new Phaser.Geom.Rectangle(
+      this.x,
+      this.y,
+      this.width,
+      this.height
+    );
+  }
+
+  public setEnabled(
+    enabled: boolean
+  ): void {
+    this.active =
+      enabled &&
+      !this.defeated;
+
+    if (this.active) {
+      this.visualMode = "entrance";
+      this.visualTimer = 0.82;
+      this.previousPhase = this.phase;
+      this.phaseElapsed = 0;
+    }
+
+    this.updateView();
+  }
+
+  public breakShield(): void {
+    if (
+      !this.active ||
+      !this.shielded
+    ) {
+      return;
+    }
+
+    this.shielded = false;
+    this.onAction("shield-break");
+    this.flashTimer = 0.35;
+    this.visualMode = "entrance";
+    this.visualTimer = 0.72;
+
+    this.scene.cameras.main.flash(
+      220,
+      115,
+      239,
+      255,
+      false
+    );
+
+    this.scene.cameras.main.shake(
+      150,
+      0.006
+    );
+  }
+
+  public receiveRangedHit(
+    damage: number,
+    sourceX: number
+  ): boolean {
+    if (!this.active) {
+      return false;
+    }
+
+    this.markedTimer = 2.2;
+
+    this.receiveHit(
+      damage,
+      60,
+      -20,
+      sourceX < this.x
+        ? 1
+        : -1
+    );
+
+    return true;
+  }
+
+  public receiveHit(
+    damage: number,
+    _knockbackX: number,
+    _knockbackY: number,
+    facing: -1 | 1
+  ): void {
+    if (!this.active) {
+      return;
+    }
+
+    this.facing = facing;
+
+    if (this.shielded) {
+      this.onAction("shield-block");
+      this.onCounter({
+        x:
+          this.x +
+          this.width * 0.5,
+        y:
+          this.y +
+          this.height * 0.5
+      });
+
+      this.flashTimer = 0.1;
+      this.visualMode = "counter";
+      this.visualTimer = 0.48;
+      return;
+    }
+
+    const phaseBefore = this.phase;
+
+    this.health = applyMirrorConductorDamage(
+      this.health,
+      damage,
+      this.phaseElapsed
+    );
+
+    this.flashTimer = 0.12;
+
+    if (this.health <= 0) {
+      this.startDefeatSequence();
+      return;
+    }
+
+    const phaseAfter = this.phase;
+
+    if (phaseAfter !== phaseBefore) {
+      this.phaseElapsed = 0;
+    }
+
+    if (
+      phaseBefore === 1 &&
+      phaseAfter >= 2
+    ) {
+      this.visualMode = "transition12";
+      this.visualTimer = 1.0;
+    } else if (
+      phaseBefore <= 2 &&
+      phaseAfter === 3
+    ) {
+      this.visualMode = "transition23";
+      this.visualTimer = 1.12;
+    } else {
+      this.visualMode = "hurt";
+      this.visualTimer = 0.3;
+    }
+
+    this.previousPhase = phaseAfter;
+  }
+
+  public reset(): void {
+    this.x = 47200;
+    this.y = 300;
+
+    this.health = 108;
+    this.shielded = true;
+    this.active = false;
+    this.defeated = false;
+
+    this.markedTimer = 0;
+    this.flashTimer = 0;
+    this.visualTimer = 0;
+    this.visualMode = "idle";
+    this.previousPhase = 1;
+    this.facing = -1;
+    this.defeatSequenceStarted = false;
+    this.phaseElapsed = 0;
+
+    this.graphics.clear();
+
+    this.view.reset(
+      this.viewState(false)
+    );
+  }
+
+  public update(
+    deltaSeconds: number,
+    elapsed: number,
+    player: PlayerController,
+    fireProjectile: (
+      x: number,
+      y: number,
+      targetX: number,
+      targetY: number,
+      color?: number
+    ) => void
+  ): void {
+    if (!this.active) {
+      return;
+    }
+
+    this.phaseElapsed +=
+      deltaSeconds;
+
+    this.flashTimer = Math.max(
+      0,
+      this.flashTimer - deltaSeconds
+    );
+
+    this.markedTimer = Math.max(
+      0,
+      this.markedTimer - deltaSeconds
+    );
+
+    this.visualTimer = Math.max(
+      0,
+      this.visualTimer - deltaSeconds
+    );
+
+    this.facing =
+      player.centerX <
+      this.x + this.width * 0.5
+        ? -1
+        : 1;
+
+    this.y =
+      300 +
+      Math.sin(elapsed * 1.8) *
+      34;
+
+    const currentPhase = this.phase;
+
+    if (
+      currentPhase !==
+      this.previousPhase
+    ) {
+      if (
+        this.previousPhase === 1 &&
+        currentPhase >= 2
+      ) {
+        this.visualMode = "transition12";
+        this.visualTimer = 1.0;
+      } else if (
+        this.previousPhase <= 2 &&
+        currentPhase === 3
+      ) {
+        this.visualMode = "transition23";
+        this.visualTimer = 1.12;
+      }
+
+      this.previousPhase =
+        currentPhase;
+    }
+
+    if (
+      this.visualTimer <= 0 &&
+      this.visualMode !== "idle"
+    ) {
+      this.visualMode = "idle";
+    }
+
+    const interval =
+      currentPhase === 1
+        ? 1.15
+        : currentPhase === 2
+          ? 0.9
+          : 0.62;
+
+    const previousCycle =
+      Math.floor(
+        (elapsed - deltaSeconds) /
+        interval
+      );
+
+    const currentCycle =
+      Math.floor(
+        elapsed /
+        interval
+      );
+
+    if (
+      currentCycle !== previousCycle
+    ) {
+      this.onAction("projectile-volley");
+
+      const count =
+        currentPhase === 3
+          ? 3
+          : currentPhase === 2
+            ? 2
+            : 1;
+
+      for (
+        let index = 0;
+        index < count;
+        index += 1
+      ) {
+        fireProjectile(
+          this.x +
+            this.width * 0.5,
+          this.y +
+            this.height * 0.5,
+          player.centerX,
+          player.centerY +
+            (
+              index -
+              (count - 1) * 0.5
+            ) *
+            55,
+          index % 2 === 0
+            ? 0xe95acb
+            : 0x75eaf1
+        );
+      }
+
+      if (
+        this.visualMode === "idle"
+      ) {
+        this.visualMode = "cast";
+        this.visualTimer = 0.48;
+      }
+    }
+
+    this.updateView();
+    this.redrawVfx(elapsed);
+  }
+
+  private startDefeatSequence(): void {
+    if (this.defeatSequenceStarted) {
+      return;
+    }
+
+    this.defeatSequenceStarted = true;
+    this.defeated = true;
+    this.active = false;
+
+    this.graphics.clear();
+
+    this.view.playDefeatSequence(
+      this.viewState(true),
+      () => {
+        this.onDefeated();
+      }
+    );
+  }
+
+  private updateView(): void {
+    this.view.update(
+      this.viewState(this.active),
+      this.selectAnimation()
+    );
+  }
+
+  private viewState(
+    visible: boolean
+  ): {
+    readonly x: number;
+    readonly y: number;
+    readonly width: number;
+    readonly height: number;
+    readonly facing: -1 | 1;
+    readonly phase: 1 | 2 | 3;
+    readonly visible: boolean;
+    readonly flashing: boolean;
+  } {
+    return {
+      x: this.x,
+      y: this.y,
+      width: this.width,
+      height: this.height,
+      facing: this.facing,
+      phase: this.phase,
+      visible,
+      flashing: this.flashTimer > 0
+    };
+  }
+
+  private selectAnimation(): string {
+    const phase = this.phase;
+
+    switch (this.visualMode) {
+      case "entrance":
+        return "boss_entrance";
+
+      case "transition12":
+        return "boss_transition_1_2";
+
+      case "transition23":
+        return "boss_transition_2_3";
+
+      case "cast":
+        return `boss_phase${phase}_cast`;
+
+      case "counter":
+        return `boss_phase${phase}_counter`;
+
+      case "hurt":
+        return `boss_hurt_phase${phase}`;
+
+      case "idle":
+        return `boss_phase${phase}_idle`;
+    }
+  }
+
+  private redrawVfx(
+    elapsed: number
+  ): void {
+    const g = this.graphics;
+    g.clear();
+
+    if (!this.active) {
+      return;
+    }
+
+    const centerX =
+      this.x +
+      this.width * 0.5;
+
+    const centerY =
+      this.y +
+      this.height * 0.5;
+
+    if (
+      this.phase >= 2 &&
+      this.markedTimer <= 0
+    ) {
+      for (
+        const offset of [-105, 105]
+      ) {
+        g.fillStyle(
+          0x723769,
+          0.2
+        );
+
+        g.fillRoundedRect(
+          this.x + offset,
+          this.y,
+          this.width,
+          this.height,
+          9
+        );
+
+        g.lineStyle(
+          2,
+          0xe95acb,
+          0.45
+        );
+
+        g.strokeRoundedRect(
+          this.x + offset,
+          this.y,
+          this.width,
+          this.height,
+          9
+        );
+      }
+    }
+
+    if (this.markedTimer > 0) {
+      g.lineStyle(
+        4,
+        0xf6d466,
+        1
+      );
+
+      g.strokeCircle(
+        centerX,
+        centerY,
+        38 +
+          Math.sin(elapsed * 7) *
+          3
+      );
+    }
+
+    if (this.shielded) {
+      g.lineStyle(
+        5,
+        0x91f5f4,
+        0.86
+      );
+
+      g.strokeCircle(
+        centerX,
+        centerY,
+        41
+      );
+    }
+  }
+}
+
+
+export class MirrorConductorSystem {
+  private elapsed = 0;
+  private checkpointReached = false;
+  private bossStarted = false;
+  private bossDefeated = false;
+  private finaleActive = false;
+  private finaleSubmitted = false;
+  private finaleTime = 0;
+  private finaleBurstTimer = 0;
+  private finaleCreditsVisible = false;
+  private curtainAudioPlayed = false;
+  private floorWarningSide: "left" | "right" | null = null;
+  private hazardCooldown = 0;
+  private previousSpotlightCasts = 0;
+
+  private readonly entranceGate = createWorldGate(
+    "MirrorConductorEntrance"
+  );
+
+  private readonly resolutionGate = createWorldGate(
+    "MirrorConductorResolution"
+  );
+
+  private readonly projectiles: BossProjectile[] = [];
+  private readonly finaleParticles: FinaleParticle[] = [];
+  private readonly graphics: Phaser.GameObjects.Graphics;
+  private readonly hud: Phaser.GameObjects.Text;
+  private readonly bossHudGraphics: Phaser.GameObjects.Graphics;
+  private readonly bossHudText: Phaser.GameObjects.Text;
+  private readonly finaleGraphics: Phaser.GameObjects.Graphics;
+  private readonly finaleOverlay: Phaser.GameObjects.Graphics;
+  private readonly finaleTitle: Phaser.GameObjects.Text;
+  private readonly finaleHint: Phaser.GameObjects.Text;
+  private readonly finaleCredits: Phaser.GameObjects.Text;
+  private readonly conductor: MirrorConductor;
+
+  public constructor(
+    private readonly scene: Phaser.Scene,
+    private readonly player: PlayerController,
+    private readonly playerHealth: PlayerHealthSystem,
+    combatSystem: CombatSystem,
+    private readonly magicSystem: MagicSystem,
+    private readonly addSolid: (
+      solid: Phaser.Geom.Rectangle
+    ) => void,
+    private readonly removeSolid: (
+      solid: Phaser.Geom.Rectangle
+    ) => void
+  ) {
+    this.graphics = scene.add.graphics().setDepth(48);
+
+    this.hud = scene.add.text(
+      320,
+      62,
+      "",
+      {
+        align: "center",
+        fontFamily: "monospace",
+        fontSize: "10px",
+        color: "#d7fbff",
+        backgroundColor: "#050713e8",
+        padding: { x: 10, y: 7 }
+      }
+    )
+      .setOrigin(0.5, 0)
+      .setScrollFactor(0)
+      .setDepth(1220)
+      .setVisible(false);
+
+    this.bossHudGraphics = scene.add.graphics()
+      .setScrollFactor(0)
+      .setDepth(1240)
+      .setVisible(false);
+
+    this.bossHudText = scene.add.text(
+      452,
+      7,
+      "",
+      {
+        align: "center",
+        fontFamily: "monospace",
+        fontSize: "10px",
+        color: "#f6d675",
+        stroke: "#050713",
+        strokeThickness: 3
+      }
+    )
+      .setOrigin(0.5, 0)
+      .setScrollFactor(0)
+      .setDepth(1241)
+      .setVisible(false);
+
+    this.finaleGraphics = scene.add.graphics().setDepth(1320);
+    this.finaleOverlay = scene.add.graphics()
+      .setScrollFactor(0)
+      .setDepth(1900);
+
+    this.finaleTitle = scene.add.text(
+      320,
+      88,
+      [
+        "CONGRATULATION",
+        "",
+        "NOW YOU ARE AN",
+        "IMPRESSARIO TRUE MAGICIAN"
+      ].join("\n"),
+      {
+        align: "center",
+        fontFamily: "monospace",
+        fontSize: "17px",
+        color: "#ffe184",
+        stroke: "#130718",
+        strokeThickness: 5,
+        backgroundColor: "#080713d9",
+        padding: { x: 18, y: 12 }
+      }
+    )
+      .setOrigin(0.5, 0)
+      .setScrollFactor(0)
+      .setDepth(1950)
+      .setAlpha(0)
+      .setVisible(false);
+
+    this.finaleHint = scene.add.text(
+      320,
+      272,
+      [
+        "THE CURTAIN FALLS...",
+        "BUT THE GRAND PERFORMANCE MAY CONTINUE."
+      ].join("\n"),
+      {
+        align: "center",
+        fontFamily: "monospace",
+        fontSize: "11px",
+        color: "#8ff4f2",
+        stroke: "#060913",
+        strokeThickness: 4,
+        backgroundColor: "#050711d9",
+        padding: { x: 12, y: 9 }
+      }
+    )
+      .setOrigin(0.5, 0.5)
+      .setScrollFactor(0)
+      .setDepth(1951)
+      .setAlpha(0)
+      .setVisible(false);
+
+    this.finaleCredits = scene.add.text(
+      320,
+      72,
+      [
+        "IMPRESSARIO",
+        "THE MIDNIGHT SHOW",
+        "",
+        "A GAME BY",
+        "DEMIAN LIENERT",
+        "",
+        "PROGRAMMING / LOGIC / DESIGN",
+        "TYPESCRIPT",
+        "",
+        "THANK YOU FOR PLAYING"
+      ].join("\n"),
+      {
+        align: "center",
+        fontFamily: "monospace",
+        fontSize: "13px",
+        color: "#f5df9c",
+        stroke: "#05060c",
+        strokeThickness: 4,
+        lineSpacing: 7
+      }
+    )
+      .setOrigin(0.5, 0)
+      .setScrollFactor(0)
+      .setDepth(2000)
+      .setAlpha(0)
+      .setVisible(false);
+
+    this.conductor = new MirrorConductor(
+      scene,
+      scene.add.graphics().setDepth(46),
+      counter => {
+        this.fireProjectile(
+          counter.x,
+          counter.y,
+          this.player.centerX,
+          this.player.centerY,
+          0xf2c963
+        );
+      },
+      action => {
+        this.emitBossAction(action);
+      },
+      () => {
+        this.completeBoss();
+      }
+    );
+
+    combatSystem.registerTarget(this.conductor);
+    this.addSolid(this.resolutionGate);
+    this.previousSpotlightCasts = magicSystem.castsPerformed;
+  }
+
+  public update(deltaSeconds: number): void {
+    this.elapsed += deltaSeconds;
+    this.hazardCooldown = Math.max(
+      0,
+      this.hazardCooldown - deltaSeconds
+    );
+
+    const insideSection =
+      this.player.x >= MIRROR_CONDUCTOR_START_X &&
+      this.player.x < MIRROR_CONDUCTOR_END_X;
+
+    if (
+      insideSection &&
+      this.player.y > 675 &&
+      !this.finaleActive
+    ) {
+      this.playerHealth.fallOut();
+      return;
+    }
+
+    if (
+      !this.checkpointReached &&
+      this.player.x >= getWorldCheckpoint(
+        "MirrorConductor"
+      ).triggerX
+    ) {
+      this.checkpointReached = true;
+      this.playerHealth.setCheckpoint(
+        getWorldCheckpoint("MirrorConductor")
+      );
+    }
+
+    this.updateThresholdCue(insideSection);
+
+    if (
+      !this.bossStarted &&
+      !this.bossDefeated &&
+      this.player.x >= MIRROR_CONDUCTOR_THRESHOLD_X &&
+      this.player.x < MIRROR_CONDUCTOR_END_X
+    ) {
+      this.startBoss();
+    }
+
+    if (this.bossStarted) {
+      this.updateBoss(deltaSeconds);
+      this.updateProjectiles(deltaSeconds);
+      this.updateHazards();
+    }
+
+    if (this.finaleActive) {
+      this.updateFinale(deltaSeconds);
+    }
+
+    this.redraw();
+  }
+
+  public resetAfterDeath(): void {
+    if (this.bossDefeated) {
+      return;
+    }
+
+    this.elapsed = 0;
+    this.hazardCooldown = 0;
+    this.floorWarningSide = null;
+    this.projectiles.length = 0;
+    this.bossStarted = false;
+
+    this.conductor.reset();
+    this.removeSolid(this.entranceGate);
+    this.removeSolid(this.resolutionGate);
+    this.addSolid(this.resolutionGate);
+
+    this.restoreCamera();
+    this.hideBossHud();
+    this.clearThresholdCue();
+
+    this.previousSpotlightCasts =
+      this.magicSystem.castsPerformed;
+  }
+
+  private updateThresholdCue(
+    insideSection: boolean
+  ): void {
+    const visible =
+      shouldShowMirrorConductorThresholdCue({
+        insideSection,
+        bossStarted: this.bossStarted,
+        bossDefeated: this.bossDefeated,
+        finaleActive: this.finaleActive,
+        controlsLocked:
+          this.playerHealth.controlsLocked,
+        playerX: this.player.x,
+        thresholdX:
+          MIRROR_CONDUCTOR_THRESHOLD_X
+      });
+
+    if (visible) {
+      this.hud
+        .setText(
+          "CROSS THE THRESHOLD WHEN READY"
+        )
+        .setVisible(true);
+      return;
+    }
+
+    if (!this.bossStarted) {
+      this.clearThresholdCue();
+    }
+  }
+
+  private clearThresholdCue(): void {
+    this.hud
+      .setText("")
+      .setVisible(false);
+  }
+
+  private startBoss(): void {
+    this.bossStarted = true;
+    this.floorWarningSide = null;
+    this.clearThresholdCue();
+
+    this.removeSolid(this.entranceGate);
+    this.removeSolid(this.resolutionGate);
+    this.addSolid(this.entranceGate);
+    this.addSolid(this.resolutionGate);
+
+    this.scene.cameras.main.setBounds(
+      ARENA_LEFT,
+      0,
+      ARENA_RIGHT - ARENA_LEFT,
+      WORLD_HEIGHT
+    );
+
+    this.conductor.setEnabled(true);
+    this.hud.setVisible(true);
+    this.emitBossAction("intro");
+
+    this.scene.cameras.main.flash(
+      260,
+      80,
+      220,
+      245,
+      false
+    );
+  }
+
+  private updateBoss(deltaSeconds: number): void {
+    const casts = this.magicSystem.castsPerformed;
+
+    if (casts !== this.previousSpotlightCasts) {
+      const distance = Phaser.Math.Distance.Between(
+        this.player.centerX,
+        this.player.centerY,
+        this.conductor.bounds.centerX,
+        this.conductor.bounds.centerY
+      );
+
+      if (distance <= 190) {
+        this.conductor.breakShield();
+      }
+    }
+
+    this.previousSpotlightCasts = casts;
+
+    this.conductor.update(
+      deltaSeconds,
+      this.elapsed,
+      this.player,
+      (
+        x,
+        y,
+        targetX,
+        targetY,
+        color
+      ) => {
+        this.fireProjectile(
+          x,
+          y,
+          targetX,
+          targetY,
+          color
+        );
+      }
+    );
+
+    this.redrawBossHud();
+  }
+
+  private fireProjectile(
+    x: number,
+    y: number,
+    targetX: number,
+    targetY: number,
+    color = 0xe95acb
+  ): void {
+    const direction = new Phaser.Math.Vector2(
+      targetX - x,
+      targetY - y
+    );
+
+    if (direction.lengthSq() <= 0.0001) {
+      direction.set(1, 0);
+    }
+
+    direction.normalize();
+
+    this.projectiles.push({
+      x,
+      y,
+      velocityX: direction.x * 230,
+      velocityY: direction.y * 230,
+      lifetime: 4,
+      radius: 6,
+      color,
+      active: true
+    });
+  }
+
+  private updateProjectiles(
+    deltaSeconds: number
+  ): void {
+    if (this.conductor.isDefeated) {
+      this.projectiles.length = 0;
+      return;
+    }
+
+    const bounds = playerBounds(this.player);
+
+    for (const projectile of this.projectiles) {
+      if (!projectile.active) {
+        continue;
+      }
+
+      projectile.lifetime -= deltaSeconds;
+      projectile.x +=
+        projectile.velocityX * deltaSeconds;
+      projectile.y +=
+        projectile.velocityY * deltaSeconds;
+
+      if (
+        projectile.lifetime <= 0 ||
+        projectile.x < ARENA_LEFT ||
+        projectile.x > ARENA_RIGHT ||
+        projectile.y < 0 ||
+        projectile.y > 688
+      ) {
+        projectile.active = false;
+        continue;
+      }
+
+      if (
+        circleIntersectsRectangle(
+          projectile.x,
+          projectile.y,
+          projectile.radius,
+          bounds
+        ) &&
+        this.playerHealth.receiveDamage(
+          1,
+          projectile.x,
+          190,
+          -135
+        )
+      ) {
+        projectile.active = false;
+      }
+    }
+
+    const active = this.projectiles.filter(
+      projectile => projectile.active
+    );
+
+    this.projectiles.length = 0;
+    this.projectiles.push(...active);
+  }
+
+  private updateHazards(): void {
+    if (
+      this.conductor.isDefeated ||
+      this.hazardCooldown > 0
+    ) {
+      return;
+    }
+
+    const bounds = playerBounds(this.player);
+    const phase = this.conductor.phase;
+    const beamCycle = this.elapsed % 2.4;
+    const beamActive =
+      beamCycle >= 0.72 &&
+      beamCycle < 1.02;
+
+    if (beamActive) {
+      for (
+        let index = 0;
+        index < phase;
+        index += 1
+      ) {
+        const angle =
+          this.elapsed * 1.35 +
+          index * Math.PI / phase;
+
+        const endX =
+          ARENA_CENTER_X +
+          Math.cos(angle) * 1900;
+
+        const endY =
+          300 +
+          Math.sin(angle) * 440;
+
+        if (
+          lineIntersectsRectangle(
+            ARENA_CENTER_X,
+            300,
+            endX,
+            endY,
+            bounds,
+            5
+          )
+        ) {
+          this.damageHazard(ARENA_CENTER_X);
+          return;
+        }
+      }
+    }
+
+    if (phase === 3) {
+      const floorCycle = this.elapsed % 3.2;
+      const dangerousLeft = floorCycle < 1.35;
+      const side = dangerousLeft
+        ? "left"
+        : "right";
+
+      if (side !== this.floorWarningSide) {
+        this.floorWarningSide = side;
+        this.scene.events.emit(
+          AUDIO_EVENTS.bossAction,
+          "floor-warning",
+          dangerousLeft ? 46196 : 48268
+        );
+      }
+
+      const floorHazard = new Phaser.Geom.Rectangle(
+        dangerousLeft ? 45160 : 47232,
+        502,
+        2072,
+        18
+      );
+
+      if (
+        Phaser.Geom.Intersects.RectangleToRectangle(
+          bounds,
+          floorHazard
+        )
+      ) {
+        this.damageHazard(floorHazard.centerX);
+      }
+    }
+  }
+
+  private damageHazard(sourceX: number): void {
+    if (
+      this.playerHealth.receiveDamage(
+        1,
+        sourceX,
+        175,
+        -170
+      )
+    ) {
+      this.hazardCooldown = 1.15;
+    }
+  }
+
+  private completeBoss(): void {
+    if (
+      this.bossDefeated ||
+      !this.conductor.isDefeated
+    ) {
+      return;
+    }
+
+    this.bossDefeated = true;
+    this.bossStarted = false;
+    this.projectiles.length = 0;
+
+    this.removeSolid(this.resolutionGate);
+    this.removeSolid(this.entranceGate);
+    this.restoreCamera();
+    this.hideBossHud();
+    this.startFinale();
+  }
+
+  private startFinale(): void {
+    if (
+      this.finaleActive ||
+      !this.bossDefeated ||
+      !this.conductor.isDefeated
+    ) {
+      return;
+    }
+
+    this.finaleActive = true;
+    this.finaleTime = 0;
+    this.finaleBurstTimer = 0;
+    this.finaleCreditsVisible = false;
+    this.curtainAudioPlayed = false;
+    this.projectiles.length = 0;
+
+    this.player.velocityX = 0;
+    this.player.velocityY = 0;
+
+    this.hud.setVisible(false).setText("");
+    this.hideBossHud();
+
+    this.finaleTitle
+      .setVisible(true)
+      .setAlpha(0);
+
+    this.finaleHint
+      .setVisible(false)
+      .setAlpha(0);
+
+    this.finaleCredits
+      .setVisible(false)
+      .setAlpha(0);
+
+    if (!this.finaleSubmitted) {
+      this.finaleSubmitted = true;
+      void leaderboard.finishRun();
+    }
+
+    this.scene.events.emit(
+      AUDIO_EVENTS.finaleStarted,
+      ARENA_CENTER_X
+    );
+
+    this.spawnFinaleBurst(
+      ARENA_CENTER_X,
+      260,
+      48
+    );
+
+    this.spawnFinaleBurst(
+      ARENA_CENTER_X - 180,
+      190,
+      30
+    );
+
+    this.spawnFinaleBurst(
+      ARENA_CENTER_X + 180,
+      180,
+      30
+    );
+
+    this.scene.cameras.main.flash(
+      650,
+      255,
+      222,
+      115,
+      false
+    );
+
+    this.scene.cameras.main.shake(
+      420,
+      0.009
+    );
+  }
+
+  private updateFinale(deltaSeconds: number): void {
+    this.finaleTime += deltaSeconds;
+    this.finaleBurstTimer -= deltaSeconds;
+    this.player.velocityY = 0;
+
+    if (this.finaleTime < 4.4) {
+      this.player.velocityX = 0;
+
+      if (
+        this.finaleBurstTimer <= 0 &&
+        this.finaleTime < 3.6
+      ) {
+        this.spawnFinaleBurst(
+          Phaser.Math.Between(45360, 49100),
+          Phaser.Math.Between(90, 310),
+          Phaser.Math.Between(18, 32)
+        );
+
+        this.finaleBurstTimer = 0.48;
+
+        this.scene.events.emit(
+          AUDIO_EVENTS.bossAction,
+          "finale-firework",
+          this.player.centerX
+        );
+      }
+    } else if (this.finaleTime < 8.7) {
+      this.player.facing = 1;
+      this.player.velocityX = 105;
+      this.player.x = Math.min(
+        49720,
+        this.player.x + 105 * deltaSeconds
+      );
+    } else {
+      this.player.velocityX = 0;
+    }
+
+    for (const particle of this.finaleParticles) {
+      particle.lifetime -= deltaSeconds;
+      particle.velocityY += 155 * deltaSeconds;
+      particle.velocityX *= Math.pow(
+        0.985,
+        deltaSeconds * 60
+      );
+      particle.x +=
+        particle.velocityX * deltaSeconds;
+      particle.y +=
+        particle.velocityY * deltaSeconds;
+    }
+
+    const active = this.finaleParticles.filter(
+      particle => particle.lifetime > 0
+    );
+
+    this.finaleParticles.length = 0;
+    this.finaleParticles.push(...active);
+
+    const titleAlpha =
+      this.finaleTime < 0.6
+        ? this.finaleTime / 0.6
+        : this.finaleTime < 4.2
+          ? 1
+          : Phaser.Math.Clamp(
+              1 -
+                (this.finaleTime - 4.2) /
+                  0.8,
+              0,
+              1
+            );
+
+    this.finaleTitle
+      .setVisible(titleAlpha > 0)
+      .setAlpha(titleAlpha);
+
+    const hintAlpha =
+      this.finaleTime < 7.5
+        ? 0
+        : this.finaleTime < 8.3
+          ? (this.finaleTime - 7.5) / 0.8
+          : this.finaleTime < 10.3
+            ? 1
+            : Phaser.Math.Clamp(
+                1 -
+                  (this.finaleTime - 10.3) /
+                    0.7,
+                0,
+                1
+              );
+
+    this.finaleHint
+      .setVisible(hintAlpha > 0)
+      .setAlpha(hintAlpha);
+
+    if (this.finaleTime >= 10.5) {
+      if (!this.curtainAudioPlayed) {
+        this.curtainAudioPlayed = true;
+        this.scene.events.emit(
+          AUDIO_EVENTS.bossAction,
+          "curtain-close",
+          this.player.centerX
+        );
+      }
+
+      const fade = Phaser.Math.Clamp(
+        (this.finaleTime - 10.5) / 1.2,
+        0,
+        1
+      );
+
+      this.finaleOverlay.clear();
+      this.finaleOverlay
+        .fillStyle(0x020308, fade)
+        .fillRect(0, 0, 640, 360);
+
+      if (
+        fade >= 0.96 &&
+        !this.finaleCreditsVisible
+      ) {
+        this.finaleCreditsVisible = true;
+        this.finaleCredits
+          .setVisible(true)
+          .setAlpha(0);
+      }
+
+      if (this.finaleCreditsVisible) {
+        this.finaleCredits.setAlpha(
+          Phaser.Math.Clamp(
+            (this.finaleTime - 11.65) / 1.2,
+            0,
+            1
+          )
+        );
+      }
+    }
+
+    this.redrawFinale();
+  }
+
+  private spawnFinaleBurst(
+    x: number,
+    y: number,
+    amount: number
+  ): void {
+    const colors = [
+      0xffd565,
+      0xf05ac7,
+      0x75edf2,
+      0xffffff,
+      0x8ff0a8
+    ] as const;
+
+    for (
+      let index = 0;
+      index < amount;
+      index += 1
+    ) {
+      const angle = Phaser.Math.FloatBetween(
+        0,
+        Math.PI * 2
+      );
+
+      const speed = Phaser.Math.FloatBetween(
+        75,
+        245
+      );
+
+      const lifetime = Phaser.Math.FloatBetween(
+        0.8,
+        1.85
+      );
+
+      this.finaleParticles.push({
+        x,
+        y,
+        velocityX: Math.cos(angle) * speed,
+        velocityY:
+          Math.sin(angle) * speed -
+          Phaser.Math.FloatBetween(15, 75),
+        lifetime,
+        maximumLifetime: lifetime,
+        color:
+          colors[
+            Phaser.Math.Between(
+              0,
+              colors.length - 1
+            )
+          ] ?? 0xffffff,
+        size: Phaser.Math.FloatBetween(2, 5)
+      });
+    }
+  }
+
+  private emitBossAction(
+    action: BossAction
+  ): void {
+    this.scene.events.emit(
+      AUDIO_EVENTS.bossAction,
+      action,
+      this.conductor.bounds.centerX
+    );
+  }
+
+  private redraw(): void {
+    const graphics = this.graphics;
+    graphics.clear();
+
+    for (const [gate, active] of [
+      [this.entranceGate, this.bossStarted],
+      [this.resolutionGate, !this.bossDefeated]
+    ] as const) {
+      if (!active) {
+        continue;
+      }
+
+      graphics
+        .fillStyle(0x080817, 0.94)
+        .fillRect(
+          gate.x,
+          gate.y,
+          gate.width,
+          gate.height
+        );
+
+      graphics.lineStyle(3, 0xe95acb, 1);
+
+      for (
+        let y = 0;
+        y < gate.height;
+        y += 28
+      ) {
+        graphics.lineBetween(
+          gate.x + 2,
+          y,
+          gate.right - 2,
+          y + 17
+        );
+      }
+
+      graphics
+        .lineStyle(2, 0x75eaf1, 1)
+        .strokeRect(
+          gate.x,
+          gate.y,
+          gate.width,
+          gate.height
+        );
+    }
+
+    for (const projectile of this.projectiles) {
+      graphics
+        .fillStyle(projectile.color, 0.24)
+        .fillCircle(
+          projectile.x,
+          projectile.y,
+          projectile.radius * 2.2
+        );
+
+      graphics
+        .fillStyle(projectile.color, 1)
+        .fillCircle(
+          projectile.x,
+          projectile.y,
+          projectile.radius
+        );
+    }
+
+    if (this.bossStarted) {
+      this.redrawBossHazards(graphics);
+
+      const mechanic = this.conductor.isShielded
+        ? "USE [K] SPOTLIGHT NEAR THE SHIELD"
+        : this.conductor.phase === 2
+          ? "USE [L] GRAND CARD TO MARK THE REAL CONDUCTOR"
+          : this.conductor.phase === 3
+            ? "CURTAIN COLLAPSE — KEEP MOVING"
+            : "REFLECTED GUARD BROKEN";
+
+      this.hud
+        .setVisible(true)
+        .setText(
+          `MIRROR CONDUCTOR — PHASE ${this.conductor.phase}\n${mechanic}`
+        );
+    }
+  }
+
+  private redrawBossHazards(
+    graphics: Phaser.GameObjects.Graphics
+  ): void {
+    const phase = this.conductor.phase;
+    const cycle = this.elapsed % 2.4;
+    const active =
+      cycle >= 0.72 && cycle < 1.02;
+
+    const alpha =
+      cycle < 0.72
+        ? 0.18
+        : active
+          ? 0.92
+          : 0.08;
+
+    for (
+      let index = 0;
+      index < phase;
+      index += 1
+    ) {
+      const angle =
+        this.elapsed * 1.35 +
+        index * Math.PI / phase;
+
+      graphics
+        .lineStyle(
+          active ? 6 : 2,
+          0xf05ac7,
+          alpha
+        )
+        .lineBetween(
+          ARENA_CENTER_X,
+          300,
+          ARENA_CENTER_X +
+            Math.cos(angle) * 1900,
+          300 + Math.sin(angle) * 440
+        );
+    }
+
+    if (phase === 3) {
+      const dangerousLeft =
+        this.elapsed % 3.2 < 1.35;
+
+      graphics
+        .fillStyle(0xf05ac7, 0.32)
+        .fillRect(
+          dangerousLeft ? 45160 : 47232,
+          502,
+          2072,
+          18
+        );
+    }
+  }
+
+  private redrawBossHud(): void {
+    if (
+      !this.bossStarted ||
+      this.conductor.isDefeated
+    ) {
+      this.hideBossHud();
+      return;
+    }
+
+    const graphics = this.bossHudGraphics;
+    const x = 285;
+    const y = 22;
+    const width = 335;
+    const height = 17;
+
+    const healthRatio = Phaser.Math.Clamp(
+      this.conductor.currentHealth / 108,
+      0,
+      1
+    );
+
+    graphics.setVisible(true).clear();
+    graphics
+      .fillStyle(0x03050d, 0.94)
+      .fillRoundedRect(
+        x - 3,
+        y - 3,
+        width + 6,
+        height + 6,
+        6
+      );
+
+    graphics
+      .fillStyle(0x24112e, 1)
+      .fillRoundedRect(
+        x,
+        y,
+        width,
+        height,
+        4
+      );
+
+    const healthColor =
+      this.conductor.phase === 3
+        ? 0xe653bf
+        : this.conductor.phase === 2
+          ? 0x9c58db
+          : 0x63dce8;
+
+    graphics
+      .fillStyle(healthColor, 1)
+      .fillRoundedRect(
+        x,
+        y,
+        width * healthRatio,
+        height,
+        4
+      );
+
+    graphics
+      .lineStyle(2, 0xe5ba55, 1)
+      .strokeRoundedRect(
+        x,
+        y,
+        width,
+        height,
+        4
+      );
+
+    graphics
+      .lineStyle(1, 0xf6e6bc, 0.72)
+      .lineBetween(
+        x + width / 3,
+        y,
+        x + width / 3,
+        y + height
+      )
+      .lineBetween(
+        x + width * 2 / 3,
+        y,
+        x + width * 2 / 3,
+        y + height
+      );
+
+    this.bossHudText
+      .setVisible(true)
+      .setText(
+        `THE MIRROR CONDUCTOR — PHASE ${this.conductor.phase}`
+      );
+  }
+
+  private hideBossHud(): void {
+    this.bossHudGraphics
+      .setVisible(false)
+      .clear();
+
+    this.bossHudText
+      .setVisible(false)
+      .setText("");
+  }
+
+  private restoreCamera(): void {
+    this.scene.cameras.main.setBounds(
+      0,
+      0,
+      WORLD_WIDTH,
+      WORLD_HEIGHT
+    );
+  }
+
+  private redrawFinale(): void {
+    const graphics = this.finaleGraphics;
+    graphics.clear();
+
+    if (!this.finaleActive) {
+      return;
+    }
+
+    const glow =
+      0.72 +
+      Math.sin(this.finaleTime * 3) * 0.18;
+
+    graphics
+      .fillStyle(0xffdf72, 0.11 * glow)
+      .fillRoundedRect(
+        49624,
+        160,
+        176,
+        348,
+        42
+      );
+
+    graphics
+      .fillStyle(0x101c36, 1)
+      .fillRoundedRect(
+        49664,
+        192,
+        96,
+        288,
+        34
+      );
+
+    graphics
+      .lineStyle(9, 0xe4b84f, 0.96)
+      .strokeRoundedRect(
+        49664,
+        192,
+        96,
+        288,
+        34
+      );
+
+    graphics
+      .lineStyle(4, 0x7bf2ef, 0.88)
+      .strokeRoundedRect(
+        49677,
+        206,
+        70,
+        270,
+        27
+      );
+
+    graphics
+      .fillStyle(
+        0xffed9c,
+        0.42 +
+          Math.sin(this.finaleTime * 4) *
+            0.12
+      )
+      .fillRoundedRect(
+        49687,
+        219,
+        50,
+        259,
+        20
+      );
+
+    for (const particle of this.finaleParticles) {
+      const alpha = Phaser.Math.Clamp(
+        particle.lifetime /
+          particle.maximumLifetime,
+        0,
+        1
+      );
+
+      graphics
+        .fillStyle(particle.color, alpha * 0.18)
+        .fillCircle(
+          particle.x,
+          particle.y,
+          particle.size * 2.4
+        );
+
+      graphics
+        .fillStyle(particle.color, alpha)
+        .fillCircle(
+          particle.x,
+          particle.y,
+          particle.size
+        );
+    }
+  }
+}

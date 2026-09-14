@@ -36,7 +36,9 @@ const GRAND_CARD_RANGE = 520;
 const GRAND_CARD_LIFETIME = 1.6;
 const GRAND_CARD_COOLDOWN = 0.3;
 
-const ROYAL_BOX_START_X = 12000;
+const ROYAL_BOX_START_X = 31664;
+const ROYAL_BOX_END_X = 35344;
+const PROJECTILE_MARGIN = 640;
 const LOOK_DOWN_DELAY = 0.18;
 const LOOK_DOWN_OFFSET = 105;
 
@@ -132,7 +134,8 @@ export class RoyalBoxSupportSystem {
 
     if (
       !this.unlocked &&
-      this.player.x >= ROYAL_BOX_START_X
+      this.player.x >= ROYAL_BOX_START_X &&
+      this.player.x < ROYAL_BOX_END_X
     ) {
       this.unlock();
     }
@@ -332,8 +335,10 @@ export class RoyalBoxSupportSystem {
         8.5 * deltaSeconds;
 
       if (
-        projectile.x < ROYAL_BOX_START_X - 80 ||
-        projectile.x > 17320 ||
+        projectile.x <
+          ROYAL_BOX_START_X - PROJECTILE_MARGIN ||
+        projectile.x >
+          ROYAL_BOX_END_X + PROJECTILE_MARGIN ||
         projectile.y < -40 ||
         projectile.y > 760
       ) {
@@ -437,6 +442,7 @@ export class RoyalBoxSupportSystem {
     const allowed =
       this.unlocked &&
       this.player.x >= ROYAL_BOX_START_X &&
+      this.player.x < ROYAL_BOX_END_X &&
       grounded &&
       downHeld;
 

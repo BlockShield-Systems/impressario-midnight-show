@@ -18,8 +18,8 @@ const checkOnly =
   process.argv.includes("--check");
 
 const expectedCounts = {
-  Stagehand: 3,
-  CardThrower: 2,
+  Stagehand: 7,
+  CardThrower: 4,
   ShadowAcrobat: 2,
   LightWraith: 2,
   CardSentry: 3,
@@ -115,9 +115,9 @@ const spawns = layer.entityInstances
       left.id.localeCompare(right.id)
   );
 
-if (spawns.length !== 20) {
+if (spawns.length !== 26) {
   throw new Error(
-    `Expected 20 enemy spawns, got ${spawns.length}.`
+    `Expected 26 enemy spawns, got ${spawns.length}.`
   );
 }
 

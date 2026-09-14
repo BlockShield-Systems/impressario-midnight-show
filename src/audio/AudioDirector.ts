@@ -33,6 +33,24 @@ interface ManagedSound {
   gain: number;
 }
 
+interface WebAudioManagerSnapshotSource {
+  readonly context?: AudioContext;
+  readonly locked?: boolean;
+  readonly masterMuteNode?: GainNode;
+  readonly masterVolumeNode?: GainNode;
+  readonly destination?: AudioNode;
+  readonly mute?: boolean;
+  readonly volume?: number;
+}
+
+const AUDIO_BUSES: readonly AudioBus[] = [
+  "master",
+  "music",
+  "ambience",
+  "sfx",
+  "voice"
+];
+
 const KEY_PREFIX = "audio:";
 
 const LOAD_ERROR_EVENT = "loaderror";
@@ -67,6 +85,18 @@ export class AudioDirector {
 
   private voiceDepth = 0;
   private combatDuck = 0;
+  private analyser: AnalyserNode | null = null;
+  private analyserSamples:
+    Float32Array<ArrayBuffer> | null = null;
+  private observedRms = 0;
+  private observedPeak = 0;
+  private analyserInFinalOutputPath = false;
+  private readonly startedCounts =
+    new Map<AudioAssetId, number>();
+  private readonly completedCounts =
+    new Map<AudioAssetId, number>();
+  private readonly stoppedCounts =
+    new Map<AudioAssetId, number>();
 
   public static preload(
     scene: Phaser.Scene
@@ -106,7 +136,9 @@ export class AudioDirector {
     string | null = null;
 
   public constructor(
-    private readonly scene: Phaser.Scene
+    private readonly scene: Phaser.Scene,
+    private readonly preparedContext?: AudioContext,
+    qaInspectionEnabled = false
   ) {
     scene.events.once(
       Phaser.Scenes.Events.SHUTDOWN,
@@ -125,6 +157,10 @@ export class AudioDirector {
       "keydown",
       this.unlockAudio
     );
+
+    if (qaInspectionEnabled) {
+      this.attachAnalyser();
+    }
 
     void this.resumeAudioContext();
   }
@@ -148,15 +184,7 @@ export class AudioDirector {
     return task;
   }
 
-  public getDebugSnapshot(): {
-    readonly activeSounds: number;
-    readonly activeLoops: number;
-    readonly loadingOwners: number;
-    readonly cachedOwners: number;
-    readonly totalOwners: number;
-    readonly contextState: string;
-    readonly lastLoadError: string | null;
-  } {
+  public getDebugSnapshot() {
     const owners =
       new Set(
         AUDIO_ASSETS.map(
@@ -182,6 +210,81 @@ export class AudioDirector {
     const context =
       this.getAudioContext();
 
+    const activeHandles =
+      [...this.managed].map(item => {
+        const sound = item.sound as
+          VolumeControllableSound & {
+            readonly seek?: number;
+            readonly duration?: number;
+            readonly isPlaying?: boolean;
+            readonly volume?: number;
+          };
+
+        return {
+          logicalKey: item.id,
+          bus: item.bus,
+          gain: item.gain,
+          effectiveGain:
+            this.volumeFor(item),
+          playbackPosition:
+            sound.seek ?? 0,
+          duration:
+            sound.duration ?? 0,
+          isPlaying:
+            sound.isPlaying ?? false
+        };
+      });
+
+    const duplicateInstanceCounts =
+      Object.fromEntries(
+        [...new Set(
+          activeHandles.map(
+            item => item.logicalKey
+          )
+        )].map(id => [
+          id,
+          activeHandles.filter(
+            item =>
+              item.logicalKey === id
+          ).length
+        ])
+      );
+
+    const busStates = Object.fromEntries(
+      AUDIO_BUSES.map(bus => {
+        const setting =
+          this.settings.get(bus);
+
+        return [
+          bus,
+          {
+            muted: setting.muted,
+            configuredGain:
+              setting.volume,
+            effectiveGain:
+              this.settings
+                .getEffectiveVolume(bus)
+          }
+        ];
+      })
+    );
+
+    const analyser = {
+      ...this.measureAnalyser(),
+      observedRms: this.observedRms,
+      observedPeak: this.observedPeak
+    };
+
+    const currentDialogue =
+      activeHandles.findLast(
+        item => item.bus === "voice"
+      )?.logicalKey ?? null;
+
+    const manager =
+      this.scene.sound as
+        Phaser.Sound.BaseSoundManager &
+        WebAudioManagerSnapshotSource;
+
     return {
       activeSounds:
         this.managed.size,
@@ -192,6 +295,21 @@ export class AudioDirector {
               .get(item.id)
               ?.loop === true
         ).length,
+      activeHandles,
+      duplicateInstanceCounts,
+      playbackHistory: {
+        started: Object.fromEntries(
+          this.startedCounts
+        ),
+        completed: Object.fromEntries(
+          this.completedCounts
+        ),
+        stopped: Object.fromEntries(
+          this.stoppedCounts
+        )
+      },
+      busStates,
+      currentDialogue,
       loadingOwners:
         this.loadingOwnerCount,
       cachedOwners,
@@ -199,6 +317,38 @@ export class AudioDirector {
         owners.size,
       contextState:
         context?.state ?? "html5",
+      preparedContextInUse:
+        context !== undefined &&
+        context === this.preparedContext,
+      soundManagerLocked:
+        manager.locked ?? false,
+      finalOutput: {
+        contextMatchesDestination:
+          context !== undefined &&
+          context ===
+            manager.masterVolumeNode?.context &&
+          context ===
+            context.destination.context,
+        phaserDestinationMatchesContext:
+          manager.destination?.context ===
+            context,
+        masterMuted:
+          manager.mute ?? false,
+        masterGain:
+          manager.volume ??
+          manager.masterVolumeNode?.gain.value ??
+          0,
+        effectiveGain:
+          (manager.mute ? 0 : 1) *
+          (
+            manager.volume ??
+            manager.masterVolumeNode?.gain.value ??
+            0
+          ),
+        analyserInFinalOutputPath:
+          this.analyserInFinalOutputPath
+      },
+      analyser,
       lastLoadError:
         this.lastLoadError
     };
@@ -258,6 +408,7 @@ export class AudioDirector {
     );
 
     this.refreshVolumes();
+    this.observeAnalyser();
   }
 
   public play(
@@ -288,7 +439,7 @@ export class AudioDirector {
     if (
       existing.length >= maxInstances
     ) {
-      existing[0]?.sound.stop();
+      this.stopManaged(existing[0]!);
     }
 
     const owner = ownerId(id);
@@ -322,6 +473,10 @@ export class AudioDirector {
     };
 
     this.managed.add(managed);
+    this.incrementCount(
+      this.startedCounts,
+      id
+    );
 
     const pan =
       options.positionX === undefined
@@ -334,19 +489,40 @@ export class AudioDirector {
             options.positionX
           );
 
+    let cleaned = false;
+
+    const cleanup = (
+      outcome: "complete" | "stop"
+    ): void => {
+      if (cleaned) {
+        return;
+      }
+
+      cleaned = true;
+      this.managed.delete(managed);
+      sound.destroy();
+      this.incrementCount(
+        outcome === "complete"
+          ? this.completedCounts
+          : this.stoppedCounts,
+        id
+      );
+
+      if (asset.bus === "voice") {
+        this.voiceDepth = Math.max(
+          0,
+          this.voiceDepth - 1
+        );
+      }
+    };
+
     sound.once(
       "complete",
-      () => {
-        this.managed.delete(managed);
-        sound.destroy();
-
-        if (asset.bus === "voice") {
-          this.voiceDepth = Math.max(
-            0,
-            this.voiceDepth - 1
-          );
-        }
-      }
+      () => cleanup("complete")
+    );
+    sound.once(
+      "stop",
+      () => cleanup("stop")
     );
 
     if (asset.bus === "voice") {
@@ -375,6 +551,10 @@ export class AudioDirector {
       id,
       sound,
       setGain: gain => {
+        if (cleaned) {
+          return;
+        }
+
         managed.gain =
           Phaser.Math.Clamp(
             gain,
@@ -387,16 +567,12 @@ export class AudioDirector {
         );
       },
       stop: () => {
-        sound.stop();
-        this.managed.delete(managed);
-        sound.destroy();
-
-        if (asset.bus === "voice") {
-          this.voiceDepth = Math.max(
-            0,
-            this.voiceDepth - 1
-          );
+        if (cleaned) {
+          return;
         }
+
+        sound.stop();
+        cleanup("stop");
       }
     };
   }
@@ -409,9 +585,7 @@ export class AudioDirector {
         continue;
       }
 
-      item.sound.stop();
-      item.sound.destroy();
-      this.managed.delete(item);
+      this.stopManaged(item);
     }
 
     if (bus === "voice") {
@@ -589,6 +763,117 @@ export class AudioDirector {
     );
   }
 
+  private incrementCount(
+    counts: Map<AudioAssetId, number>,
+    id: AudioAssetId
+  ): void {
+    counts.set(
+      id,
+      (counts.get(id) ?? 0) + 1
+    );
+  }
+
+  private stopManaged(
+    item: ManagedSound
+  ): void {
+    item.sound.stop();
+
+    if (this.managed.has(item)) {
+      item.sound.destroy();
+      this.managed.delete(item);
+
+      if (item.bus === "voice") {
+        this.voiceDepth = Math.max(
+          0,
+          this.voiceDepth - 1
+        );
+      }
+    }
+  }
+
+  private attachAnalyser(): void {
+    const manager =
+      this.scene.sound as
+        Phaser.Sound.BaseSoundManager &
+        WebAudioManagerSnapshotSource;
+    const context = manager.context;
+    const masterVolumeNode =
+      manager.masterVolumeNode;
+
+    if (!context || !masterVolumeNode) {
+      return;
+    }
+
+    this.analyser =
+      context.createAnalyser();
+    this.analyser.fftSize = 2048;
+    this.analyser.smoothingTimeConstant = 0;
+    this.analyserSamples =
+      new Float32Array(
+        new ArrayBuffer(
+          this.analyser.fftSize *
+          Float32Array.BYTES_PER_ELEMENT
+        )
+      );
+
+    // In QA builds the analyser is inserted serially into Phaser's
+    // real final-output route. This measures exactly the signal sent
+    // to this context's destination instead of a parallel branch.
+    masterVolumeNode.disconnect();
+    masterVolumeNode.connect(this.analyser);
+    this.analyser.connect(context.destination);
+    this.analyserInFinalOutputPath = true;
+  }
+
+  private observeAnalyser(): void {
+    const sample =
+      this.measureAnalyser();
+
+    this.observedRms = Math.max(
+      this.observedRms,
+      sample.rms
+    );
+    this.observedPeak = Math.max(
+      this.observedPeak,
+      sample.peak
+    );
+  }
+
+  private measureAnalyser(): {
+    readonly rms: number;
+    readonly peak: number;
+  } {
+    if (!this.analyser || !this.analyserSamples) {
+      return {
+        rms: 0,
+        peak: 0
+      };
+    }
+
+    this.analyser.getFloatTimeDomainData(
+      this.analyserSamples
+    );
+
+    let squares = 0;
+    let peak = 0;
+
+    for (const sample of this.analyserSamples) {
+      squares += sample * sample;
+      peak = Math.max(
+        peak,
+        Math.abs(sample)
+      );
+    }
+
+    return {
+      rms: Math.sqrt(
+        squares /
+        this.analyserSamples.length
+      ),
+      peak
+    };
+  }
+
   private getAudioContext():
     AudioContext | undefined {
     const manager =
@@ -633,13 +918,41 @@ export class AudioDirector {
       this.unlockAudio
     );
 
-    for (const item of this.managed) {
-      item.sound.stop();
-      item.sound.destroy();
+    for (const item of [...this.managed]) {
+      this.stopManaged(item);
     }
 
+    if (this.analyserInFinalOutputPath) {
+      const manager =
+        this.scene.sound as
+          Phaser.Sound.BaseSoundManager &
+          WebAudioManagerSnapshotSource;
+
+      manager.masterVolumeNode?.disconnect();
+      this.analyser?.disconnect();
+
+      if (
+        manager.masterVolumeNode &&
+        manager.context
+      ) {
+        manager.masterVolumeNode.connect(
+          manager.context.destination
+        );
+      }
+    } else {
+      this.analyser?.disconnect();
+    }
+
+    this.analyserInFinalOutputPath = false;
+    this.analyser = null;
+    this.analyserSamples = null;
+    this.observedRms = 0;
+    this.observedPeak = 0;
     this.managed.clear();
     this.cooldowns.clear();
+    this.startedCounts.clear();
+    this.completedCounts.clear();
+    this.stoppedCounts.clear();
     this.voiceDepth = 0;
   }
 }

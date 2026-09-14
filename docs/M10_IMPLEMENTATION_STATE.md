@@ -1,0 +1,806 @@
+# M10 Implementation State
+
+## Authority
+
+- Baseline commit: `2d494b80c8e3534574e4568c460510d4f3136adc`
+- Current branch: `m10-semantic-level-authoring`
+- World: `49824 × 720`, grid `16`, layer width `3114` cells
+- Section boundaries:
+  1. MovementRehearsal `0..5376`
+  2. CombatRehearsal `5376..10464`
+  3. MainStage `10464..13744`
+  4. GrandGallery `13744..19456`
+  5. GalleryGauntlet `19456..23552`
+  6. SpotlightVault `23552..27984`
+  7. CardSanctum `27984..31664`
+  8. RoyalBox `31664..35344`
+  9. MirrorCore `35344..39200`
+  10. ConductorApproach `39200..44672`
+  11. MirrorConductor `44672..49824`
+
+## Completed Sections
+
+### MovementRehearsal
+
+- Latest successful commit: `2c1cc07b0d016bcbc8e396229bf752ed7bc1ce7c`
+- Status: committed and present at session start
+- Files: `assets/levels/impressario-world.ldtk`, `src/main.ts`, `src/world/MovementRehearsalVisuals.ts`, `src/world/WorldLayout.ts`
+
+### CombatRehearsal
+
+- Latest successful commit: current `feat(levels): author Combat Rehearsal encounters` Section commit
+- Interval: `5376..10464`
+- Gameplay additions:
+  - Safe entry and recovery floor
+  - Nine-step training-dummy sequence for the supported ground, air, launcher, down-strike, combo, and dash attacks
+  - Tutorial exit gate released by actual objective completion
+  - Progressive Stagehand and Card Thrower spacing within a gated mastery encounter
+  - Three readable spike lanes introduced after safe combat practice
+  - Entry and post-encounter mastery checkpoints
+  - Recovery platforms, elevated attack-practice platforms, projectile cover, and MainStage exit framing
+- Visual additions:
+  - Six deterministic rehearsal landmarks
+  - Technique, melee, ranged, ensemble, and exit signage
+  - Hazard telegraph frames and gate framing
+  - Existing environment materials remain aligned to every collision surface
+- Audio changes:
+  - Existing Combat Rehearsal music and voiceover now begin at `5376`
+  - Existing MainStage and later score zones align with fixed Section boundaries
+  - Existing combat-hit, enemy telegraph, damage, and checkpoint cues remain in use
+- CombatRehearsal counts:
+  - Collision rectangles: 37
+  - Checkpoints: 2
+  - Authored gameplay gates: 3
+  - Active enemy spawns: 5 (3 Stagehands, 2 Card Throwers)
+  - Hazards: 3 spikes
+  - Support pickups: 0
+  - Objectives: 9 attack objectives plus 1 enemy-clear objective
+- World totals after completion:
+  - Collision rectangles: 471
+  - Checkpoints: 13
+  - Gameplay gates: 10
+  - Enemy spawns: 20
+  - Hazards: 32
+  - Support pickups: 8
+- Files changed:
+  - `assets/levels/impressario-world.ldtk`
+  - `scripts/sync-ldtk-gameplay.mjs`
+  - `scripts/sync-ldtk-hazards.mjs`
+  - `scripts/validate-world-gameplay.mjs`
+  - `scripts/validate-world-hazards.mjs`
+  - `scripts/validate-world-runtime.mjs`
+  - `src/audio/AudioRuntimeBridge.ts`
+  - `src/combat/CombatSystem.ts`
+  - `src/enemies/CardThrowerSystem.ts`
+  - `src/main.ts`
+  - `src/world/CombatRehearsalHazardSystem.ts`
+  - `src/world/CombatRehearsalVisuals.ts`
+  - Generated `src/world/WorldEnemies.ts`, `WorldGameplay.ts`, `WorldHazards.ts`, and `WorldLayout.ts`
+- Successful validation:
+  - `npm run levels:validate`
+  - `npm run world:validate`
+  - `npm run typecheck`
+  - `npm run build`
+  - `npm run audio:runtime:validate`
+  - `npm run assets:player:validate`
+  - `npm run assets:enemies:validate`
+- Runtime tests actually performed:
+  - Vite development server started successfully on port `5173`
+  - Playwright audio test attempted twice; browser execution remained blocked first by a missing browser and then by missing host library `libatk-1.0.so.0`
+  - Public browser capture attempted; sandbox proxy returned HTTP 403 for protected resources
+  - No manual gameplay-completion claim recorded
+- Unresolved risks:
+  - Full keyboard traversal, tutorial completion, encounter clear, death/respawn, and adjacent MainStage transition require a browser host with Chromium runtime libraries
+
+### MainStage
+
+- Latest successful commit: current `feat(levels): author Main Stage encounter` Section commit
+- Interval: `10464..13744`
+- Authored interval plan:
+  - `10464..10720`: safe transition apron and entry checkpoint after CombatRehearsal
+  - `10720..11360`: solo Stagehand opener with a closed arena entrance
+  - `11360..12064`: mixed Stagehand and Card Thrower crossing with elevated recovery routes
+  - `12064..13472`: full-ensemble finale with Stagehands, a Card Thrower, footlight spikes, and swinging rigging
+  - `13472..13744`: enemy-clear exit gate, post-clear checkpoint, and GrandGallery transition
+- Gameplay additions:
+  - Continuous stage floor and lower fall boundary across the fixed Section interval
+  - Three objective-backed waves: one-enemy opener, two-enemy crossing, and three-enemy hazard finale
+  - Separate filtered Stagehand and Card Thrower systems for CombatRehearsal and MainStage encounter state
+  - Card Thrower projectile culling derived from each selected spawn set instead of a Combat-only interval
+  - Entry, wave-divider, and enemy-clear exit gates driven by LDtk
+  - Entry and post-clear checkpoints with safe floor-aligned respawn positions
+  - Two LDtk-authored pendulums and two broken-footlight spike lanes activated for the finale
+  - Deferred CardSanctum and RoyalBox entities relocated into their fixed Section intervals without changing their semantic identities
+- Visual additions:
+  - Six deterministic stage landmarks from entry through curtain call
+  - Proscenium panels, practical stage lights, gate framing, and hazard warning markers
+  - Immediate GrandGallery floor aligned to the MainStage exit elevation
+  - Existing environment materials remain aligned to every collision surface
+- Audio and asset reuse:
+  - Existing MainStage music, theatre ambience, and backstage-ambush voiceover begin at the fixed `10464` boundary
+  - Existing checkpoint, combat-hit, damage, enemy telegraph, player atlas, enemy atlas, and boss atlas assets remain in use
+- MainStage counts:
+  - Collision rectangles: 16
+  - Checkpoints: 2
+  - Gameplay gates: 3
+  - Enemy spawns: 6 (4 Stagehands, 2 Card Throwers)
+  - Hazards: 4 (2 pendulums, 2 spikes)
+  - Support pickups: 0
+  - Objectives: 3 escalating enemy-clear waves plus curtain-call exit
+- World totals after completion:
+  - Collision rectangles: 457
+  - Checkpoints: 14
+  - Gameplay gates: 13
+  - Enemy spawns: 26
+  - Hazards: 36
+  - Support pickups: 8
+- Runtime modules added:
+  - `src/world/MainStageEncounterSystem.ts`
+  - `src/world/MainStageHazardSystem.ts`
+  - `src/world/MainStageVisuals.ts`
+- Existing runtime modules updated:
+  - `src/main.ts`
+  - `src/enemies/StagehandSystem.ts`
+  - `src/enemies/CardThrowerSystem.ts`
+  - Generated `src/world/WorldEnemies.ts`, `WorldGameplay.ts`, `WorldHazards.ts`, and `WorldLayout.ts`
+- Validation coverage added:
+  - Fixed Section boundaries are asserted in `validate-world-runtime.mjs`
+  - MainStage checkpoints and gates are asserted in `validate-world-gameplay.mjs`
+  - MainStage enemy IDs and MainStage, CardSanctum, and RoyalBox enemy intervals are asserted in `validate-world-enemies.mjs`
+  - MainStage hazard bounds and MainStage, CardSanctum, and RoyalBox hazard/support intervals are asserted in `validate-world-hazards.mjs`
+- Successful validation:
+  - `npm run levels:validate`
+  - `npm run world:validate`
+  - `npm run typecheck`
+  - `npm run build`
+  - `npm run audio:runtime:validate`
+  - `npm run assets:audio:validate`
+  - `npm run assets:player:validate`
+  - `npm run assets:enemies:validate`
+  - `npm run assets:boss:validate`
+- Runtime tests actually performed:
+  - Vite development server started successfully on port `5174` after port `5173` was already occupied
+  - Local HTTP health check returned `200 OK`
+  - Browser capture was attempted; the Playwright browser context closed during navigation before application execution
+  - No manual gameplay-completion claim recorded
+- Unresolved risks:
+  - Full keyboard traversal, all three wave transitions, hazard interaction, death/reset, post-clear respawn, and GrandGallery transition require a browser-capable host
+  - GrandGallery and later Sections retain M9 geometry pending sequential M10 authoring
+
+### GrandGallery
+
+- Latest successful commit: current `feat(levels): author Grand Gallery traversal` Section commit
+- Interval: `13744..19456`
+- Authored interval plan:
+  - `13744..14992`: safe MainStage transition, entry checkpoint, and readable low-risk portrait walk
+  - `14992..16912`: alternating floor elevations with optional upper-platform observation routes
+  - `16912..18720`: card salon traversal with denser vertical route choices
+  - `18720..19456`: controlled descending exhibit aligned to the GalleryGauntlet entry platform
+- Gameplay additions:
+  - Twenty-three deliberate collision rectangles replace forty-nine disconnected compact-world remnants
+  - Continuous lower route with readable 32–48 pixel elevation changes and thirteen optional upper platforms
+  - Full-width lower fall boundary preserves existing fall-out handling
+  - GrandGallery checkpoint moved to `13824,296` with trigger `13792`
+  - GalleryGauntlet entry checkpoint aligned to the inherited `y=480` transition platform
+  - Shadow Acrobat spawns relocated into the fixed GalleryGauntlet interval for the following Section
+  - Gallery hazards confirmed inside the fixed GalleryGauntlet interval
+  - Deferred MirrorCore checkpoints, gates, enemies, hazards, supports, dynamic platforms, relays, boss coordinates, and presentation assumptions relocated into `35344..39200`
+- Visual additions:
+  - Deterministic fixed-world wall panels, tall night windows, card portraits, chandeliers, and transition framing
+  - Six route landmarks from the MainStage threshold through the descending exhibit
+  - Cyan and gold telegraphs align with all thirteen upper platforms
+  - Compact-world GrandGallery presentation coordinates removed from `src/main.ts`
+- GrandGallery counts:
+  - Collision rectangles: 23
+  - Checkpoints: 1
+  - Gameplay gates: 0
+  - Enemy spawns: 0
+  - Hazards: 0
+  - Support pickups: 0
+  - Route landmarks: 6
+- World totals after completion:
+  - Collision rectangles: 431
+  - Checkpoints: 14
+  - Gameplay gates: 13
+  - Enemy spawns: 26
+  - Hazards: 36
+  - Support pickups: 8
+- Runtime modules added:
+  - `src/world/GrandGalleryVisuals.ts`
+- Existing runtime modules updated:
+  - `src/main.ts`
+  - `src/world/MirrorCoreSystem.ts`
+  - Generated `src/world/WorldEnemies.ts`, `WorldGameplay.ts`, `WorldHazards.ts`, and `WorldLayout.ts`
+- Validation coverage added:
+  - Exact GrandGallery collision count and principal floor geometry are asserted in `validate-world-runtime.mjs`
+  - GrandGallery, GalleryGauntlet, and relocated MirrorCore checkpoint/gate bounds are asserted in `validate-world-gameplay.mjs`
+  - GalleryGauntlet Shadow Acrobat and MirrorCore enemy intervals are asserted in `validate-world-enemies.mjs`
+  - GalleryGauntlet and MirrorCore hazard/support intervals are asserted in `validate-world-hazards.mjs`
+- Successful validation:
+  - Structural LDtk review: unchanged definitions, unchanged `49824×720` dimensions, 11 fixed Sections, and unique entity IIDs
+  - `npm run levels:validate`
+  - `npm run world:validate`
+  - `npm run typecheck`
+  - `npm run build`
+  - `npm run audio:runtime:validate`
+  - `npm run assets:audio:validate`
+  - `npm run assets:player:validate`
+  - `npm run assets:enemies:validate`
+  - `npm run assets:boss:validate`
+- Runtime tests actually performed:
+  - Vite development server started successfully on port `5175`
+  - Local HTTP health check returned `200 OK`
+  - Browser capture was attempted; the Playwright browser context closed during navigation before application execution
+  - No manual gameplay-completion claim recorded
+- Unresolved risks:
+  - Full keyboard traversal, optional upper-route coverage, checkpoint respawn, fall recovery, and both adjacent transitions require a browser-capable host
+  - GalleryGauntlet and later Sections retain M9 geometry pending sequential M10 authoring
+
+### GalleryGauntlet
+
+- Successful Section commit: `bc9e9538844ad00e2694c72e6a55b8b98b523854`
+- Interval: `19456..23552`
+- Twenty-four authored collision rectangles replaced forty inherited compact-world fragments
+- Two objective-gated Shadow Acrobat duels, four LDtk progression gates, midpoint checkpoint, synchronized hazards, fixed-world visuals, and death/reset flow completed
+- Canonical validation and production build passed; browser traversal remains pending on a browser-capable host
+
+### SpotlightVault
+
+- Section commit: `feat(levels): author Spotlight Vault encounter`
+- Interval: `23552..27984`
+- Gameplay additions:
+  - Twenty-one deliberate collision rectangles replace thirty-six inherited compact-world fragments
+  - GalleryGauntlet arrival remains aligned at `y=352`; the release route returns to the CardSanctum entry at `y=480`
+  - Safe entry checkpoint moved to `23600,322` with trigger `23568`
+  - One broad gated Light Wraith arena spans `24000..25856` with five optional elevated casting platforms
+  - Both existing LDtk gates now cover the complete `0..688` playable height
+  - Light Wraith patrols widened inside the arena and retain opposing authored phases
+  - Full-width lower fall boundary preserves existing fall-out handling
+  - Spotlight unlock precedes encounter closure; death restores Wraiths, gates, and Show while preserving the unlock
+- Visual additions:
+  - Fixed-world vault walls, spotlight sigil, archive silhouettes, route telegraphs, and five progression landmarks
+  - Compact-world SpotlightVault presentation and completion signage removed from `src/main.ts`
+  - CardSanctum transition signage moved into the fixed SpotlightVault interval
+- SpotlightVault counts:
+  - Collision rectangles: 21
+  - Checkpoints: 1
+  - Gameplay gates: 2
+  - Enemy spawns: 2 Light Wraiths
+  - Hazards: 0
+  - Support pickups: 0
+- World totals after completion:
+  - Collision rectangles: 400
+  - Checkpoints: 14
+  - Gameplay gates: 17
+  - Enemy spawns: 26
+  - Hazards: 36
+  - Support pickups: 8
+- Runtime modules added:
+  - `src/world/SpotlightVaultEncounterSystem.ts`
+  - `src/world/SpotlightVaultVisuals.ts`
+- Existing runtime modules updated:
+  - `src/main.ts`
+  - Generated `src/world/WorldEnemies.ts`, `WorldGameplay.ts`, and `WorldLayout.ts`
+- Validation coverage added:
+  - Exact SpotlightVault collision count and principal transition, arena, release, and fall-boundary geometry
+  - Exact SpotlightVault checkpoint and full-height gate bounds
+  - Exact Light Wraith positions, patrol bounds, phases, and Section containment
+  - Dedicated encounter-module ownership of both LDtk gates
+- Successful validation:
+  - Structural LDtk review: unchanged `49824×720` dimensions, 11 fixed Sections, and 512 unique entity IIDs
+  - `npm run levels:validate`
+  - `npm run world:validate`
+  - `npm run typecheck`
+  - `npm run build`
+  - `npm run audio:runtime:validate`
+  - `npm run assets:audio:validate`
+  - `npm run assets:player:validate`
+  - `npm run assets:enemies:validate`
+  - `npm run assets:boss:validate`
+- Runtime tests actually performed:
+  - No browser traversal was completed for SpotlightVault
+- Unresolved risks:
+  - Full keyboard traversal, Spotlight range instruction, Show recovery, encounter clear, death/reset, and both adjacent transitions require a browser-capable host
+  - CardSanctum and later Sections retain M9 geometry pending sequential M10 authoring
+
+## CardSanctum Pre-Mutation Plan
+
+- Fixed interval: `27984..31664`
+- Adjacent transition constraints:
+  - Preserve the authored SpotlightVault exit surface at `27776,480,208,32`
+  - Begin CardSanctum on a safe `y=480` entry surface at the fixed `27984` boundary
+  - End CardSanctum on a `y=480` surface aligned with the inherited RoyalBox entry at `31664,480,112,16`
+  - Do not mutate RoyalBox geometry or semantic entities during CardSanctum authoring
+- Inherited inventory:
+  - 50 collision rectangles, including 26 unrelated ceiling fragments at `y=0` and 24 repeating lower stepping stones
+  - 1 checkpoint at `28016,450` with trigger `28000`
+  - 1 enemy-clear exit gate at `31584,0,18,520`
+  - 3 stationary Card Sentries
+  - 8 hazards: 4 moving blades and 4 spike lanes
+  - 0 support pickups
+- Authored interval plan:
+  - `27984..28240`: safe SpotlightVault arrival, floor-aligned checkpoint, route introduction, and encounter approach
+  - `28240..29120`: lower trap route and upper attack route around the first Card Sentry, with cover against aimed cards
+  - `29120..30368`: central wall-jump chamber around the elevated second Card Sentry, combining vertical blade timing with a safe recovery floor
+  - `30368..31584`: final route convergence around the third Card Sentry, alternating spike lanes and moving blades before the exit lock
+  - `31584..31664`: enemy-clear gate and level `y=480` RoyalBox transition
+- Planned collision structure:
+  - Replace all 50 inherited fragments with deliberate fixed-world floors, upper-route platforms, wall-jump surfaces, projectile cover, and a full-width lower fall boundary
+  - Keep every mandatory encounter route completable with the existing jump, double-jump, dash, air-dash, wall-slide, and wall-jump systems
+  - Preserve at least one readable lower route and one optional elevated route through the first two encounter segments
+  - Keep hazards separated by safe landing and recovery surfaces rather than stacking unavoidable damage zones
+- Planned semantic changes:
+  - Retain the existing CardSanctum checkpoint identity and align its position to the authored entry floor
+  - Retain `CardSanctumExit` as the sole encounter gate; no additional LDtk gate is required because the Section is an enemy-clear traversal rather than a sealed arena
+  - Reposition all three existing Card Sentries onto distinct, reachable combat platforms while preserving their identifiers and phases
+  - Reposition all four blades and all four spike lanes to match the authored route geometry while preserving their semantic identities
+  - Derive Card Sentry projectile culling bounds from generated Card Sentry spawn data instead of compact-world constants
+- Planned runtime architecture:
+  - Add `CardSanctumVisuals.ts` for fixed-world card arches, route telegraphs, hazard framing, encounter landmarks, and RoyalBox transition signage
+  - Add `CardSanctumEncounterSystem.ts` for checkpoint activation, Sentry activation, generated exit-gate ownership, objective state, clear state, and death/reset lifecycle
+  - Preserve `CardSanctumHazardSystem` as the LDtk-driven blade/spike and global fall-out owner; its update must continue while encounter hazards are disabled
+  - Remove compact-world CardSanctum presentation and encounter state from `src/main.ts`
+- Planned validation coverage:
+  - Exact CardSanctum collision count and principal entry, route, exit, and fall-boundary geometry
+  - Exact checkpoint and exit-gate bounds
+  - Exact Card Sentry positions, phases, and Section containment
+  - Exact blade and spike positions, dimensions, movement values, and Section containment
+  - Dedicated encounter-module ownership of the generated exit gate
+
+## CardSanctum Completion
+
+- Section commit: current `feat(levels): author Card Sanctum encounter` Section commit
+- Interval: `27984..31664`
+- Gameplay additions:
+  - Twenty-four deliberate collision rectangles replace fifty inherited compact-world fragments
+  - SpotlightVault arrival and RoyalBox departure remain aligned on level `y=480` transition surfaces
+  - Safe entry checkpoint moved to `28032,450` with trigger `28000`
+  - One generated enemy-clear exit gate remains at `31584` and now covers the complete `0..688` playable height
+  - Three Card Sentries occupy distinct reachable upper combat positions while preserving their identities and phases
+  - Four blades and four spike lanes align with safe recovery floors, upper attack routes, and the central wall-jump chamber
+  - Full-width lower fall boundary preserves CardSanctum fall-out handling
+  - Card Sentry projectile culling derives from generated Sentry positions instead of compact-world constants
+- Visual additions:
+  - Fixed-world card walls, archive silhouettes, platform telegraphs, wall-jump framing, five route landmarks, and RoyalBox transition signage
+  - Compact-world CardSanctum presentation and encounter logic removed from `src/main.ts`
+- CardSanctum counts:
+  - Collision rectangles: 24
+  - Checkpoints: 1
+  - Gameplay gates: 1
+  - Enemy spawns: 3 Card Sentries
+  - Hazards: 8 (4 blades, 4 spike lanes)
+  - Support pickups: 0
+- World totals after completion:
+  - Collision rectangles: 374
+  - Checkpoints: 14
+  - Gameplay gates: 17
+  - Enemy spawns: 26
+  - Hazards: 36
+  - Support pickups: 8
+- Runtime modules added:
+  - `src/world/CardSanctumEncounterSystem.ts`
+  - `src/world/CardSanctumVisuals.ts`
+- Existing runtime modules updated:
+  - `src/main.ts`
+  - `src/enemies/CardSentrySystem.ts`
+  - Generated `src/world/WorldEnemies.ts`, `WorldGameplay.ts`, `WorldHazards.ts`, and `WorldLayout.ts`
+- Validation coverage added:
+  - Exact CardSanctum collision count and principal entry, floor, wall-jump, exit, and fall-boundary geometry
+  - Exact CardSanctum checkpoint and full-height exit-gate bounds
+  - Exact Card Sentry positions, patrol bounds, phases, and Section containment
+  - Exact blade and spike positions, dimensions, movement values, and Section containment
+  - Dedicated encounter-module ownership of the generated exit gate
+- Successful validation:
+  - Structural LDtk review: unchanged `49824×720` dimensions, 11 fixed Sections, and 486 unique entity IIDs
+  - `npm run levels:validate`
+  - `npm run world:validate`
+  - `npm run typecheck`
+  - `npm run build`
+  - `npm run audio:runtime:validate`
+  - `npm run assets:audio:validate`
+  - `npm run assets:player:validate`
+  - `npm run assets:enemies:validate`
+  - `npm run assets:boss:validate`
+- Runtime tests actually performed:
+  - No browser traversal was completed for CardSanctum
+- Unresolved risks:
+  - Full keyboard traversal, both route choices, wall-jump chamber, Sentry projectile interaction, hazard timing, encounter clear, death/reset, and both adjacent transitions require a browser-capable host
+  - RoyalBox and later Sections retain M9 geometry pending sequential M10 authoring
+
+## RoyalBox Pre-Mutation Plan
+
+- Fixed interval: `31664..35344`
+- Adjacent transition constraints:
+  - Preserve the authored CardSanctum exit surface at `31216,480,448,32`
+  - Begin RoyalBox on a safe `y=480` entry surface at the fixed `31664` boundary
+  - End RoyalBox on a `y=480` surface aligned with the inherited MirrorCore entry at `35344,480,112,16`
+  - Do not mutate MirrorCore geometry or semantic entities during RoyalBox authoring
+- Inherited inventory:
+  - 47 collision rectangles, including 21 unrelated ceiling fragments at `y=0` and 25 repeating lower stepping or entry fragments
+  - 1 checkpoint at `31744,296` with trigger `31712`, vertically inconsistent with the inherited `y=480` entry surface
+  - 1 enemy-clear exit gate at `35264,0,18,520`
+  - 4 Royal Echoes: 2 duelists and 2 prism casters
+  - 13 hazards: 5 spike lanes, 4 moving blades, and 4 timed lasers
+  - 4 Royal Rose support pickups
+- Authored interval plan:
+  - `31664..32000`: safe CardSanctum arrival, floor-aligned checkpoint, Grand Card unlock, and readable encounter approach
+  - `32000..32800`: first fractured-box duel pairing a grounded duelist with an elevated caster, separated laser timing, and optional upper cover
+  - `32800..33664`: central reflected gallery pairing the second duelist with the second caster across alternating platforms, blades, and recovery roses
+  - `33664..35264`: final mastery traversal combining readable laser cycles, spike lanes, moving blades, and converging lower and upper routes
+  - `35264..35344`: enemy-clear gate and level `y=480` MirrorCore transition
+- Planned collision structure:
+  - Replace all 47 inherited fragments with deliberate fixed-world entry and exit floors, combat platforms, projectile cover, wall-jump surfaces, and a full-width lower fall boundary
+  - Keep all mandatory combat positions reachable with existing jump, double-jump, dash, air-dash, wall-slide, and wall-jump systems
+  - Preserve safe recovery space between laser, blade, and spike combinations so damage is avoidable and route decisions remain legible
+  - Maintain distinct lower and upper routes through the first two combat segments before a controlled final convergence
+- Planned semantic changes:
+  - Retain the existing RoyalBox checkpoint identity and align it to the authored `y=480` entry floor
+  - Retain `RoyalBoxExit` as the sole encounter gate and expand it to the full `0..688` playable height
+  - Reposition all four Royal Echoes onto authored combat surfaces while preserving identifiers, kinds, and phases
+  - Reposition all thirteen hazards and four Royal Roses to match authored surfaces while preserving semantic identities
+  - Derive Royal Echo projectile bounds and RoyalBox support unlock/projectile bounds from the fixed Section interval or generated spawn data instead of compact-world constants
+- Planned runtime architecture:
+  - Add `RoyalBoxVisuals.ts` for fixed-world fractured mirrors, route telegraphs, hazard framing, encounter landmarks, and MirrorCore transition signage
+  - Add `RoyalBoxEncounterSystem.ts` for checkpoint activation, Royal Echo activation, generated exit-gate ownership, objective state, clear state, and death/reset lifecycle
+  - Preserve `RoyalBoxHazardSystem` as the LDtk-driven blade, laser, spike, and fall-out owner; keep fall recovery active while encounter hazards are disabled
+  - Preserve `RoyalBoxSupportSystem` as the Grand Card unlock, Royal Rose, projectile, and look-down owner while replacing compact-world bounds
+  - Remove compact-world RoyalBox presentation and encounter state from `src/main.ts`
+- Planned validation coverage:
+  - Exact RoyalBox collision count and principal entry, combat, exit, and fall-boundary geometry
+  - Exact checkpoint and full-height exit-gate bounds
+  - Exact Royal Echo positions, patrol bounds, kinds, phases, and Section containment
+  - Exact hazard and support positions, dimensions, movement values, phases, and Section containment
+  - Dedicated encounter-module ownership of the generated exit gate
+  - Absence of stale compact-world RoyalBox presentation, encounter triggers, and projectile bounds
+
+## RoyalBox Completion
+
+- Section commit: `e9649e3289d8747db163e013c4d337c61e528582` (`feat(levels): author Royal Box encounter`)
+- Interval: `31664..35344`
+- Gameplay additions:
+  - Twenty-four deliberate collision rectangles replace forty-seven inherited compact-world fragments
+  - CardSanctum arrival and MirrorCore departure remain aligned on level `y=480` transition surfaces
+  - Safe entry checkpoint moved to `31744,450` with trigger `31712`
+  - The generated enemy-clear exit gate remains at `35264` and now covers the complete `0..688` playable height
+  - Four Royal Echoes occupy distinct grounded and elevated combat positions while preserving their identities, kinds, and phases
+  - Five spike lanes, four blades, and four timed lasers align with recovery floors, upper routes, and cover structures
+  - Four Royal Roses align with safe recovery positions throughout the Section
+  - Full-width lower fall boundary preserves RoyalBox fall-out handling while encounter hazards are disabled
+  - Royal Echo and Grand Card projectile culling use generated or fixed-world RoyalBox bounds instead of compact-world constants
+  - Grounded look-down camera behavior is constrained to `31664..35344` and resets outside RoyalBox
+- Visual additions:
+  - Fixed-world fractured mirror walls, dark lower royal boxes, platform telegraphs, wall-jump framing, five progression landmarks, and MirrorCore transition signage
+  - Compact-world RoyalBox presentation and encounter logic removed from `src/main.ts`
+- RoyalBox counts:
+  - Collision rectangles: 24
+  - Checkpoints: 1
+  - Gameplay gates: 1
+  - Enemy spawns: 4 Royal Echoes
+  - Hazards: 13 (5 spike lanes, 4 blades, 4 lasers)
+  - Support pickups: 4 Royal Roses
+- World totals after completion:
+  - Collision rectangles: 351
+  - Checkpoints: 14
+  - Gameplay gates: 17
+  - Enemy spawns: 26
+  - Hazards: 36
+  - Support pickups: 8
+- Runtime modules added:
+  - `src/world/RoyalBoxEncounterSystem.ts`
+  - `src/world/RoyalBoxVisuals.ts`
+- Existing runtime modules updated:
+  - `src/main.ts`
+  - `src/enemies/RoyalEchoSystem.ts`
+  - `src/world/RoyalBoxHazardSystem.ts`
+  - `src/world/RoyalBoxSupportSystem.ts`
+  - Generated `src/world/WorldEnemies.ts`, `WorldGameplay.ts`, `WorldHazards.ts`, and `WorldLayout.ts`
+- Validation coverage added:
+  - Exact RoyalBox collision count and principal entry, combat, exit, wall, and fall-boundary geometry
+  - Exact RoyalBox checkpoint and full-height exit-gate bounds
+  - Exact Royal Echo positions, patrol bounds, kinds, phases, and Section containment
+  - Exact hazard and support positions, dimensions, movement values, phases, and Section containment
+  - Dedicated encounter-module ownership of the generated exit gate
+  - Absence of stale compact-world RoyalBox presentation and encounter state in `src/main.ts`
+- Successful validation:
+  - Structural LDtk review: unchanged `49824×720` dimensions, 11 fixed Sections, 463 unique entity IIDs, exact RoyalBox semantic counts, and unchanged MirrorCore entry geometry
+  - `git diff --check`
+  - `npm run levels:validate`
+  - `npm run world:validate`
+  - `npm run typecheck`
+  - `npm run build`
+  - `npm run audio:runtime:validate`
+  - `npm run assets:audio:validate`
+  - `npm run assets:player:validate`
+  - `npm run assets:enemies:validate`
+  - `npm run assets:boss:validate`
+- Runtime tests actually performed:
+  - No browser traversal was completed for RoyalBox
+- Unresolved risks:
+  - Full keyboard traversal, Royal Echo encounter completion, hazard timing, Grand Card behavior, Royal Rose recovery, look-down camera behavior, death/reset, and both adjacent transitions require browser validation
+  - MirrorCore and later Sections retain inherited geometry pending sequential M10 authoring
+
+## MirrorCore Pre-Mutation Plan
+
+- Fixed interval: `35344..39200`
+- Adjacent transition constraints:
+  - Preserve the authored RoyalBox exit surface at `34912,480,432,32`
+  - Begin MirrorCore on the inherited safe `y=480` entry surface at the fixed `35344` boundary
+  - End MirrorCore on a `y=480` surface aligned with the inherited ConductorApproach entry at `39200,480,112,16`
+  - Do not mutate ConductorApproach collision geometry or author its semantic entities during MirrorCore work
+- Inherited inventory:
+  - 45 collision rectangles, including 21 ceiling fragments and 24 repeating lower entry or stepping fragments
+  - 3 checkpoints: `MirrorCore` at `35424,296`, `MirrorRelays` at `36224,296`, and `CoreChamber` at `37344,296`
+  - 3 gates at `36192`, `38240`, and `39072`, each stopping at `y=520`
+  - 4 Core reflections: 1 duelist, 2 casters, and 1 mime
+  - 4 spike hazards and 4 Royal Rose support pickups
+  - 2 hard-coded Grand Card relays, 3 hard-coded moving mirrors, 3 timed refraction beams, rotating gauntlet beams, and fixed projectile bounds
+  - A Mirror Conductor boss, boss HUD, phase hazards, finale, leaderboard completion, and credits are incorrectly owned and activated inside MirrorCore before the later ConductorApproach and MirrorConductor Sections
+- Authored interval plan:
+  - `35344..35648`: safe RoyalBox arrival, floor-aligned entry checkpoint, Grand Card relay instruction, and low-risk route introduction
+  - `35648..36192`: refraction ascent using three readable moving mirrors, three telegraphed vertical beam windows, two ranged relays, and recovery routes
+  - `36192..37344`: Kaleidoscope Gauntlet with four generated Core reflections, separated spike lanes, rotating beam pressure, and safe combat platforms
+  - `37344..39072`: post-gauntlet stabilization traversal, safe CoreChamber checkpoint, optional upper movement route, recovery roses, and a readable release toward ConductorApproach
+  - `39072..39200`: objective-clear exit gate and level `y=480` ConductorApproach transition
+- Planned collision structure:
+  - Replace all 45 inherited fragments with deliberate fixed-world entry and exit floors, relay-ascent supports, gauntlet platforms, wall-jump surfaces, projectile cover, stabilization-route platforms, and a full-width lower fall boundary
+  - Keep every required relay and combat position reachable with existing jump, double-jump, dash, air-dash, wall-slide, wall-jump, Grand Card, and Spotlight systems
+  - Place checkpoints only on authored safe surfaces and keep recovery space between spikes, vertical beams, moving mirrors, and rotating gauntlet beams
+  - Preserve a readable lower recovery route beneath optional moving-mirror and upper-platform choices
+- Planned semantic changes:
+  - Retain all three checkpoint identities while aligning their positions and triggers to authored safe surfaces
+  - Retain the three generated gate identities, expand active locks through `y=688`, and assign them to relay completion, gauntlet progression, and Section release without permitting an early boss encounter
+  - Reposition all four Core reflections onto authored combat surfaces while preserving identifiers, kinds, and phases
+  - Reposition all four spikes and four Royal Roses to match authored surfaces while preserving semantic identities
+  - Keep MirrorCore projectile and hazard bounds constrained to `35344..39200`
+- Planned runtime architecture:
+  - Add `MirrorCoreVisuals.ts` for fixed-world refraction chambers, platform telegraphs, relay framing, gauntlet landmarks, stabilization presentation, and ConductorApproach signage
+  - Refactor `MirrorCoreSystem.ts` around checkpoint activation, relays, moving mirrors, generated gates, Core reflections, hazards, supports, objective state, clear state, and death/reset lifecycle
+  - Separate inherited Mirror Conductor boss, boss HUD, phase hazards, finale, leaderboard completion, and credits from MirrorCore ownership; no boss or run-completion path may activate before the later fixed MirrorConductor interval is authored
+  - Preserve existing production enemy, boss, combat, magic, health, audio, and leaderboard systems for their appropriate Sections rather than replacing them
+- Planned validation coverage:
+  - Exact MirrorCore collision count and principal entry, ascent, gauntlet, stabilization, exit, and fall-boundary geometry
+  - Exact checkpoint and full-height gate bounds
+  - Exact Core reflection positions, patrol bounds, kinds, phases, and Section containment
+  - Exact spike and support positions, dimensions, and Section containment
+  - Exact moving-mirror, relay, beam, projectile, and progression bounds within `35344..39200`
+  - Absence of Mirror Conductor activation, finale, leaderboard completion, and credits from the MirrorCore progression path
+
+## MirrorCore Completion
+
+- Interval: `35344..39200`
+- Gameplay additions:
+  - Twenty-nine deliberate collision rectangles replace forty-five inherited compact-world fragments
+  - RoyalBox arrival and ConductorApproach departure remain aligned on level `y=480` transition surfaces
+  - Three floor-aligned checkpoints define entry, relay completion, and post-gauntlet recovery
+  - Three generated full-height gates own relay completion, Kaleidoscope Gauntlet progression, and Section release
+  - Two Grand Card relays, three moving mirrors, and three timed refraction beams define the ascent route
+  - Four generated Core reflections occupy grounded and elevated gauntlet positions while preserving identifiers, kinds, patrol bounds, and phases
+  - Four spike lanes and four Core Roses align with authored recovery surfaces
+  - Rotating Kaleidoscope beams remain confined to the gauntlet interval
+  - Projectile, hazard, moving-platform, objective, checkpoint, and fall-out behavior is constrained to `35344..39200`
+  - Mirror Conductor activation, boss HUD, boss-only hazards, finale flow, credits, and leaderboard completion were removed from MirrorCore ownership
+- Visual additions:
+  - Fixed-world refraction chambers, lower-core treatment, floor and platform telegraphs, wall-jump framing, five progression landmarks, and ConductorApproach signage
+  - No Mirror Conductor arena or boss signage appears in MirrorCore
+- MirrorCore counts:
+  - Collision rectangles: 29
+  - Checkpoints: 3
+  - Gameplay gates: 3
+  - Enemy spawns: 4 Core reflections
+  - Hazards: 4 spike lanes plus bounded dynamic refraction and gauntlet beams
+  - Support pickups: 4 Core Roses
+  - Dynamic moving mirrors: 3
+  - Grand Card relays: 2
+- World totals after completion:
+  - Collision rectangles: 335
+  - Checkpoints: 14
+  - Gameplay gates: 17
+  - Enemy spawns: 26
+  - Hazards: 36
+  - Support pickups: 8
+- Runtime modules added:
+  - `src/world/MirrorCoreVisuals.ts`
+- Existing runtime modules updated:
+  - `src/main.ts`
+  - `src/world/MirrorCoreSystem.ts`
+  - Generated `src/world/WorldEnemies.ts`, `WorldGameplay.ts`, `WorldHazards.ts`, and `WorldLayout.ts`
+- Validation coverage added:
+  - Exact MirrorCore collision count and all twenty-nine authored rectangles
+  - Exact checkpoint bounds, triggers, and full-height gate bounds
+  - Exact Core reflection positions, patrol bounds, kinds, phases, and Section containment
+  - Exact spike and support positions, dimensions, movement values, and Section containment
+  - Bounded relay, moving-mirror, refraction-beam, gauntlet-beam, projectile, hazard, objective, and fall-out runtime ownership
+  - Absence of Mirror Conductor, boss HUD, finale, credits, and leaderboard completion from `MirrorCoreSystem.ts`
+- Successful validation:
+  - `git diff --check`
+  - `npm run levels:validate`
+  - `npm run world:validate`
+  - `npm run typecheck`
+  - `npm run build`
+  - `npm run audio:runtime:validate`
+  - `npm run assets:audio:validate`
+  - `npm run assets:player:validate`
+  - `npm run assets:enemies:validate`
+  - `npm run assets:boss:validate`
+- Runtime tests actually performed:
+  - Vite development server started successfully on port `5176`
+  - Local HTTP health check returned `200 OK`
+  - Public browser capture was attempted; protected resources returned HTTP 403 before application execution
+  - No manual gameplay-completion claim recorded
+- Unresolved risks:
+  - Full keyboard traversal, relay targeting, moving-mirror routing, beam timing, gauntlet completion, checkpoint respawn, support recovery, death/reset, and both adjacent transitions require browser validation
+  - ConductorApproach and MirrorConductor retain inherited geometry pending sequential M10 authoring
+
+## ConductorApproach Pre-Mutation Plan
+
+- Fixed interval: `39200..44672`
+- Adjacent transition constraints:
+  - Preserve the authored MirrorCore exit surface at `39090,480,110,32`
+  - Begin ConductorApproach on a safe `y=480` entry surface at the fixed `39200` boundary
+  - End ConductorApproach on a `y=480` surface aligned with the inherited MirrorConductor entry at `44672,480,112,16`
+  - Do not mutate MirrorConductor geometry, activate boss behavior, or author finale ownership before the fixed `44672` boundary
+- Inherited inventory:
+  - 43 collision rectangles, including 9 disconnected ceiling fragments and 34 repeating lower entry or stepping fragments
+  - 0 checkpoints
+  - 0 gameplay gates
+  - 0 enemy spawns
+  - 0 hazards
+  - 0 support pickups
+- Authored interval plan:
+  - `39200..40000`: safe MirrorCore arrival, level entry promenade, and low-risk recovery route
+  - `40000..41280`: ascending overture with alternating floor elevations and optional upper movement phrases
+  - `41280..42592`: central orchestral corridor combining repeated double-jump and air-dash route choices over a continuous lower recovery route
+  - `42592..43904`: final movement crescendo with denser upper-platform rhythm and readable lower landings
+  - `43904..44672`: quiet boss antechamber, level `y=480` alignment, and unmistakable MirrorConductor threshold framing
+- Planned collision structure:
+  - Replace all 43 inherited fragments with 31 deliberate fixed-world rectangles: 13 contiguous principal floor segments, 17 optional upper-route platforms, and one full-width lower safety boundary
+  - Preserve a continuous, hazard-free lower route so the pre-boss approach provides decompression rather than an untelegraphed combat or damage check
+  - Keep every optional upper platform reachable with the existing jump, double-jump, dash, air-dash, wall-slide, and wall-jump systems
+  - Keep all geometry inside `39200..44672` and preserve both adjacent transition surfaces unchanged
+- Planned semantic behavior:
+  - Preserve the intentionally empty ConductorApproach semantic inventory; no checkpoint, gate, enemy, hazard, or support entity is required for this traversal-only Section
+  - Continue MirrorCore music and machine ambience through the approach; the existing MirrorConductor score and boss-intro voice remain aligned to `44672`
+  - Do not add boss HUD, boss mechanics, finale, credits, or `leaderboard.finishRun()` ownership to ConductorApproach
+- Planned runtime architecture:
+  - Add `ConductorApproachVisuals.ts` for fixed-world orchestral architecture, floor and platform telegraphs, movement landmarks, crescendo presentation, antechamber quieting, and MirrorConductor threshold signage
+  - Integrate only deterministic fixed-world visuals in `src/main.ts`; no dynamic encounter system is required for the hazard-free semantic inventory
+  - Reuse the existing environment renderer, movement controller, production assets, MirrorCore audio zone, and later MirrorConductor audio boundary
+- Planned validation coverage:
+  - Exact ConductorApproach collision count and all 31 authored rectangles
+  - Exact empty checkpoint, gate, enemy, hazard, and support inventory within `39200..44672`
+  - Exact preservation of the MirrorCore exit and MirrorConductor entry surfaces
+  - Construction of `ConductorApproachVisuals` in `src/main.ts`
+  - Absence of boss activation, boss HUD, finale, credits, and leaderboard completion from ConductorApproach ownership
+
+## ConductorApproach Completion
+
+- Interval: `39200..44672`
+- Thirty-one deliberate collision rectangles replace forty-three inherited fragments: thirteen principal floor segments, seventeen optional upper platforms, and one full-width lower safety boundary
+- MirrorCore departure and MirrorConductor arrival remain aligned on safe `y=480` surfaces; the fixed `44672` boss and audio boundary remains unchanged
+- The Section remains intentionally free of checkpoints, gates, enemies, hazards, supports, boss activation, finale flow, and leaderboard completion
+- `ConductorApproachVisuals.ts` adds fixed-world orchestral architecture, route telegraphs, five movement landmarks, crescendo presentation, antechamber quieting, and MirrorConductor threshold signage
+- World totals: 323 collisions, 11 Sections, 14 checkpoints, 17 gates, 26 enemy spawns, 36 hazards, and 8 supports
+- Exact validators cover all authored collisions, empty semantic inventory, adjacent transition preservation, visual construction, and later-Section ownership separation
+- `git diff --check`, canonical level/world validation, typecheck, production build, and all production asset validators passed
+- Vite served locally on port `5177` with HTTP 200; public browser capture was blocked by HTTP 403 before application execution, so full traversal remains pending on a browser-capable host
+
+## MirrorConductor Pre-Mutation Plan
+
+- Fixed interval: `44672..49824`; preserve the `49824×720` world, grid `16`, the ConductorApproach entry surface at `44672,480,112,16`, and the world end at `49824`
+- Inherited authoritative inventory:
+  - 38 `CollisionRect` entities: five disconnected ceiling fragments and thirty-three repeating entry or stepping fragments
+  - 0 checkpoints, 0 gameplay gates, 0 enemy spawns, 0 hazards, and 0 support pickups
+  - 1 fixed `MirrorConductor` Section entity spanning the complete interval
+- Existing boss implementation:
+  - The M9 `MirrorCoreSystem.ts` history contains the complete `MirrorConductor` combat target, three-phase health state machine, shield counter, projectile volleys, rotating beams, phase-three floor collapse, boss HUD, defeat sequence, finale, credits, and leaderboard completion
+  - MirrorCore authoring correctly removed that later-Section ownership; the implementation will be restored under a dedicated `MirrorConductorSystem.ts` without returning boss behavior to MirrorCore or ConductorApproach
+  - Health remains 108 with phase thresholds at 72 and 36 and minimum phase windows of 55, 60, and 70 seconds so high damage cannot skip a musical phase
+- Boss atlas and animation ownership:
+  - Reuse `BossView.ts`, the production `mirror-conductor` atlas, all 171 frames, and all 21 validated tags
+  - Preserve dormant, entrance, phase idle/telegraph/cast/counter, phase transitions, phase hurt, defeat, and fireworks sequences
+- Arena geometry and transition plan:
+  - Replace inherited fragments with a safe entry apron, checkpoint surface, full-height entrance lock, broad principal arena floor, separated recovery platforms, telegraphed phase-three floor lanes, finale runway, illuminated resolution gate, and full-width lower fall boundary
+  - Keep every collision, dynamic hazard, projectile bound, camera constraint, and completion coordinate inside `44672..49824`
+  - Preserve ConductorApproach except for no change beyond validating the shared `44672` transition
+- Checkpoint, gates, camera, and reset behavior:
+  - Add one authoritative safe pre-fight checkpoint and authoritative entrance and resolution gates in LDtk, then regenerate typed gameplay data only through `npm run levels:sync`
+  - Activate the checkpoint before arena closure; close the entrance only after the player enters the arena and keep the resolution gate closed until confirmed boss defeat
+  - Constrain the combat camera to the authored arena while active, restore world camera bounds on death or defeat, clear projectiles and temporary hazards on death, reset the boss and gates deterministically, and preserve the safe pre-fight respawn
+- Hazards, projectiles, and recovery:
+  - Preserve shield counter projectiles, phase-scaled aimed volleys, rotating phase beams, and alternating phase-three floor danger with explicit telegraphs
+  - Provide safe landing space and bounded recovery opportunities between attacks; add authoritative support pickups only if required by the authored arena and keep them boss-local
+  - Retain existing player damage immunity, knockback, fall-out, and health recovery APIs rather than adding parallel combat rules
+- Player capabilities at entry:
+  - The route assumes the previously acquired jump, double jump, ground dash, air dash, wall slide, wall jump, Spotlight, and Grand Card capabilities
+  - Spotlight breaks the opening shield at close range; Grand Card marks the real Conductor during the mirror phase; no new ability is introduced in the boss Section
+- Audio and presentation:
+  - Preserve the existing `44672` transition to `music_10_conductor_phase_1`, machine ambience, and `vo_boss_intro`
+  - Preserve BossView tag-driven transitions to phase-two and phase-three music, SFX, and voiceover, plus boss defeat and finale audio
+  - Add deterministic fixed-world arena visuals, readable gate framing, phase hazard telegraphs, boss landmarks, finale runway, and valid world-end presentation
+- Completion ownership:
+  - Start defeat and finale flow only after boss health reaches zero after the phase-three minimum window
+  - Keep finale, credits, and `leaderboard.finishRun()` exclusively in MirrorConductor ownership
+  - Guard finale startup and leaderboard submission with explicit one-shot state in addition to the leaderboard client's existing `finishing` guard
+- Generated runtime and validation ownership:
+  - LDtk remains authoritative for Section bounds, collision, checkpoint, gates, and any static hazards or supports added by the plan
+  - Generated `WorldLayout.ts`, `WorldGameplay.ts`, `WorldEnemies.ts`, and `WorldHazards.ts` change only through synchronization scripts
+  - Exact validators will cover every authored rectangle and semantic entity, interval containment, transition continuity, dedicated runtime construction, phase windows, gate/checkpoint ownership, projectile and camera bounds, defeat-only finale, and single leaderboard completion call
+- Existing tests and required validation:
+  - Baseline `git diff --check`, level/world validators, typecheck, and production build pass at `eabc295`
+  - The production boss atlas validator passes with 171 frames and 21 tags; audio, player, enemy, and boss asset validators remain mandatory
+  - `test:audio:e2e` is the only package Playwright test; browser execution and controlled gameplay traversal must be reported separately and only if actually completed
+
+## MirrorConductor Completion
+
+- Implementation commits:
+  - `1cd2db9` — `feat(levels): author Mirror Conductor finale`
+  - `da60075` — `test(levels): validate Mirror Conductor semantics`
+- Fixed interval: `44672..49824`; world dimensions remain `49824×720` on grid `16`
+- Authoritative LDtk geometry:
+  - Eleven exact collision rectangles: safe entry apron, broad arena floor, seven recovery platforms, resolution runway, and full-width lower fall boundary
+  - One safe `MirrorConductor` checkpoint at `44752,450` with trigger `44704`
+  - `MirrorConductorEntrance` gate at `45120,0,18,688`
+  - `MirrorConductorResolution` gate at `49344,0,18,688`
+  - Zero LDtk enemy spawns, hazard anchors, and support pickups; the boss and dynamic hazards remain dedicated runtime mechanics
+- Dedicated runtime ownership:
+  - `MirrorConductorSystem.ts` exclusively owns the `MirrorConductor` `CombatTarget`, arena activation, dynamic gates, camera confinement/restoration, checkpoint/fall recovery, projectiles, beams, phase-three floor danger, boss HUD, defeat sequence, finale, credits, and leaderboard completion
+  - `MirrorCoreSystem.ts` and `ConductorApproachVisuals.ts` remain free of boss, finale, credits, and leaderboard ownership
+  - Gate insertion is idempotent across repeated start/reset calls; death clears projectiles and hazards, resets the boss, restores the resolution lock, removes the entrance lock, and restores world camera bounds
+- Preserved boss behavior:
+  - 108 health with phase thresholds at 72 and 36
+  - Minimum phase windows of 55, 60, and 70 seconds
+  - Spotlight cast-count shield break and shield counter projectile
+  - Grand Card ranged-hit integration through `CombatSystem.applyRangedHit()` and `receiveRangedHit()`
+  - Phase-scaled aimed volleys, rotating beams, alternating phase-three floor danger, marked real-Conductor presentation, phase transitions, hurt states, and full defeat/fireworks sequence
+  - Production boss atlas remains 171 frames, 21 tags, and `128×128` frames
+- Finale and completion safety:
+  - Boss completion and finale startup both require confirmed `conductor.isDefeated`
+  - Finale restores repeated firework bursts, player procession, finale hint, curtain fade, credits, and final-world presentation
+  - `finaleSubmitted` guards the only `leaderboard.finishRun()` source call; the leaderboard client retains its independent `finishing` guard
+  - `BossView.reset()` cancels pending defeat callbacks, preventing simultaneous player/boss death from completing the finale after respawn
+- Audio:
+  - The fixed boss zone still begins exactly at `44672` with phase-one music, machine ambience, and boss-intro voiceover
+  - BossView tags continue to drive phase-two, phase-three, defeat, and finale music/SFX/voice transitions
+  - Semantic boss-action events drive intro, shield block/break, projectile volley, floor warning, repeated fireworks, and curtain-close SFX without pretending those actions are atlas tags
+- Exact validation coverage:
+  - All eleven MirrorConductor collision rectangles, all Section bounds, shared transition, and world end
+  - Exact checkpoint, trigger, and both full-height gates
+  - Empty LDtk enemy/hazard/support inventory and dedicated `CombatTarget` ownership
+  - Runtime/visual construction, health thresholds, phase windows, Spotlight/Grand Card integration, camera restoration, fall handling, bounded projectiles and hazards, defeat-only finale, and exactly one leaderboard completion call
+  - Explicit absence of boss/finale ownership from MirrorCore and ConductorApproach
+- Successful validation:
+  - `npm run levels:sync`
+  - `git diff --check`
+  - `npm run levels:validate`
+  - `npm run world:validate`
+  - `npm run typecheck`
+  - `npm run build`
+  - `npm run audio:runtime:validate`
+  - `npm run assets:audio:validate`
+  - `npm run assets:player:validate`
+  - `npm run assets:enemies:validate`
+  - `npm run assets:boss:validate` — 171 frames and 21 tags
+  - `npm run test:audio:e2e` — one Playwright test passed after installing Chromium and extracting its missing shared libraries into ignored workspace-local caches only
+- Browser validation actually performed:
+  - Vite served locally with HTTP 200 and delivered the MirrorConductor-integrated main module
+  - Playwright opened the start overlay, began a run, rendered one visible canvas, unlocked WebAudio, loaded audio lazily, exercised movement/jump/dash/combat/HUD input, and completed without page or console errors
+  - A separate controlled browser probe confirmed the overlay closed, the canvas remained active, WebAudio was running with two loops, all loading completed, and no audio load error occurred
+  - The public sandbox URL remained blocked by HTTP 403 for protected resources
+  - No full eleven-Section keyboard traversal or live MirrorConductor phase/defeat completion is claimed: the production build intentionally exposes no teleport/debug scene hook, and bypassing prior progression would not be an honest end-to-end gameplay test
+- Final eleven-Section integration audit:
+  - Section order is contiguous from `0` through `49824`; dimensions, grid, generated boundaries, and the `44672` audio transition are unchanged
+  - Current totals are 296 collisions, 15 checkpoints, 19 gates, 26 enemy spawns, 36 static hazards, and 8 supports
+  - All 411 LDtk entity IIDs are unique
+  - Structural comparison with the planning commit found zero semantic entity changes outside `44672..49824`; the large LDtk text diff is entity ordering plus the final-Section authoring
+  - ConductorApproach remains exactly 31 collisions with empty checkpoint/gate/enemy/hazard/support inventory
+  - Worker, Wrangler, package manifests, D1 configuration, milestone branches, and tags were not changed; no deployment or D1 operation was run
+
+## Current Section
+
+- Current Section: MirrorConductor `44672..49824`
+- Status: implementation, exact validation, production build, asset validation, Playwright smoke coverage, documentation, and final structural integration audit complete
+- Remaining manual risk: full keyboard traversal through all progression gates and live boss phase/death/finale timing require a browser session capable of playing the complete run without bypassing production progression
+
+## Exact Next Action
+
+Commit and push this reviewed implementation-state update, refresh pull request #1, and verify clean local/remote parity without merging or closing the pull request.

@@ -129,6 +129,9 @@ const supports =
     );
 
 const expected = {
+  "CombatRehearsal:Spike": 3,
+  "MainStage:Pendulum": 2,
+  "MainStage:Spike": 2,
   "Gallery:Pendulum": 2,
   "Gallery:Spike": 2,
   "CardSanctum:Blade": 4,
@@ -139,9 +142,9 @@ const expected = {
   "MirrorCore:Spike": 4
 };
 
-if (hazards.length !== 29) {
+if (hazards.length !== 36) {
   throw new Error(
-    `Expected 29 hazards, got ${hazards.length}.`
+    `Expected 36 hazards, got ${hazards.length}.`
   );
 }
 
@@ -245,6 +248,8 @@ const lines = [
   "/* Edit assets/levels/impressario-world.ldtk, not this file. */",
   "",
   "export type WorldHazardGroup =",
+  '  | "CombatRehearsal"',
+  '  | "MainStage"',
   '  | "Gallery"',
   '  | "CardSanctum"',
   '  | "RoyalBox"',
@@ -356,7 +361,7 @@ if (checkOnly) {
 
   console.log(
     "LDtk hazard runtime synchronized: " +
-    "29 hazards, 8 supports."
+    "36 hazards, 8 supports."
   );
 
   process.exit(0);
@@ -370,5 +375,5 @@ fs.writeFileSync(
 
 console.log(
   "Generated src/world/WorldHazards.ts: " +
-  "29 hazards, 8 supports."
+  "36 hazards, 8 supports."
 );

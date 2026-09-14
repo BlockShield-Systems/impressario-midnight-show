@@ -116,15 +116,58 @@ const supports = entities.filter(
     entity.__identifier === "SupportPickup"
 );
 
-if (hazards.length !== 29) {
+if (hazards.length !== 36) {
   fail(
-    `Expected 29 hazards, got ${hazards.length}.`
+    `Expected 36 hazards, got ${hazards.length}.`
   );
 }
 
 if (supports.length !== 8) {
   fail(
     `Expected 8 supports, got ${supports.length}.`
+  );
+}
+
+const conductorApproachHazards = hazards.filter(
+  entity =>
+    entity.__worldX >= 39200 &&
+    entity.__worldX < 44672
+);
+
+const conductorApproachSupports = supports.filter(
+  entity =>
+    entity.__worldX >= 39200 &&
+    entity.__worldX < 44672
+);
+
+if (
+  conductorApproachHazards.length !== 0 ||
+  conductorApproachSupports.length !== 0
+) {
+  fail(
+    "ConductorApproach must remain hazard-free and support-free."
+  );
+}
+
+const mirrorConductorHazards = hazards.filter(
+  entity =>
+    entity.__worldX >= 44672 &&
+    entity.__worldX < 49824
+);
+
+const mirrorConductorSupports = supports.filter(
+  entity =>
+    entity.__worldX >= 44672 &&
+    entity.__worldX < 49824
+);
+
+if (
+  mirrorConductorHazards.length !== 0 ||
+  mirrorConductorSupports.length !== 0
+) {
+  fail(
+    "MirrorConductor must have zero LDtk hazards and supports; " +
+    "its hazards are dedicated dynamic boss mechanics."
   );
 }
 
@@ -170,6 +213,354 @@ if (new Set(ids).size !== ids.length) {
   fail("Hazard/support identifiers are not unique.");
 }
 
+const mainStageHazards = new Map(
+  hazards
+    .filter(entity =>
+      fieldMap(entity).get("Group") === "MainStage"
+    )
+    .map(entity => [
+      fieldMap(entity).get("Identifier"),
+      entity
+    ])
+);
+
+for (const [id, x, y, width] of [
+  ["MainStageRiggingA", 11616, 48, 16],
+  ["MainStageFootlightsA", 12144, 326, 80],
+  ["MainStageRiggingB", 12736, 42, 16],
+  ["MainStageFootlightsB", 13040, 326, 88]
+]) {
+  const entity = mainStageHazards.get(id);
+
+  if (
+    !entity ||
+    entity.__worldX !== x ||
+    entity.__worldY !== y ||
+    entity.width !== width
+  ) {
+    fail(
+      `${id} does not match its authored LDtk bounds.`
+    );
+  }
+}
+
+const cardSanctumHazards = new Map(
+  hazards
+    .filter(entity =>
+      fieldMap(entity).get("Group") === "CardSanctum"
+    )
+    .map(entity => [
+      fieldMap(entity).get("Identifier"),
+      entity
+    ])
+);
+
+for (
+  const [
+    id,
+    x,
+    y,
+    width,
+    travelX,
+    travelY,
+    speed,
+    phase
+  ] of [
+    ["SanctumBladeA", 28496, 440, 16, 96, 0, 1.7, 0],
+    [
+      "SanctumBladeB",
+      29760,
+      392,
+      16,
+      0,
+      88,
+      1.5,
+      Math.PI / 2
+    ],
+    [
+      "SanctumBladeC",
+      30288,
+      400,
+      16,
+      112,
+      0,
+      1.9,
+      Math.PI
+    ],
+    [
+      "SanctumBladeD",
+      31104,
+      368,
+      16,
+      0,
+      80,
+      1.65,
+      Math.PI / 4
+    ],
+    ["SanctumSpikeA", 28320, 528, 80, 0, 0, 0, 0],
+    ["SanctumSpikeB", 28976, 512, 80, 0, 0, 0, 0],
+    ["SanctumSpikeC", 30384, 528, 80, 0, 0, 0, 0],
+    ["SanctumSpikeD", 30880, 512, 80, 0, 0, 0, 0]
+  ]
+) {
+  const entity = cardSanctumHazards.get(id);
+  const fields = entity ? fieldMap(entity) : null;
+
+  if (
+    !entity ||
+    !fields ||
+    entity.__worldX !== x ||
+    entity.__worldY !== y ||
+    entity.width !== width ||
+    fields.get("TravelX") !== travelX ||
+    fields.get("TravelY") !== travelY ||
+    fields.get("Speed") !== speed ||
+    fields.get("Phase") !== phase
+  ) {
+    fail(
+      `${id} does not match its authored LDtk values.`
+    );
+  }
+}
+
+const royalBoxHazards = new Map(
+  hazards
+    .filter(entity =>
+      fieldMap(entity).get("Group") === "RoyalBox"
+    )
+    .map(entity => [
+      fieldMap(entity).get("Identifier"),
+      entity
+    ])
+);
+
+for (
+  const [
+    id,
+    kind,
+    x,
+    y,
+    width,
+    height,
+    travelX,
+    travelY,
+    speed,
+    phase
+  ] of [
+    ["RoyalLaserA", "Laser", 32384, 240, 8, 288, 0, 0, 0, 0],
+    ["RoyalSpikeA", "Spike", 32064, 528, 80, 16, 0, 0, 0, 0],
+    ["RoyalBladeA", "Blade", 32416, 416, 16, 16, 96, 0, 1.8, 0],
+    ["RoyalSpikeB", "Spike", 32544, 512, 80, 16, 0, 0, 0, 0],
+    [
+      "RoyalBladeB",
+      "Blade",
+      33248,
+      400,
+      16,
+      16,
+      0,
+      80,
+      1.6,
+      Math.PI / 2
+    ],
+    ["RoyalLaserB", "Laser", 32992, 208, 8, 272, 0, 0, 0, 0.85],
+    ["RoyalSpikeC", "Spike", 33504, 528, 80, 16, 0, 0, 0, 0],
+    ["RoyalSpikeD", "Spike", 34096, 512, 80, 16, 0, 0, 0, 0],
+    [
+      "RoyalBladeC",
+      "Blade",
+      34256,
+      400,
+      16,
+      16,
+      96,
+      0,
+      2.05,
+      Math.PI
+    ],
+    ["RoyalLaserC", "Laser", 33904, 224, 8, 288, 0, 0, 0, 1.55],
+    ["RoyalSpikeE", "Spike", 34480, 480, 80, 16, 0, 0, 0, 0],
+    [
+      "RoyalBladeD",
+      "Blade",
+      35008,
+      400,
+      16,
+      16,
+      0,
+      64,
+      1.75,
+      Math.PI / 4
+    ],
+    ["RoyalLaserD", "Laser", 34784, 208, 8, 272, 0, 0, 0, 0.35]
+  ]
+) {
+  const entity = royalBoxHazards.get(id);
+  const fields = entity ? fieldMap(entity) : null;
+
+  if (
+    !entity ||
+    !fields ||
+    fields.get("Kind") !== kind ||
+    entity.__worldX !== x ||
+    entity.__worldY !== y ||
+    entity.width !== width ||
+    entity.height !== height ||
+    fields.get("TravelX") !== travelX ||
+    fields.get("TravelY") !== travelY ||
+    fields.get("Speed") !== speed ||
+    fields.get("Phase") !== phase
+  ) {
+    fail(
+      `${id} does not match its authored LDtk values.`
+    );
+  }
+}
+
+const royalBoxSupports = new Map(
+  supports
+    .filter(entity =>
+      fieldMap(entity).get("Group") === "RoyalBox"
+    )
+    .map(entity => [
+      fieldMap(entity).get("Identifier"),
+      entity
+    ])
+);
+
+for (const [id, x, y] of [
+  ["RoyalRoseA", 31888, 448],
+  ["RoyalRoseB", 32784, 272],
+  ["RoyalRoseC", 33792, 320],
+  ["RoyalRoseD", 35072, 352]
+]) {
+  const entity = royalBoxSupports.get(id);
+
+  if (
+    !entity ||
+    entity.__worldX !== x ||
+    entity.__worldY !== y
+  ) {
+    fail(
+      `${id} does not match its authored LDtk values.`
+    );
+  }
+}
+
+const mirrorCoreHazards = new Map(
+  hazards
+    .filter(entity =>
+      fieldMap(entity).get("Group") === "MirrorCore"
+    )
+    .map(entity => [
+      fieldMap(entity).get("Identifier"),
+      entity
+    ])
+);
+
+for (const [id, x, y, width, height] of [
+  ["CoreSpikeA", 36448, 496, 80, 16],
+  ["CoreSpikeB", 36688, 464, 80, 16],
+  ["CoreSpikeC", 36976, 496, 80, 16],
+  ["CoreSpikeD", 37232, 464, 80, 16]
+]) {
+  const entity = mirrorCoreHazards.get(id);
+  const fields = entity ? fieldMap(entity) : null;
+
+  if (
+    !entity ||
+    !fields ||
+    fields.get("Kind") !== "Spike" ||
+    entity.__worldX !== x ||
+    entity.__worldY !== y ||
+    entity.width !== width ||
+    entity.height !== height ||
+    fields.get("TravelX") !== 0 ||
+    fields.get("TravelY") !== 0 ||
+    fields.get("Speed") !== 0 ||
+    fields.get("Phase") !== 0
+  ) {
+    fail(
+      `${id} does not match its authored LDtk values.`
+    );
+  }
+}
+
+const mirrorCoreSupports = new Map(
+  supports
+    .filter(entity =>
+      fieldMap(entity).get("Group") === "MirrorCore"
+    )
+    .map(entity => [
+      fieldMap(entity).get("Identifier"),
+      entity
+    ])
+);
+
+for (const [id, x, y] of [
+  ["CoreRoseA", 35488, 480],
+  ["CoreRoseB", 36096, 272],
+  ["CoreRoseC", 37488, 352],
+  ["CoreRoseD", 38976, 304]
+]) {
+  const entity = mirrorCoreSupports.get(id);
+
+  if (
+    !entity ||
+    entity.__worldX !== x ||
+    entity.__worldY !== y
+  ) {
+    fail(
+      `${id} does not match its authored LDtk values.`
+    );
+  }
+}
+
+for (const entity of [
+  ...hazards,
+  ...supports
+]) {
+  const fields = fieldMap(entity);
+  const id = fields.get("Identifier");
+  const group = fields.get("Group");
+  const x = entity.__worldX;
+
+  if (
+    group === "MainStage" &&
+    (x < 10464 || x >= 13744)
+  ) {
+    fail(`${id} is outside the MainStage interval.`);
+  }
+
+  if (
+    group === "Gallery" &&
+    (x < 19456 || x >= 23552)
+  ) {
+    fail(`${id} is outside the GalleryGauntlet interval.`);
+  }
+
+  if (
+    group === "CardSanctum" &&
+    (x < 27984 || x >= 31664)
+  ) {
+    fail(`${id} is outside the CardSanctum interval.`);
+  }
+
+  if (
+    group === "RoyalBox" &&
+    (x < 31664 || x >= 35344)
+  ) {
+    fail(`${id} is outside the RoyalBox interval.`);
+  }
+
+  if (
+    group === "MirrorCore" &&
+    (x < 35344 || x >= 39200)
+  ) {
+    fail(`${id} is outside the MirrorCore interval.`);
+  }
+}
+
 assertCounts(
   countBy(
     hazards,
@@ -177,8 +568,8 @@ assertCounts(
       fieldMap(entity).get("Kind")
   ),
   {
-    Spike: 15,
-    Pendulum: 2,
+    Spike: 20,
+    Pendulum: 4,
     Blade: 8,
     Laser: 4
   },
@@ -192,6 +583,8 @@ assertCounts(
       fieldMap(entity).get("Group")
   ),
   {
+    CombatRehearsal: 3,
+    MainStage: 4,
     Gallery: 4,
     CardSanctum: 8,
     RoyalBox: 13,
@@ -214,6 +607,23 @@ assertCounts(
 );
 
 const consumers = [
+  [
+    "src/world/CombatRehearsalHazardSystem.ts",
+    [
+      "getWorldHazards",
+      '"CombatRehearsal"',
+      '"Spike"'
+    ]
+  ],
+  [
+    "src/world/MainStageHazardSystem.ts",
+    [
+      "getWorldHazards",
+      '"MainStage"',
+      '"Pendulum"',
+      '"Spike"'
+    ]
+  ],
   [
     "src/world/GalleryHazardSystem.ts",
     [
@@ -268,6 +678,96 @@ for (const [file, tokens] of consumers) {
         `${file} is missing ${JSON.stringify(token)}.`
       );
     }
+  }
+}
+
+const mirrorCoreSource = read(
+  "src/world/MirrorCoreSystem.ts"
+);
+
+for (const token of [
+  "public readonly x: number",
+  "35720",
+  "36080",
+  "originX: 35616",
+  "originX: 35872",
+  "originX: 36064",
+  "35680",
+  "35888",
+  "36096",
+  "const centerX = 36768",
+  "projectile.x < MIRROR_CORE_START_X",
+  "projectile.x >= MIRROR_CORE_END_X",
+  "this.player.x >= MIRROR_CORE_START_X",
+  "this.player.x < MIRROR_CORE_END_X"
+]) {
+  if (!mirrorCoreSource.includes(token)) {
+    fail(
+      `MirrorCoreSystem is missing bounded runtime token ${JSON.stringify(token)}.`
+    );
+  }
+}
+
+for (const forbidden of [
+  "class MirrorConductor",
+  "BossView",
+  "leaderboard.finishRun",
+  "startFinale",
+  "finaleCredits",
+  "MIRROR_CORE_START_X - 80",
+  "MIRROR_CORE_END_X + 80"
+]) {
+  if (mirrorCoreSource.includes(forbidden)) {
+    fail(
+      `MirrorCoreSystem retains forbidden ownership ${JSON.stringify(forbidden)}.`
+    );
+  }
+}
+
+const mirrorConductorSource = read(
+  "src/world/MirrorConductorSystem.ts"
+);
+
+for (const token of [
+  "const ARENA_LEFT = 45120",
+  "const ARENA_RIGHT = 49344",
+  "this.player.x >= MIRROR_CONDUCTOR_START_X",
+  "this.player.x < MIRROR_CONDUCTOR_END_X",
+  "projectile.x < ARENA_LEFT",
+  "projectile.x > ARENA_RIGHT",
+  "projectile.y < 0",
+  "projectile.y > 688",
+  "if (this.bossStarted)",
+  "this.updateProjectiles(deltaSeconds)",
+  "this.updateHazards()",
+  "this.conductor.isDefeated",
+  "if (phase === 3)",
+  "dangerousLeft ? 45160 : 47232",
+  "2072",
+  '"floor-warning"'
+]) {
+  if (!mirrorConductorSource.includes(token)) {
+    fail(
+      `MirrorConductorSystem is missing bounded dynamic hazard token ${JSON.stringify(token)}.`
+    );
+  }
+}
+
+const conductorApproachSource = read(
+  "src/world/ConductorApproachVisuals.ts"
+);
+
+for (const forbidden of [
+  "BossProjectile",
+  "updateHazards",
+  "floor-warning",
+  "leaderboard.finishRun",
+  "BossView"
+]) {
+  if (conductorApproachSource.includes(forbidden)) {
+    fail(
+      `ConductorApproach retains boss hazard ownership ${JSON.stringify(forbidden)}.`
+    );
   }
 }
 
@@ -341,7 +841,7 @@ for (const name of [
 
 console.log(
   "LDtk hazard runtime valid: " +
-  "29 hazards, 8 supports, " +
-  "4 hazard consumers, " +
-  "2 support consumers."
+  "36 hazards, 8 supports, " +
+  "zero MirrorConductor static inventory, " +
+  "bounded dedicated dynamic boss hazards."
 );

@@ -80,6 +80,21 @@ export class PlayerHealthSystem {
     return this.hurtTimer > 0;
   }
 
+  public getDebugSnapshot() {
+    return {
+      checkpointName:
+        this.checkpointName,
+      checkpointX:
+        this.checkpointX,
+      checkpointY:
+        this.checkpointY,
+      controlsLocked:
+        this.controlsLocked,
+      currentHealth:
+        this.currentHealth
+    };
+  }
+
   public update(deltaSeconds: number): void {
     this.invulnerabilityTimer = Math.max(
       0,

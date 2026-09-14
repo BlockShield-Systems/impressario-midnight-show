@@ -3,6 +3,13 @@ import {
   devices
 } from "@playwright/test";
 
+const externalServer =
+  process.env.PLAYWRIGHT_EXTERNAL_SERVER === "1";
+
+const baseURL =
+  process.env.PLAYWRIGHT_BASE_URL ??
+  "http://127.0.0.1:4173";
+
 export default defineConfig({
   testDir: "./tests",
   fullyParallel: false,
@@ -20,8 +27,7 @@ export default defineConfig({
   ],
 
   use: {
-    baseURL:
-      "http://127.0.0.1:4173",
+    baseURL,
     trace:
       "retain-on-failure",
     screenshot:
@@ -34,14 +40,19 @@ export default defineConfig({
     ]
   },
 
-  webServer: {
-    command:
-      "npm run dev -- --host 127.0.0.1 --port 4173",
-    url:
-      "http://127.0.0.1:4173",
-    reuseExistingServer: false,
-    timeout: 120_000,
-    stdout: "pipe",
-    stderr: "pipe"
-  }
+  webServer: externalServer
+    ? undefined
+    : {
+        command:
+          "npx vite build --outDir dist-qa && npx vite preview --outDir dist-qa --host 127.0.0.1 --port 4173",
+        url: baseURL,
+        reuseExistingServer: false,
+        timeout: 120_000,
+        stdout: "pipe",
+        stderr: "pipe",
+        env: {
+          ...process.env,
+          VITE_QA_RUNTIME_INSPECTION: "1"
+        } as Record<string, string>
+      }
 });
