@@ -8,6 +8,9 @@ import {
   MAX_CATCH_UP_STEPS,
   advanceFixedStepFrame
 } from "../src/runtime/FixedStepTiming.ts";
+import {
+  resetSimulationTimingForPause
+} from "../src/runtime/PauseTiming.ts";
 
 const representativeDeltas = [
   16.67,
@@ -219,6 +222,49 @@ test(
     assert.equal(
       frame.accumulatorSeconds,
       0
+    );
+  }
+);
+
+test(
+  "pause keeps wall-clock duration authoritative and resumes without accumulator backlog",
+  () => {
+    const runStartedAt = 10_000;
+    const pausedAt = 14_000;
+    const resumedAt = 44_000;
+    const runFinishedAt = 50_000;
+    const timing =
+      resetSimulationTimingForPause();
+
+    assert.equal(
+      runFinishedAt - runStartedAt,
+      40_000,
+      "submitted wall time includes the entire 30-second pause"
+    );
+    assert.equal(resumedAt - pausedAt, 30_000);
+    assert.equal(timing.accumulatorSeconds, 0);
+    assert.equal(timing.fixedStepInitialized, false);
+
+    const resumeFrame = advanceFixedStepFrame(
+      resumedAt - pausedAt,
+      timing.accumulatorSeconds,
+      !timing.fixedStepInitialized
+    );
+
+    assert.equal(resumeFrame.acceptedSeconds, 0);
+    assert.equal(resumeFrame.discardedSeconds, 30);
+    assert.equal(resumeFrame.steps, 0);
+    assert.equal(resumeFrame.accumulatorSeconds, 0);
+
+    const nextFrame = advanceFixedStepFrame(
+      1000 / 60,
+      resumeFrame.accumulatorSeconds
+    );
+
+    assert.equal(nextFrame.steps, 2);
+    assert.ok(
+      nextFrame.accumulatorSeconds <
+        FIXED_TIMESTEP_SECONDS
     );
   }
 );

@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import { MainMenuScene } from "./menu/MainMenuScene";
+import { PauseMenuScene } from "./menu/PauseMenuScene";
 import "./style.css";
 import { CombatSystem } from "./combat/CombatSystem";
 import { StagehandSystem } from "./enemies/StagehandSystem";
@@ -33,6 +34,9 @@ import {
   advanceFixedStepFrame,
   FIXED_TIMESTEP_SECONDS
 } from "./runtime/FixedStepTiming";
+import {
+  resetSimulationTimingForPause
+} from "./runtime/PauseTiming";
 import {
   MOVEMENT_ROUTE_CAMERA_HEIGHT,
   isBelowMovementRoute,
@@ -174,6 +178,10 @@ interface InputSnapshot {
 
 class PlayerInput {
   private readonly heldKeys = new Set<string>();
+  private readonly blockedUntilKeyUp =
+    new Set<string>();
+  private enabled = true;
+  private suppressGamepadUntilNeutral = false;
 
   private jumpQueued = false;
   private dashQueued = false;
@@ -208,6 +216,7 @@ class PlayerInput {
     if (!gamepad) {
       this.previousGamepadJump = false;
       this.previousGamepadDash = false;
+      this.suppressGamepadUntilNeutral = false;
       return;
     }
 
@@ -228,6 +237,23 @@ class PlayerInput {
       Boolean(gamepad.buttons[1]?.pressed) ||
       Boolean(gamepad.buttons[7]?.pressed);
 
+    if (this.suppressGamepadUntilNeutral) {
+      const gamepadActive =
+        Math.abs(axisX) >= MOVEMENT.gamepadDeadzone ||
+        Math.abs(axisY) >= MOVEMENT.gamepadDeadzone ||
+        jumpHeld ||
+        dashHeld;
+
+      this.previousGamepadJump = jumpHeld;
+      this.previousGamepadDash = dashHeld;
+
+      if (!gamepadActive) {
+        this.suppressGamepadUntilNeutral = false;
+      }
+
+      return;
+    }
+
     if (jumpHeld && !this.previousGamepadJump) {
       this.jumpQueued = true;
     }
@@ -239,6 +265,29 @@ class PlayerInput {
     this.gamepadJump = jumpHeld;
     this.previousGamepadJump = jumpHeld;
     this.previousGamepadDash = dashHeld;
+  }
+
+  public setEnabled(enabled: boolean): void {
+    if (!enabled) {
+      for (const code of this.heldKeys) {
+        this.blockedUntilKeyUp.add(code);
+      }
+    }
+
+    this.enabled = enabled;
+    this.clear();
+    this.suppressGamepadUntilNeutral = true;
+  }
+
+  public clear(): void {
+    this.heldKeys.clear();
+    this.jumpQueued = false;
+    this.dashQueued = false;
+    this.previousGamepadJump = false;
+    this.previousGamepadDash = false;
+    this.gamepadMoveX = 0;
+    this.gamepadDown = false;
+    this.gamepadJump = false;
   }
 
   public snapshot(consumeEdges: boolean): InputSnapshot {
@@ -285,6 +334,15 @@ class PlayerInput {
       event.preventDefault();
     }
 
+    if (!this.enabled) {
+      this.blockedUntilKeyUp.add(event.code);
+      return;
+    }
+
+    if (this.blockedUntilKeyUp.has(event.code)) {
+      return;
+    }
+
     if (!event.repeat) {
       if (event.code === "Space") {
         this.jumpQueued = true;
@@ -309,12 +367,11 @@ class PlayerInput {
     }
 
     this.heldKeys.delete(event.code);
+    this.blockedUntilKeyUp.delete(event.code);
   };
 
   private readonly handleBlur = (): void => {
-    this.heldKeys.clear();
-    this.previousGamepadJump = false;
-    this.previousGamepadDash = false;
+    this.clear();
   };
 
   private isHeld(code: string): boolean {
@@ -328,6 +385,7 @@ class PlayerInput {
       "KeyS",
       "KeyW",
       "KeyK",
+      "KeyP",
       "ArrowLeft",
       "ArrowRight",
       "ArrowDown",
@@ -1422,6 +1480,23 @@ class GameScene extends Phaser.Scene {
     this.debugText.setVisible(false);
 
     this.input.keyboard?.on(
+      "keydown-P",
+      this.openPauseMenu,
+      this
+    );
+
+    this.events.once(
+      Phaser.Scenes.Events.SHUTDOWN,
+      () => {
+        this.input.keyboard?.off(
+          "keydown-P",
+          this.openPauseMenu,
+          this
+        );
+      }
+    );
+
+    this.input.keyboard?.on(
       "keydown-F3",
       () => {
         const debugVisible =
@@ -1583,10 +1658,42 @@ class GameScene extends Phaser.Scene {
     }
   }
 
+  private readonly openPauseMenu = (): void => {
+    if (
+      this.scene.isActive("pause-menu") ||
+      this.scene.isPaused()
+    ) {
+      return;
+    }
+
+    this.resetSimulationTiming();
+    this.playerInput.setEnabled(false);
+    this.input.keyboard?.resetKeys();
+
+    this.scene.launch("pause-menu", {
+      audioDirector: this.audioDirector,
+      resumeGameplay: () => {
+        this.resetSimulationTiming();
+        this.playerInput.setEnabled(true);
+        this.input.keyboard?.resetKeys();
+        this.scene.resume();
+      }
+    });
+    this.scene.pause();
+  };
+
+  private resetSimulationTiming(): void {
+    const timing =
+      resetSimulationTimingForPause();
+    this.accumulator =
+      timing.accumulatorSeconds;
+    this.fixedStepInitialized =
+      timing.fixedStepInitialized;
+  }
+
   private readonly handleVisibilityChange =
     (): void => {
-      this.accumulator = 0;
-      this.fixedStepInitialized = false;
+      this.resetSimulationTiming();
     };
 
   private readonly recordQaWindowError = (
@@ -1638,6 +1745,32 @@ class GameScene extends Phaser.Scene {
           ),
         0
       );
+    const objectiveBanners =
+      this.children.list
+        .filter(
+          child =>
+            child instanceof
+              Phaser.GameObjects.Text &&
+            child.visible &&
+            child.scrollFactorX === 0 &&
+            child.y === 12 &&
+            child.text.length > 0
+        )
+        .map(child => {
+          const text =
+            child as Phaser.GameObjects.Text;
+          const bounds = text.getBounds();
+
+          return {
+            text: text.text,
+            bounds: {
+              x: bounds.x,
+              y: bounds.y,
+              width: bounds.width,
+              height: bounds.height
+            }
+          };
+        });
 
     return {
       player: {
@@ -1685,6 +1818,12 @@ class GameScene extends Phaser.Scene {
           this.magicSystem
             .maximumGrandCardCharges
       },
+      abilityHud:
+        this.magicSystem
+          .getHudDebugSnapshot(),
+      pauseMenuOpen:
+        this.scene.isActive("pause-menu"),
+      objectiveBanners,
       soundtrack:
         this.musicDirector
           .getDebugSnapshot(),
@@ -2401,7 +2540,8 @@ const config: Phaser.Types.Core.GameConfig = {
 
   scene: [
     MainMenuScene,
-    GameScene
+    GameScene,
+    PauseMenuScene
   ]
 };
 

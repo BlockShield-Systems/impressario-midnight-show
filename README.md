@@ -31,6 +31,7 @@ Befehle:
 - Sprung/Double Jump: Space, W oder Gamepad A
 - Dash: Shift, K, Gamepad RT oder B
 - Fast Fall: S, Pfeil runter oder Stick runter
+- Pause: P (Escape schließt ein geöffnetes Pausenmenü)
 
 ## Aktueller Umfang
 
