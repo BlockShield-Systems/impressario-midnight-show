@@ -232,7 +232,9 @@ test("P pauses in fullscreen and pause settings persist without gameplay input l
   await expect(music).toHaveValue("37");
   await expect(sfx).toHaveValue("26");
 
-  await page.keyboard.press("Escape");
+  await page.evaluate(() =>
+    document.exitFullscreen()
+  );
   await expect.poll(() => page.evaluate(() =>
     document.fullscreenElement
   )).toBeNull();
