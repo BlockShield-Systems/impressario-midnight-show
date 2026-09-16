@@ -10,6 +10,16 @@ import {
   type WorldGateId
 } from "./WorldGameplay";
 import { EnemyView } from "../enemies/EnemyView";
+import { AUDIO_EVENTS } from "../audio/AudioEvents";
+import {
+  KALEIDOSCOPE_ANGULAR_SPEED,
+  KALEIDOSCOPE_BEAM_LENGTH,
+  KALEIDOSCOPE_CENTER_X,
+  KALEIDOSCOPE_CENTER_Y,
+  advanceKaleidoscopeHazardTime,
+  getKaleidoscopeHazardPhase,
+  isKaleidoscopeBeamDamaging
+} from "./KaleidoscopeHazardTiming";
 
 import type {
   CombatSystem,
@@ -869,6 +879,7 @@ export class MirrorCoreSystem {
   private coreCheckpointReached = false;
   private cleared = false;
   private hazardCooldown = 0;
+  private gauntletBeamElapsed = 0;
 
   private readonly graphics:
     Phaser.GameObjects.Graphics;
@@ -1083,6 +1094,9 @@ export class MirrorCoreSystem {
     }
 
     this.updateProgression();
+    this.updateGauntletBeamTiming(
+      deltaSeconds
+    );
     this.updateMovingMirrors();
     this.updateRelays(deltaSeconds);
     this.updateEnemies(deltaSeconds);
@@ -1101,6 +1115,10 @@ export class MirrorCoreSystem {
       relaysActivated,
       relayGateOpen:
         this.relaysCheckpointReached,
+      kaleidoscopePhase:
+        getKaleidoscopeHazardPhase(
+          this.gauntletBeamElapsed
+        ),
       objective: this.objectiveText.text
     };
   }
@@ -1108,6 +1126,7 @@ export class MirrorCoreSystem {
   public resetAfterDeath(): void {
     this.elapsed = 0;
     this.hazardCooldown = 0;
+    this.gauntletBeamElapsed = 0;
     this.projectiles.length = 0;
 
     for (const rose of this.roses) {
@@ -1198,6 +1217,7 @@ export class MirrorCoreSystem {
       this.player.x >= this.relayGate.right
     ) {
       this.gauntletStarted = true;
+      this.gauntletBeamElapsed = 0;
       for (const enemy of this.enemies) {
         enemy.setEnabled(true);
       }
@@ -1286,6 +1306,46 @@ export class MirrorCoreSystem {
       180,
       0.004
     );
+  }
+
+  private updateGauntletBeamTiming(
+    deltaSeconds: number
+  ): void {
+    if (!this.gauntletStarted) {
+      return;
+    }
+
+    const previousPhase =
+      getKaleidoscopeHazardPhase(
+        this.gauntletBeamElapsed
+      );
+
+    this.gauntletBeamElapsed =
+      advanceKaleidoscopeHazardTime(
+        this.gauntletBeamElapsed,
+        deltaSeconds
+      );
+
+    const phase =
+      getKaleidoscopeHazardPhase(
+        this.gauntletBeamElapsed
+      );
+
+    if (phase === previousPhase) {
+      return;
+    }
+
+    if (phase === "telegraph") {
+      this.scene.events.emit(
+        AUDIO_EVENTS.hazardTelegraph,
+        KALEIDOSCOPE_CENTER_X
+      );
+    } else if (phase === "active") {
+      this.scene.events.emit(
+        AUDIO_EVENTS.hazardActive,
+        KALEIDOSCOPE_CENTER_X
+      );
+    }
   }
 
   private updateMovingMirrors(): void {
@@ -1504,40 +1564,48 @@ export class MirrorCoreSystem {
       }
     }
 
-    if (!this.gauntletStarted) {
+    if (
+      !this.gauntletStarted ||
+      !isKaleidoscopeBeamDamaging(
+        this.gauntletBeamElapsed
+      )
+    ) {
       return;
     }
 
-    const centerX = 36768;
-    const centerY = 336;
-    const length = 544;
-
     for (let index = 0; index < 2; index += 1) {
       const angle =
-        this.elapsed * 0.9 +
+        this.gauntletBeamElapsed *
+          KALEIDOSCOPE_ANGULAR_SPEED +
         index * Math.PI / 2;
       const endX = Phaser.Math.Clamp(
-        centerX + Math.cos(angle) * length,
+        KALEIDOSCOPE_CENTER_X +
+          Math.cos(angle) *
+            KALEIDOSCOPE_BEAM_LENGTH,
         this.relayGate.right,
         this.gauntletGate.x
       );
       const endY = Phaser.Math.Clamp(
-        centerY + Math.sin(angle) * length,
+        KALEIDOSCOPE_CENTER_Y +
+          Math.sin(angle) *
+            KALEIDOSCOPE_BEAM_LENGTH,
         96,
         656
       );
 
       if (
         lineIntersectsRectangle(
-          centerX,
-          centerY,
+          KALEIDOSCOPE_CENTER_X,
+          KALEIDOSCOPE_CENTER_Y,
           endX,
           endY,
           bounds,
           5
         )
       ) {
-        this.damageHazard(centerX);
+        this.damageHazard(
+          KALEIDOSCOPE_CENTER_X
+        );
         return;
       }
     }
@@ -1742,37 +1810,109 @@ export class MirrorCoreSystem {
       return;
     }
 
-    const centerX = 36768;
-    const centerY = 336;
-    const length = 544;
+    const phase =
+      getKaleidoscopeHazardPhase(
+        this.gauntletBeamElapsed
+      );
+
+    if (phase === "off") {
+      return;
+    }
+
+    const telegraph = phase === "telegraph";
+    const pulse =
+      0.55 +
+      Math.sin(
+        this.gauntletBeamElapsed * 22
+      ) * 0.15;
+
+    g.fillStyle(
+      telegraph ? 0xf7d77a : 0xffffff,
+      telegraph ? pulse : 0.9
+    );
+    g.fillCircle(
+      KALEIDOSCOPE_CENTER_X,
+      KALEIDOSCOPE_CENTER_Y,
+      telegraph ? 10 : 7
+    );
 
     for (let index = 0; index < 2; index += 1) {
       const angle =
-        this.elapsed * 0.9 +
+        this.gauntletBeamElapsed *
+          KALEIDOSCOPE_ANGULAR_SPEED +
         index * Math.PI / 2;
       const endX = Phaser.Math.Clamp(
-        centerX + Math.cos(angle) * length,
+        KALEIDOSCOPE_CENTER_X +
+          Math.cos(angle) *
+            KALEIDOSCOPE_BEAM_LENGTH,
         this.relayGate.right,
         this.gauntletGate.x
       );
       const endY = Phaser.Math.Clamp(
-        centerY + Math.sin(angle) * length,
+        KALEIDOSCOPE_CENTER_Y +
+          Math.sin(angle) *
+            KALEIDOSCOPE_BEAM_LENGTH,
         96,
         656
       );
+      const color = index % 2 === 0
+        ? 0xe95acb
+        : 0x75eaf1;
+
       g.lineStyle(
-        5,
-        index % 2 === 0
-          ? 0xe95acb
-          : 0x75eaf1,
-        0.88
+        telegraph ? 2 : 5,
+        color,
+        telegraph ? pulse : 0.88
       );
-      g.lineBetween(
-        centerX,
-        centerY,
-        endX,
-        endY
-      );
+
+      if (telegraph) {
+        const segmentCount = 14;
+
+        for (
+          let segment = 0;
+          segment < segmentCount;
+          segment += 2
+        ) {
+          const start =
+            segment / segmentCount;
+          const end =
+            Math.min(
+              1,
+              (segment + 1) /
+                segmentCount
+            );
+
+          g.lineBetween(
+            Phaser.Math.Linear(
+              KALEIDOSCOPE_CENTER_X,
+              endX,
+              start
+            ),
+            Phaser.Math.Linear(
+              KALEIDOSCOPE_CENTER_Y,
+              endY,
+              start
+            ),
+            Phaser.Math.Linear(
+              KALEIDOSCOPE_CENTER_X,
+              endX,
+              end
+            ),
+            Phaser.Math.Linear(
+              KALEIDOSCOPE_CENTER_Y,
+              endY,
+              end
+            )
+          );
+        }
+      } else {
+        g.lineBetween(
+          KALEIDOSCOPE_CENTER_X,
+          KALEIDOSCOPE_CENTER_Y,
+          endX,
+          endY
+        );
+      }
     }
   }
 

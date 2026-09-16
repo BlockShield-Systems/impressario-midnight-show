@@ -21,6 +21,10 @@ export const AUDIO_EVENTS = {
     "audio:grand-card-pickup",
   grandCardDepleted:
     "audio:grand-card-depleted",
+  hazardTelegraph:
+    "audio:hazard-telegraph",
+  hazardActive:
+    "audio:hazard-active",
   finaleStarted:
     "audio:finale-started"
 } as const;

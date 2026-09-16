@@ -768,7 +768,8 @@ for (const token of [
   "35680",
   "35888",
   "36096",
-  "const centerX = 36768",
+  "KALEIDOSCOPE_CENTER_X",
+  "isKaleidoscopeBeamDamaging",
   "projectile.x < MIRROR_CORE_START_X",
   "projectile.x >= MIRROR_CORE_END_X",
   "this.player.x >= MIRROR_CORE_START_X",
@@ -777,6 +778,25 @@ for (const token of [
   if (!mirrorCoreSource.includes(token)) {
     fail(
       `MirrorCoreSystem is missing bounded runtime token ${JSON.stringify(token)}.`
+    );
+  }
+}
+
+const kaleidoscopeTimingSource = read(
+  "src/world/KaleidoscopeHazardTiming.ts"
+);
+
+for (const token of [
+  "KALEIDOSCOPE_CENTER_X = 36768",
+  "KALEIDOSCOPE_BEAM_LENGTH = 544",
+  "KALEIDOSCOPE_ANGULAR_SPEED = 0.9",
+  "KALEIDOSCOPE_OFF_SECONDS = 1.5",
+  "KALEIDOSCOPE_TELEGRAPH_SECONDS = 0.65",
+  "KALEIDOSCOPE_ACTIVE_SECONDS = 1.85"
+]) {
+  if (!kaleidoscopeTimingSource.includes(token)) {
+    fail(
+      `Kaleidoscope timing is missing ${JSON.stringify(token)}.`
     );
   }
 }
