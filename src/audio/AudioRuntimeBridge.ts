@@ -273,6 +273,18 @@ export class AudioRuntimeBridge {
       this
     );
 
+    scene.events.on(
+      AUDIO_EVENTS.hazardTelegraph,
+      this.onHazardTelegraph,
+      this
+    );
+
+    scene.events.on(
+      AUDIO_EVENTS.hazardActive,
+      this.onHazardActive,
+      this
+    );
+
     scene.events.once(
       Phaser.Scenes.Events.SHUTDOWN,
       this.destroy,
@@ -850,6 +862,34 @@ export class AudioRuntimeBridge {
     });
   };
 
+  private readonly onHazardTelegraph = (
+    x: number
+  ): void => {
+    this.audio.play(
+      "world_hazard_telegraph",
+      {
+        gain: 0.72,
+        positionX: x,
+        cooldownMs: 1000,
+        maxInstances: 1
+      }
+    );
+  };
+
+  private readonly onHazardActive = (
+    x: number
+  ): void => {
+    this.audio.play(
+      "world_hazard_active",
+      {
+        gain: 0.78,
+        positionX: x,
+        cooldownMs: 1000,
+        maxInstances: 1
+      }
+    );
+  };
+
   private readonly onFinaleStarted = (
     x: number
   ): void => {
@@ -971,6 +1011,18 @@ export class AudioRuntimeBridge {
     this.scene.events.off(
       AUDIO_EVENTS.grandCardDepleted,
       this.onGrandCardDepleted,
+      this
+    );
+
+    this.scene.events.off(
+      AUDIO_EVENTS.hazardTelegraph,
+      this.onHazardTelegraph,
+      this
+    );
+
+    this.scene.events.off(
+      AUDIO_EVENTS.hazardActive,
+      this.onHazardActive,
       this
     );
   }

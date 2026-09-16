@@ -125,6 +125,8 @@ export const SECTION_AUDIO_IDS = {
     "core_mime_record",
     "core_mime_mimic",
     "world_mirror_move_loop",
+    "world_hazard_telegraph",
+    "world_hazard_active",
     "world_rose_pickup",
     "grand_card_cast",
     "grand_card_flight",
