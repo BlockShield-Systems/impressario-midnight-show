@@ -7,6 +7,11 @@ import {
   GrandCardChargeState,
   type GrandCardSpendResult
 } from "./GrandCardState";
+import {
+  ABILITY_RESOURCE_HUD_BOUNDS,
+  ABILITY_RESOURCE_HUD_METER,
+  ABILITY_RESOURCE_HUD_TEXT
+} from "../ui/HudLayout";
 
 interface SpotlightResult {
   readonly targetsHit: number;
@@ -35,7 +40,13 @@ export class MagicSystem {
   private readonly hudGraphics:
     Phaser.GameObjects.Graphics;
 
-  private readonly spellText:
+  private readonly lightText:
+    Phaser.GameObjects.Text;
+
+  private readonly cardText:
+    Phaser.GameObjects.Text;
+
+  private readonly showText:
     Phaser.GameObjects.Text;
 
   public constructor(
@@ -62,23 +73,43 @@ export class MagicSystem {
       .setScrollFactor(0)
       .setDepth(1120);
 
-    this.spellText = scene.add.text(
-      122,
-      10,
+    const textStyle = {
+      fontFamily: "monospace",
+      fontSize: "9px",
+      color: "#bff8ff",
+      stroke: "#07101d",
+      strokeThickness: 3
+    } as const;
+
+    this.lightText = scene.add.text(
+      ABILITY_RESOURCE_HUD_TEXT.x,
+      ABILITY_RESOURCE_HUD_TEXT.lightY,
+      "[K] SPOTLIGHT",
+      textStyle
+    );
+    this.cardText = scene.add.text(
+      ABILITY_RESOURCE_HUD_TEXT.x,
+      ABILITY_RESOURCE_HUD_TEXT.cardY,
       "",
-      {
-        fontFamily: "monospace",
-        fontSize: "9px",
-        color: "#bff8ff",
-        stroke: "#07101d",
-        strokeThickness: 3
-      }
+      textStyle
+    );
+    this.showText = scene.add.text(
+      ABILITY_RESOURCE_HUD_TEXT.x,
+      ABILITY_RESOURCE_HUD_TEXT.showY,
+      "",
+      textStyle
     );
 
-    this.spellText
-      .setScrollFactor(0)
-      .setDepth(1121)
-      .setVisible(false);
+    for (const text of [
+      this.lightText,
+      this.cardText,
+      this.showText
+    ]) {
+      text
+        .setScrollFactor(0)
+        .setDepth(1121)
+        .setVisible(false);
+    }
   }
 
   public get isUnlocked(): boolean {
@@ -105,7 +136,8 @@ export class MagicSystem {
     this.unlocked = true;
     this.show = this.maximumShow;
 
-    this.spellText.setVisible(true);
+    this.lightText.setVisible(true);
+    this.showText.setVisible(true);
     this.redrawHud();
   }
 
@@ -188,6 +220,20 @@ export class MagicSystem {
     id: string
   ): boolean {
     return this.grandCardCharges.isPickupAvailable(id);
+  }
+
+  public getHudDebugSnapshot() {
+    return {
+      visible:
+        this.lightText.visible &&
+        this.showText.visible,
+      bounds: {
+        ...ABILITY_RESOURCE_HUD_BOUNDS
+      },
+      lightText: this.lightText.text,
+      cardText: this.cardText.text,
+      showText: this.showText.text
+    };
   }
 
   public resetEncounter(): void {
@@ -275,10 +321,10 @@ export class MagicSystem {
     );
 
     g.fillRoundedRect(
-      118,
-      8,
-      150,
-      24,
+      ABILITY_RESOURCE_HUD_BOUNDS.x,
+      ABILITY_RESOURCE_HUD_BOUNDS.y,
+      ABILITY_RESOURCE_HUD_BOUNDS.width,
+      ABILITY_RESOURCE_HUD_BOUNDS.height,
       5
     );
 
@@ -289,10 +335,10 @@ export class MagicSystem {
     );
 
     g.strokeRoundedRect(
-      118,
-      8,
-      150,
-      24,
+      ABILITY_RESOURCE_HUD_BOUNDS.x,
+      ABILITY_RESOURCE_HUD_BOUNDS.y,
+      ABILITY_RESOURCE_HUD_BOUNDS.width,
+      ABILITY_RESOURCE_HUD_BOUNDS.height,
       5
     );
 
@@ -302,10 +348,10 @@ export class MagicSystem {
     );
 
     g.fillRoundedRect(
-      176,
-      15,
-      82,
-      9,
+      ABILITY_RESOURCE_HUD_METER.x,
+      ABILITY_RESOURCE_HUD_METER.y,
+      ABILITY_RESOURCE_HUD_METER.width,
+      ABILITY_RESOURCE_HUD_METER.height,
       3
     );
 
@@ -317,10 +363,10 @@ export class MagicSystem {
     );
 
     g.fillRoundedRect(
-      176,
-      15,
-      82 * ratio,
-      9,
+      ABILITY_RESOURCE_HUD_METER.x,
+      ABILITY_RESOURCE_HUD_METER.y,
+      ABILITY_RESOURCE_HUD_METER.width * ratio,
+      ABILITY_RESOURCE_HUD_METER.height,
       3
     );
 
@@ -329,17 +375,22 @@ export class MagicSystem {
         ? `CARD ${this.grandCardCharges.currentCharges}/${GRAND_CARD_MAX_CHARGES}`
         : "CARD EMPTY";
 
-    this.spellText.setText(
-      this.grandCardUnlocked
-        ? `[K] LIGHT  [L] ${cardStatus}  SHOW ${Math.floor(this.show)}`
-        : `[K] SPOTLIGHT  SHOW ${Math.floor(this.show)}`
-    );
-
-    this.spellText.setColor(
-      this.grandCardUnlocked &&
-      this.grandCardCharges.currentCharges === 0
-        ? "#ff7895"
-        : "#bff8ff"
+    this.lightText.setText("[K] SPOTLIGHT");
+    this.cardText
+      .setVisible(this.grandCardUnlocked)
+      .setText(
+        this.grandCardUnlocked
+          ? `[L] ${cardStatus}`
+          : ""
+      )
+      .setColor(
+        this.grandCardUnlocked &&
+        this.grandCardCharges.currentCharges === 0
+          ? "#ff7895"
+          : "#bff8ff"
+      );
+    this.showText.setText(
+      `SHOW ${Math.floor(this.show)}`
     );
   }
 

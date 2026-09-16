@@ -11,6 +11,9 @@ const DISPLAY_KEY = "impressario.display-settings.v1";
 const source = await readFile(
   new URL("../src/menu/MainMenuScene.ts", import.meta.url), "utf8"
 );
+const pauseSource = await readFile(
+  new URL("../src/menu/PauseMenuScene.ts", import.meta.url), "utf8"
+);
 
 function storage(t, entries = []) {
   const previous = Object.getOwnPropertyDescriptor(globalThis, "localStorage");
@@ -143,9 +146,31 @@ test("menu reports startup rejection rather than leaving an unhandled promise", 
   assert.match(scene.status.textContent, /Unable to open the start screen/);
 });
 
+test("pause menu reuses persisted settings without duplicating storage schemas", () => {
+  assert.match(
+    pauseSource,
+    /this\.audioDirector\.settings\.get\(bus\)/
+  );
+  assert.match(
+    pauseSource,
+    /this\.audioDirector\.adjustBusVolume\(/
+  );
+  assert.match(
+    pauseSource,
+    /new DisplayPreferences\(\)/
+  );
+  assert.doesNotMatch(
+    pauseSource,
+    /localStorage|audio-settings\.v2|display-settings\.v1/
+  );
+});
+
 test("production bootstrap has one menu-first scene list and no startup bypass", async () => {
   const main = await readFile(new URL("../src/main.ts", import.meta.url), "utf8");
-  assert.match(main, /scene:\s*\[\s*MainMenuScene,\s*GameScene\s*\]/);
+  assert.match(
+    main,
+    /scene:\s*\[\s*MainMenuScene,\s*GameScene,\s*PauseMenuScene\s*\]/
+  );
   assert.equal((main.match(/new Phaser\.Game\(/g) ?? []).length, 1);
   assert.doesNotMatch(main, /leaderboard\.boot/);
   assert.doesNotMatch(source, /QA_RUNTIME|VITE_QA|qaMainMenu|URLSearchParams/);
