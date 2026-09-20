@@ -172,15 +172,15 @@ if (hazards.length !== 36) {
   );
 }
 
-if (supports.length !== 8) {
+if (supports.length !== 10) {
   throw new Error(
-    `Expected 8 supports, got ${supports.length}.`
+    `Expected 10 supports, got ${supports.length}.`
   );
 }
 
-if (cardPickups.length !== 5) {
+if (cardPickups.length !== 7) {
   throw new Error(
-    `Expected 5 Grand Card pickups, got ${cardPickups.length}.`
+    `Expected 7 Grand Card pickups, got ${cardPickups.length}.`
   );
 }
 
@@ -260,7 +260,7 @@ for (
 for (
   const [group, expectedCount] of [
     ["RoyalBox", 4],
-    ["MirrorCore", 4]
+    ["MirrorCore", 6]
   ]
 ) {
   const actual = supports.filter(
@@ -431,7 +431,7 @@ if (checkOnly) {
 
   console.log(
     "LDtk hazard runtime synchronized: " +
-    "36 hazards, 8 supports, 5 Grand Card pickups."
+    "36 hazards, 10 supports, 7 Grand Card pickups."
   );
 
   process.exit(0);
@@ -445,5 +445,5 @@ fs.writeFileSync(
 
 console.log(
   "Generated src/world/WorldHazards.ts: " +
-  "36 hazards, 8 supports, 5 Grand Card pickups."
+  "36 hazards, 10 supports, 7 Grand Card pickups."
 );

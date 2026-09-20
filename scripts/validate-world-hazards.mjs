@@ -128,15 +128,15 @@ if (hazards.length !== 36) {
   );
 }
 
-if (supports.length !== 8) {
+if (supports.length !== 10) {
   fail(
-    `Expected 8 supports, got ${supports.length}.`
+    `Expected 10 supports, got ${supports.length}.`
   );
 }
 
-if (cardPickups.length !== 5) {
+if (cardPickups.length !== 7) {
   fail(
-    `Expected 5 Grand Card pickups, got ${cardPickups.length}.`
+    `Expected 7 Grand Card pickups, got ${cardPickups.length}.`
   );
 }
 
@@ -479,6 +479,8 @@ for (const [id, group, x, y] of [
   ["RoyalCardB", "RoyalBox", 34976, 384],
   ["CoreCardA", "MirrorCore", 35504, 384],
   ["CoreCardB", "MirrorCore", 36048, 272],
+  ["CoreCardC", "MirrorCore", 36384, 384],
+  ["CoreCardD", "MirrorCore", 37184, 320],
   ["ApproachCardA", "ConductorApproach", 44384, 288]
 ]) {
   const entity = authoredCardPickups.get(id);
@@ -550,6 +552,8 @@ const mirrorCoreSupports = new Map(
 for (const [id, x, y] of [
   ["CoreRoseA", 35488, 480],
   ["CoreRoseB", 36096, 272],
+  ["CoreRoseE", 36592, 336],
+  ["CoreRoseF", 36944, 368],
   ["CoreRoseC", 37488, 352],
   ["CoreRoseD", 38976, 304]
 ]) {
@@ -659,7 +663,7 @@ assertCounts(
   ),
   {
     RoyalBox: 4,
-    MirrorCore: 4
+    MirrorCore: 6
   },
   "support group"
 );
@@ -672,7 +676,7 @@ assertCounts(
   ),
   {
     RoyalBox: 2,
-    MirrorCore: 2,
+    MirrorCore: 4,
     ConductorApproach: 1
   },
   "Grand Card pickup group"
@@ -736,6 +740,7 @@ const consumers = [
     [
       "getWorldHazards",
       "getWorldSupportPickups",
+      "getWorldGrandCardPickups",
       '"MirrorCore"',
       '"Spike"'
     ]
@@ -942,7 +947,7 @@ for (const name of [
 
 console.log(
   "LDtk hazard runtime valid: " +
-  "36 hazards, 8 supports, 5 Grand Card pickups, " +
+  "36 hazards, 10 supports, 7 Grand Card pickups, " +
   "zero MirrorConductor static inventory, " +
   "bounded dedicated dynamic boss hazards."
 );

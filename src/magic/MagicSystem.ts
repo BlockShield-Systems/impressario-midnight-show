@@ -222,6 +222,12 @@ export class MagicSystem {
     return this.grandCardCharges.isPickupAvailable(id);
   }
 
+  public resetGrandCardPickups(
+    ids: readonly string[]
+  ): void {
+    this.grandCardCharges.resetPickups(ids);
+  }
+
   public getHudDebugSnapshot() {
     return {
       visible:

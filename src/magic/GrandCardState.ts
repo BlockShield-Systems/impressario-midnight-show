@@ -30,12 +30,76 @@ export interface RectangleBounds {
   readonly height: number;
 }
 
+export class PickupRespawnState {
+  private readonly timers =
+    new Map<string, number>();
+
+  public collect(
+    id: string,
+    respawnSeconds: number
+  ): boolean {
+    if (
+      respawnSeconds <= 0 ||
+      !this.isAvailable(id)
+    ) {
+      return false;
+    }
+
+    this.timers.set(id, respawnSeconds);
+    return true;
+  }
+
+  public isAvailable(id: string): boolean {
+    return (this.timers.get(id) ?? 0) <= 0;
+  }
+
+  public remainingSeconds(id: string): number {
+    return this.timers.get(id) ?? 0;
+  }
+
+  public update(
+    deltaSeconds: number,
+    simulationRunning = true
+  ): void {
+    if (
+      !simulationRunning ||
+      deltaSeconds <= 0
+    ) {
+      return;
+    }
+
+    for (const [id, remaining] of this.timers) {
+      const next = Math.max(
+        0,
+        remaining - deltaSeconds
+      );
+
+      if (next === 0) {
+        this.timers.delete(id);
+      } else {
+        this.timers.set(id, next);
+      }
+    }
+  }
+
+  public reset(ids?: readonly string[]): void {
+    if (ids === undefined) {
+      this.timers.clear();
+      return;
+    }
+
+    for (const id of ids) {
+      this.timers.delete(id);
+    }
+  }
+}
+
 export class GrandCardChargeState {
   private unlocked = false;
   private charges = 0;
 
-  private readonly pickupRespawnTimers =
-    new Map<string, number>();
+  private readonly pickupRespawns =
+    new PickupRespawnState();
 
   public get currentCharges(): number {
     return this.charges;
@@ -71,44 +135,30 @@ export class GrandCardChargeState {
     if (
       !this.unlocked ||
       this.charges >= GRAND_CARD_MAX_CHARGES ||
-      !this.isPickupAvailable(id)
+      !this.pickupRespawns.collect(
+        id,
+        GRAND_CARD_PICKUP_RESPAWN_SECONDS
+      )
     ) {
       return false;
     }
 
     this.charges += 1;
-    this.pickupRespawnTimers.set(
-      id,
-      GRAND_CARD_PICKUP_RESPAWN_SECONDS
-    );
-
     return true;
   }
 
   public isPickupAvailable(id: string): boolean {
-    return (
-      this.pickupRespawnTimers.get(id) ?? 0
-    ) <= 0;
+    return this.pickupRespawns.isAvailable(id);
   }
 
   public update(deltaSeconds: number): void {
-    if (deltaSeconds <= 0) {
-      return;
-    }
+    this.pickupRespawns.update(deltaSeconds);
+  }
 
-    for (const [id, remaining] of
-      this.pickupRespawnTimers) {
-      const next = Math.max(
-        0,
-        remaining - deltaSeconds
-      );
-
-      if (next === 0) {
-        this.pickupRespawnTimers.delete(id);
-      } else {
-        this.pickupRespawnTimers.set(id, next);
-      }
-    }
+  public resetPickups(
+    ids: readonly string[]
+  ): void {
+    this.pickupRespawns.reset(ids);
   }
 
   public resetEncounter(): void {
@@ -116,7 +166,7 @@ export class GrandCardChargeState {
       this.charges = GRAND_CARD_MAX_CHARGES;
     }
 
-    this.pickupRespawnTimers.clear();
+    this.pickupRespawns.reset();
   }
 }
 

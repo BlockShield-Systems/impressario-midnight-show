@@ -7,6 +7,9 @@ import {
   getWorldSection
 } from "./SectionOwnership";
 import {
+  MIRROR_CORE_GAUNTLET_CARD_PICKUP_IDS
+} from "./MirrorCoreBalance";
+import {
   advanceGrandCardProjectile,
   createGrandCardProjectileState,
   grandCardProjectileBounds,
@@ -60,7 +63,11 @@ const ROSE_POSITIONS =
 
 const GRAND_CARD_PICKUPS:
 readonly GrandCardPickup[] =
-  getWorldGrandCardPickups();
+  getWorldGrandCardPickups().filter(
+    pickup =>
+      !MIRROR_CORE_GAUNTLET_CARD_PICKUP_IDS
+        .some(id => id === pickup.id)
+  );
 
 export class RoyalBoxSupportSystem {
   private unlocked = false;
@@ -242,11 +249,16 @@ export class RoyalBoxSupportSystem {
     const startY =
       this.player.centerY - 8;
 
+    const ownerSection =
+      getWorldSection(startX);
+
     const target =
       this.combatSystem.findNearestTarget(
         startX,
         startY,
-        GRAND_CARD_RANGE
+        GRAND_CARD_RANGE,
+        this.player.facing,
+        ownerSection?.id ?? null
       );
 
     const direction =
@@ -276,7 +288,7 @@ export class RoyalBoxSupportSystem {
         direction.x * GRAND_CARD_SPEED,
         direction.y * GRAND_CARD_SPEED,
         GRAND_CARD_LIFETIME,
-        getWorldSection(startX)
+        ownerSection
       ),
       rotation: Math.atan2(
         direction.y,

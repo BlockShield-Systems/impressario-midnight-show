@@ -16525,6 +16525,172 @@
                 288
               ],
               "width": 16
+            },
+            {
+              "__identifier": "SupportPickup",
+              "__grid": [
+                2287,
+                21
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 36592,
+              "__worldY": 336,
+              "defUid": 35,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "CoreRoseE",
+                  "defUid": 36,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "MirrorCore",
+                  "defUid": 37,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "d88787f5-f6f5-459f-bd05-4718fae53704",
+              "px": [
+                36592,
+                336
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "SupportPickup",
+              "__grid": [
+                2309,
+                23
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay",
+                "Checkpoint"
+              ],
+              "__tile": null,
+              "__worldX": 36944,
+              "__worldY": 368,
+              "defUid": 35,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "CoreRoseF",
+                  "defUid": 36,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "MirrorCore",
+                  "defUid": 37,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "46dd2da4-77d7-4e13-ae0d-6f787a679f02",
+              "px": [
+                36944,
+                368
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "GrandCardPickup",
+              "__grid": [
+                2274,
+                24
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay"
+              ],
+              "__tile": null,
+              "__worldX": 36384,
+              "__worldY": 384,
+              "defUid": 38,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "CoreCardC",
+                  "defUid": 39,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "MirrorCore",
+                  "defUid": 40,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "4eb228be-bc48-4e9c-b1a5-82d23a69da96",
+              "px": [
+                36384,
+                384
+              ],
+              "width": 16
+            },
+            {
+              "__identifier": "GrandCardPickup",
+              "__grid": [
+                2324,
+                20
+              ],
+              "__pivot": [
+                0,
+                0
+              ],
+              "__tags": [
+                "Gameplay"
+              ],
+              "__tile": null,
+              "__worldX": 37184,
+              "__worldY": 320,
+              "defUid": 38,
+              "fieldInstances": [
+                {
+                  "__identifier": "Identifier",
+                  "__type": "String",
+                  "__value": "CoreCardD",
+                  "defUid": 39,
+                  "realEditorValues": []
+                },
+                {
+                  "__identifier": "Group",
+                  "__type": "String",
+                  "__value": "MirrorCore",
+                  "defUid": 40,
+                  "realEditorValues": []
+                }
+              ],
+              "height": 16,
+              "iid": "9300bcc9-0fff-4350-aad4-4281b39930d1",
+              "px": [
+                37184,
+                320
+              ],
+              "width": 16
             }
           ],
           "gridTiles": [],

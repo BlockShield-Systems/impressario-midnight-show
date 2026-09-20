@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import { getWorldEnemySpawns } from "./WorldEnemies";
 import {
+  getWorldGrandCardPickups,
   getWorldHazards,
   getWorldSupportPickups
 } from "./WorldHazards";
@@ -11,6 +12,15 @@ import {
 } from "./WorldGameplay";
 import { EnemyView } from "../enemies/EnemyView";
 import { AUDIO_EVENTS } from "../audio/AudioEvents";
+import {
+  PickupRespawnState
+} from "../magic/GrandCardState";
+import {
+  MIRROR_CORE_GAUNTLET_CARD_PICKUP_IDS,
+  MIRROR_CORE_GAUNTLET_HEALTH_PICKUP_IDS,
+  MIRROR_CORE_HEALTH_PICKUP_RESPAWN_SECONDS,
+  mirrorCoreEnemyHealth
+} from "./MirrorCoreBalance";
 import {
   KALEIDOSCOPE_ANGULAR_SPEED,
   KALEIDOSCOPE_BEAM_LENGTH,
@@ -67,9 +77,16 @@ interface MovingMirror {
 }
 
 interface Rose {
+  readonly id: string;
   readonly x: number;
   readonly y: number;
   consumed: boolean;
+}
+
+interface GauntletPickup {
+  readonly id: string;
+  readonly x: number;
+  readonly y: number;
 }
 
 interface CoreProjectile {
@@ -84,6 +101,7 @@ interface CoreProjectile {
 }
 
 interface CoreEnemySpawn {
+  readonly id: string;
   readonly kind:
     | "duelist"
     | "caster"
@@ -109,6 +127,7 @@ readonly CoreEnemySpawn[] =
       }
 
       return {
+        id: spawn.id,
         kind: spawn.kind,
         x: spawn.x,
         y: spawn.y,
@@ -118,8 +137,31 @@ readonly CoreEnemySpawn[] =
     }
   );
 
+const GAUNTLET_HEALTH_PICKUPS:
+readonly GauntletPickup[] =
+  getWorldSupportPickups("MirrorCore")
+    .filter(pickup =>
+      MIRROR_CORE_GAUNTLET_HEALTH_PICKUP_IDS.some(
+        id => id === pickup.id
+      )
+    );
+
 const ROSE_POSITIONS =
-  getWorldSupportPickups("MirrorCore");
+  getWorldSupportPickups("MirrorCore")
+    .filter(pickup =>
+      !MIRROR_CORE_GAUNTLET_HEALTH_PICKUP_IDS.some(
+        id => id === pickup.id
+      )
+    );
+
+const GAUNTLET_CARD_PICKUPS:
+readonly GauntletPickup[] =
+  getWorldGrandCardPickups("MirrorCore")
+    .filter(pickup =>
+      MIRROR_CORE_GAUNTLET_CARD_PICKUP_IDS.some(
+        id => id === pickup.id
+      )
+    );
 
 const SPIKE_RECTS =
   getWorldHazards(
@@ -261,6 +303,8 @@ function lineIntersectsRectangle(
 class MirrorRelay
 implements CombatTarget {
   public active = true;
+  public readonly targetingGroup = "MirrorCore";
+  public readonly targetingKind = "relay";
 
   private activated = false;
   private flashTimer = 0;
@@ -270,6 +314,7 @@ implements CombatTarget {
 
   public constructor(
     private readonly scene: Phaser.Scene,
+    public readonly targetingId: string,
     public readonly x: number,
     public readonly y: number,
     private readonly onActivated:
@@ -429,6 +474,7 @@ implements CombatTarget {
 
   public readonly width = 20;
   public readonly height = 30;
+  public readonly targetingGroup = "MirrorCore";
 
   public active = false;
 
@@ -479,11 +525,15 @@ implements CombatTarget {
     );
 
     this.health =
-      spawn.kind === "mime"
-        ? 56
-        : spawn.kind === "duelist"
-          ? 48
-          : 40;
+      mirrorCoreEnemyHealth(spawn.kind);
+  }
+
+  public get targetingId(): string {
+    return this.spawn.id;
+  }
+
+  public get targetingKind(): string {
+    return this.spawn.kind;
   }
 
   public get isDefeated(): boolean {
@@ -515,11 +565,9 @@ implements CombatTarget {
     this.y = this.spawn.y;
 
     this.health =
-      this.spawn.kind === "mime"
-        ? 56
-        : this.spawn.kind === "duelist"
-          ? 48
-          : 40;
+      mirrorCoreEnemyHealth(
+        this.spawn.kind
+      );
 
     this.active = false;
     this.defeated = false;
@@ -880,6 +928,9 @@ export class MirrorCoreSystem {
   private cleared = false;
   private hazardCooldown = 0;
   private gauntletBeamElapsed = 0;
+  private wasInsideSection = false;
+  private readonly healthPickupRespawns =
+    new PickupRespawnState();
 
   private readonly graphics:
     Phaser.GameObjects.Graphics;
@@ -912,7 +963,7 @@ export class MirrorCoreSystem {
     private readonly playerHealth:
       PlayerHealthSystem,
     combatSystem: CombatSystem,
-    _magicSystem: MagicSystem,
+    private readonly magicSystem: MagicSystem,
     private readonly addSolid: (
       solid: Phaser.Geom.Rectangle
     ) => void,
@@ -963,12 +1014,14 @@ export class MirrorCoreSystem {
     this.relays = [
       new MirrorRelay(
         scene,
+        "MirrorRelayA",
         35720,
         286,
         () => this.onRelayActivated()
       ),
       new MirrorRelay(
         scene,
+        "MirrorRelayB",
         36080,
         254,
         () => this.onRelayActivated()
@@ -1009,6 +1062,7 @@ export class MirrorCoreSystem {
 
     this.roses = ROSE_POSITIONS.map(
       position => ({
+        id: position.id,
         x: position.x,
         y: position.y,
         consumed: false
@@ -1083,10 +1137,21 @@ export class MirrorCoreSystem {
       this.hazardCooldown - deltaSeconds
     );
 
-    if (!this.isPlayerInSection()) {
+    const insideSection =
+      this.isPlayerInSection();
+
+    if (!insideSection) {
+      if (this.wasInsideSection) {
+        this.resetGauntletPickups();
+        this.redraw();
+      }
+
+      this.wasInsideSection = false;
       this.objectiveText.setVisible(false);
       return;
     }
+
+    this.wasInsideSection = true;
 
     if (this.player.y > 675) {
       this.playerHealth.fallOut();
@@ -1103,6 +1168,9 @@ export class MirrorCoreSystem {
     this.updateProjectiles(deltaSeconds);
     this.updateHazards();
     this.updateRoses();
+    this.updateGauntletPickups(
+      deltaSeconds
+    );
     this.redraw();
   }
 
@@ -1128,6 +1196,7 @@ export class MirrorCoreSystem {
     this.hazardCooldown = 0;
     this.gauntletBeamElapsed = 0;
     this.projectiles.length = 0;
+    this.resetGauntletPickups();
 
     for (const rose of this.roses) {
       rose.consumed = false;
@@ -1241,6 +1310,7 @@ export class MirrorCoreSystem {
       this.gauntletCleared = true;
       this.removeSolid(this.gauntletGate);
       this.projectiles.length = 0;
+      this.resetGauntletPickups();
       this.scene.cameras.main.flash(
         220,
         242,
@@ -1624,6 +1694,98 @@ export class MirrorCoreSystem {
     }
   }
 
+  private updateGauntletPickups(
+    deltaSeconds: number
+  ): void {
+    if (!this.gauntletStarted) {
+      return;
+    }
+
+    this.healthPickupRespawns.update(
+      deltaSeconds
+    );
+
+    const bounds = playerBounds(this.player);
+
+    for (const pickup of GAUNTLET_CARD_PICKUPS) {
+      if (
+        !this.magicSystem
+          .isGrandCardPickupAvailable(
+            pickup.id
+          ) ||
+        !Phaser.Geom.Intersects
+          .RectangleToRectangle(
+            bounds,
+            new Phaser.Geom.Rectangle(
+              pickup.x - 10,
+              pickup.y - 18,
+              20,
+              24
+            )
+          )
+      ) {
+        continue;
+      }
+
+      if (
+        this.magicSystem.collectGrandCardPickup(
+          pickup.id,
+          pickup.x
+        )
+      ) {
+        this.scene.cameras.main.shake(
+          55,
+          0.0015
+        );
+      }
+    }
+
+    for (const pickup of GAUNTLET_HEALTH_PICKUPS) {
+      if (
+        !this.healthPickupRespawns
+          .isAvailable(pickup.id) ||
+        !Phaser.Geom.Intersects
+          .RectangleToRectangle(
+            bounds,
+            new Phaser.Geom.Rectangle(
+              pickup.x - 9,
+              pickup.y - 19,
+              18,
+              20
+            )
+          )
+      ) {
+        continue;
+      }
+
+      if (
+        this.playerHealth.heal(1) &&
+        this.healthPickupRespawns.collect(
+          pickup.id,
+          MIRROR_CORE_HEALTH_PICKUP_RESPAWN_SECONDS
+        )
+      ) {
+        this.scene.events.emit(
+          AUDIO_EVENTS.grandCardPickup,
+          pickup.x
+        );
+        this.scene.cameras.main.shake(
+          55,
+          0.0015
+        );
+      }
+    }
+  }
+
+  private resetGauntletPickups(): void {
+    this.healthPickupRespawns.reset(
+      MIRROR_CORE_GAUNTLET_HEALTH_PICKUP_IDS
+    );
+    this.magicSystem.resetGrandCardPickups(
+      MIRROR_CORE_GAUNTLET_CARD_PICKUP_IDS
+    );
+  }
+
   private updateRoses(): void {
     const bounds = playerBounds(this.player);
 
@@ -1688,6 +1850,7 @@ export class MirrorCoreSystem {
     this.redrawRefractionBeams(g);
     this.redrawSpikes(g);
     this.redrawRoses(g);
+    this.redrawGauntletPickups(g);
     this.redrawProjectiles(g);
     this.redrawGauntletBeam(g);
     this.redrawGates(g);
@@ -1778,6 +1941,84 @@ export class MirrorCoreSystem {
         rose.x,
         rose.y
       );
+    }
+  }
+
+  private redrawGauntletPickups(
+    g: Phaser.GameObjects.Graphics
+  ): void {
+    if (
+      !this.gauntletStarted ||
+      !this.isPlayerInSection()
+    ) {
+      return;
+    }
+
+    for (const pickup of GAUNTLET_HEALTH_PICKUPS) {
+      if (
+        !this.healthPickupRespawns
+          .isAvailable(pickup.id)
+      ) {
+        continue;
+      }
+
+      const y = pickup.y - 10 + Math.sin(
+        this.elapsed * 4.2 +
+        pickup.x * 0.01
+      ) * 3;
+
+      g.fillStyle(0x62e9b2, 0.25);
+      g.fillCircle(pickup.x, y, 14);
+      g.fillStyle(0xe85fbd, 1);
+      g.fillCircle(pickup.x - 4, y - 2, 5);
+      g.fillCircle(pickup.x + 4, y - 2, 5);
+      g.fillCircle(pickup.x, y - 7, 5);
+      g.fillStyle(0xf4ce68, 1);
+      g.fillCircle(pickup.x, y - 2, 3);
+      g.lineStyle(2, 0x62e9b2, 1);
+      g.lineBetween(
+        pickup.x,
+        y + 2,
+        pickup.x,
+        y + 10
+      );
+    }
+
+    for (const pickup of GAUNTLET_CARD_PICKUPS) {
+      if (
+        !this.magicSystem
+          .isGrandCardPickupAvailable(
+            pickup.id
+          )
+      ) {
+        continue;
+      }
+
+      const y = pickup.y - 9 + Math.sin(
+        this.elapsed * 3.8 +
+        pickup.x * 0.01
+      ) * 3;
+
+      g.fillStyle(0x75edf2, 0.18);
+      g.fillCircle(pickup.x, y, 17);
+      g.fillStyle(0xf6e4b5, 1);
+      g.fillRoundedRect(
+        pickup.x - 8,
+        y - 5,
+        16,
+        10,
+        2
+      );
+      g.lineStyle(2, 0xe85fbd, 1);
+      g.strokeRoundedRect(
+        pickup.x - 8,
+        y - 5,
+        16,
+        10,
+        2
+      );
+      g.fillStyle(0xd5376c, 1);
+      g.fillCircle(pickup.x, y, 2);
     }
   }
 
