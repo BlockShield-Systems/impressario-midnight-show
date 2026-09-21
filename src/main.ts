@@ -441,7 +441,16 @@ class CollisionWorld {
   public removeSolid(
     solid: Phaser.Geom.Rectangle
   ): void {
-    const index = this.solids.indexOf(solid);
+    const index = this.solids.findIndex(
+      candidate =>
+        candidate === solid ||
+        (
+          candidate.x === solid.x &&
+          candidate.y === solid.y &&
+          candidate.width === solid.width &&
+          candidate.height === solid.height
+        )
+    );
 
     if (index >= 0) {
       this.solids.splice(index, 1);

@@ -12,10 +12,15 @@ import type { MagicSystem } from "../magic/MagicSystem";
 import type { PlayerHealthSystem } from "../player/PlayerHealthSystem";
 import type { PlayerController } from "../main";
 import {
+  MIRROR_CONDUCTOR_ARENA_BOUNDS,
+  MIRROR_CONDUCTOR_ARENA_WALLS,
   MIRROR_CONDUCTOR_INITIAL_HEALTH,
   MirrorConductorCheckpointState,
+  MirrorConductorMovementCycle,
+  MirrorConductorShieldCycle,
   applyMirrorConductorDamage,
   getMirrorConductorPhase,
+  getMirrorConductorPosition,
   shouldShowMirrorConductorThresholdCue,
   type MirrorConductorCheckpointPhase,
   type MirrorConductorPhaseCheckpoint
@@ -23,10 +28,13 @@ import {
 
 export const MIRROR_CONDUCTOR_START_X = 44672;
 export const MIRROR_CONDUCTOR_END_X = 49824;
-export const MIRROR_CONDUCTOR_THRESHOLD_X = 45312;
-const ARENA_LEFT = 45120;
-const ARENA_RIGHT = 49344;
-const ARENA_CENTER_X = 47232;
+export const MIRROR_CONDUCTOR_THRESHOLD_X = 45472;
+const ARENA_LEFT =
+  MIRROR_CONDUCTOR_ARENA_BOUNDS.left;
+const ARENA_RIGHT =
+  MIRROR_CONDUCTOR_ARENA_BOUNDS.right;
+const ARENA_CENTER_X =
+  (ARENA_LEFT + ARENA_RIGHT) * 0.5;
 
 const HEALTH_PICKUP_RESPAWN_SECONDS = 14;
 
@@ -175,7 +183,7 @@ function createWorldGate(
 
 class MirrorConductor
 implements CombatTarget {
-  public x = 47200;
+  public x = 45872;
   public y = 300;
 
   public readonly width = 42;
@@ -203,6 +211,8 @@ implements CombatTarget {
   private previousPhase: 1 | 2 | 3 = 1;
   private facing: -1 | 1 = -1;
   private defeatSequenceStarted = false;
+  private readonly movementCycle =
+    new MirrorConductorMovementCycle();
 
   // Each score is approximately 90 seconds. These minimum windows
   // prevent high damage from skipping an entire musical phase.
@@ -282,12 +292,12 @@ implements CombatTarget {
     this.updateView();
   }
 
-  public breakShield(): void {
+  public breakShield(): boolean {
     if (
       !this.active ||
       !this.shielded
     ) {
-      return;
+      return false;
     }
 
     this.shielded = false;
@@ -308,6 +318,17 @@ implements CombatTarget {
       150,
       0.006
     );
+
+    return true;
+  }
+
+  public rearmShield(): void {
+    if (!this.active || this.shielded) {
+      return;
+    }
+
+    this.shielded = true;
+    this.flashTimer = 0.16;
   }
 
   public receiveRangedHit(
@@ -418,8 +439,10 @@ implements CombatTarget {
   }
 
   public reset(): void {
-    this.x = 47200;
-    this.y = 300;
+    const position =
+      getMirrorConductorPosition(0);
+    this.x = position.x;
+    this.y = position.y;
 
     this.health =
       MIRROR_CONDUCTOR_INITIAL_HEALTH;
@@ -435,6 +458,7 @@ implements CombatTarget {
     this.facing = -1;
     this.defeatSequenceStarted = false;
     this.phaseElapsed = 0;
+    this.movementCycle.reset();
 
     this.graphics.clear();
 
@@ -483,10 +507,12 @@ implements CombatTarget {
         ? -1
         : 1;
 
-    this.y =
-      300 +
-      Math.sin(elapsed * 1.8) *
-      34;
+    const position =
+      this.movementCycle.update(
+        deltaSeconds
+      );
+    this.x = position.x;
+    this.y = position.y;
 
     const currentPhase = this.phase;
 
@@ -764,6 +790,9 @@ export class MirrorConductorSystem {
   private hazardCooldown = 0;
   private previousSpotlightCasts = 0;
   private wasInsideSection = false;
+  private arenaWallsActive = false;
+  private readonly shieldCycle =
+    new MirrorConductorShieldCycle();
   private readonly phaseCheckpoint =
     new MirrorConductorCheckpointState();
   private readonly healthPickupRespawns =
@@ -776,6 +805,17 @@ export class MirrorConductorSystem {
   private readonly resolutionGate = createWorldGate(
     "MirrorConductorResolution"
   );
+
+  private readonly arenaWalls =
+    MIRROR_CONDUCTOR_ARENA_WALLS.map(
+      wall =>
+        new Phaser.Geom.Rectangle(
+          wall.x,
+          wall.y,
+          wall.width,
+          wall.height
+        )
+    );
 
   private readonly projectiles: BossProjectile[] = [];
   private readonly finaleParticles: FinaleParticle[] = [];
@@ -970,7 +1010,9 @@ export class MirrorConductorSystem {
 
     combatSystem.registerTarget(this.conductor);
     this.addSolid(this.resolutionGate);
+    this.setArenaWallsActive(false);
     this.previousSpotlightCasts = magicSystem.castsPerformed;
+    this.shieldCycle.reset(this.player.centerX);
     this.beginFreshRun();
   }
 
@@ -1073,6 +1115,10 @@ export class MirrorConductorSystem {
       this.conductor.restorePhaseCheckpoint(
         checkpoint
       );
+      this.shieldCycle.reset(
+        this.player.centerX
+      );
+      this.setArenaWallsActive(true);
       this.playerHealth.restoreHealth(
         checkpoint.playerHealth
       );
@@ -1084,6 +1130,10 @@ export class MirrorConductorSystem {
       );
     } else {
       this.conductor.reset();
+      this.shieldCycle.reset(
+        this.player.centerX
+      );
+      this.setArenaWallsActive(false);
     }
     this.removeSolid(this.entranceGate);
     this.removeSolid(this.resolutionGate);
@@ -1168,6 +1218,7 @@ export class MirrorConductorSystem {
   }
 
   private clearFinaleRunState(): void {
+    this.setArenaWallsActive(false);
     this.phaseCheckpoint.clear();
     this.resetDropTimers();
     this.clearCardPickups();
@@ -1236,6 +1287,9 @@ export class MirrorConductorSystem {
 
   private startBoss(): void {
     this.bossStarted = true;
+    this.shieldCycle.reset(
+      this.player.centerX
+    );
     this.floorWarningSide = null;
     this.clearThresholdCue();
 
@@ -1243,6 +1297,7 @@ export class MirrorConductorSystem {
     this.removeSolid(this.resolutionGate);
     this.addSolid(this.entranceGate);
     this.addSolid(this.resolutionGate);
+    this.setArenaWallsActive(true);
 
     this.scene.cameras.main.setBounds(
       ARENA_LEFT,
@@ -1266,6 +1321,15 @@ export class MirrorConductorSystem {
   }
 
   private updateBoss(deltaSeconds: number): void {
+    if (
+      this.shieldCycle.update(
+        deltaSeconds,
+        this.player.centerX
+      )
+    ) {
+      this.conductor.rearmShield();
+    }
+
     const casts = this.magicSystem.castsPerformed;
 
     if (casts !== this.previousSpotlightCasts) {
@@ -1276,8 +1340,14 @@ export class MirrorConductorSystem {
         this.conductor.bounds.centerY
       );
 
-      if (distance <= 190) {
-        this.conductor.breakShield();
+      if (
+        distance <= 190 &&
+        this.shieldCycle.canBreak(
+          this.player.centerX
+        ) &&
+        this.conductor.breakShield()
+      ) {
+        this.shieldCycle.noteShieldBroken();
       }
     }
 
@@ -1613,6 +1683,7 @@ export class MirrorConductorSystem {
 
     this.removeSolid(this.resolutionGate);
     this.removeSolid(this.entranceGate);
+    this.setArenaWallsActive(false);
     this.restoreCamera();
     this.hideBossHud();
     this.startFinale();
@@ -1886,6 +1957,20 @@ export class MirrorConductorSystem {
     }
   }
 
+  private setArenaWallsActive(
+    active: boolean
+  ): void {
+    for (const wall of this.arenaWalls) {
+      this.removeSolid(wall);
+
+      if (active) {
+        this.addSolid(wall);
+      }
+    }
+
+    this.arenaWallsActive = active;
+  }
+
   private emitBossAction(
     action: BossAction
   ): void {
@@ -1902,7 +1987,13 @@ export class MirrorConductorSystem {
 
     for (const [gate, active] of [
       [this.entranceGate, this.bossStarted],
-      [this.resolutionGate, !this.bossDefeated]
+      [this.resolutionGate, !this.bossDefeated],
+      ...this.arenaWalls.map(
+        wall => [
+          wall,
+          this.arenaWallsActive
+        ] as const
+      )
     ] as const) {
       if (!active) {
         continue;

@@ -8,6 +8,170 @@ export const MIRROR_CONDUCTOR_MINIMUM_PHASE_DURATION = {
 
 export const MIRROR_CONDUCTOR_INITIAL_HEALTH = 108;
 
+export const MIRROR_CONDUCTOR_ARENA_BOUNDS = {
+  left: 45472,
+  right: 49248
+} as const;
+
+export const MIRROR_CONDUCTOR_ARENA_WALLS = [
+  {
+    x: 45448,
+    y: 96,
+    width: 24,
+    height: 424
+  },
+  {
+    x: 49248,
+    y: 96,
+    width: 24,
+    height: 424
+  }
+] as const;
+
+export const MIRROR_CONDUCTOR_PLATFORMS = [
+  { x: 45472, y: 400, width: 256, height: 16 },
+  { x: 45840, y: 464, width: 128, height: 16 },
+  { x: 46048, y: 352, width: 256, height: 16 },
+  { x: 46432, y: 448, width: 128, height: 16 },
+  { x: 46624, y: 416, width: 256, height: 16 },
+  { x: 46992, y: 464, width: 128, height: 16 },
+  { x: 47200, y: 352, width: 288, height: 16 },
+  { x: 47616, y: 464, width: 128, height: 16 },
+  { x: 47840, y: 416, width: 256, height: 16 },
+  { x: 48208, y: 448, width: 128, height: 16 },
+  { x: 48416, y: 352, width: 256, height: 16 },
+  { x: 48800, y: 464, width: 128, height: 16 },
+  { x: 48992, y: 400, width: 256, height: 16 }
+] as const;
+
+export const MIRROR_CONDUCTOR_MOVEMENT_CYCLE_SECONDS = 8;
+export const MIRROR_CONDUCTOR_MOVEMENT_LEG_SECONDS = 2;
+
+export const MIRROR_CONDUCTOR_MOVEMENT_WAYPOINTS = [
+  { x: 45872, y: 300 },
+  { x: 47179, y: 210 },
+  { x: 48768, y: 300 },
+  { x: 47179, y: 270 },
+  { x: 45872, y: 300 }
+] as const;
+
+export const MIRROR_CONDUCTOR_SHIELD_REARM_SECONDS = 12;
+export const MIRROR_CONDUCTOR_SHIELD_DISPLACEMENT = 128;
+
+export function getMirrorConductorPosition(
+  elapsedSeconds: number
+): { readonly x: number; readonly y: number } {
+  const cycleTime =
+    ((elapsedSeconds %
+      MIRROR_CONDUCTOR_MOVEMENT_CYCLE_SECONDS) +
+      MIRROR_CONDUCTOR_MOVEMENT_CYCLE_SECONDS) %
+    MIRROR_CONDUCTOR_MOVEMENT_CYCLE_SECONDS;
+  const leg = Math.min(
+    MIRROR_CONDUCTOR_MOVEMENT_WAYPOINTS.length - 2,
+    Math.floor(
+      cycleTime /
+        MIRROR_CONDUCTOR_MOVEMENT_LEG_SECONDS
+    )
+  );
+  const linearProgress =
+    (cycleTime -
+      leg * MIRROR_CONDUCTOR_MOVEMENT_LEG_SECONDS) /
+    MIRROR_CONDUCTOR_MOVEMENT_LEG_SECONDS;
+  const easedProgress =
+    linearProgress *
+    linearProgress *
+    (3 - 2 * linearProgress);
+  const start =
+    MIRROR_CONDUCTOR_MOVEMENT_WAYPOINTS[leg]!;
+  const end =
+    MIRROR_CONDUCTOR_MOVEMENT_WAYPOINTS[leg + 1]!;
+
+  return {
+    x: start.x + (end.x - start.x) * easedProgress,
+    y: start.y + (end.y - start.y) * easedProgress
+  };
+}
+
+export class MirrorConductorMovementCycle {
+  private elapsed = 0;
+
+  public reset(): void {
+    this.elapsed = 0;
+  }
+
+  public update(
+    deltaSeconds: number,
+    simulationRunning = true
+  ): { readonly x: number; readonly y: number } {
+    if (simulationRunning) {
+      this.elapsed += deltaSeconds;
+    }
+
+    return getMirrorConductorPosition(
+      this.elapsed
+    );
+  }
+
+  public get elapsedSeconds(): number {
+    return this.elapsed;
+  }
+}
+
+export class MirrorConductorShieldCycle {
+  private anchorX = 0;
+  private rearmRemaining: number | null = null;
+
+  public reset(playerX: number): void {
+    this.anchorX = playerX;
+    this.rearmRemaining = null;
+  }
+
+  public canBreak(playerX: number): boolean {
+    return (
+      Math.abs(playerX - this.anchorX) >=
+      MIRROR_CONDUCTOR_SHIELD_DISPLACEMENT
+    );
+  }
+
+  public noteShieldBroken(): void {
+    this.rearmRemaining =
+      MIRROR_CONDUCTOR_SHIELD_REARM_SECONDS;
+  }
+
+  public update(
+    deltaSeconds: number,
+    playerX: number,
+    simulationRunning = true
+  ): boolean {
+    if (
+      !simulationRunning ||
+      this.rearmRemaining === null
+    ) {
+      return false;
+    }
+
+    this.rearmRemaining = Math.max(
+      0,
+      this.rearmRemaining - deltaSeconds
+    );
+
+    if (this.rearmRemaining > 1e-9) {
+      return false;
+    }
+
+    this.reset(playerX);
+    return true;
+  }
+
+  public get displacementAnchorX(): number {
+    return this.anchorX;
+  }
+
+  public get rearmSecondsRemaining(): number | null {
+    return this.rearmRemaining;
+  }
+}
+
 export const MIRROR_CONDUCTOR_PHASE_START = {
   2: {
     health: 72,

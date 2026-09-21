@@ -477,7 +477,7 @@ for (const required of [
   "public receiveRangedHit(",
   "this.magicSystem.castsPerformed",
   "combatSystem.registerTarget(this.conductor)",
-  "export const MIRROR_CONDUCTOR_THRESHOLD_X = 45312",
+  "export const MIRROR_CONDUCTOR_THRESHOLD_X = 45472",
   "this.player.x >= MIRROR_CONDUCTOR_THRESHOLD_X",
   "this.player.x < MIRROR_CONDUCTOR_END_X",
   "this.playerHealth.fallOut()",
@@ -530,11 +530,17 @@ for (const required of [
   "const START_X = 44672",
   "const END_X = 49824",
   "[45472, 400, 256]",
+  "[45840, 464, 128]",
   "[46048, 352, 256]",
+  "[46432, 448, 128]",
   "[46624, 416, 256]",
+  "[46992, 464, 128]",
   "[47200, 352, 288]",
+  "[47616, 464, 128]",
   "[47840, 416, 256]",
+  "[48208, 448, 128]",
   "[48416, 352, 256]",
+  "[48800, 464, 128]",
   "[48992, 400, 256]"
 ]) {
   if (!mirrorConductorVisuals.includes(required)) {
