@@ -477,7 +477,7 @@ for (const required of [
   "public receiveRangedHit(",
   "this.magicSystem.castsPerformed",
   "combatSystem.registerTarget(this.conductor)",
-  "export const MIRROR_CONDUCTOR_THRESHOLD_X = 45472",
+  "export const MIRROR_CONDUCTOR_THRESHOLD_X = 45552",
   "this.player.x >= MIRROR_CONDUCTOR_THRESHOLD_X",
   "this.player.x < MIRROR_CONDUCTOR_END_X",
   "this.playerHealth.fallOut()",

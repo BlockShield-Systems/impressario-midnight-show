@@ -13,22 +13,24 @@ import type { PlayerHealthSystem } from "../player/PlayerHealthSystem";
 import type { PlayerController } from "../main";
 import {
   MIRROR_CONDUCTOR_ARENA_BOUNDS,
+  MIRROR_CONDUCTOR_ANCHORS,
   MIRROR_CONDUCTOR_ARENA_WALLS,
+  MIRROR_CONDUCTOR_BEAM_REACH,
   MIRROR_CONDUCTOR_INITIAL_HEALTH,
   MirrorConductorCheckpointState,
   MirrorConductorMovementCycle,
   MirrorConductorShieldCycle,
   applyMirrorConductorDamage,
   getMirrorConductorPhase,
-  getMirrorConductorPosition,
   shouldShowMirrorConductorThresholdCue,
   type MirrorConductorCheckpointPhase,
+  type MirrorConductorMovementSnapshot,
   type MirrorConductorPhaseCheckpoint
 } from "./MirrorConductorPhase";
 
 export const MIRROR_CONDUCTOR_START_X = 44672;
 export const MIRROR_CONDUCTOR_END_X = 49824;
-export const MIRROR_CONDUCTOR_THRESHOLD_X = 45472;
+export const MIRROR_CONDUCTOR_THRESHOLD_X = 45552;
 const ARENA_LEFT =
   MIRROR_CONDUCTOR_ARENA_BOUNDS.left;
 const ARENA_RIGHT =
@@ -183,8 +185,10 @@ function createWorldGate(
 
 class MirrorConductor
 implements CombatTarget {
-  public x = 45872;
-  public y = 300;
+  public x: number =
+    MIRROR_CONDUCTOR_ANCHORS[0].x;
+  public y: number =
+    MIRROR_CONDUCTOR_ANCHORS[0].y;
 
   public readonly width = 42;
   public readonly height = 64;
@@ -263,6 +267,11 @@ implements CombatTarget {
 
   public get isDefeated(): boolean {
     return this.defeated;
+  }
+
+  public get movementState():
+  MirrorConductorMovementSnapshot {
+    return this.movementCycle.current;
   }
 
   public get bounds():
@@ -440,7 +449,7 @@ implements CombatTarget {
 
   public reset(): void {
     const position =
-      getMirrorConductorPosition(0);
+      MIRROR_CONDUCTOR_ANCHORS[0];
     this.x = position.x;
     this.y = position.y;
 
@@ -478,9 +487,9 @@ implements CombatTarget {
       targetY: number,
       color?: number
     ) => void
-  ): void {
+  ): MirrorConductorMovementSnapshot {
     if (!this.active) {
-      return;
+      return this.movementCycle.current;
     }
 
     this.phaseElapsed +=
@@ -609,6 +618,8 @@ implements CombatTarget {
 
     this.updateView();
     this.redrawVfx(elapsed);
+
+    return position;
   }
 
   private startDefeatSequence(): void {
@@ -1321,10 +1332,16 @@ export class MirrorConductorSystem {
   }
 
   private updateBoss(deltaSeconds: number): void {
+    const deferShieldRearm =
+      this.conductor.movementState.state === "hold" &&
+      !this.conductor.isShielded;
+
     if (
       this.shieldCycle.update(
         deltaSeconds,
-        this.player.centerX
+        this.player.centerX,
+        true,
+        deferShieldRearm
       )
     ) {
       this.conductor.rearmShield();
@@ -1353,7 +1370,7 @@ export class MirrorConductorSystem {
 
     this.previousSpotlightCasts = casts;
 
-    this.conductor.update(
+    const movement = this.conductor.update(
       deltaSeconds,
       this.elapsed,
       this.player,
@@ -1373,6 +1390,13 @@ export class MirrorConductorSystem {
         );
       }
     );
+
+    if (movement.beamTelegraphStarted) {
+      this.scene.events.emit(
+        AUDIO_EVENTS.hazardTelegraph,
+        this.conductor.bounds.centerX
+      );
+    }
 
     this.redrawBossHud();
   }
@@ -1475,10 +1499,14 @@ export class MirrorConductorSystem {
 
     const bounds = playerBounds(this.player);
     const phase = this.conductor.phase;
-    const beamCycle = this.elapsed % 2.4;
+    const movement =
+      this.conductor.movementState;
     const beamActive =
-      beamCycle >= 0.72 &&
-      beamCycle < 1.02;
+      movement.beamState === "active";
+    const beamOriginX =
+      this.conductor.bounds.centerX;
+    const beamOriginY =
+      this.conductor.bounds.centerY;
 
     if (beamActive) {
       for (
@@ -1487,28 +1515,30 @@ export class MirrorConductorSystem {
         index += 1
       ) {
         const angle =
-          this.elapsed * 1.35 +
+          movement.stateElapsed * 1.35 +
           index * Math.PI / phase;
 
         const endX =
-          ARENA_CENTER_X +
-          Math.cos(angle) * 1900;
+          beamOriginX +
+          Math.cos(angle) *
+            MIRROR_CONDUCTOR_BEAM_REACH;
 
         const endY =
-          300 +
-          Math.sin(angle) * 440;
+          beamOriginY +
+          Math.sin(angle) *
+            MIRROR_CONDUCTOR_BEAM_REACH;
 
         if (
           lineIntersectsRectangle(
-            ARENA_CENTER_X,
-            300,
+            beamOriginX,
+            beamOriginY,
             endX,
             endY,
             bounds,
             5
           )
         ) {
-          this.damageHazard(ARENA_CENTER_X);
+          this.damageHazard(beamOriginX);
           return;
         }
       }
@@ -2141,38 +2171,70 @@ export class MirrorConductorSystem {
     graphics: Phaser.GameObjects.Graphics
   ): void {
     const phase = this.conductor.phase;
-    const cycle = this.elapsed % 2.4;
+    const movement =
+      this.conductor.movementState;
     const active =
-      cycle >= 0.72 && cycle < 1.02;
+      movement.beamState === "active";
+    const telegraph =
+      movement.beamState === "telegraph";
+    const originX =
+      this.conductor.bounds.centerX;
+    const originY =
+      this.conductor.bounds.centerY;
 
-    const alpha =
-      cycle < 0.72
-        ? 0.18
-        : active
-          ? 0.92
-          : 0.08;
+    const alpha = active
+      ? 0.92
+      : telegraph
+        ? 0.28
+        : 0;
 
-    for (
-      let index = 0;
-      index < phase;
-      index += 1
-    ) {
-      const angle =
-        this.elapsed * 1.35 +
-        index * Math.PI / phase;
+    if (active || telegraph) {
+      for (
+        let index = 0;
+        index < phase;
+        index += 1
+      ) {
+        const angle =
+          movement.stateElapsed * 1.35 +
+          index * Math.PI / phase;
+
+        graphics
+          .lineStyle(
+            active ? 6 : 2,
+            0xf05ac7,
+            alpha
+          )
+          .lineBetween(
+            originX,
+            originY,
+            originX +
+              Math.cos(angle) *
+                MIRROR_CONDUCTOR_BEAM_REACH,
+            originY +
+              Math.sin(angle) *
+                MIRROR_CONDUCTOR_BEAM_REACH
+          );
+      }
+    }
+
+    if (movement.state === "telegraph") {
+      const destination =
+        MIRROR_CONDUCTOR_ANCHORS[
+          movement.destinationIndex
+        ]!;
 
       graphics
-        .lineStyle(
-          active ? 6 : 2,
-          0xf05ac7,
-          alpha
-        )
+        .lineStyle(2, 0x75eaf1, 0.65)
         .lineBetween(
-          ARENA_CENTER_X,
-          300,
-          ARENA_CENTER_X +
-            Math.cos(angle) * 1900,
-          300 + Math.sin(angle) * 440
+          originX,
+          originY,
+          destination.x + 21,
+          destination.y + 32
+        )
+        .strokeCircle(
+          destination.x + 21,
+          destination.y + 32,
+          28
         );
     }
 

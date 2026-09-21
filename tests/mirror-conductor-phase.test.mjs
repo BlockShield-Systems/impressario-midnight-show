@@ -6,20 +6,32 @@ import {
   PickupRespawnState
 } from "../src/magic/GrandCardState.ts";
 import {
+  MIRROR_CONDUCTOR_ANCHORS,
   MIRROR_CONDUCTOR_ARENA_BOUNDS,
   MIRROR_CONDUCTOR_ARENA_WALLS,
+  MIRROR_CONDUCTOR_BEAM_ACTIVE_SECONDS,
+  MIRROR_CONDUCTOR_BEAM_ACTIVE_START,
+  MIRROR_CONDUCTOR_BEAM_REACH,
+  MIRROR_CONDUCTOR_BEAM_TELEGRAPH_SECONDS,
+  MIRROR_CONDUCTOR_BEAM_TELEGRAPH_START,
+  MIRROR_CONDUCTOR_HOLD_SECONDS,
   MIRROR_CONDUCTOR_INITIAL_HEALTH,
-  MIRROR_CONDUCTOR_MOVEMENT_WAYPOINTS,
+  MIRROR_CONDUCTOR_MOVEMENT_CYCLE_SECONDS,
   MIRROR_CONDUCTOR_PLATFORMS,
   MIRROR_CONDUCTOR_SHIELD_REARM_SECONDS,
+  MIRROR_CONDUCTOR_TELEGRAPH_SECONDS,
+  MIRROR_CONDUCTOR_TRAVEL_SECONDS,
   MirrorConductorCheckpointState,
   MirrorConductorMovementCycle,
   MirrorConductorShieldCycle,
   applyMirrorConductorDamage,
+  getMirrorConductorBeamState,
   getMirrorConductorPhase,
-  getMirrorConductorPosition,
   shouldShowMirrorConductorThresholdCue
 } from "../src/world/MirrorConductorPhase.ts";
+import {
+  WORLD_SOLIDS
+} from "../src/world/WorldLayout.ts";
 
 test("threshold cue appears only before the boss trigger inside its section", () => {
   const ready = {
@@ -299,32 +311,40 @@ test("runtime clears phase state at fresh entry, section exit, and boss defeat",
   );
 });
 
-test("movement cycle is frame-step independent, pause-preserving, and bounded", () => {
+test("anchored movement cycle is deterministic, pause-preserving, stationary on holds, and bounded", () => {
   const singleStep =
     new MirrorConductorMovementCycle();
   const splitSteps =
     new MirrorConductorMovementCycle();
-  const expectedElapsed = 5.75;
+  const expectedElapsed = 26.75;
 
   const singlePosition =
     singleStep.update(expectedElapsed);
   let splitPosition = splitSteps.update(0);
 
   for (const delta of [
-    0.5,
-    0.25,
+    3,
     1,
-    0.125,
-    2,
-    0.375,
-    1.5
+    6.677,
+    3,
+    1,
+    6.83,
+    3,
+    1,
+    1.243
   ]) {
     splitPosition = splitSteps.update(delta);
   }
 
+  assert.ok(
+    Math.abs(
+      splitSteps.elapsedSeconds - expectedElapsed
+    ) < 1e-9
+  );
+  assert.equal(splitPosition.state, singlePosition.state);
   assert.equal(
-    splitSteps.elapsedSeconds,
-    expectedElapsed
+    splitPosition.anchorIndex,
+    singlePosition.anchorIndex
   );
   assert.ok(
     Math.abs(splitPosition.x - singlePosition.x) < 1e-9
@@ -336,30 +356,310 @@ test("movement cycle is frame-step independent, pause-preserving, and bounded", 
   const beforePause = { ...splitPosition };
   splitPosition = splitSteps.update(30, false);
   assert.deepEqual(splitPosition, beforePause);
-  assert.equal(
-    splitSteps.elapsedSeconds,
-    expectedElapsed
+  assert.ok(
+    Math.abs(
+      splitSteps.elapsedSeconds - expectedElapsed
+    ) < 1e-9
   );
 
-  for (let time = 0; time <= 16; time += 0.01) {
-    const position = getMirrorConductorPosition(time);
-    assert.ok(
-      position.x >= MIRROR_CONDUCTOR_ARENA_BOUNDS.left &&
-      position.x <= MIRROR_CONDUCTOR_ARENA_BOUNDS.right,
-      `boss x ${position.x} escaped at ${time}`
-    );
-  }
+  const cycle = new MirrorConductorMovementCycle();
 
   for (
     let index = 0;
-    index < MIRROR_CONDUCTOR_MOVEMENT_WAYPOINTS.length;
+    index < MIRROR_CONDUCTOR_ANCHORS.length;
     index += 1
   ) {
-    assert.deepEqual(
-      getMirrorConductorPosition(index * 2),
-      MIRROR_CONDUCTOR_MOVEMENT_WAYPOINTS[index]
+    const anchor = MIRROR_CONDUCTOR_ANCHORS[index];
+    const holdStart = cycle.current;
+    assert.equal(holdStart.state, "hold");
+    assert.equal(holdStart.anchorIndex, index);
+    assert.equal(holdStart.x, anchor.x);
+    assert.equal(holdStart.y, anchor.y);
+
+    const held = cycle.update(
+      MIRROR_CONDUCTOR_HOLD_SECONDS - 1e-6
+    );
+    assert.equal(held.state, "hold");
+    assert.equal(held.x, anchor.x);
+    assert.equal(held.y, anchor.y);
+
+    const telegraph = cycle.update(1e-6);
+    assert.equal(telegraph.state, "telegraph");
+    assert.equal(telegraph.x, anchor.x);
+    assert.equal(telegraph.y, anchor.y);
+
+    const travel = cycle.update(
+      MIRROR_CONDUCTOR_TELEGRAPH_SECONDS
+    );
+    assert.equal(travel.state, "travel");
+    cycle.update(
+      MIRROR_CONDUCTOR_TRAVEL_SECONDS[index]
     );
   }
+
+  const expectedPeakSpeeds = [
+    262.393,
+    263.543,
+    308.773,
+    257.592
+  ];
+
+  for (
+    let index = 0;
+    index < MIRROR_CONDUCTOR_ANCHORS.length;
+    index += 1
+  ) {
+    const start = MIRROR_CONDUCTOR_ANCHORS[index];
+    const end =
+      MIRROR_CONDUCTOR_ANCHORS[
+        (index + 1) % MIRROR_CONDUCTOR_ANCHORS.length
+      ];
+    const distance = Math.hypot(
+      end.x - start.x,
+      end.y - start.y
+    );
+    const peakSpeed =
+      1.5 * distance /
+      MIRROR_CONDUCTOR_TRAVEL_SECONDS[index];
+    assert.ok(
+      Math.abs(peakSpeed - expectedPeakSpeeds[index]) < 0.001,
+      `leg ${index} peak changed to ${peakSpeed.toFixed(3)}px/s`
+    );
+    assert.ok(
+      MIRROR_CONDUCTOR_TELEGRAPH_SECONDS +
+        MIRROR_CONDUCTOR_TRAVEL_SECONDS[index] >= 2.5,
+      `leg ${index} must regenerate 30 SHOW from zero`
+    );
+  }
+
+  assert.ok(
+    Math.abs(
+      MIRROR_CONDUCTOR_MOVEMENT_CYCLE_SECONDS -
+      43.11231578947368
+    ) < 1e-9
+  );
+
+  const sampler = new MirrorConductorMovementCycle();
+  const sampleStep = 1 / 240;
+
+  for (
+    let elapsed = 0;
+    elapsed <
+      MIRROR_CONDUCTOR_MOVEMENT_CYCLE_SECONDS * 2;
+    elapsed += sampleStep
+  ) {
+    const position = sampler.update(sampleStep);
+    assert.ok(
+      position.x >= MIRROR_CONDUCTOR_ARENA_BOUNDS.left &&
+      position.x + 42 <= MIRROR_CONDUCTOR_ARENA_BOUNDS.right,
+      `boss body escaped at ${elapsed.toFixed(3)}`
+    );
+  }
+});
+
+test("beam timing is hold-scoped, deterministic, bounded, and pause-preserving", () => {
+  assert.ok(
+    Math.abs(
+      MIRROR_CONDUCTOR_BEAM_TELEGRAPH_START - 2.05
+    ) < 1e-12
+  );
+  assert.ok(
+    Math.abs(
+      MIRROR_CONDUCTOR_BEAM_ACTIVE_START - 2.7
+    ) < 1e-12
+  );
+  assert.equal(
+    MIRROR_CONDUCTOR_BEAM_TELEGRAPH_SECONDS,
+    0.65
+  );
+  assert.equal(
+    MIRROR_CONDUCTOR_BEAM_ACTIVE_SECONDS,
+    0.3
+  );
+  assert.equal(MIRROR_CONDUCTOR_BEAM_REACH, 480);
+
+  const preservedCoordinates = [
+    { id: "card-left", x: 45920, y: 520, anchors: ["A"] },
+    { id: "card-right", x: 48544, y: 520, anchors: ["C", "D"] },
+    { id: "heart-left", x: 46176, y: 352, anchors: ["A"] },
+    { id: "heart-right", x: 47968, y: 416, anchors: ["D"] },
+    { id: "phase-2-spawn", x: 45584, y: 370, anchors: [] },
+    { id: "phase-3-spawn", x: 49104, y: 370, anchors: [] }
+  ];
+
+  for (const anchor of MIRROR_CONDUCTOR_ANCHORS) {
+    const originX = anchor.x + 21;
+    assert.ok(
+      originX - MIRROR_CONDUCTOR_BEAM_REACH >=
+        MIRROR_CONDUCTOR_ARENA_BOUNDS.left
+    );
+    assert.ok(
+      originX + MIRROR_CONDUCTOR_BEAM_REACH <=
+        MIRROR_CONDUCTOR_ARENA_BOUNDS.right
+    );
+    assert.ok(anchor.y > 96);
+  }
+
+  for (const coordinate of preservedCoordinates) {
+    const containingAnchors =
+      MIRROR_CONDUCTOR_ANCHORS
+        .filter(anchor =>
+          Math.hypot(
+            coordinate.x - (anchor.x + 21),
+            coordinate.y - (anchor.y + 32)
+          ) <= MIRROR_CONDUCTOR_BEAM_REACH
+        )
+        .map(anchor => anchor.id);
+    assert.deepEqual(
+      containingAnchors,
+      coordinate.anchors,
+      `${coordinate.id} beam footprint changed`
+    );
+  }
+
+  assert.equal(
+    getMirrorConductorBeamState("hold", 0),
+    "off"
+  );
+  assert.equal(
+    getMirrorConductorBeamState(
+      "hold",
+      MIRROR_CONDUCTOR_BEAM_TELEGRAPH_START - 1e-6
+    ),
+    "off"
+  );
+  assert.equal(
+    getMirrorConductorBeamState(
+      "hold",
+      MIRROR_CONDUCTOR_BEAM_TELEGRAPH_START
+    ),
+    "telegraph"
+  );
+  assert.equal(
+    getMirrorConductorBeamState(
+      "hold",
+      MIRROR_CONDUCTOR_BEAM_ACTIVE_START - 1e-6
+    ),
+    "telegraph"
+  );
+  assert.equal(
+    getMirrorConductorBeamState(
+      "hold",
+      MIRROR_CONDUCTOR_BEAM_ACTIVE_START
+    ),
+    "active"
+  );
+  assert.equal(
+    getMirrorConductorBeamState("telegraph", 2.7),
+    "off"
+  );
+  assert.equal(
+    getMirrorConductorBeamState("travel", 2.7),
+    "off"
+  );
+
+  const cycle = new MirrorConductorMovementCycle();
+  cycle.update(
+    MIRROR_CONDUCTOR_BEAM_TELEGRAPH_START - 0.001
+  );
+  const beforePause = cycle.current;
+  assert.deepEqual(cycle.update(10, false), beforePause);
+  assert.equal(
+    cycle.update(0.001).beamTelegraphStarted,
+    true
+  );
+});
+
+test("every anchor has clear jump geometry and the corrected air-up overlap window", () => {
+  const launches = [
+    { surfaceY: 352, platform: [46048, 352, 256, 16] },
+    { surfaceY: 352, platform: [47200, 352, 288, 16] },
+    { surfaceY: 352, platform: [48416, 352, 256, 16] },
+    { surfaceY: 520, platform: [45120, 520, 4224, 32] }
+  ];
+  const maximumRise =
+    455 ** 2 / (2 * 1600) +
+    420 ** 2 / (2 * 1600);
+  const expectedOverlap = 39.8203125;
+  const expectedDwell = 0.4462079812150383;
+
+  for (
+    let index = 0;
+    index < MIRROR_CONDUCTOR_ANCHORS.length;
+    index += 1
+  ) {
+    const anchor = MIRROR_CONDUCTOR_ANCHORS[index];
+    const launch = launches[index];
+    const playerCenterX = anchor.x + 12;
+    const hitbox = {
+      x: playerCenterX - 8,
+      y: launch.surfaceY - maximumRise - 70,
+      width: 34,
+      height: 40
+    };
+    const boss = {
+      x: anchor.x,
+      y: anchor.y,
+      width: 42,
+      height: 64
+    };
+    const overlapX = Math.min(
+      hitbox.x + hitbox.width,
+      boss.x + boss.width
+    ) - Math.max(hitbox.x, boss.x);
+    const overlapY = Math.min(
+      hitbox.y + hitbox.height,
+      boss.y + boss.height
+    ) - Math.max(hitbox.y, boss.y);
+
+    assert.equal(overlapX, 34);
+    assert.ok(
+      Math.abs(overlapY - expectedOverlap) < 1e-9,
+      `anchor ${anchor.id} overlap ${overlapY}`
+    );
+
+    const corridorTop =
+      launch.surfaceY - 189.8203125;
+    const bodyLeft = playerCenterX - 9;
+    const bodyRight = playerCenterX + 9;
+    const blockers = WORLD_SOLIDS.filter(
+      solid =>
+        solid.x < bodyRight &&
+        solid.x + solid.width > bodyLeft &&
+        solid.y < launch.surfaceY &&
+        solid.y + solid.height > corridorTop
+    );
+    assert.deepEqual(
+      blockers,
+      [],
+      `anchor ${anchor.id} jump arc must be clear`
+    );
+    assert.deepEqual(
+      launch.platform,
+      index === 3
+        ? [45120, 520, 4224, 32]
+        : [
+            MIRROR_CONDUCTOR_PLATFORMS[
+              index === 0 ? 2 : index === 1 ? 6 : 10
+            ].x,
+            launch.surfaceY,
+            MIRROR_CONDUCTOR_PLATFORMS[
+              index === 0 ? 2 : index === 1 ? 6 : 10
+            ].width,
+            16
+          ]
+    );
+  }
+
+  const firstJumpRise = 455 ** 2 / (2 * 1600);
+  const dwellDiscriminant =
+    420 ** 2 -
+    2 * 1600 * (80 - firstJumpRise);
+  const dwellSeconds =
+    Math.sqrt(dwellDiscriminant) / 800;
+  assert.ok(
+    Math.abs(dwellSeconds - expectedDwell) < 1e-12
+  );
 });
 
 test("every adjacent platform route is dash-free with at least five pixels margin", () => {
@@ -465,6 +765,25 @@ test("shield requires movement and re-arms deterministically without paused time
   assert.equal(cycle.displacementAnchorX, 300);
   assert.equal(cycle.canBreak(300), false);
   assert.equal(cycle.canBreak(428), true);
+
+  cycle.noteShieldBroken();
+  assert.equal(
+    cycle.update(12, 500, true, true),
+    false,
+    "an expired timer cannot re-arm during a vulnerable HOLD"
+  );
+  assert.equal(cycle.rearmSecondsRemaining, 0);
+  assert.equal(
+    cycle.update(0.5, 500, true, true),
+    false,
+    "a hit after the break remains unshielded for the full HOLD"
+  );
+  assert.equal(
+    cycle.update(0.001, 500, true, false),
+    true,
+    "deferred re-arm applies after HOLD ends"
+  );
+  assert.equal(cycle.displacementAnchorX, 500);
 });
 
 test("arena walls close on checkpoint restore and open before and after the fight", async () => {
