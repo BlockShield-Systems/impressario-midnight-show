@@ -17,11 +17,15 @@ import {
   MIRROR_CONDUCTOR_ARENA_WALLS,
   MIRROR_CONDUCTOR_BEAM_REACH,
   MIRROR_CONDUCTOR_INITIAL_HEALTH,
+  MIRROR_CONDUCTOR_PHASE_THREE_PROJECTILE_CAP,
   MirrorConductorCheckpointState,
+  MirrorConductorFloorHazardState,
   MirrorConductorMovementCycle,
   MirrorConductorShieldCycle,
   applyMirrorConductorDamage,
   getMirrorConductorPhase,
+  getMirrorConductorProjectileProfile,
+  getMirrorConductorShieldRearmSeconds,
   shouldShowMirrorConductorThresholdCue,
   type MirrorConductorCheckpointPhase,
   type MirrorConductorMovementSnapshot,
@@ -86,6 +90,7 @@ interface BossProjectile {
   radius: number;
   color: number;
   active: boolean;
+  spawnDelay: number;
 }
 
 interface RuntimeGrandCardPickup {
@@ -485,7 +490,10 @@ implements CombatTarget {
       y: number,
       targetX: number,
       targetY: number,
-      color?: number
+      color?: number,
+      delaySeconds?: number,
+      speed?: number,
+      lifetimeSeconds?: number
     ) => void
   ): MirrorConductorMovementSnapshot {
     if (!this.active) {
@@ -554,12 +562,12 @@ implements CombatTarget {
       this.visualMode = "idle";
     }
 
+    const projectileProfile =
+      getMirrorConductorProjectileProfile(
+        currentPhase
+      );
     const interval =
-      currentPhase === 1
-        ? 1.15
-        : currentPhase === 2
-          ? 0.9
-          : 0.62;
+      projectileProfile.intervalSeconds;
 
     const previousCycle =
       Math.floor(
@@ -579,11 +587,7 @@ implements CombatTarget {
       this.onAction("projectile-volley");
 
       const count =
-        currentPhase === 3
-          ? 3
-          : currentPhase === 2
-            ? 2
-            : 1;
+        projectileProfile.volleySize;
 
       for (
         let index = 0;
@@ -604,7 +608,11 @@ implements CombatTarget {
             55,
           index % 2 === 0
             ? 0xe95acb
-            : 0x75eaf1
+            : 0x75eaf1,
+          index *
+            projectileProfile.staggerSeconds,
+          projectileProfile.speed,
+          projectileProfile.lifetimeSeconds
         );
       }
 
@@ -797,7 +805,8 @@ export class MirrorConductorSystem {
   private finaleBurstTimer = 0;
   private finaleCreditsVisible = false;
   private curtainAudioPlayed = false;
-  private floorWarningSide: "left" | "right" | null = null;
+  private readonly floorHazard =
+    new MirrorConductorFloorHazardState();
   private hazardCooldown = 0;
   private previousSpotlightCasts = 0;
   private wasInsideSection = false;
@@ -1088,7 +1097,7 @@ export class MirrorConductorSystem {
     if (this.bossStarted) {
       this.updateBoss(deltaSeconds);
       this.updateProjectiles(deltaSeconds);
-      this.updateHazards();
+      this.updateHazards(deltaSeconds);
       this.updateCardPickups();
       this.updateHealthPickups(
         deltaSeconds
@@ -1109,7 +1118,7 @@ export class MirrorConductorSystem {
 
     this.elapsed = 0;
     this.hazardCooldown = 0;
-    this.floorWarningSide = null;
+    this.floorHazard.reset();
     this.projectiles.length = 0;
     this.bossStarted = false;
     this.clearCardPickups();
@@ -1301,7 +1310,7 @@ export class MirrorConductorSystem {
     this.shieldCycle.reset(
       this.player.centerX
     );
-    this.floorWarningSide = null;
+    this.floorHazard.reset();
     this.clearThresholdCue();
 
     this.removeSolid(this.entranceGate);
@@ -1364,7 +1373,11 @@ export class MirrorConductorSystem {
         ) &&
         this.conductor.breakShield()
       ) {
-        this.shieldCycle.noteShieldBroken();
+        this.shieldCycle.noteShieldBroken(
+          getMirrorConductorShieldRearmSeconds(
+            this.conductor.phase
+          )
+        );
       }
     }
 
@@ -1379,14 +1392,20 @@ export class MirrorConductorSystem {
         y,
         targetX,
         targetY,
-        color
+        color,
+        delaySeconds,
+        speed,
+        lifetimeSeconds
       ) => {
         this.fireProjectile(
           x,
           y,
           targetX,
           targetY,
-          color
+          color,
+          delaySeconds,
+          speed,
+          lifetimeSeconds
         );
       }
     );
@@ -1406,8 +1425,21 @@ export class MirrorConductorSystem {
     y: number,
     targetX: number,
     targetY: number,
-    color = 0xe95acb
+    color = 0xe95acb,
+    delaySeconds = 0,
+    speed = 230,
+    lifetimeSeconds = 4
   ): void {
+    if (
+      this.conductor.phase === 3 &&
+      this.projectiles.filter(
+        projectile => projectile.active
+      ).length >=
+        MIRROR_CONDUCTOR_PHASE_THREE_PROJECTILE_CAP
+    ) {
+      return;
+    }
+
     const direction = new Phaser.Math.Vector2(
       targetX - x,
       targetY - y
@@ -1422,12 +1454,13 @@ export class MirrorConductorSystem {
     this.projectiles.push({
       x,
       y,
-      velocityX: direction.x * 230,
-      velocityY: direction.y * 230,
-      lifetime: 4,
+      velocityX: direction.x * speed,
+      velocityY: direction.y * speed,
+      lifetime: lifetimeSeconds,
       radius: 6,
       color,
-      active: true
+      active: true,
+      spawnDelay: delaySeconds
     });
   }
 
@@ -1446,11 +1479,28 @@ export class MirrorConductorSystem {
         continue;
       }
 
-      projectile.lifetime -= deltaSeconds;
+      let activeDelta = deltaSeconds;
+
+      if (projectile.spawnDelay > 0) {
+        activeDelta = Math.max(
+          0,
+          deltaSeconds - projectile.spawnDelay
+        );
+        projectile.spawnDelay = Math.max(
+          0,
+          projectile.spawnDelay - deltaSeconds
+        );
+
+        if (projectile.spawnDelay > 0) {
+          continue;
+        }
+      }
+
+      projectile.lifetime -= activeDelta;
       projectile.x +=
-        projectile.velocityX * deltaSeconds;
+        projectile.velocityX * activeDelta;
       projectile.y +=
-        projectile.velocityY * deltaSeconds;
+        projectile.velocityY * activeDelta;
 
       if (
         projectile.lifetime <= 0 ||
@@ -1489,11 +1539,10 @@ export class MirrorConductorSystem {
     this.projectiles.push(...active);
   }
 
-  private updateHazards(): void {
-    if (
-      this.conductor.isDefeated ||
-      this.hazardCooldown > 0
-    ) {
+  private updateHazards(
+    deltaSeconds: number
+  ): void {
+    if (this.conductor.isDefeated) {
       return;
     }
 
@@ -1508,7 +1557,10 @@ export class MirrorConductorSystem {
     const beamOriginY =
       this.conductor.bounds.centerY;
 
-    if (beamActive) {
+    if (
+      beamActive &&
+      this.hazardCooldown <= 0
+    ) {
       for (
         let index = 0;
         index < phase;
@@ -1545,50 +1597,64 @@ export class MirrorConductorSystem {
     }
 
     if (phase === 3) {
-      const floorCycle = this.elapsed % 3.2;
-      const dangerousLeft = floorCycle < 1.35;
-      const side = dangerousLeft
-        ? "left"
-        : "right";
+      const suppressRight =
+        movement.state === "hold" &&
+        movement.anchorIndex === 3;
+      const floor = this.floorHazard.update(
+        deltaSeconds,
+        suppressRight
+      );
 
-      if (side !== this.floorWarningSide) {
-        this.floorWarningSide = side;
+      if (floor.telegraphStarted) {
         this.scene.events.emit(
           AUDIO_EVENTS.bossAction,
           "floor-warning",
-          dangerousLeft ? 46196 : 48268
+          floor.side === "left" ? 46196 : 48268
         );
       }
 
-      const floorHazard = new Phaser.Geom.Rectangle(
-        dangerousLeft ? 45160 : 47232,
-        502,
-        2072,
-        18
-      );
+      if (floor.damagingSide) {
+        const floorHazard =
+          new Phaser.Geom.Rectangle(
+            floor.damagingSide === "left"
+              ? 45160
+              : 47232,
+            502,
+            2072,
+            18
+          );
 
-      if (
-        Phaser.Geom.Intersects.RectangleToRectangle(
-          bounds,
-          floorHazard
-        )
-      ) {
-        this.damageHazard(floorHazard.centerX);
+        if (
+          this.floorHazard.canDamage(
+            floor.damagingSide
+          ) &&
+          this.hazardCooldown <= 0 &&
+          Phaser.Geom.Intersects.RectangleToRectangle(
+            bounds,
+            floorHazard
+          ) &&
+          this.damageHazard(floorHazard.centerX)
+        ) {
+          this.floorHazard.markDamageApplied();
+        }
       }
     }
   }
 
-  private damageHazard(sourceX: number): void {
-    if (
+  private damageHazard(sourceX: number): boolean {
+    const damaged =
       this.playerHealth.receiveDamage(
         1,
         sourceX,
         175,
         -170
-      )
-    ) {
+      );
+
+    if (damaged) {
       this.hazardCooldown = 1.15;
     }
+
+    return damaged;
   }
 
   private spawnCardPickups(): void {
@@ -2131,6 +2197,10 @@ export class MirrorConductorSystem {
     }
 
     for (const projectile of this.projectiles) {
+      if (projectile.spawnDelay > 0) {
+        continue;
+      }
+
       graphics
         .fillStyle(projectile.color, 0.24)
         .fillCircle(
@@ -2239,17 +2309,24 @@ export class MirrorConductorSystem {
     }
 
     if (phase === 3) {
-      const dangerousLeft =
-        this.elapsed % 3.2 < 1.35;
+      const floor = this.floorHazard.current;
+      const visible =
+        floor.phase === "telegraph" ||
+        floor.damagingSide !== null;
 
-      graphics
-        .fillStyle(0xf05ac7, 0.32)
-        .fillRect(
-          dangerousLeft ? 45160 : 47232,
-          502,
-          2072,
-          18
-        );
+      if (visible) {
+        graphics
+          .fillStyle(
+            0xf05ac7,
+            floor.damagingSide ? 0.32 : 0.14
+          )
+          .fillRect(
+            floor.side === "left" ? 45160 : 47232,
+            502,
+            2072,
+            18
+          );
+      }
     }
   }
 
