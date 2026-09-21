@@ -88,8 +88,54 @@ export const MIRROR_CONDUCTOR_MOVEMENT_CYCLE_SECONDS =
     0
   );
 
+export interface MirrorConductorProjectileProfile {
+  readonly volleySize: number;
+  readonly intervalSeconds: number;
+  readonly staggerSeconds: number;
+  readonly speed: number;
+  readonly lifetimeSeconds: number;
+}
+
+export const MIRROR_CONDUCTOR_PHASE_THREE_PROJECTILE_CAP = 5;
+
+export const MIRROR_CONDUCTOR_PHASE_THREE_PROJECTILES:
+MirrorConductorProjectileProfile = {
+  volleySize: 3,
+  intervalSeconds: 1.4,
+  staggerSeconds: 0.25,
+  speed: 230,
+  lifetimeSeconds: 2
+};
+
+export function getMirrorConductorProjectileProfile(
+  phase: MirrorConductorPhase
+): MirrorConductorProjectileProfile {
+  if (phase === 3) {
+    return MIRROR_CONDUCTOR_PHASE_THREE_PROJECTILES;
+  }
+
+  return {
+    volleySize: phase,
+    intervalSeconds: phase === 1 ? 1.15 : 0.9,
+    staggerSeconds: 0,
+    speed: 230,
+    lifetimeSeconds: 4
+  };
+}
+
 export const MIRROR_CONDUCTOR_SHIELD_REARM_SECONDS = 12;
+export const MIRROR_CONDUCTOR_PHASE_THREE_SHIELD_REARM_SECONDS = 18;
 export const MIRROR_CONDUCTOR_SHIELD_DISPLACEMENT = 128;
+export const MIRROR_CONDUCTOR_CHECKPOINT_PLAYER_HEALTH = 5;
+export const MIRROR_CONDUCTOR_CHECKPOINT_GRAND_CARD_CHARGES = 3;
+
+export function getMirrorConductorShieldRearmSeconds(
+  phase: MirrorConductorPhase
+): number {
+  return phase === 3
+    ? MIRROR_CONDUCTOR_PHASE_THREE_SHIELD_REARM_SECONDS
+    : MIRROR_CONDUCTOR_SHIELD_REARM_SECONDS;
+}
 
 export interface MirrorConductorMovementSnapshot {
   readonly x: number;
@@ -285,9 +331,11 @@ export class MirrorConductorShieldCycle {
     );
   }
 
-  public noteShieldBroken(): void {
-    this.rearmRemaining =
-      MIRROR_CONDUCTOR_SHIELD_REARM_SECONDS;
+  public noteShieldBroken(
+    rearmSeconds =
+      MIRROR_CONDUCTOR_SHIELD_REARM_SECONDS
+  ): void {
+    this.rearmRemaining = rearmSeconds;
   }
 
   public update(
@@ -325,6 +373,161 @@ export class MirrorConductorShieldCycle {
 
   public get rearmSecondsRemaining(): number | null {
     return this.rearmRemaining;
+  }
+}
+
+export type MirrorConductorFloorHazardSide =
+  | "left"
+  | "right";
+
+export type MirrorConductorFloorHazardPhase =
+  | "safe"
+  | "telegraph"
+  | "damage";
+
+export const MIRROR_CONDUCTOR_FLOOR_SAFE_SECONDS =
+  2.791858621784668 + 1;
+export const MIRROR_CONDUCTOR_FLOOR_TELEGRAPH_SECONDS = 0.65;
+export const MIRROR_CONDUCTOR_FLOOR_DAMAGE_SECONDS =
+  MIRROR_CONDUCTOR_FLOOR_SAFE_SECONDS *
+  (1.35 / 1.85);
+export const MIRROR_CONDUCTOR_FLOOR_CYCLE_SECONDS =
+  MIRROR_CONDUCTOR_FLOOR_SAFE_SECONDS +
+  MIRROR_CONDUCTOR_FLOOR_TELEGRAPH_SECONDS +
+  MIRROR_CONDUCTOR_FLOOR_DAMAGE_SECONDS;
+
+export interface MirrorConductorFloorHazardSnapshot {
+  readonly phase: MirrorConductorFloorHazardPhase;
+  readonly side: MirrorConductorFloorHazardSide;
+  readonly phaseElapsed: number;
+  readonly damagingSide:
+    MirrorConductorFloorHazardSide | null;
+  readonly telegraphStarted: boolean;
+}
+
+export class MirrorConductorFloorHazardState {
+  private phase: MirrorConductorFloorHazardPhase = "safe";
+  private side: MirrorConductorFloorHazardSide = "left";
+  private phaseElapsed = 0;
+  private damageApplied = false;
+  private rightSuppressed = false;
+
+  public reset(): void {
+    this.phase = "safe";
+    this.side = "left";
+    this.phaseElapsed = 0;
+    this.damageApplied = false;
+    this.rightSuppressed = false;
+  }
+
+  public update(
+    deltaSeconds: number,
+    suppressRight: boolean,
+    simulationRunning = true
+  ): MirrorConductorFloorHazardSnapshot {
+    let remaining = simulationRunning
+      ? Math.max(0, deltaSeconds)
+      : 0;
+    let telegraphStarted = false;
+
+    if (
+      this.rightSuppressed &&
+      !suppressRight
+    ) {
+      if (this.side === "right") {
+        this.phase = "safe";
+        this.phaseElapsed = 0;
+        this.damageApplied = false;
+      }
+    }
+
+    this.rightSuppressed = suppressRight;
+
+    while (remaining > 1e-9) {
+      const duration = this.phaseDuration;
+      const step = Math.min(
+        remaining,
+        duration - this.phaseElapsed
+      );
+
+      this.phaseElapsed += step;
+      remaining -= step;
+
+      if (this.phaseElapsed >= duration - 1e-9) {
+        if (this.phase === "safe") {
+          this.phase = "telegraph";
+          this.phaseElapsed = 0;
+          telegraphStarted = true;
+        } else if (this.phase === "telegraph") {
+          this.phase = "damage";
+          this.phaseElapsed = 0;
+          this.damageApplied = false;
+        } else {
+          this.side = this.side === "left"
+            ? "right"
+            : "left";
+          this.phase = "safe";
+          this.phaseElapsed = 0;
+          this.damageApplied = false;
+        }
+      }
+    }
+
+    return this.snapshot(
+      telegraphStarted &&
+      !(this.side === "right" && this.rightSuppressed)
+    );
+  }
+
+  public get current():
+  MirrorConductorFloorHazardSnapshot {
+    return this.snapshot(false);
+  }
+
+  public canDamage(
+    side: MirrorConductorFloorHazardSide
+  ): boolean {
+    return (
+      this.phase === "damage" &&
+      this.side === side &&
+      !this.damageApplied &&
+      !(side === "right" && this.rightSuppressed)
+    );
+  }
+
+  public markDamageApplied(): void {
+    this.damageApplied = true;
+  }
+
+  private get phaseDuration(): number {
+    if (this.phase === "safe") {
+      return MIRROR_CONDUCTOR_FLOOR_SAFE_SECONDS;
+    }
+
+    if (this.phase === "telegraph") {
+      return MIRROR_CONDUCTOR_FLOOR_TELEGRAPH_SECONDS;
+    }
+
+    return MIRROR_CONDUCTOR_FLOOR_DAMAGE_SECONDS;
+  }
+
+  private snapshot(
+    telegraphStarted: boolean
+  ): MirrorConductorFloorHazardSnapshot {
+    const suppressed =
+      this.side === "right" &&
+      this.rightSuppressed;
+
+    return {
+      phase: this.phase,
+      side: this.side,
+      phaseElapsed: this.phaseElapsed,
+      damagingSide:
+        this.phase === "damage" && !suppressed
+          ? this.side
+          : null,
+      telegraphStarted
+    };
   }
 }
 
@@ -366,8 +569,8 @@ export class MirrorConductorCheckpointState {
 
   public capture(
     phase: MirrorConductorCheckpointPhase,
-    playerHealth: number,
-    grandCardCharges: number,
+    _playerHealth: number,
+    _grandCardCharges: number,
     dropTimerRemainders:
       Readonly<Record<string, number>>
   ): MirrorConductorPhaseCheckpoint {
@@ -377,8 +580,10 @@ export class MirrorConductorCheckpointState {
     this.checkpoint = {
       phase,
       bossHealth: phaseStart.health,
-      playerHealth,
-      grandCardCharges,
+      playerHealth:
+        MIRROR_CONDUCTOR_CHECKPOINT_PLAYER_HEALTH,
+      grandCardCharges:
+        MIRROR_CONDUCTOR_CHECKPOINT_GRAND_CARD_CHARGES,
       dropTimerRemainders: {
         ...dropTimerRemainders
       },

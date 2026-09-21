@@ -14,19 +14,31 @@ import {
   MIRROR_CONDUCTOR_BEAM_REACH,
   MIRROR_CONDUCTOR_BEAM_TELEGRAPH_SECONDS,
   MIRROR_CONDUCTOR_BEAM_TELEGRAPH_START,
+  MIRROR_CONDUCTOR_CHECKPOINT_GRAND_CARD_CHARGES,
+  MIRROR_CONDUCTOR_CHECKPOINT_PLAYER_HEALTH,
+  MIRROR_CONDUCTOR_FLOOR_CYCLE_SECONDS,
+  MIRROR_CONDUCTOR_FLOOR_DAMAGE_SECONDS,
+  MIRROR_CONDUCTOR_FLOOR_SAFE_SECONDS,
+  MIRROR_CONDUCTOR_FLOOR_TELEGRAPH_SECONDS,
   MIRROR_CONDUCTOR_HOLD_SECONDS,
   MIRROR_CONDUCTOR_INITIAL_HEALTH,
   MIRROR_CONDUCTOR_MOVEMENT_CYCLE_SECONDS,
+  MIRROR_CONDUCTOR_PHASE_THREE_PROJECTILE_CAP,
+  MIRROR_CONDUCTOR_PHASE_THREE_PROJECTILES,
+  MIRROR_CONDUCTOR_PHASE_THREE_SHIELD_REARM_SECONDS,
   MIRROR_CONDUCTOR_PLATFORMS,
   MIRROR_CONDUCTOR_SHIELD_REARM_SECONDS,
   MIRROR_CONDUCTOR_TELEGRAPH_SECONDS,
   MIRROR_CONDUCTOR_TRAVEL_SECONDS,
   MirrorConductorCheckpointState,
+  MirrorConductorFloorHazardState,
   MirrorConductorMovementCycle,
   MirrorConductorShieldCycle,
   applyMirrorConductorDamage,
   getMirrorConductorBeamState,
   getMirrorConductorPhase,
+  getMirrorConductorProjectileProfile,
+  getMirrorConductorShieldRearmSeconds,
   shouldShowMirrorConductorThresholdCue
 } from "../src/world/MirrorConductorPhase.ts";
 import {
@@ -156,7 +168,7 @@ test("defeat remains locked until the phase-three window completes", () => {
   );
 });
 
-test("phase checkpoint restores its exact snapshot and restarts the phase window", () => {
+test("phase checkpoint restores full resources and restarts the phase window", () => {
   const state =
     new MirrorConductorCheckpointState();
   const snapshot = state.capture(
@@ -174,8 +186,10 @@ test("phase checkpoint restores its exact snapshot and restarts the phase window
   assert.deepEqual(snapshot, {
     phase: 3,
     bossHealth: 36,
-    playerHealth: 2,
-    grandCardCharges: 1,
+    playerHealth:
+      MIRROR_CONDUCTOR_CHECKPOINT_PLAYER_HEALTH,
+    grandCardCharges:
+      MIRROR_CONDUCTOR_CHECKPOINT_GRAND_CARD_CHARGES,
     dropTimerRemainders: {
       ConductorCardLeft: 3.25,
       ConductorCardRight: 0,
@@ -195,6 +209,28 @@ test("phase checkpoint restores its exact snapshot and restarts the phase window
     ),
     1,
     "phase three must restart its 70-second minimum window"
+  );
+
+  const phaseTwo =
+    new MirrorConductorCheckpointState().capture(
+      2,
+      1,
+      0,
+      { ConductorCardLeft: 6 }
+    );
+  assert.equal(
+    phaseTwo.playerHealth,
+    MIRROR_CONDUCTOR_CHECKPOINT_PLAYER_HEALTH
+  );
+  assert.equal(
+    phaseTwo.grandCardCharges,
+    MIRROR_CONDUCTOR_CHECKPOINT_GRAND_CARD_CHARGES
+  );
+  assert.equal(phaseTwo.bossHealth, 72);
+  assert.equal(
+    phaseTwo.dropTimerRemainders.ConductorCardLeft,
+    6,
+    "resource refill must not rewind pickup timers"
   );
 });
 
@@ -784,6 +820,280 @@ test("shield requires movement and re-arms deterministically without paused time
     "deferred re-arm applies after HOLD ends"
   );
   assert.equal(cycle.displacementAnchorX, 500);
+});
+
+test("phase-three shield re-arm starts at its break and never leaks into earlier phases", () => {
+  assert.equal(
+    getMirrorConductorShieldRearmSeconds(1),
+    MIRROR_CONDUCTOR_SHIELD_REARM_SECONDS
+  );
+  assert.equal(
+    getMirrorConductorShieldRearmSeconds(2),
+    MIRROR_CONDUCTOR_SHIELD_REARM_SECONDS
+  );
+  assert.equal(
+    getMirrorConductorShieldRearmSeconds(3),
+    MIRROR_CONDUCTOR_PHASE_THREE_SHIELD_REARM_SECONDS
+  );
+
+  const cycle = new MirrorConductorShieldCycle();
+  cycle.reset(100);
+  cycle.noteShieldBroken(
+    getMirrorConductorShieldRearmSeconds(3)
+  );
+  assert.equal(cycle.update(17.999, 300), false);
+  assert.ok(
+    cycle.rearmSecondsRemaining >= 0.001 - 1e-9
+  );
+  assert.equal(
+    cycle.update(0.001, 300, true, true),
+    false,
+    "HOLD deferral cannot shorten the eighteen-second window"
+  );
+  assert.ok(
+    cycle.rearmSecondsRemaining !== null &&
+    cycle.rearmSecondsRemaining <= 1e-9
+  );
+  assert.equal(
+    cycle.update(0.001, 300, true, false),
+    true
+  );
+
+  cycle.reset(500);
+  assert.equal(
+    cycle.rearmSecondsRemaining,
+    null,
+    "fresh runs cannot inherit phase-three shield timing"
+  );
+});
+
+test("phase-three floor timing covers pickups, pauses safely, warns after suppression, and damages once", () => {
+  const leftRoundTrip =
+    Math.sqrt(2 * 56 / 1600) +
+    96 / 190 +
+    (455 - Math.sqrt(455 ** 2 - 2 * 1600 * 56)) /
+      1600;
+  const firstJumpRise = 455 ** 2 / (2 * 1600);
+  const rightJumpTime =
+    455 / 1600 +
+    (420 -
+      Math.sqrt(
+        420 ** 2 -
+        2 * 1600 * (72 - firstJumpRise)
+      )) /
+      1600;
+  const rightRoundTrip =
+    Math.sqrt(2 * 72 / 1600) +
+    416 / 190 +
+    rightJumpTime;
+
+  assert.ok(Math.abs(leftRoundTrip - 0.9499581182661192) < 1e-12);
+  assert.ok(Math.abs(rightRoundTrip - 2.791858621784668) < 1e-12);
+  assert.ok(
+    MIRROR_CONDUCTOR_FLOOR_SAFE_SECONDS >=
+      rightRoundTrip + 1
+  );
+  assert.equal(
+    MIRROR_CONDUCTOR_FLOOR_TELEGRAPH_SECONDS,
+    0.65
+  );
+  assert.ok(
+    Math.abs(
+      MIRROR_CONDUCTOR_FLOOR_DAMAGE_SECONDS /
+      MIRROR_CONDUCTOR_FLOOR_SAFE_SECONDS -
+      1.35 / 1.85
+    ) < 1e-12
+  );
+  assert.ok(
+    Math.abs(
+      MIRROR_CONDUCTOR_FLOOR_CYCLE_SECONDS -
+      7.20889058903294
+    ) < 1e-12
+  );
+
+  const single = new MirrorConductorFloorHazardState();
+  const split = new MirrorConductorFloorHazardState();
+  const singleSnapshot = single.update(5.25, false);
+  let splitSnapshot = split.current;
+
+  for (const delta of [1, 0.25, 2, 2]) {
+    splitSnapshot = split.update(delta, false);
+  }
+
+  assert.deepEqual(splitSnapshot, singleSnapshot);
+  const beforePause = split.current;
+  assert.deepEqual(
+    split.update(30, false, false),
+    beforePause
+  );
+
+  const right = new MirrorConductorFloorHazardState();
+  right.update(
+    MIRROR_CONDUCTOR_FLOOR_CYCLE_SECONDS,
+    false
+  );
+  right.update(
+    MIRROR_CONDUCTOR_FLOOR_SAFE_SECONDS +
+      MIRROR_CONDUCTOR_FLOOR_TELEGRAPH_SECONDS,
+    false
+  );
+  assert.equal(right.current.side, "right");
+  assert.equal(right.current.phase, "damage");
+  assert.equal(right.current.damagingSide, "right");
+
+  const fullHold = new MirrorConductorFloorHazardState();
+  fullHold.update(
+    MIRROR_CONDUCTOR_FLOOR_CYCLE_SECONDS,
+    false
+  );
+  fullHold.update(
+    MIRROR_CONDUCTOR_FLOOR_SAFE_SECONDS +
+      MIRROR_CONDUCTOR_FLOOR_TELEGRAPH_SECONDS,
+    false
+  );
+  const suppressed = fullHold.update(
+    MIRROR_CONDUCTOR_HOLD_SECONDS,
+    true
+  );
+  assert.notEqual(
+    suppressed.damagingSide,
+    "right",
+    "anchor-D floor must stay safe for the full HOLD"
+  );
+
+  right.update(0.5, true);
+  const resumed = right.update(0, false);
+  assert.equal(resumed.side, "right");
+  assert.equal(resumed.phase, "safe");
+  assert.equal(resumed.phaseElapsed, 0);
+  assert.equal(resumed.damagingSide, null);
+
+  right.update(
+    MIRROR_CONDUCTOR_FLOOR_SAFE_SECONDS,
+    false
+  );
+  assert.equal(right.current.phase, "telegraph");
+  assert.equal(right.current.telegraphStarted, false);
+  right.update(
+    MIRROR_CONDUCTOR_FLOOR_TELEGRAPH_SECONDS - 1e-6,
+    false
+  );
+  assert.equal(right.current.phase, "telegraph");
+  right.update(1e-6, false);
+  assert.equal(right.current.phase, "damage");
+  assert.equal(right.canDamage("right"), true);
+  right.markDamageApplied();
+  assert.equal(
+    right.canDamage("right"),
+    false,
+    "one floor window can remove at most one heart"
+  );
+});
+
+test("phase-three projectile profile limits every sampled in-flight count", () => {
+  assert.deepEqual(
+    getMirrorConductorProjectileProfile(1),
+    {
+      volleySize: 1,
+      intervalSeconds: 1.15,
+      staggerSeconds: 0,
+      speed: 230,
+      lifetimeSeconds: 4
+    }
+  );
+  assert.deepEqual(
+    getMirrorConductorProjectileProfile(2),
+    {
+      volleySize: 2,
+      intervalSeconds: 0.9,
+      staggerSeconds: 0,
+      speed: 230,
+      lifetimeSeconds: 4
+    }
+  );
+  assert.deepEqual(
+    getMirrorConductorProjectileProfile(3),
+    MIRROR_CONDUCTOR_PHASE_THREE_PROJECTILES
+  );
+
+  const profile =
+    MIRROR_CONDUCTOR_PHASE_THREE_PROJECTILES;
+  assert.equal(
+    profile.speed * profile.lifetimeSeconds,
+    460
+  );
+  assert.equal(
+    profile.speed * profile.staggerSeconds,
+    57.5
+  );
+  assert.ok(
+    190 * profile.staggerSeconds > 18
+  );
+  assert.ok(
+    profile.volleySize /
+      profile.intervalSeconds *
+      profile.lifetimeSeconds <= 5
+  );
+
+  const shotTimes = [];
+  for (
+    let volley = 0;
+    volley < 30;
+    volley += profile.intervalSeconds
+  ) {
+    for (
+      let shot = 0;
+      shot < profile.volleySize;
+      shot += 1
+    ) {
+      shotTimes.push(
+        volley + shot * profile.staggerSeconds
+      );
+    }
+  }
+  shotTimes.sort((left, right) => left - right);
+
+  const expirations = [];
+  let shotIndex = 0;
+  let maximumInFlight = 0;
+
+  for (let time = 0; time <= 30; time += 1 / 240) {
+    for (
+      let index = expirations.length - 1;
+      index >= 0;
+      index -= 1
+    ) {
+      if (expirations[index] <= time + 1e-9) {
+        expirations.splice(index, 1);
+      }
+    }
+
+    while (
+      shotIndex < shotTimes.length &&
+      shotTimes[shotIndex] <= time + 1e-9
+    ) {
+      if (
+        expirations.length <
+        MIRROR_CONDUCTOR_PHASE_THREE_PROJECTILE_CAP
+      ) {
+        expirations.push(
+          shotTimes[shotIndex] +
+          profile.lifetimeSeconds
+        );
+      }
+      shotIndex += 1;
+    }
+
+    maximumInFlight = Math.max(
+      maximumInFlight,
+      expirations.length
+    );
+  }
+
+  assert.ok(
+    maximumInFlight <=
+      MIRROR_CONDUCTOR_PHASE_THREE_PROJECTILE_CAP
+  );
 });
 
 test("arena walls close on checkpoint restore and open before and after the fight", async () => {
