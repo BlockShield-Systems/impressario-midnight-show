@@ -471,7 +471,7 @@ for (const required of [
   'createWorldGate(\n    "MirrorConductorEntrance"',
   'createWorldGate(\n    "MirrorConductorResolution"',
   'getWorldCheckpoint(\n        "MirrorConductor"',
-  "private health = 108",
+  "MIRROR_CONDUCTOR_INITIAL_HEALTH",
   "getMirrorConductorPhase(",
   "applyMirrorConductorDamage(",
   "public receiveRangedHit(",
@@ -486,7 +486,13 @@ for (const required of [
   "WORLD_HEIGHT",
   "private finaleSubmitted = false",
   "if (!this.finaleSubmitted)",
-  "!this.conductor.isDefeated"
+  "!this.conductor.isDefeated",
+  "MirrorConductorCheckpointState",
+  "capturePhaseCheckpoint(",
+  "restorePhaseCheckpoint(",
+  "setRuntimeCheckpoint(",
+  "restoreGrandCardCharges(",
+  "restoreDropTimerRemainders("
 ]) {
   if (!mirrorConductor.includes(required)) {
     throw new Error(
@@ -503,6 +509,11 @@ for (const required of [
   "2: 60",
   "3: 70",
   "phaseElapsed <",
+  "MIRROR_CONDUCTOR_PHASE_START",
+  "spawnX: 45584",
+  "spawnX: 49104",
+  "phaseElapsed: 0",
+  "shielded: true",
   "? 73",
   ": 37",
   ": 1",

@@ -228,6 +228,27 @@ export class MagicSystem {
     this.grandCardCharges.resetPickups(ids);
   }
 
+  public restoreGrandCardCharges(
+    charges: number
+  ): void {
+    this.grandCardCharges.restoreCharges(charges);
+    this.redrawHud();
+  }
+
+  public grandCardPickupTimerRemainders(
+    ids: readonly string[]
+  ): Readonly<Record<string, number>> {
+    return this.grandCardCharges
+      .pickupTimerRemainders(ids);
+  }
+
+  public restoreGrandCardPickupTimers(
+    remainders: Readonly<Record<string, number>>
+  ): void {
+    this.grandCardCharges
+      .restorePickupTimers(remainders);
+  }
+
   public getHudDebugSnapshot() {
     return {
       visible:

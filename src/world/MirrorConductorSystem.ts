@@ -2,6 +2,9 @@ import Phaser from "phaser";
 import { BossView } from "../boss/BossView";
 import { AUDIO_EVENTS } from "../audio/AudioEvents";
 import { leaderboard } from "../leaderboard/LeaderboardClient";
+import {
+  PickupRespawnState
+} from "../magic/GrandCardState";
 import { WORLD_HEIGHT, WORLD_WIDTH } from "./WorldLayout";
 import { getWorldCheckpoint, getWorldGate, type WorldGateId } from "./WorldGameplay";
 import type { CombatSystem, CombatTarget } from "../combat/CombatSystem";
@@ -9,9 +12,13 @@ import type { MagicSystem } from "../magic/MagicSystem";
 import type { PlayerHealthSystem } from "../player/PlayerHealthSystem";
 import type { PlayerController } from "../main";
 import {
+  MIRROR_CONDUCTOR_INITIAL_HEALTH,
+  MirrorConductorCheckpointState,
   applyMirrorConductorDamage,
   getMirrorConductorPhase,
-  shouldShowMirrorConductorThresholdCue
+  shouldShowMirrorConductorThresholdCue,
+  type MirrorConductorCheckpointPhase,
+  type MirrorConductorPhaseCheckpoint
 } from "./MirrorConductorPhase";
 
 export const MIRROR_CONDUCTOR_START_X = 44672;
@@ -20,6 +27,8 @@ export const MIRROR_CONDUCTOR_THRESHOLD_X = 45312;
 const ARENA_LEFT = 45120;
 const ARENA_RIGHT = 49344;
 const ARENA_CENTER_X = 47232;
+
+const HEALTH_PICKUP_RESPAWN_SECONDS = 14;
 
 const RUNTIME_CARD_PICKUP_POSITIONS = [
   {
@@ -31,6 +40,19 @@ const RUNTIME_CARD_PICKUP_POSITIONS = [
     id: "ConductorCardRight",
     x: 48544,
     y: 520
+  }
+] as const;
+
+const RUNTIME_HEALTH_PICKUP_POSITIONS = [
+  {
+    id: "ConductorRoseLeft",
+    x: 46176,
+    y: 352
+  },
+  {
+    id: "ConductorRoseRight",
+    x: 47968,
+    y: 416
   }
 ] as const;
 
@@ -61,6 +83,12 @@ interface RuntimeGrandCardPickup {
   readonly x: number;
   readonly y: number;
   active: boolean;
+}
+
+interface RuntimeHealthPickup {
+  readonly id: string;
+  readonly x: number;
+  readonly y: number;
 }
 
 interface FinaleParticle {
@@ -155,7 +183,8 @@ implements CombatTarget {
 
   public active = false;
 
-  private health = 108;
+  private health =
+    MIRROR_CONDUCTOR_INITIAL_HEALTH;
   private shielded = true;
   private defeated = false;
   private markedTimer = 0;
@@ -190,6 +219,9 @@ implements CombatTarget {
       (counter: BossCounter) => void,
     private readonly onAction:
       (action: BossAction) => void,
+    private readonly onPhaseChanged: (
+      phase: MirrorConductorCheckpointPhase
+    ) => void,
     private readonly onDefeated:
       () => void
   ) {
@@ -348,6 +380,10 @@ implements CombatTarget {
 
     if (phaseAfter !== phaseBefore) {
       this.phaseElapsed = 0;
+      this.onPhaseChanged(
+        phaseAfter as
+          MirrorConductorCheckpointPhase
+      );
     }
 
     if (
@@ -370,11 +406,23 @@ implements CombatTarget {
     this.previousPhase = phaseAfter;
   }
 
+  public restorePhaseCheckpoint(
+    checkpoint: MirrorConductorPhaseCheckpoint
+  ): void {
+    this.reset();
+    this.health = checkpoint.bossHealth;
+    this.shielded = checkpoint.shielded;
+    this.previousPhase = checkpoint.phase;
+    this.phaseElapsed =
+      checkpoint.phaseElapsed;
+  }
+
   public reset(): void {
     this.x = 47200;
     this.y = 300;
 
-    this.health = 108;
+    this.health =
+      MIRROR_CONDUCTOR_INITIAL_HEALTH;
     this.shielded = true;
     this.active = false;
     this.defeated = false;
@@ -716,6 +764,10 @@ export class MirrorConductorSystem {
   private hazardCooldown = 0;
   private previousSpotlightCasts = 0;
   private wasInsideSection = false;
+  private readonly phaseCheckpoint =
+    new MirrorConductorCheckpointState();
+  private readonly healthPickupRespawns =
+    new PickupRespawnState();
 
   private readonly entranceGate = createWorldGate(
     "MirrorConductorEntrance"
@@ -735,6 +787,9 @@ export class MirrorConductorSystem {
           active: false
         })
       );
+  private readonly healthPickups:
+    readonly RuntimeHealthPickup[] =
+      RUNTIME_HEALTH_PICKUP_POSITIONS;
   private readonly graphics: Phaser.GameObjects.Graphics;
   private readonly hud: Phaser.GameObjects.Text;
   private readonly bossHudGraphics: Phaser.GameObjects.Graphics;
@@ -903,6 +958,11 @@ export class MirrorConductorSystem {
       action => {
         this.emitBossAction(action);
       },
+      phase => {
+        this.capturePhaseCheckpoint(
+          phase
+        );
+      },
       () => {
         this.completeBoss();
       }
@@ -911,6 +971,7 @@ export class MirrorConductorSystem {
     combatSystem.registerTarget(this.conductor);
     this.addSolid(this.resolutionGate);
     this.previousSpotlightCasts = magicSystem.castsPerformed;
+    this.beginFreshRun();
   }
 
   public update(deltaSeconds: number): void {
@@ -925,10 +986,16 @@ export class MirrorConductorSystem {
       this.player.x < MIRROR_CONDUCTOR_END_X;
 
     if (
+      !this.wasInsideSection &&
+      insideSection
+    ) {
+      this.beginFreshRun();
+      this.restoreAuthoredCheckpoint();
+    } else if (
       this.wasInsideSection &&
       !insideSection
     ) {
-      this.clearCardPickups();
+      this.clearFinaleRunState();
     }
 
     this.wasInsideSection = insideSection;
@@ -970,6 +1037,9 @@ export class MirrorConductorSystem {
       this.updateProjectiles(deltaSeconds);
       this.updateHazards();
       this.updateCardPickups();
+      this.updateHealthPickups(
+        deltaSeconds
+      );
     }
 
     if (this.finaleActive) {
@@ -991,7 +1061,30 @@ export class MirrorConductorSystem {
     this.bossStarted = false;
     this.clearCardPickups();
 
-    this.conductor.reset();
+    const activeDropTimers =
+      this.dropTimerRemainders();
+    this.phaseCheckpoint.preserveDropTimers(
+      activeDropTimers
+    );
+    const checkpoint =
+      this.phaseCheckpoint.restore();
+
+    if (checkpoint) {
+      this.conductor.restorePhaseCheckpoint(
+        checkpoint
+      );
+      this.playerHealth.restoreHealth(
+        checkpoint.playerHealth
+      );
+      this.magicSystem.restoreGrandCardCharges(
+        checkpoint.grandCardCharges
+      );
+      this.restoreDropTimerRemainders(
+        checkpoint.dropTimerRemainders
+      );
+    } else {
+      this.conductor.reset();
+    }
     this.removeSolid(this.entranceGate);
     this.removeSolid(this.resolutionGate);
     this.addSolid(this.resolutionGate);
@@ -1002,6 +1095,107 @@ export class MirrorConductorSystem {
 
     this.previousSpotlightCasts =
       this.magicSystem.castsPerformed;
+  }
+
+  private capturePhaseCheckpoint(
+    phase: MirrorConductorCheckpointPhase
+  ): void {
+    const checkpoint =
+      this.phaseCheckpoint.capture(
+        phase,
+        this.playerHealth.currentHealth,
+        this.magicSystem.grandCardChargeCount,
+        this.dropTimerRemainders()
+      );
+
+    this.playerHealth.setRuntimeCheckpoint(
+      `Mirror Conductor — Phase ${phase}`,
+      checkpoint.spawnX,
+      checkpoint.spawnY
+    );
+  }
+
+  private dropTimerRemainders():
+  Readonly<Record<string, number>> {
+    return {
+      ...this.magicSystem
+        .grandCardPickupTimerRemainders(
+          RUNTIME_CARD_PICKUP_POSITIONS.map(
+            pickup => pickup.id
+          )
+        ),
+      ...this.healthPickupRespawns.snapshot(
+        RUNTIME_HEALTH_PICKUP_POSITIONS.map(
+          pickup => pickup.id
+        )
+      )
+    };
+  }
+
+  private restoreDropTimerRemainders(
+    remainders: Readonly<Record<string, number>>
+  ): void {
+    const cardRemainders =
+      Object.fromEntries(
+        RUNTIME_CARD_PICKUP_POSITIONS.map(
+          pickup => [
+            pickup.id,
+            remainders[pickup.id] ?? 0
+          ])
+      );
+    const healthRemainders =
+      Object.fromEntries(
+        RUNTIME_HEALTH_PICKUP_POSITIONS.map(
+          pickup => [
+            pickup.id,
+            remainders[pickup.id] ?? 0
+          ])
+      );
+
+    this.magicSystem
+      .restoreGrandCardPickupTimers(
+        cardRemainders
+      );
+    this.healthPickupRespawns.restore(
+      healthRemainders
+    );
+  }
+
+  private beginFreshRun(): void {
+    this.phaseCheckpoint.beginRun();
+    this.resetDropTimers();
+    this.clearCardPickups();
+  }
+
+  private clearFinaleRunState(): void {
+    this.phaseCheckpoint.clear();
+    this.resetDropTimers();
+    this.clearCardPickups();
+    this.restoreAuthoredCheckpoint();
+  }
+
+  private restoreAuthoredCheckpoint(): void {
+    const checkpoint =
+      getWorldCheckpoint("MirrorConductor");
+
+    this.playerHealth.replaceRuntimeCheckpoint(
+      checkpoint.displayName,
+      checkpoint.x,
+      checkpoint.y
+    );
+  }
+
+  private resetDropTimers(): void {
+    this.healthPickupRespawns.reset(
+      RUNTIME_HEALTH_PICKUP_POSITIONS.map(
+        pickup => pickup.id
+      )
+    );
+    this.magicSystem.resetGrandCardPickups(
+      RUNTIME_CARD_PICKUP_POSITIONS.map(
+        pickup => pickup.id
+      )
+    );
   }
 
   private updateThresholdCue(
@@ -1358,6 +1552,52 @@ export class MirrorConductorSystem {
     }
   }
 
+  private updateHealthPickups(
+    deltaSeconds: number
+  ): void {
+    this.healthPickupRespawns.update(
+      deltaSeconds
+    );
+
+    const bounds = playerBounds(this.player);
+
+    for (const pickup of this.healthPickups) {
+      if (
+        !this.healthPickupRespawns
+          .isAvailable(pickup.id) ||
+        !Phaser.Geom.Intersects
+          .RectangleToRectangle(
+            bounds,
+            new Phaser.Geom.Rectangle(
+              pickup.x - 9,
+              pickup.y - 19,
+              18,
+              20
+            )
+          )
+      ) {
+        continue;
+      }
+
+      if (
+        this.playerHealth.heal(1) &&
+        this.healthPickupRespawns.collect(
+          pickup.id,
+          HEALTH_PICKUP_RESPAWN_SECONDS
+        )
+      ) {
+        this.scene.events.emit(
+          AUDIO_EVENTS.grandCardPickup,
+          pickup.x
+        );
+        this.scene.cameras.main.shake(
+          55,
+          0.0015
+        );
+      }
+    }
+  }
+
   private completeBoss(): void {
     if (
       this.bossDefeated ||
@@ -1369,7 +1609,7 @@ export class MirrorConductorSystem {
     this.bossDefeated = true;
     this.bossStarted = false;
     this.projectiles.length = 0;
-    this.clearCardPickups();
+    this.clearFinaleRunState();
 
     this.removeSolid(this.resolutionGate);
     this.removeSolid(this.entranceGate);
@@ -1734,6 +1974,39 @@ export class MirrorConductorSystem {
         )
         .fillStyle(0xd5376c, 1)
         .fillCircle(pickup.x, y, 2);
+    }
+
+    for (const pickup of this.healthPickups) {
+      if (
+        !this.bossStarted ||
+        !this.healthPickupRespawns
+          .isAvailable(pickup.id)
+      ) {
+        continue;
+      }
+
+      const y = pickup.y - 10 +
+        Math.sin(
+          this.elapsed * 4.2 +
+          pickup.x * 0.01
+        ) * 3;
+
+      graphics
+        .fillStyle(0x62e9b2, 0.25)
+        .fillCircle(pickup.x, y, 14)
+        .fillStyle(0xe85fbd, 1)
+        .fillCircle(pickup.x - 4, y - 2, 5)
+        .fillCircle(pickup.x + 4, y - 2, 5)
+        .fillCircle(pickup.x, y - 7, 5)
+        .fillStyle(0xf4ce68, 1)
+        .fillCircle(pickup.x, y - 2, 3)
+        .lineStyle(2, 0x62e9b2, 1)
+        .lineBetween(
+          pickup.x,
+          y + 2,
+          pickup.x,
+          y + 10
+        );
     }
 
     for (const projectile of this.projectiles) {
