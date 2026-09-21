@@ -300,8 +300,8 @@ export const WORLD_SOLIDS: readonly WorldSolid[] = [
   { x: 44672, y: 480, width: 448, height: 32 },
   { x: 44672, y: 688, width: 5152, height: 32 },
   { x: 45120, y: 520, width: 4224, height: 32 },
-  { x: 45448, y: 96, width: 24, height: 424 },
   { x: 45472, y: 400, width: 256, height: 16 },
+  { x: 45528, y: 96, width: 24, height: 424 },
   { x: 45840, y: 464, width: 128, height: 16 },
   { x: 46048, y: 352, width: 256, height: 16 },
   { x: 46432, y: 448, width: 128, height: 16 },
@@ -314,7 +314,7 @@ export const WORLD_SOLIDS: readonly WorldSolid[] = [
   { x: 48416, y: 352, width: 256, height: 16 },
   { x: 48800, y: 464, width: 128, height: 16 },
   { x: 48992, y: 400, width: 256, height: 16 },
-  { x: 49248, y: 96, width: 24, height: 424 },
+  { x: 49136, y: 96, width: 24, height: 424 },
   { x: 49344, y: 480, width: 480, height: 32 },
 ] as const;
 

@@ -16695,7 +16695,7 @@
             {
               "__identifier": "CollisionRect",
               "__grid": [
-                2840,
+                2845,
                 6
               ],
               "__pivot": [
@@ -16706,14 +16706,14 @@
                 "Collision"
               ],
               "__tile": null,
-              "__worldX": 45448,
+              "__worldX": 45528,
               "__worldY": 96,
               "defUid": 2,
               "fieldInstances": [],
               "height": 424,
               "iid": "d4607b46-3c0e-557b-a8dd-f3766fa0bd5b",
               "px": [
-                45448,
+                45528,
                 96
               ],
               "width": 24
@@ -16721,7 +16721,7 @@
             {
               "__identifier": "CollisionRect",
               "__grid": [
-                3078,
+                3071,
                 6
               ],
               "__pivot": [
@@ -16732,14 +16732,14 @@
                 "Collision"
               ],
               "__tile": null,
-              "__worldX": 49248,
+              "__worldX": 49136,
               "__worldY": 96,
               "defUid": 2,
               "fieldInstances": [],
               "height": 424,
               "iid": "36a5ce33-2d2b-593b-a078-83171ab781f7",
               "px": [
-                49248,
+                49136,
                 96
               ],
               "width": 24
