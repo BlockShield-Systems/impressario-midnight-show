@@ -126,16 +126,23 @@ export class PlayerHealthSystem {
   public setCheckpoint(
     checkpoint: WorldCheckpoint
   ): void {
-    const name =
-      checkpoint.displayName;
+    this.setRuntimeCheckpoint(
+      checkpoint.displayName,
+      checkpoint.x,
+      checkpoint.y
+    );
+  }
 
-    this.checkpointX =
-      checkpoint.x;
-
-    this.checkpointY =
-      checkpoint.y;
-
-    this.checkpointName = name;
+  public setRuntimeCheckpoint(
+    name: string,
+    x: number,
+    y: number
+  ): void {
+    this.replaceRuntimeCheckpoint(
+      name,
+      x,
+      y
+    );
 
     leaderboard.recordCheckpoint(name);
 
@@ -159,6 +166,27 @@ export class PlayerHealthSystem {
       94,
       false
     );
+  }
+
+  public replaceRuntimeCheckpoint(
+    name: string,
+    x: number,
+    y: number
+  ): void {
+    this.checkpointX = x;
+    this.checkpointY = y;
+    this.checkpointName = name;
+  }
+
+  public restoreHealth(health: number): void {
+    this.health = Math.max(
+      1,
+      Math.min(
+        this.maximumHealth,
+        Math.floor(health)
+      )
+    );
+    this.redrawHud();
   }
 
   public heal(amount: number): boolean {

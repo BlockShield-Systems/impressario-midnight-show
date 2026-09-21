@@ -82,6 +82,30 @@ export class PickupRespawnState {
     }
   }
 
+  public snapshot(
+    ids: readonly string[]
+  ): Readonly<Record<string, number>> {
+    return Object.fromEntries(
+      ids.map(id => [
+        id,
+        this.remainingSeconds(id)
+      ])
+    );
+  }
+
+  public restore(
+    remainders: Readonly<Record<string, number>>
+  ): void {
+    for (const [id, remaining] of
+      Object.entries(remainders)) {
+      if (remaining > 0) {
+        this.timers.set(id, remaining);
+      } else {
+        this.timers.delete(id);
+      }
+    }
+  }
+
   public reset(ids?: readonly string[]): void {
     if (ids === undefined) {
       this.timers.clear();
@@ -149,6 +173,32 @@ export class GrandCardChargeState {
 
   public isPickupAvailable(id: string): boolean {
     return this.pickupRespawns.isAvailable(id);
+  }
+
+  public restoreCharges(charges: number): void {
+    if (!this.unlocked) {
+      return;
+    }
+
+    this.charges = Math.max(
+      0,
+      Math.min(
+        GRAND_CARD_MAX_CHARGES,
+        Math.floor(charges)
+      )
+    );
+  }
+
+  public pickupTimerRemainders(
+    ids: readonly string[]
+  ): Readonly<Record<string, number>> {
+    return this.pickupRespawns.snapshot(ids);
+  }
+
+  public restorePickupTimers(
+    remainders: Readonly<Record<string, number>>
+  ): void {
+    this.pickupRespawns.restore(remainders);
   }
 
   public update(deltaSeconds: number): void {

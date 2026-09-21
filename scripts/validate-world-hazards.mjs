@@ -845,9 +845,13 @@ for (const token of [
   '"floor-warning"',
   'id: "ConductorCardLeft"',
   'id: "ConductorCardRight"',
+  'id: "ConductorRoseLeft"',
+  'id: "ConductorRoseRight"',
+  "HEALTH_PICKUP_RESPAWN_SECONDS = 14",
   "private spawnCardPickups()",
   "private clearCardPickups()",
   "private updateCardPickups()",
+  "private updateHealthPickups(",
   "this.clearCardPickups()"
 ]) {
   if (!mirrorConductorSource.includes(token)) {
