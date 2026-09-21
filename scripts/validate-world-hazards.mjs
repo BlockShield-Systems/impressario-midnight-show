@@ -827,8 +827,8 @@ const mirrorConductorSource = read(
 );
 
 for (const token of [
-  "const ARENA_LEFT = 45120",
-  "const ARENA_RIGHT = 49344",
+  "MIRROR_CONDUCTOR_ARENA_BOUNDS.left",
+  "MIRROR_CONDUCTOR_ARENA_BOUNDS.right",
   "this.player.x >= MIRROR_CONDUCTOR_START_X",
   "this.player.x < MIRROR_CONDUCTOR_END_X",
   "projectile.x < ARENA_LEFT",

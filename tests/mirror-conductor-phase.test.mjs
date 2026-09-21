@@ -6,10 +6,18 @@ import {
   PickupRespawnState
 } from "../src/magic/GrandCardState.ts";
 import {
+  MIRROR_CONDUCTOR_ARENA_BOUNDS,
+  MIRROR_CONDUCTOR_ARENA_WALLS,
   MIRROR_CONDUCTOR_INITIAL_HEALTH,
+  MIRROR_CONDUCTOR_MOVEMENT_WAYPOINTS,
+  MIRROR_CONDUCTOR_PLATFORMS,
+  MIRROR_CONDUCTOR_SHIELD_REARM_SECONDS,
   MirrorConductorCheckpointState,
+  MirrorConductorMovementCycle,
+  MirrorConductorShieldCycle,
   applyMirrorConductorDamage,
   getMirrorConductorPhase,
+  getMirrorConductorPosition,
   shouldShowMirrorConductorThresholdCue
 } from "../src/world/MirrorConductorPhase.ts";
 
@@ -287,6 +295,233 @@ test("runtime clears phase state at fresh entry, section exit, and boss defeat",
   );
   assert.match(
     source,
-    /if \(distance <= 190\) \{\s*this\.conductor\.breakShield\(\);/
+    /distance <= 190 &&[\s\S]*this\.shieldCycle\.canBreak\([\s\S]*this\.conductor\.breakShield\(\)/
+  );
+});
+
+test("movement cycle is frame-step independent, pause-preserving, and bounded", () => {
+  const singleStep =
+    new MirrorConductorMovementCycle();
+  const splitSteps =
+    new MirrorConductorMovementCycle();
+  const expectedElapsed = 5.75;
+
+  const singlePosition =
+    singleStep.update(expectedElapsed);
+  let splitPosition = splitSteps.update(0);
+
+  for (const delta of [
+    0.5,
+    0.25,
+    1,
+    0.125,
+    2,
+    0.375,
+    1.5
+  ]) {
+    splitPosition = splitSteps.update(delta);
+  }
+
+  assert.equal(
+    splitSteps.elapsedSeconds,
+    expectedElapsed
+  );
+  assert.ok(
+    Math.abs(splitPosition.x - singlePosition.x) < 1e-9
+  );
+  assert.ok(
+    Math.abs(splitPosition.y - singlePosition.y) < 1e-9
+  );
+
+  const beforePause = { ...splitPosition };
+  splitPosition = splitSteps.update(30, false);
+  assert.deepEqual(splitPosition, beforePause);
+  assert.equal(
+    splitSteps.elapsedSeconds,
+    expectedElapsed
+  );
+
+  for (let time = 0; time <= 16; time += 0.01) {
+    const position = getMirrorConductorPosition(time);
+    assert.ok(
+      position.x >= MIRROR_CONDUCTOR_ARENA_BOUNDS.left &&
+      position.x <= MIRROR_CONDUCTOR_ARENA_BOUNDS.right,
+      `boss x ${position.x} escaped at ${time}`
+    );
+  }
+
+  for (
+    let index = 0;
+    index < MIRROR_CONDUCTOR_MOVEMENT_WAYPOINTS.length;
+    index += 1
+  ) {
+    assert.deepEqual(
+      getMirrorConductorPosition(index * 2),
+      MIRROR_CONDUCTOR_MOVEMENT_WAYPOINTS[index]
+    );
+  }
+});
+
+test("every adjacent platform route is dash-free with at least five pixels margin", () => {
+  const movement = {
+    maxRunSpeed: 190,
+    gravity: 1600,
+    jumpSpeed: 455,
+    doubleJumpSpeed: 420
+  };
+  const expectedHorizontalMargins = [
+    18.237,
+    42.692,
+    11.186,
+    102.858,
+    13.343,
+    42.692,
+    15.325,
+    64.835,
+    8.087,
+    56.692,
+    15.325,
+    90.095
+  ];
+  const singleJumpRise =
+    movement.jumpSpeed ** 2 /
+    (2 * movement.gravity);
+  const doubleJumpRise =
+    movement.doubleJumpSpeed ** 2 /
+    (2 * movement.gravity);
+
+  for (
+    let index = 0;
+    index < MIRROR_CONDUCTOR_PLATFORMS.length - 1;
+    index += 1
+  ) {
+    const from = MIRROR_CONDUCTOR_PLATFORMS[index];
+    const to = MIRROR_CONDUCTOR_PLATFORMS[index + 1];
+    const gap = to.x - (from.x + from.width);
+    const verticalChange = to.y - from.y;
+    let airtime;
+
+    if (verticalChange >= 0) {
+      airtime =
+        (movement.jumpSpeed +
+          Math.sqrt(
+            movement.jumpSpeed ** 2 +
+            2 * movement.gravity * verticalChange
+          )) /
+        movement.gravity;
+    } else {
+      const ascent = -verticalChange;
+      const verticalMargin =
+        singleJumpRise + doubleJumpRise - ascent;
+      assert.ok(
+        verticalMargin >= 5,
+        `route ${index} vertical margin ${verticalMargin.toFixed(3)}px`
+      );
+      airtime =
+        movement.jumpSpeed / movement.gravity +
+        (movement.doubleJumpSpeed +
+          Math.sqrt(
+            movement.doubleJumpSpeed ** 2 -
+            2 * movement.gravity *
+              (ascent - singleJumpRise)
+          )) /
+          movement.gravity;
+    }
+
+    const horizontalMargin =
+      movement.maxRunSpeed * airtime - gap;
+    assert.ok(
+      Math.abs(
+        horizontalMargin -
+        expectedHorizontalMargins[index]
+      ) < 0.001,
+      `route ${index} margin changed to ${horizontalMargin.toFixed(3)}px`
+    );
+    assert.ok(
+      horizontalMargin >= 5,
+      `route ${index} horizontal margin ${horizontalMargin.toFixed(3)}px`
+    );
+  }
+});
+
+test("shield requires movement and re-arms deterministically without paused time", () => {
+  const cycle = new MirrorConductorShieldCycle();
+  cycle.reset(100);
+
+  assert.equal(cycle.canBreak(100), false);
+  assert.equal(cycle.canBreak(227.999), false);
+  assert.equal(cycle.canBreak(228), true);
+
+  cycle.noteShieldBroken();
+  assert.equal(
+    cycle.rearmSecondsRemaining,
+    MIRROR_CONDUCTOR_SHIELD_REARM_SECONDS
+  );
+  assert.equal(cycle.update(6, 300), false);
+  assert.equal(cycle.update(60, 300, false), false);
+  assert.equal(cycle.rearmSecondsRemaining, 6);
+  assert.equal(cycle.update(5.999, 300), false);
+  assert.equal(cycle.update(0.001, 300), true);
+  assert.equal(cycle.displacementAnchorX, 300);
+  assert.equal(cycle.canBreak(300), false);
+  assert.equal(cycle.canBreak(428), true);
+});
+
+test("arena walls close on checkpoint restore and open before and after the fight", async () => {
+  const source = await readFile(
+    new URL(
+      "../src/world/MirrorConductorSystem.ts",
+      import.meta.url
+    ),
+    "utf8"
+  );
+  const mainSource = await readFile(
+    new URL("../src/main.ts", import.meta.url),
+    "utf8"
+  );
+
+  assert.equal(MIRROR_CONDUCTOR_ARENA_WALLS.length, 2);
+  assert.match(
+    source,
+    /this\.setArenaWallsActive\(false\);[\s\S]*this\.beginFreshRun\(\);/
+  );
+  assert.match(
+    source,
+    /if \(checkpoint\) \{[\s\S]*restorePhaseCheckpoint\([\s\S]*this\.setArenaWallsActive\(true\);/
+  );
+  assert.match(
+    source,
+    /private startBoss\(\): void \{[\s\S]*this\.setArenaWallsActive\(true\);/
+  );
+  assert.match(
+    source,
+    /private completeBoss\(\): void \{[\s\S]*this\.setArenaWallsActive\(false\);/
+  );
+  assert.match(
+    source,
+    /private clearFinaleRunState\(\): void \{\s*this\.setArenaWallsActive\(false\);/
+  );
+  assert.match(
+    mainSource,
+    /candidate\.x === solid\.x[\s\S]*candidate\.height === solid\.height/
+  );
+
+  for (const phase of [2, 3]) {
+    const checkpoint =
+      new MirrorConductorCheckpointState();
+    checkpoint.capture(phase, 3, 3, {});
+    assert.ok(
+      checkpoint.restore(),
+      `phase-${phase} death restores walls with its checkpoint`
+    );
+  }
+
+  assert.ok(
+    MIRROR_CONDUCTOR_ARENA_WALLS[0].x > 45120,
+    "left wall is inactive before start, leaving the entry floor traversable"
+  );
+  assert.ok(
+    MIRROR_CONDUCTOR_ARENA_WALLS[1].x < 49824,
+    "right wall removal after completeBoss leaves the world end reachable"
   );
 });

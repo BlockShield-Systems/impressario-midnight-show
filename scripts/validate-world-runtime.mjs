@@ -59,9 +59,9 @@ const sections =
       entity.__identifier === "Section"
   );
 
-if (collisions.length !== 287) {
+if (collisions.length !== 295) {
   throw new Error(
-    `Expected 287 collisions, got ${collisions.length}.`
+    `Expected 295 collisions, got ${collisions.length}.`
   );
 }
 
@@ -443,12 +443,20 @@ const expectedMirrorConductorCollisions = [
   [44672, 480, 448, 32],
   [45120, 520, 4224, 32],
   [49344, 480, 480, 32],
+  [45448, 96, 24, 424],
+  [49248, 96, 24, 424],
   [45472, 400, 256, 16],
+  [45840, 464, 128, 16],
   [46048, 352, 256, 16],
+  [46432, 448, 128, 16],
   [46624, 416, 256, 16],
+  [46992, 464, 128, 16],
   [47200, 352, 288, 16],
+  [47616, 464, 128, 16],
   [47840, 416, 256, 16],
+  [48208, 448, 128, 16],
   [48416, 352, 256, 16],
+  [48800, 464, 128, 16],
   [48992, 400, 256, 16],
   [44672, 688, 5152, 32]
 ];
@@ -458,7 +466,7 @@ if (
   expectedMirrorConductorCollisions.length
 ) {
   throw new Error(
-    "Expected 11 authored MirrorConductor collisions, " +
+    "Expected 19 authored MirrorConductor collisions, " +
     `got ${mirrorConductorCollisions.length}.`
   );
 }
@@ -673,6 +681,6 @@ for (const file of sourceFiles) {
 
 console.log(
   "World runtime valid: 49824x720, " +
-  "287 collisions, 11 LDtk-driven lighting sections, " +
+  "295 collisions, 11 LDtk-driven lighting sections, " +
   "exact MirrorConductor geometry and world end."
 );
