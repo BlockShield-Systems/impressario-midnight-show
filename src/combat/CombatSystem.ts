@@ -6,6 +6,9 @@ import {
 } from "../world/WorldLayout";
 
 import { EnemyView } from "../enemies/EnemyView";
+import {
+  selectGrandCardTarget
+} from "../magic/GrandCardTargeting";
 import type { PlayerController } from "../main";
 
 const TUTORIAL_START = 5792;
@@ -350,6 +353,9 @@ class CombatInput {
 export interface CombatTarget {
   readonly bounds: Phaser.Geom.Rectangle;
   readonly active: boolean;
+  readonly targetingId?: string;
+  readonly targetingGroup?: string;
+  readonly targetingKind?: string;
 
   receiveHit(
     damage: number,
@@ -705,38 +711,36 @@ export class CombatSystem {
   public findNearestTarget(
     centerX: number,
     centerY: number,
-    maximumDistance: number
+    maximumDistance: number,
+    facing: -1 | 1 = 1,
+    sectionId: string | null = null
   ): CombatTarget | null {
-    let nearest: CombatTarget | null = null;
-    let nearestDistanceSquared =
-      maximumDistance * maximumDistance;
+    const candidates = this.targets.map(
+      target => {
+        const bounds = target.bounds;
 
-    for (const target of this.targets) {
-      if (!target.active) {
-        continue;
+        return {
+          id:
+            target.targetingId ??
+            `${target.constructor.name}:${bounds.centerX}:${bounds.centerY}`,
+          active: target.active,
+          centerX: bounds.centerX,
+          centerY: bounds.centerY,
+          group: target.targetingGroup,
+          kind: target.targetingKind,
+          target
+        };
       }
+    );
 
-      const deltaX =
-        target.bounds.centerX - centerX;
-
-      const deltaY =
-        target.bounds.centerY - centerY;
-
-      const distanceSquared =
-        deltaX * deltaX +
-        deltaY * deltaY;
-
-      if (
-        distanceSquared <=
-        nearestDistanceSquared
-      ) {
-        nearest = target;
-        nearestDistanceSquared =
-          distanceSquared;
-      }
-    }
-
-    return nearest;
+    return selectGrandCardTarget(
+      candidates,
+      centerX,
+      centerY,
+      maximumDistance,
+      facing,
+      sectionId
+    )?.target ?? null;
   }
 
   public findTargetIntersecting(

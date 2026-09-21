@@ -557,6 +557,18 @@ export const WORLD_SUPPORT_PICKUPS = [
     y: 272
   },
   {
+    id: "CoreRoseE",
+    group: "MirrorCore",
+    x: 36592,
+    y: 336
+  },
+  {
+    id: "CoreRoseF",
+    group: "MirrorCore",
+    x: 36944,
+    y: 368
+  },
+  {
     id: "CoreRoseC",
     group: "MirrorCore",
     x: 37488,
@@ -594,6 +606,18 @@ export const WORLD_GRAND_CARD_PICKUPS = [
     group: "MirrorCore",
     x: 36048,
     y: 272
+  },
+  {
+    id: "CoreCardC",
+    group: "MirrorCore",
+    x: 36384,
+    y: 384
+  },
+  {
+    id: "CoreCardD",
+    group: "MirrorCore",
+    x: 37184,
+    y: 320
   },
   {
     id: "ApproachCardA",
