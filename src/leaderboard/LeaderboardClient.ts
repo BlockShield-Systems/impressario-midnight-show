@@ -45,6 +45,37 @@ interface PublicConfig {
   readonly buildVersion: string;
 }
 
+export interface ClaimVerificationResult {
+  readonly rank: number | null;
+  readonly playerName: string;
+  readonly elapsedMs: number;
+  readonly rankedMs: number;
+  readonly deaths: number;
+  readonly hits: number;
+  readonly buildVersion: string;
+  readonly completedAt: number;
+}
+
+export type ClaimVerificationErrorKind =
+  | "invalid-format"
+  | "not-found"
+  | "rate-limited"
+  | "server";
+
+export class ClaimVerificationError extends Error {
+  public readonly kind:
+    ClaimVerificationErrorKind;
+
+  public constructor(
+    kind: ClaimVerificationErrorKind,
+    message: string
+  ) {
+    super(message);
+    this.name = "ClaimVerificationError";
+    this.kind = kind;
+  }
+}
+
 interface RunSession {
   readonly runId: string;
   readonly token: string;
@@ -89,6 +120,35 @@ const PLAYER_STORAGE_KEY =
 
 export const LOCAL_LEADERBOARD_MESSAGE =
   "Leaderboard is not available in local development.";
+
+const CLAIM_CODE_ALPHABET =
+  "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+
+export function normalizeClaimCodeInput(
+  input: string
+): string | null {
+  const compact = input
+    .normalize("NFKC")
+    .trim()
+    .toUpperCase()
+    .replace(/[-\s]/g, "");
+
+  if (
+    compact.length !== 16 ||
+    !new RegExp(
+      `^[${CLAIM_CODE_ALPHABET}]{16}$`
+    ).test(compact)
+  ) {
+    return null;
+  }
+
+  return [
+    compact.slice(0, 4),
+    compact.slice(4, 8),
+    compact.slice(8, 12),
+    compact.slice(12, 16)
+  ].join("-");
+}
 
 function normalizePlayerName(
   input: string
@@ -216,6 +276,81 @@ class LeaderboardClient {
   ): Promise<void> {
     this.startGame = startGame;
     await this.showStartScreen();
+  }
+
+  public async verifyClaimCode(
+    input: string
+  ): Promise<ClaimVerificationResult> {
+    const code = normalizeClaimCodeInput(input);
+
+    if (!code) {
+      throw new ClaimVerificationError(
+        "invalid-format",
+        "Enter a 16-character claim code."
+      );
+    }
+
+    let response: Response;
+
+    try {
+      response = await fetch(
+        `${API_BASE}/claims/verify`,
+        {
+          method: "POST",
+          headers: {
+            "content-type": "application/json"
+          },
+          body: JSON.stringify({ code })
+        }
+      );
+    } catch {
+      throw new ClaimVerificationError(
+        "server",
+        "Claim verification is unavailable. Try again."
+      );
+    }
+
+    let body: unknown;
+
+    try {
+      body = await response.json();
+    } catch {
+      throw new ClaimVerificationError(
+        "server",
+        "Claim verification returned an invalid response."
+      );
+    }
+
+    if (response.status === 404) {
+      throw new ClaimVerificationError(
+        "not-found",
+        "Code not found."
+      );
+    }
+
+    if (response.status === 429) {
+      throw new ClaimVerificationError(
+        "rate-limited",
+        "Too many attempts. Wait one minute and try again."
+      );
+    }
+
+    if (!response.ok) {
+      const message =
+        typeof body === "object" &&
+        body !== null &&
+        "error" in body &&
+        typeof body.error === "string"
+          ? body.error
+          : "Claim verification is unavailable. Try again.";
+
+      throw new ClaimVerificationError(
+        "server",
+        message
+      );
+    }
+
+    return body as ClaimVerificationResult;
   }
 
   public recordHit(): void {

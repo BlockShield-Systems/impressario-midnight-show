@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 import { AudioSettings } from "../audio/AudioSettings";
-import { leaderboard } from "../leaderboard/LeaderboardClient";
+import { ClaimVerificationError, leaderboard, normalizeClaimCodeInput, type ClaimVerificationResult } from "../leaderboard/LeaderboardClient";
 import { DisplayPreferences } from "./DisplayPreferences";
 import "./main-menu.css";
 
@@ -11,6 +11,11 @@ export class MainMenuScene extends Phaser.Scene {
   private panel!: HTMLElement;
   private home!: HTMLElement;
   private settingsPanel!: HTMLElement;
+  private verificationPanel!: HTMLElement;
+  private verificationButton!: HTMLButtonElement;
+  private verificationInput!: HTMLInputElement;
+  private verificationSubmit!: HTMLButtonElement;
+  private verificationSummary!: HTMLElement;
   private displayButton!: HTMLButtonElement;
   private status!: HTMLElement;
   private listeners!: AbortController;
@@ -88,6 +93,7 @@ export class MainMenuScene extends Phaser.Scene {
       <div class="main-menu-home">
         <button type="button" class="main-menu-start">Start Game</button>
         <button type="button" class="main-menu-settings">Settings</button>
+        <button type="button" class="main-menu-verify">Verify Claim Code</button>
         <p class="main-menu-hint">The stage is yours.</p>
       </div>
       <div class="main-menu-options" hidden>
@@ -107,16 +113,41 @@ export class MainMenuScene extends Phaser.Scene {
         </label>
         <button type="button" class="main-menu-back">Back</button>
       </div>
+      <div class="main-menu-verification" hidden>
+        <h2>Verify Claim Code</h2>
+        <form class="main-menu-verification-form">
+          <label for="main-menu-claim-code">Claim code</label>
+          <input
+            id="main-menu-claim-code"
+            name="claim-code"
+            type="text"
+            inputmode="text"
+            autocomplete="off"
+            spellcheck="false"
+            maxlength="19"
+          >
+          <button type="submit" class="main-menu-verify-submit">Verify</button>
+        </form>
+        <dl class="main-menu-verification-summary" hidden></dl>
+        <button type="button" class="main-menu-verify-back">Back</button>
+      </div>
       <p class="main-menu-status" role="status" aria-live="polite"></p>
     `;
     this.panel = panel;
     this.home = panel.querySelector<HTMLElement>(".main-menu-home")!;
     this.settingsPanel = panel.querySelector<HTMLElement>(".main-menu-options")!;
+    this.verificationPanel = panel.querySelector<HTMLElement>(".main-menu-verification")!;
+    this.verificationButton = panel.querySelector<HTMLButtonElement>(".main-menu-verify")!;
+    this.verificationInput = panel.querySelector<HTMLInputElement>("#main-menu-claim-code")!;
+    this.verificationSubmit = panel.querySelector<HTMLButtonElement>(".main-menu-verify-submit")!;
+    this.verificationSummary = panel.querySelector<HTMLElement>(".main-menu-verification-summary")!;
     this.displayButton = panel.querySelector<HTMLButtonElement>(".main-menu-display")!;
     this.status = panel.querySelector<HTMLElement>(".main-menu-status")!;
     const start = panel.querySelector<HTMLButtonElement>(".main-menu-start")!;
     const settings = panel.querySelector<HTMLButtonElement>(".main-menu-settings")!;
     const back = panel.querySelector<HTMLButtonElement>(".main-menu-back")!;
+    const verificationBack = panel.querySelector<HTMLButtonElement>(".main-menu-verify-back")!;
+    const verificationForm = panel.querySelector<HTMLFormElement>(".main-menu-verification-form")!;
     const options = { signal: this.listeners.signal };
 
     start.addEventListener("click", () => this.startGame(), options);
@@ -126,15 +157,35 @@ export class MainMenuScene extends Phaser.Scene {
       this.refreshDisplay();
       back.focus();
     }, options);
+    this.verificationButton.addEventListener("click", () => {
+      this.openVerificationPanel();
+    }, options);
+    verificationForm.addEventListener("submit", event => {
+      event.preventDefault();
+      void this.submitVerification(false);
+    }, options);
     back.addEventListener("click", () => {
       this.settingsPanel.hidden = true;
       this.home.hidden = false;
       this.status.textContent = "";
       settings.focus();
     }, options);
+    verificationBack.addEventListener("click", () => {
+      this.verificationPanel.hidden = true;
+      this.home.hidden = false;
+      this.status.textContent = "";
+      this.status.removeAttribute("data-state");
+      this.verificationButton.focus();
+    }, options);
     panel.addEventListener("keydown", event => {
-      if (event.key === "Escape" && !this.settingsPanel.hidden) {
+      if (event.key !== "Escape") {
+        return;
+      }
+
+      if (!this.settingsPanel.hidden) {
         back.click();
+      } else if (!this.verificationPanel.hidden) {
+        verificationBack.click();
       }
     }, options);
     this.displayButton.addEventListener("click", () => {
@@ -162,6 +213,149 @@ export class MainMenuScene extends Phaser.Scene {
     this.add.dom(320, 222, panel);
     this.refreshDisplay();
     start.focus();
+    this.openVerificationDeepLink();
+  }
+
+  private openVerificationPanel(): void {
+    this.home.hidden = true;
+    this.settingsPanel.hidden = true;
+    this.verificationPanel.hidden = false;
+    this.verificationSummary.hidden = true;
+    this.verificationSummary.replaceChildren();
+    this.status.textContent = "";
+    this.status.removeAttribute("data-state");
+    this.verificationInput.focus();
+  }
+
+  private openVerificationDeepLink(): void {
+    const url = new URL(window.location.href);
+    const code = url.searchParams.get("verify");
+
+    if (!code) {
+      return;
+    }
+
+    const normalized =
+      normalizeClaimCodeInput(code);
+
+    if (!normalized) {
+      return;
+    }
+
+    this.openVerificationPanel();
+    this.verificationInput.value = normalized;
+    void this.submitVerification(true);
+  }
+
+  private async submitVerification(
+    fromDeepLink: boolean
+  ): Promise<void> {
+    const normalized =
+      normalizeClaimCodeInput(
+        this.verificationInput.value
+      );
+
+    if (!normalized) {
+      this.showVerificationMessage(
+        "invalid-format",
+        "Enter a 16-character claim code."
+      );
+      return;
+    }
+
+    this.verificationInput.value = normalized;
+    this.verificationSubmit.disabled = true;
+    this.verificationSummary.hidden = true;
+    this.verificationSummary.replaceChildren();
+    this.showVerificationMessage(
+      "loading",
+      "Checking claim code..."
+    );
+
+    try {
+      const result =
+        await leaderboard.verifyClaimCode(
+          normalized
+        );
+      this.renderVerificationSummary(result);
+      this.showVerificationMessage(
+        "success",
+        "Run summary loaded."
+      );
+    } catch (error) {
+      if (error instanceof ClaimVerificationError) {
+        this.showVerificationMessage(
+          error.kind,
+          error.message
+        );
+      } else {
+        this.showVerificationMessage(
+          "server",
+          "Claim verification is unavailable. Try again."
+        );
+      }
+    } finally {
+      this.verificationSubmit.disabled = false;
+
+      if (fromDeepLink) {
+        const url = new URL(window.location.href);
+        url.searchParams.delete("verify");
+        history.replaceState(
+          history.state,
+          "",
+          `${url.pathname}${url.search}${url.hash}`
+        );
+      }
+    }
+  }
+
+  private showVerificationMessage(
+    state: string,
+    message: string
+  ): void {
+    this.status.dataset.state = state;
+    this.status.textContent = message;
+  }
+
+  private renderVerificationSummary(
+    result: ClaimVerificationResult
+  ): void {
+    const values: readonly [string, string][] = [
+      ["Rank", result.rank === null ? "Not ranked" : `#${result.rank}`],
+      ["Player", result.playerName],
+      ["Gameplay time", this.formatVerificationTime(result.elapsedMs)],
+      ["Ranked time", this.formatVerificationTime(result.rankedMs)],
+      ["Deaths", String(result.deaths)],
+      ["Hits", String(result.hits)],
+      ["Build", result.buildVersion],
+      ["Submitted", new Date(result.completedAt).toLocaleString()]
+    ];
+
+    for (const [label, value] of values) {
+      const term = document.createElement("dt");
+      const description = document.createElement("dd");
+      term.textContent = label;
+      description.textContent = value;
+      this.verificationSummary.append(
+        term,
+        description
+      );
+    }
+
+    this.verificationSummary.hidden = false;
+  }
+
+  private formatVerificationTime(
+    milliseconds: number
+  ): string {
+    const totalSeconds = Math.max(
+      0,
+      Math.floor(milliseconds / 1000)
+    );
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+
+    return `${minutes}:${String(seconds).padStart(2, "0")}`;
   }
 
   private refreshDisplay(): void {

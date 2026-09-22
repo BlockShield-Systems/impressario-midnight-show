@@ -58,6 +58,127 @@ test("reloads and settings do not initialize Turnstile or consume run starts", a
   expect(errors).toEqual([]);
 });
 
+test("claim verification panel rejects malformed input without starting a run", async ({ page }) => {
+  const requests: string[] = [];
+  page.on("request", request => {
+    const url = new URL(request.url());
+    if (url.pathname.startsWith("/api/")) {
+      requests.push(`${request.method()} ${url.pathname}`);
+    }
+  });
+
+  await page.goto("/");
+  const region = menu(page);
+  await region.getByRole("button", {
+    name: "Verify Claim Code",
+    exact: true
+  }).click();
+  await expect(region.getByRole("heading", {
+    name: "Verify Claim Code"
+  })).toBeVisible();
+  await region.getByRole("textbox", {
+    name: "Claim code"
+  }).fill("not-a-code");
+  await region.getByRole("button", {
+    name: "Verify",
+    exact: true
+  }).click();
+  await expect(region.locator(".main-menu-status"))
+    .toHaveAttribute("data-state", "invalid-format");
+  await expect(region.locator(".main-menu-status"))
+    .toHaveText("Enter a 16-character claim code.");
+  expect(requests).toEqual([]);
+});
+
+test("claim verification distinguishes not-found and rate-limited responses", async ({ page }) => {
+  await page.route("**/api/claims/verify", async route => {
+    const body = route.request().postDataJSON() as {
+      code: string;
+    };
+    const rateLimited = body.code.startsWith("2345");
+    await route.fulfill({
+      status: rateLimited ? 429 : 404,
+      contentType: "application/json",
+      body: JSON.stringify({
+        error: rateLimited
+          ? "Too many verification attempts. Please wait one minute and try again."
+          : "Code not found"
+      })
+    });
+  });
+
+  await page.goto("/");
+  const region = menu(page);
+  await region.getByRole("button", {
+    name: "Verify Claim Code",
+    exact: true
+  }).click();
+  const input = region.getByRole("textbox", {
+    name: "Claim code"
+  });
+  const submit = region.getByRole("button", {
+    name: "Verify",
+    exact: true
+  });
+
+  await input.fill("ABCD-EFGH-JKLM-NPQR");
+  await submit.click();
+  await expect(region.locator(".main-menu-status"))
+    .toHaveAttribute("data-state", "not-found");
+  await expect(region.locator(".main-menu-status"))
+    .toHaveText("Code not found.");
+
+  await input.fill("2345-6789-ABCD-EFGH");
+  await submit.click();
+  await expect(region.locator(".main-menu-status"))
+    .toHaveAttribute("data-state", "rate-limited");
+  await expect(region.locator(".main-menu-status"))
+    .toHaveText("Too many attempts. Wait one minute and try again.");
+  await expect(submit).toBeEnabled();
+});
+
+test("claim verification deep link prefills, resolves, and removes the code without starting a run", async ({ page }) => {
+  const runStarts: string[] = [];
+  page.on("request", request => {
+    const url = new URL(request.url());
+    if (request.method() === "POST" && url.pathname === "/api/runs") {
+      runStarts.push(url.pathname);
+    }
+  });
+  await page.route("**/api/claims/verify", route => route.fulfill({
+    status: 200,
+    contentType: "application/json",
+    body: JSON.stringify({
+      rank: 3,
+      playerName: "Midnight Player",
+      elapsedMs: 123456,
+      rankedMs: 173456,
+      deaths: 1,
+      hits: 1,
+      buildVersion: "0.7.0",
+      completedAt: 1795000000000
+    })
+  }));
+
+  await page.goto("/?verify=abcd-efgh-jklm-npqr");
+  const region = menu(page);
+  await expect(region.getByRole("heading", {
+    name: "Verify Claim Code"
+  })).toBeVisible();
+  await expect(region.getByRole("textbox", {
+    name: "Claim code"
+  })).toHaveValue("ABCD-EFGH-JKLM-NPQR");
+  await expect(region.locator(".main-menu-status"))
+    .toHaveAttribute("data-state", "success");
+  await expect(region.locator(".main-menu-verification-summary"))
+    .toContainText("Midnight Player");
+  await expect(region.locator(".main-menu-verification-summary"))
+    .toContainText("0.7.0");
+  await expect(page).toHaveURL("/");
+  expect(runStarts).toEqual([]);
+  await expect(region).not.toContainText(/unused|unclaimed/i);
+});
+
 test("native volume controls preserve audio v2 values across settings, reload and gameplay", async ({ page }) => {
   await page.goto("/");
   await expect(menu(page)).toBeVisible();
