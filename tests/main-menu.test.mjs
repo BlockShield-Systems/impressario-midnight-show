@@ -68,6 +68,16 @@ test("menu display preferences remain usable when browser storage is blocked", t
   assert.equal(display.getFullscreen(), true);
 });
 
+test("menu exposes claim verification without changing existing button order", () => {
+  assert.match(
+    source,
+    /main-menu-start[\s\S]*main-menu-settings[\s\S]*main-menu-verify/
+  );
+  assert.match(source, />Verify Claim Code<\/button>/);
+  assert.match(source, /history\.replaceState\(/);
+  assert.match(source, /url\.searchParams\.delete\("verify"\)/);
+});
+
 test("menu volume writes use existing audio persistence and preserve mute/other buses", t => {
   const values = storage(t);
   const settings = new AudioSettings();

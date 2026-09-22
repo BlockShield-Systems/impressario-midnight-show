@@ -38,6 +38,7 @@ interface Env {
   DB: D1Database;
   ASSETS: Fetcher;
   START_LIMITER: RateLimitBinding;
+  CLAIM_VERIFY_LIMITER?: RateLimitBinding;
 
   TURNSTILE_SITE_KEY: string;
   TURNSTILE_SECRET_KEY: string;
@@ -60,6 +61,17 @@ interface RunRow {
   checkpoint_name: string | null;
   status: string;
   ranked_ms: number | null;
+}
+
+interface ClaimRunRow {
+  rank: number | null;
+  player_name: string;
+  elapsed_ms: number;
+  ranked_ms: number;
+  deaths: number;
+  hits: number;
+  build_version: string;
+  finished_at: number;
 }
 
 const JSON_HEADERS = {
@@ -196,9 +208,42 @@ function randomToken(
   ).join("");
 }
 
+export const CLAIM_CODE_ALPHABET =
+  "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+
+export function normalizeClaimCode(
+  input: unknown
+): string | null {
+  if (typeof input !== "string") {
+    return null;
+  }
+
+  const compact = input
+    .normalize("NFKC")
+    .trim()
+    .toUpperCase()
+    .replace(/[-\s]/g, "");
+
+  if (
+    compact.length !== 16 ||
+    !new RegExp(
+      `^[${CLAIM_CODE_ALPHABET}]{16}$`
+    ).test(compact)
+  ) {
+    return null;
+  }
+
+  return [
+    compact.slice(0, 4),
+    compact.slice(4, 8),
+    compact.slice(8, 12),
+    compact.slice(12, 16)
+  ].join("-");
+}
+
 function randomClaimCode(): string {
   const alphabet =
-    "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    CLAIM_CODE_ALPHABET;
 
   const bytes =
     crypto.getRandomValues(
@@ -381,6 +426,119 @@ async function readRun(
     run,
     tokenHash
   };
+}
+
+async function verifyClaimCode(
+  request: Request,
+  env: Env
+): Promise<Response> {
+  if (!env.CLAIM_VERIFY_LIMITER) {
+    return json(
+      {
+        error:
+          "Claim verification is temporarily unavailable"
+      },
+      503
+    );
+  }
+
+  const remoteIp =
+    request.headers.get(
+      "CF-Connecting-IP"
+    ) ?? "unknown";
+  const rateResult =
+    await env.CLAIM_VERIFY_LIMITER.limit({
+      key: remoteIp
+    });
+
+  if (!rateResult.success) {
+    return json(
+      {
+        error:
+          "Too many verification attempts. Please wait one minute and try again."
+      },
+      429
+    );
+  }
+
+  let body: {
+    code?: unknown;
+  };
+
+  try {
+    body = await request.json() as typeof body;
+  } catch {
+    return json(
+      { error: "Invalid claim code" },
+      400
+    );
+  }
+
+  const claimCode =
+    normalizeClaimCode(body.code);
+
+  if (!claimCode) {
+    return json(
+      { error: "Invalid claim code" },
+      400
+    );
+  }
+
+  const claimHash = await sha256(claimCode);
+  const run = await env.DB.prepare(
+    `
+      WITH ranked AS (
+        SELECT
+          id,
+          ROW_NUMBER() OVER (
+            ORDER BY
+              ranked_ms ASC,
+              deaths ASC,
+              hits ASC,
+              elapsed_ms ASC,
+              finished_at ASC
+          ) AS rank
+        FROM runs
+        WHERE status = 'completed'
+      )
+      SELECT
+        ranked.rank,
+        runs.player_name,
+        runs.elapsed_ms,
+        runs.ranked_ms,
+        runs.deaths,
+        runs.hits,
+        runs.build_version,
+        runs.finished_at
+      FROM runs
+      LEFT JOIN ranked ON ranked.id = runs.id
+      WHERE
+        runs.claim_hash = ? AND
+        runs.finished_at IS NOT NULL
+      LIMIT 1
+    `
+  ).bind(claimHash).first<ClaimRunRow>();
+
+  if (!run) {
+    return json(
+      { error: "Code not found" },
+      404
+    );
+  }
+
+  return json({
+    rank:
+      run.rank == null
+        ? null
+        : Number(run.rank),
+    playerName: run.player_name,
+    elapsedMs: Number(run.elapsed_ms),
+    rankedMs: Number(run.ranked_ms),
+    deaths: Number(run.deaths),
+    hits: Number(run.hits),
+    buildVersion: run.build_version,
+    completedAt: Number(run.finished_at)
+  });
 }
 
 async function startRun(
@@ -1081,6 +1239,17 @@ async function handleApi(
   ) {
     return getLeaderboard(
       url,
+      env
+    );
+  }
+
+  if (
+    request.method === "POST" &&
+    url.pathname ===
+      "/api/claims/verify"
+  ) {
+    return verifyClaimCode(
+      request,
       env
     );
   }

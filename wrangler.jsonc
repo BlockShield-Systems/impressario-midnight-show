@@ -29,6 +29,14 @@
         "limit": 8,
         "period": 60
       }
+    },
+    {
+      "name": "CLAIM_VERIFY_LIMITER",
+      "namespace_id": "1002",
+      "simple": {
+        "limit": 10,
+        "period": 60
+      }
     }
   ],
   "vars": {
