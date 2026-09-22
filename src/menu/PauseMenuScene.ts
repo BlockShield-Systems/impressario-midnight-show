@@ -6,11 +6,13 @@ import "./pause-menu.css";
 
 interface PauseMenuData {
   readonly audioDirector: AudioDirector;
+  readonly pollGamepadPause: () => boolean;
   readonly resumeGameplay: () => void;
 }
 
 export class PauseMenuScene extends Phaser.Scene {
   private audioDirector!: AudioDirector;
+  private pollGamepadPause!: () => boolean;
   private resumeGameplay!: () => void;
   private displayPreferences!: DisplayPreferences;
   private panel!: HTMLElement;
@@ -26,6 +28,7 @@ export class PauseMenuScene extends Phaser.Scene {
 
   public init(data: PauseMenuData): void {
     this.audioDirector = data.audioDirector;
+    this.pollGamepadPause = data.pollGamepadPause;
     this.resumeGameplay = data.resumeGameplay;
   }
 
@@ -52,6 +55,15 @@ export class PauseMenuScene extends Phaser.Scene {
     queueMicrotask(() => {
       this.keyboardCloseEnabled = true;
     });
+  }
+
+  public update(): void {
+    if (
+      !this.closing &&
+      this.pollGamepadPause()
+    ) {
+      this.close();
+    }
   }
 
   private createControls(): void {

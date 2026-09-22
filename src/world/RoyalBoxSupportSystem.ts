@@ -23,6 +23,10 @@ import type {
 
 import type { MagicSystem } from "../magic/MagicSystem";
 import type { PlayerController } from "../main";
+import {
+  combinePressedIntent,
+  type GameplayActionIntentSource
+} from "../runtime/GamepadInputController";
 
 import type {
   PlayerHealthSystem
@@ -95,6 +99,8 @@ export class RoyalBoxSupportSystem {
 
   private readonly cardKey:
     Phaser.Input.Keyboard.Key | undefined;
+  private readonly actionIntents:
+    GameplayActionIntentSource;
 
   private readonly downKey:
     Phaser.Input.Keyboard.Key | undefined;
@@ -107,8 +113,10 @@ export class RoyalBoxSupportSystem {
     private readonly player: PlayerController,
     private readonly playerHealth: PlayerHealthSystem,
     private readonly combatSystem: CombatSystem,
-    private readonly magicSystem: MagicSystem
+    private readonly magicSystem: MagicSystem,
+    actionIntents: GameplayActionIntentSource
   ) {
+    this.actionIntents = actionIntents;
     this.graphics = scene.add.graphics();
     this.graphics.setDepth(96);
 
@@ -156,6 +164,11 @@ export class RoyalBoxSupportSystem {
   public update(deltaSeconds: number): void {
     this.elapsed += deltaSeconds;
 
+    const gamepadCard =
+      this.actionIntents.consumeGamepadAction(
+        "grandCard"
+      );
+
     if (
       !this.unlocked &&
       this.player.x >= ROYAL_BOX_START_X &&
@@ -171,9 +184,14 @@ export class RoyalBoxSupportSystem {
     }
 
     if (
-      this.cardKey &&
-      Phaser.Input.Keyboard.JustDown(
-        this.cardKey
+      combinePressedIntent(
+        Boolean(
+          this.cardKey &&
+          Phaser.Input.Keyboard.JustDown(
+            this.cardKey
+          )
+        ),
+        gamepadCard
       )
     ) {
       this.tryCastGrandCard();
@@ -489,17 +507,10 @@ export class RoyalBoxSupportSystem {
   private updateLookDown(
     deltaSeconds: number
   ): void {
-    const gamepad =
-      navigator.getGamepads?.()[0];
-
-    const gamepadDown =
-      Boolean(gamepad?.buttons[13]?.pressed) ||
-      (gamepad?.axes[1] ?? 0) > 0.55;
-
     const downHeld =
       Boolean(this.downKey?.isDown) ||
       Boolean(this.arrowDownKey?.isDown) ||
-      gamepadDown;
+      this.actionIntents.gamepadLookDownHeld;
 
     const grounded =
       this.player.state === "idle" ||
