@@ -5,6 +5,9 @@ import { RoyalEchoSystem } from "../enemies/RoyalEchoSystem";
 import type { MagicSystem } from "../magic/MagicSystem";
 import type { PlayerController } from "../main";
 import type { PlayerHealthSystem } from "../player/PlayerHealthSystem";
+import type {
+  GameplayActionIntentSource
+} from "../runtime/GamepadInputController";
 import { RoyalBoxHazardSystem } from "./RoyalBoxHazardSystem";
 import { RoyalBoxSupportSystem } from "./RoyalBoxSupportSystem";
 import {
@@ -52,6 +55,7 @@ export class RoyalBoxEncounterSystem {
     private readonly playerHealth: PlayerHealthSystem,
     combatSystem: CombatSystem,
     magicSystem: MagicSystem,
+    actionIntents: GameplayActionIntentSource,
     private readonly addSolid: (
       solid: Phaser.Geom.Rectangle
     ) => void,
@@ -75,7 +79,8 @@ export class RoyalBoxEncounterSystem {
       player,
       playerHealth,
       combatSystem,
-      magicSystem
+      magicSystem,
+      actionIntents
     );
 
     this.gateGraphics =

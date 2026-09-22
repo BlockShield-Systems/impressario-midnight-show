@@ -9,7 +9,14 @@ import { EnemyView } from "../enemies/EnemyView";
 import {
   selectGrandCardTarget
 } from "../magic/GrandCardTargeting";
-import type { PlayerController } from "../main";
+import type {
+  PlayerController
+} from "../main";
+import {
+  combinePressedIntent,
+  type GameplayActionIntentSource
+} from "../runtime/GamepadInputController";
+
 
 const TUTORIAL_START = 5792;
 const TUTORIAL_END = 6688;
@@ -270,7 +277,6 @@ class CombatInput {
   private readonly held = new Set<string>();
 
   private attackQueued = false;
-  private previousGamepadAttack = false;
 
   public constructor() {
     window.addEventListener("keydown", this.handleKeyDown, {
@@ -282,23 +288,6 @@ class CombatInput {
     });
 
     window.addEventListener("blur", this.handleBlur);
-  }
-
-  public update(): void {
-    const gamepad = navigator.getGamepads?.()[0];
-
-    if (!gamepad) {
-      this.previousGamepadAttack = false;
-      return;
-    }
-
-    const attackHeld = Boolean(gamepad.buttons[2]?.pressed);
-
-    if (attackHeld && !this.previousGamepadAttack) {
-      this.attackQueued = true;
-    }
-
-    this.previousGamepadAttack = attackHeld;
   }
 
   public consumeAttack(): boolean {
@@ -507,6 +496,8 @@ function moveTowardsLocal(
 
 export class CombatSystem {
   private readonly input = new CombatInput();
+  private readonly actionIntents:
+    GameplayActionIntentSource;
   private readonly dummy: TrainingDummy;
   private readonly targets: CombatTarget[];
 
@@ -534,8 +525,10 @@ export class CombatSystem {
 
   public constructor(
     private readonly scene: Phaser.Scene,
-    private readonly player: PlayerController
+    private readonly player: PlayerController,
+    actionIntents: GameplayActionIntentSource
   ) {
+    this.actionIntents = actionIntents;
     this.dummy = new TrainingDummy(scene);
     this.targets = [this.dummy];
 
@@ -602,7 +595,6 @@ export class CombatSystem {
   }
 
   public update(deltaSeconds: number): void {
-    this.input.update();
     this.dummy.update(deltaSeconds);
 
     this.comboResetTimer = Math.max(
@@ -617,7 +609,17 @@ export class CombatSystem {
       this.comboStep = 0;
     }
 
-    if (this.input.consumeAttack()) {
+    const gamepadAttack =
+      this.actionIntents.consumeGamepadAction(
+        "melee"
+      );
+
+    if (
+      combinePressedIntent(
+        this.input.consumeAttack(),
+        gamepadAttack
+      )
+    ) {
       this.handleAttackInput();
     }
 

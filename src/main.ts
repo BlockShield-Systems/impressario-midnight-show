@@ -38,6 +38,12 @@ import {
   resetSimulationTimingForPause
 } from "./runtime/PauseTiming";
 import {
+  combinePressedIntent,
+  GamepadInputController,
+  type GamepadPressedAction,
+  type GameplayActionIntentSource
+} from "./runtime/GamepadInputController";
+import {
   MOVEMENT_ROUTE_CAMERA_HEIGHT,
   isBelowMovementRoute,
   isInMovementRehearsal
@@ -122,9 +128,7 @@ const MOVEMENT = {
 
   dashSpeed: 430,
   dashDuration: 0.13,
-  dashCooldown: 0.18,
-
-  gamepadDeadzone: 0.22
+  dashCooldown: 0.18
 } as const;
 
 /* -------------------------------------------------------------------------- */
@@ -176,22 +180,17 @@ interface InputSnapshot {
   readonly dashPressed: boolean;
 }
 
-class PlayerInput {
+class PlayerInput
+implements GameplayActionIntentSource {
   private readonly heldKeys = new Set<string>();
   private readonly blockedUntilKeyUp =
     new Set<string>();
+  private readonly gamepad =
+    new GamepadInputController();
   private enabled = true;
-  private suppressGamepadUntilNeutral = false;
 
   private jumpQueued = false;
   private dashQueued = false;
-
-  private previousGamepadJump = false;
-  private previousGamepadDash = false;
-
-  private gamepadMoveX = 0;
-  private gamepadDown = false;
-  private gamepadJump = false;
 
   public constructor() {
     window.addEventListener("keydown", this.handleKeyDown, {
@@ -206,65 +205,28 @@ class PlayerInput {
   }
 
   public update(): void {
-    const gamepads = navigator.getGamepads?.() ?? [];
-    const gamepad = gamepads[0];
+    this.gamepad.update("gameplay");
+  }
 
-    this.gamepadMoveX = 0;
-    this.gamepadDown = false;
-    this.gamepadJump = false;
+  public updatePauseMenu(): void {
+    this.gamepad.update("pause-menu");
+  }
 
-    if (!gamepad) {
-      this.previousGamepadJump = false;
-      this.previousGamepadDash = false;
-      this.suppressGamepadUntilNeutral = false;
-      return;
-    }
+  public consumePausePressed(): boolean {
+    return this.gamepad.consume("pause");
+  }
 
-    const axisX = gamepad.axes[0] ?? 0;
-    const axisY = gamepad.axes[1] ?? 0;
+  public consumeGamepadAction(
+    action: Extract<
+      GamepadPressedAction,
+      "melee" | "grandCard" | "spotlight"
+    >
+  ): boolean {
+    return this.gamepad.consumeGamepadAction(action);
+  }
 
-    if (Math.abs(axisX) >= MOVEMENT.gamepadDeadzone) {
-      this.gamepadMoveX = clamp(axisX, -1, 1);
-    }
-
-    this.gamepadDown =
-      axisY > MOVEMENT.gamepadDeadzone ||
-      Boolean(gamepad.buttons[13]?.pressed);
-
-    const jumpHeld = Boolean(gamepad.buttons[0]?.pressed);
-
-    const dashHeld =
-      Boolean(gamepad.buttons[1]?.pressed) ||
-      Boolean(gamepad.buttons[7]?.pressed);
-
-    if (this.suppressGamepadUntilNeutral) {
-      const gamepadActive =
-        Math.abs(axisX) >= MOVEMENT.gamepadDeadzone ||
-        Math.abs(axisY) >= MOVEMENT.gamepadDeadzone ||
-        jumpHeld ||
-        dashHeld;
-
-      this.previousGamepadJump = jumpHeld;
-      this.previousGamepadDash = dashHeld;
-
-      if (!gamepadActive) {
-        this.suppressGamepadUntilNeutral = false;
-      }
-
-      return;
-    }
-
-    if (jumpHeld && !this.previousGamepadJump) {
-      this.jumpQueued = true;
-    }
-
-    if (dashHeld && !this.previousGamepadDash) {
-      this.dashQueued = true;
-    }
-
-    this.gamepadJump = jumpHeld;
-    this.previousGamepadJump = jumpHeld;
-    this.previousGamepadDash = dashHeld;
+  public get gamepadLookDownHeld(): boolean {
+    return this.gamepad.gamepadLookDownHeld;
   }
 
   public setEnabled(enabled: boolean): void {
@@ -276,18 +238,14 @@ class PlayerInput {
 
     this.enabled = enabled;
     this.clear();
-    this.suppressGamepadUntilNeutral = true;
+    this.gamepad.suppressUntilNeutral();
   }
 
   public clear(): void {
     this.heldKeys.clear();
     this.jumpQueued = false;
     this.dashQueued = false;
-    this.previousGamepadJump = false;
-    this.previousGamepadDash = false;
-    this.gamepadMoveX = 0;
-    this.gamepadDown = false;
-    this.gamepadJump = false;
+    this.gamepad.reset();
   }
 
   public snapshot(consumeEdges: boolean): InputSnapshot {
@@ -296,9 +254,16 @@ class PlayerInput {
       (this.isHeld("KeyA") || this.isHeld("ArrowLeft") ? 1 : 0);
 
     const moveX =
-      Math.abs(this.gamepadMoveX) > Math.abs(keyboardMove)
-        ? this.gamepadMoveX
+      Math.abs(this.gamepad.moveX) > Math.abs(keyboardMove)
+        ? this.gamepad.moveX
         : keyboardMove;
+
+    const gamepadJumpPressed =
+      consumeEdges &&
+      this.gamepad.consume("jump");
+    const gamepadDashPressed =
+      consumeEdges &&
+      this.gamepad.consume("dash");
 
     const snapshot: InputSnapshot = {
       moveX,
@@ -306,17 +271,25 @@ class PlayerInput {
       downHeld:
         this.isHeld("KeyS") ||
         this.isHeld("ArrowDown") ||
-        this.gamepadDown,
+        this.gamepad.downHeld,
 
       jumpHeld:
         this.isHeld("Space") ||
-        this.gamepadJump,
+        this.gamepad.jumpHeld,
 
       jumpPressed:
-        consumeEdges && this.jumpQueued,
+        consumeEdges &&
+        combinePressedIntent(
+          this.jumpQueued,
+          gamepadJumpPressed
+        ),
 
       dashPressed:
-        consumeEdges && this.dashQueued
+        consumeEdges &&
+        combinePressedIntent(
+          this.dashQueued,
+          gamepadDashPressed
+        )
     };
 
     if (consumeEdges) {
@@ -1157,7 +1130,8 @@ class GameScene extends Phaser.Scene {
 
     this.combatSystem = new CombatSystem(
       this,
-      this.player
+      this.player,
+      this.playerInput
     );
 
     this.playerView = new PlayerView(
@@ -1240,7 +1214,8 @@ class GameScene extends Phaser.Scene {
               centerX,
               centerY,
               radius
-            )
+            ),
+        this.playerInput
       );
 
     this.spotlightVaultEncounterSystem =
@@ -1279,6 +1254,7 @@ class GameScene extends Phaser.Scene {
         this.playerHealth,
         this.combatSystem,
         this.magicSystem,
+        this.playerInput,
         solid => {
           this.collisionWorld.addSolid(solid);
         },
@@ -1549,6 +1525,11 @@ class GameScene extends Phaser.Scene {
 
     this.playerInput.update();
 
+    if (this.playerInput.consumePausePressed()) {
+      this.openPauseMenu();
+      return;
+    }
+
     const fixedFrame =
       advanceFixedStepFrame(
         rawDeltaMilliseconds,
@@ -1681,6 +1662,10 @@ class GameScene extends Phaser.Scene {
 
     this.scene.launch("pause-menu", {
       audioDirector: this.audioDirector,
+      pollGamepadPause: () => {
+        this.playerInput.updatePauseMenu();
+        return this.playerInput.consumePausePressed();
+      },
       resumeGameplay: () => {
         this.resetSimulationTiming();
         this.playerInput.setEnabled(true);

@@ -29,9 +29,14 @@ Befehle:
 
 - Bewegung: A/D, Pfeiltasten oder Left Stick
 - Sprung/Double Jump: Space, W oder Gamepad A
-- Dash: Shift, K, Gamepad RT oder B
-- Fast Fall: S, Pfeil runter oder Stick runter
-- Pause: P (Escape schließt ein geöffnetes Pausenmenü)
+- Dash: Shift, K, Gamepad B oder RT
+- Fast Fall: S, Pfeil runter, Left Stick runter oder D-Pad runter
+- Nahkampfangriff: J oder Gamepad X
+- Grand Card: L oder Gamepad Y
+- Spotlight: K oder Gamepad RB
+- Pause: P oder Gamepad Start/Menu (Escape schließt ein geöffnetes Pausenmenü)
+
+Main Menu, Pause Menu und Claim-Code-Prüfung haben derzeit keine Gamepad-Navigation. Spielername und Claim-Code erfordern Tastatur- beziehungsweise Plattform-Texteingabe.
 
 ## Aktueller Umfang
 

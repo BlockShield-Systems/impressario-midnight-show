@@ -12,6 +12,10 @@ import {
   ABILITY_RESOURCE_HUD_METER,
   ABILITY_RESOURCE_HUD_TEXT
 } from "../ui/HudLayout";
+import {
+  combinePressedIntent,
+  type GameplayActionIntentSource
+} from "../runtime/GamepadInputController";
 
 interface SpotlightResult {
   readonly targetsHit: number;
@@ -33,6 +37,8 @@ export class MagicSystem {
 
   private readonly castKey:
     Phaser.Input.Keyboard.Key | undefined;
+  private readonly actionIntents:
+    GameplayActionIntentSource;
 
   private readonly worldGraphics:
     Phaser.GameObjects.Graphics;
@@ -56,8 +62,10 @@ export class MagicSystem {
       centerX: number,
       centerY: number,
       radius: number
-    ) => SpotlightResult
+    ) => SpotlightResult,
+    actionIntents: GameplayActionIntentSource
   ) {
+    this.actionIntents = actionIntents;
     this.castKey =
       scene.input.keyboard?.addKey(
         Phaser.Input.Keyboard.KeyCodes.K
@@ -274,6 +282,11 @@ export class MagicSystem {
   }
 
   public update(deltaSeconds: number): void {
+    const gamepadCast =
+      this.actionIntents.consumeGamepadAction(
+        "spotlight"
+      );
+
     if (!this.unlocked) {
       return;
     }
@@ -296,9 +309,14 @@ export class MagicSystem {
     );
 
     if (
-      this.castKey &&
-      Phaser.Input.Keyboard.JustDown(
-        this.castKey
+      combinePressedIntent(
+        Boolean(
+          this.castKey &&
+          Phaser.Input.Keyboard.JustDown(
+            this.castKey
+          )
+        ),
+        gamepadCast
       )
     ) {
       this.tryCastSpotlight();
