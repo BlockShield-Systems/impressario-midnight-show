@@ -1,6 +1,6 @@
 # Deployment Checklist: Workers Static Assets + D1
 
-Base: `m10-semantic-level-authoring`, commit `62569e413709ab2dfa4d5ac0472ae510203f3cac`.
+Base: `milestone-7f-boss-atlas-runtime`, commit `dbd421d15dd44754e4195265b26eef37774a5832`.
 Sources: `wrangler.jsonc`, `worker/src/index.ts`, `worker/migrations/0001_initial.sql`.
 
 This checklist is a manual runbook. Remote state and reachability were not verified when it was written. No build, tests, or deployment were executed during authoring.
@@ -64,7 +64,7 @@ Exactly one migration exists: `worker/migrations/0001_initial.sql`. It creates t
 
 The Worker expects exactly one Turnstile secret: **`TURNSTILE_SECRET_KEY`**. It must belong to the widget with site key **`0x4AAAAAAETYILffpEJOeLSk`**.
 
-`TURNSTILE_SITE_KEY` is public and already configured under `vars`, as are `ALLOWED_ORIGIN`, `BUILD_VERSION` (`0.7.0`), and `ENVIRONMENT` (`production`). `DB`, `ASSETS`, and `START_LIMITER` are bindings, not manually set secrets. In production there is no Turnstile bypass when the secret is absent.
+`TURNSTILE_SITE_KEY` is public and already configured under `vars`, as are `ALLOWED_ORIGIN`, `BUILD_VERSION` (`0.7.0`), and `ENVIRONMENT` (`production`). `DB`, `ASSETS`, `START_LIMITER`, and `CLAIM_VERIFY_LIMITER` are bindings, not manually set secrets. In production there is no Turnstile bypass when the secret is absent.
 
 - [ ] **Check secret names:**
 
@@ -141,7 +141,7 @@ The configuration uses `main: worker/src/index.ts`, static assets from `./dist` 
   git push origin --tags
   ```
 
-  **Success:** The tag exists locally and on the remote. Without it there is no reliable record of which revision is live, since deployments happen from `m10-semantic-level-authoring` while the default branch is `milestone-7f-boss-atlas-runtime`.
+  **Success:** The tag exists locally and on the remote. Without it there is no reliable record of which revision is live, since deployments happen from `milestone-7f-boss-atlas-runtime`.
 
 ## 6. Post-deployment smoke test
 
@@ -163,6 +163,18 @@ The configuration uses `main: worker/src/index.ts`, static assets from `./dist` 
   ```
 
   **Success:** HTTP **404** with JSON `{"error":"Not found"}`, not HTTP 200 with the game HTML. `--fail-with-body` is deliberately omitted here because 404 is the expected result.
+
+- [ ] **Check read-only claim verification:**
+
+  ```bash
+  curl --silent --show-error -i \
+    -X POST \
+    -H 'content-type: application/json' \
+    --data '{"code":"XXXX-XXXX-XXXX-XXXX"}' \
+    "$BASE_URL/api/claims/verify"
+  ```
+
+  **Success:** HTTP **404** with JSON `{"error":"Code not found"}`. The placeholder is intentionally not a real claim code. HTTP 429 means the per-IP verification limit was reached; wait at least 60 seconds before retrying.
 
 - [ ] **Check the game, same-origin behavior, and real Turnstile verification in a browser:**
 
